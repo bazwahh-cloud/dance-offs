@@ -3,23 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=70">
+  <link rel="stylesheet" href="style2.css?v=80">
 
   <style>
     .battle-card {
-      margin: 40px 0;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
     }
     .battle-card:nth-child(odd) { background: #eef6ff; }
     .battle-card:nth-child(even) { background: #f7ecff; }
 
+    /* LOCKED VIDEO HEIGHT */
     .video-box {
       position: relative;
       width: 100%;
-      height: 220px;
+      height: 160px;       /* FIXED HEIGHT */
+      min-height: 160px;   /* PREVENT COLLAPSE */
       overflow: hidden;
+      background: #000;
     }
     .video-box iframe {
       position: absolute;
@@ -31,13 +34,13 @@
 
     .video-overlay {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 8px;
+      left: 8px;
       background: rgba(0,0,0,0.65);
       color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 16px;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 14px;
       font-weight: bold;
       z-index: 10;
       pointer-events: none;
@@ -45,12 +48,12 @@
 
     .vote-button {
       width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      font-size: 18px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 16px;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       background: #0077ff;
       color: white;
@@ -62,12 +65,12 @@
     }
 
     .vote-count {
-      margin-top: 10px;
-      font-size: 16px;
+      margin-top: 8px;
+      font-size: 14px;
       font-weight: bold;
     }
 
-    /* Small, safe SoundCloud player */
+    /* SMALL, SAFE SOUNDCLOUD PLAYER */
     .soundcloud-wrapper {
       width: 100%;
       padding: 20px 0;
@@ -78,7 +81,7 @@
     .soundcloud-wrapper iframe {
       max-width: 900px;
       width: 100%;
-      height: 80px;
+      height: 80px; /* SMALL + SAFE */
       border-radius: 6px;
     }
   </style>
@@ -116,8 +119,4 @@ function getDataURL() {
   return BASE_URL + "?mode=read&cache=" + Math.random();
 }
 
-function getVoteCountsURL() {
-  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
-}
-
-function
+function get
