@@ -20,10 +20,13 @@ body {
   background: #ffffff;
   border-bottom: 2px solid #000;
   padding: 15px 0;
-  text-align: center;
   position: sticky;
   top: 0;
   z-index: 999;
+
+  display: flex;
+  justify-content: center; /* center the nav */
+  gap: 25px;
 }
 
 .navbar a {
@@ -31,21 +34,21 @@ body {
   text-decoration: none;
   font-size: 20px;
   font-weight: bold;
-  margin: 0 20px;
   padding: 8px 12px;
   border-radius: 6px;
   transition: 0.2s;
 }
 
+/* Hover effect */
 .navbar a:hover {
-  background: #000;
-  color: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
 }
 
+/* Active page uses shadow instead of colour */
 .navbar a.active {
-  background: #000;
-  color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
   border: 2px solid #000;
+  background: #fff;
 }
 
 /* Input row */
@@ -89,12 +92,12 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
-  flex-wrap: nowrap;
+  flex-wrap: nowrap; /* keeps side-by-side on desktop */
 }
 
 /* Each video box */
 .video-box {
-  width: 48%;
+  width: 48%; /* guarantees two columns */
   border: 2px solid #000;
   border-radius: 10px;
   padding: 10px;
@@ -119,35 +122,4 @@ iframe {
 
 /* Footer */
 .footer {
-  width: 100%;
-  text-align: center;
-  padding: 15px 0;
-  border-top: 2px solid #000;
-  background: #fff;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: auto;
-}
-
-/* Responsive: stack videos and inputs on narrow screens */
-@media (max-width: 800px) {
-  .videos-wrapper {
-    flex-direction: column;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .video-box {
-    width: 100%;
-  }
-
-  .input-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .input-row input,
-  .input-row button {
-    width: 100%;
-  }
-}
+  width
