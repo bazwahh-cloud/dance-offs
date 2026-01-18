@@ -106,11 +106,10 @@ async function loadBattles() {
   );
 
   // Only dancer battles (ignore DJ rows)
-  const dancers = clean.filter(r =>
-    r["Performer"].toLowerCase().includes("dancer") ||
-    r["Performer"].toLowerCase() === "left" ||
-    r["Performer"].toLowerCase() === "right"
-  );
+  const dancers = clean.filter(r => {
+    const p = r["Performer"].toLowerCase();
+    return p.includes("dancer") || p === "left" || p === "right";
+  });
 
   const lefts = dancers.filter(r =>
     r["Performer"].toLowerCase().includes("left")
@@ -128,9 +127,4 @@ async function loadBattles() {
     const left = lefts[i];
     const right = rights[i];
 
-    const leftID = getYouTubeID(left["YouTube URL"]);
-    const rightID = getYouTubeID(right["YouTube URL"]);
-
-    if (!leftID || !rightID) continue;
-
-    const leftVotes = voteTotals[left["YouTube URL
+    const left
