@@ -38,7 +38,12 @@
       transition: 0.2s;
     }
 
-    .navbar a:hover,
+    .navbar a:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    /* ACTIVE PAGE HIGHLIGHT */
     .navbar a.active {
       background: #000;
       color: #fff;
@@ -47,50 +52,16 @@
     h1 {
       text-align: center;
       margin: 40px 0 20px;
-      font-size: 36px;
+      font-size: 32px;
     }
 
-    .container {
+    .videos-wrapper {
       width: 90%;
       max-width: 1000px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .input-group {
-      margin: 20px 0;
-    }
-
-    input[type="text"] {
-      width: 70%;
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #000;
-      border-radius: 6px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      margin-left: 10px;
-      border: 2px solid #000;
-      background: #fff;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #000;
-      color: #fff;
-    }
-
-    .video-row {
+      margin: 0 auto 60px;
       display: flex;
-      justify-content: space-between;
-      margin-top: 40px;
       gap: 20px;
+      justify-content: space-between;
     }
 
     .video-box {
@@ -105,36 +76,7 @@
       height: 315px;
       border: none;
     }
-
-    .battle-buttons {
-      margin-top: 30px;
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .battle-buttons button {
-      width: 40%;
-      font-size: 20px;
-    }
   </style>
-
-  <script>
-    function extractVideoID(url) {
-      const match = url.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([^&]+)/);
-      return match ? match[1] : null;
-    }
-
-    function loadVideo(side) {
-      const input = document.getElementById(`input-${side}`).value;
-      const videoId = extractVideoID(input);
-      if (videoId) {
-        const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        document.getElementById(`video-${side}`).innerHTML = iframe;
-      } else {
-        alert("Please enter a valid YouTube link.");
-      }
-    }
-  </script>
 </head>
 
 <body>
@@ -142,16 +84,4 @@
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
-    <a href="battle.html" class="active">Battle</a>
-    <a href="djs.html">DJs</a>
-    <a href="merch.html">Merch</a>
-  </div>
-
-  <h1>Paste YouTube Links for Each Dancer</h1>
-
-  <div class="container">
-    <div class="input-group">
-      <input type="text" id="input-left" placeholder="Paste YouTube link for Dancer Left">
-      <button onclick="loadVideo('left')">Load Left Video</button>
-    </div>
-
+    <a href="battle.html" class="active">
