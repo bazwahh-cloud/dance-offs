@@ -55,4 +55,38 @@
        OLD WORKING FUNCTIONS (EXACTLY LIKE DEBUG LOADER)
     ---------------------------------------------------- */
 
-    function
+    function extractUrlFromInput(raw) {
+      let text = raw.trim();
+      if (text.includes("<iframe")) {
+        const srcMatch = text.match(/src="([^"]+)"/i);
+        if (srcMatch) text = srcMatch[1];
+      }
+      return text;
+    }
+
+    function getInnerUrlIfPlayer(url) {
+      if (url.includes("w.soundcloud.com/player")) {
+        try {
+          const u = new URL(url);
+          const inner = u.searchParams.get("url");
+          if (inner) return decodeURIComponent(inner);
+        } catch (e) {}
+      }
+      return url;
+    }
+
+    async function resolveViaOEmbed(url) {
+      try {
+        const oembedUrl = "https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url);
+        const res = await fetch(oembedUrl);
+        if (!res.ok) return url;
+
+        const data = await res.json();
+        const html = data.html || "";
+        const srcMatch = html.match(/src="([^"]+)"/i);
+        if (!srcMatch) return url;
+
+        let playerUrl = srcMatch[1];
+        playerUrl = getInnerUrlIfPlayer(playerUrl);
+        return playerUrl || url;
+      }
