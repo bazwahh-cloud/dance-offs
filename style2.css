@@ -93,6 +93,12 @@ h1 {
    BATTLE CARDS
 -------------------------------------------------- */
 
+#battleContainer {
+  display: block;
+  width: 100%;
+  padding: 20px 0;
+}
+
 .battle-card {
   margin: 30px auto;
   padding: 20px;
@@ -111,6 +117,7 @@ h1 {
 
 .battle-column {
   flex: 1 1 45%;
+  min-width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
