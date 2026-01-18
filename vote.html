@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=1">
+  <link rel="stylesheet" href="style2.css?v=3">
 </head>
 
 <body>
@@ -27,7 +27,7 @@
 
   </div>
 
-  <!-- Minimal SoundCloud Player -->
+  <!-- SoundCloud Player -->
   <div class="sc-player-wrapper">
     <iframe 
       width="100%" 
@@ -45,3 +45,46 @@
 
 <script>
 const BASE_URL =
+  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+function getDataURL() {
+  return BASE_URL + "?mode=read&cache=" + Math.random();
+}
+
+function getVoteCountsURL() {
+  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
+}
+
+function getYouTubeID(url) {
+  if (!url) return null;
+  const patterns = [
+    /v=([^&]+)/,
+    /youtu\.be\/([^?]+)/,
+    /shorts\/([^?]+)/,
+    /embed\/([^?]+)/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function vote(battleIndex, winner) {
+  const url =
+    BASE_URL +
+    "?mode=vote" +
+    "&battle=" + battleIndex +
+    "&winner=" + encodeURIComponent(winner);
+
+  fetch(url, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + winner);
+      loadBattles();
+    })
+    .catch(() => alert("Error recording vote"));
+}
+
+async function loadBattles() {
+  const container = document.getElementById("battleContainer");
+  container.inner
