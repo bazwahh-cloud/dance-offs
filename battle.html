@@ -14,6 +14,7 @@
     <a href="dancers.html">Dancers</a>
     <a href="battle.html" class="active">Battle</a>
     <a href="djs.html">DJs</a>
+    <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
   </div>
 
@@ -86,63 +87,4 @@
       match = url.match(/shorts\/([^?&#]+)/i);
       if (match) return match[1];
 
-      match = url.match(/embed\/([^?&#]+)/i);
-      if (match) return match[1];
-
-      match = url.match(/youtube\.com\/.*\/([^?&#]+)/i);
-      if (match) return match[1];
-
-      return null;
-    }
-
-    function logToSheet(side, url) {
-      const fullURL =
-        SHEET_URL +
-        "?dancer=" + encodeURIComponent(side) +
-        "&url=" + encodeURIComponent(url);
-
-      fetch(fullURL, { method: "GET", mode: "no-cors" })
-        .catch(() => {});
-    }
-
-    function loadLeft() {
-      const url = document.getElementById("leftInput").value;
-      const id = extractVideoID(url);
-
-      if (!id) {
-        alert("Invalid YouTube URL for the left side.");
-        return;
-      }
-
-      const embedURL =
-        "https://www.youtube.com/embed/" +
-        id +
-        "?autoplay=1&mute=1&playsinline=1";
-
-      document.getElementById("leftVid").src = embedURL;
-
-      setTimeout(() => logToSheet("Left", url), 300);
-    }
-
-    function loadRight() {
-      const url = document.getElementById("rightInput").value;
-      const id = extractVideoID(url);
-
-      if (!id) {
-        alert("Invalid YouTube URL for the right side.");
-        return;
-      }
-
-      const embedURL =
-        "https://www.youtube.com/embed/" +
-        id +
-        "?autoplay=1&mute=1&playsinline=1";
-
-      document.getElementById("rightVid").src = embedURL;
-
-      setTimeout(() => logToSheet("Right", url), 300);
-    }
-  </script>
-
-</body>
-</html>
+      match = url
