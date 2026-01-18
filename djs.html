@@ -22,18 +22,12 @@
     <h1>Submit Your DJ Mix</h1>
 
     <p style="text-align:center; margin-bottom:20px;">
-      Paste your SoundCloud mix URL and choose Left or Right.
+      Paste your SoundCloud mix URL. The system will auto‑assign Left/Right.
     </p>
 
     <div class="battle-card" style="max-width:600px;">
 
-      <label>DJ Side</label>
-      <select id="djSide" class="input-field">
-        <option value="DJ Left">DJ Left</option>
-        <option value="DJ Right">DJ Right</option>
-      </select>
-
-      <label style="margin-top:15px;">SoundCloud Mix URL</label>
+      <label>SoundCloud Mix URL</label>
       <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/...">
 
       <button class="vote-button" style="margin-top:20px;" onclick="submitDJ()">
@@ -49,8 +43,20 @@
     const BASE_URL =
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    function submitDJ() {
-      const side = document.getElementById("djSide").value;
+    async function getNextSide() {
+      const res = await fetch(BASE_URL + "?mode=readdj&cache=" + Math.random());
+      const data = await res.json();
+
+      if (!data || data.length === 0) {
+        return "DJ Left"; // first entry
+      }
+
+      const last = data[data.length - 1].DJ.toLowerCase();
+
+      return last.includes("left") ? "DJ Right" : "DJ Left";
+    }
+
+    async function submitDJ() {
       const url = document.getElementById("scURL").value.trim();
       const status = document.getElementById("status");
 
@@ -60,6 +66,8 @@
         return;
       }
 
+      const side = await getNextSide();
+
       const logURL =
         BASE_URL +
         "?mode=logdj" +
@@ -68,7 +76,7 @@
 
       fetch(logURL, { method: "GET", mode: "no-cors" })
         .then(() => {
-          status.textContent = "Mix submitted successfully!";
+          status.textContent = "Mix submitted as " + side + "!";
           status.style.color = "#0077cc";
           document.getElementById("scURL").value = "";
         })
