@@ -71,27 +71,18 @@
     const SHEET_URL =
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    // Expand shortened SoundCloud links using oEmbed API
+    // Expand shortened SoundCloud links using a safe redirect trick
     async function expandSoundCloud(url) {
       if (!url.includes("on.soundcloud.com")) {
         return url; // Already full URL
       }
 
       try {
-        const api = "https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url);
-        const response = await fetch(api);
-        const data = await response.json();
-
-        // Extract the real track URL from the oEmbed HTML
-        const match = data.html.match(/url=(https[^&"]+)/);
-        if (match) {
-          return decodeURIComponent(match[1]);
-        }
+        const response = await fetch(url, { method: "GET", redirect: "follow" });
+        return response.url || url;
       } catch (e) {
-        console.log("Short link expansion failed:", e);
+        return url; // Fallback
       }
-
-      return url; // Fallback
     }
 
     function buildSoundCloudEmbed(url) {
@@ -117,6 +108,7 @@
     async function loadLeftDJ() {
       let url = document.getElementById("leftDJInput").value;
 
+      // Expand shortened link if needed
       url = await expandSoundCloud(url);
 
       const embed = buildSoundCloudEmbed(url);
@@ -134,6 +126,7 @@
     async function loadRightDJ() {
       let url = document.getElementById("rightDJInput").value;
 
+      // Expand shortened link if needed
       url = await expandSoundCloud(url);
 
       const embed = buildSoundCloudEmbed(url);
