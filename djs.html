@@ -26,7 +26,7 @@
 
       <div class="input-box">
         <input id="leftDJInput" type="text" placeholder="Left DJ SoundCloud URL">
-        <button type="button" onclick="loadLeftDJ()">Load Left Mix</button>
+        <button type="button" onclick="loadLeftDJ()">Load DJ Left</button>
       </div>
 
       <div class="video-box">
@@ -46,7 +46,7 @@
 
       <div class="input-box">
         <input id="rightDJInput" type="text" placeholder="Right DJ SoundCloud URL">
-        <button type="button" onclick="loadRightDJ()">Load Right Mix</button>
+        <button type="button" onclick="loadRightDJ()">Load DJ Right</button>
       </div>
 
       <div class="video-box">
@@ -98,7 +98,7 @@
       const embed = buildSoundCloudEmbed(url);
 
       if (!embed) {
-        alert("Please enter a valid SoundCloud URL for the left DJ.");
+        alert("Please enter a valid SoundCloud URL for DJ Left.");
         return;
       }
 
@@ -113,7 +113,7 @@
       const embed = buildSoundCloudEmbed(url);
 
       if (!embed) {
-        alert("Please enter a valid SoundCloud URL for the right DJ.");
+        alert("Please enter a valid SoundCloud URL for DJ Right.");
         return;
       }
 
