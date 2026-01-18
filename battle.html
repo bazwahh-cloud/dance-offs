@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 
 <body>
 
+  <!-- Navigation -->
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -16,53 +17,57 @@
     <a href="merch.html">Merch</a>
   </div>
 
-  <!-- Input Bar Row -->
-  <div class="input-row">
+  <!-- Two-column battle layout -->
+  <div class="battle-wrapper">
 
-    <input 
-      id="leftInput" 
-      type="text" 
-      placeholder="Left YouTube URL"
-    >
-    <button onclick="loadLeft()">Load Left</button>
+    <!-- LEFT SIDE -->
+    <div class="battle-column">
 
-    <input 
-      id="rightInput" 
-      type="text" 
-      placeholder="Right YouTube URL"
-    >
-    <button onclick="loadRight()">Load Right</button>
+      <div class="input-box">
+        <input id="leftInput" type="text" placeholder="Left YouTube URL">
+        <button onclick="loadLeft()">Load Left</button>
+      </div>
+
+      <div class="video-box">
+        <div class="video-label">Dancer Left</div>
+        <iframe
+          id="leftVid"
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1"
+          allow="autoplay; encrypted-media"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="battle-column">
+
+      <div class="input-box">
+        <input id="rightInput" type="text" placeholder="Right YouTube URL">
+        <button onclick="loadRight()">Load Right</button>
+      </div>
+
+      <div class="video-box">
+        <div class="video-label">Dancer Right</div>
+        <iframe
+          id="rightVid"
+          src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
+          allow="autoplay; encrypted-media"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </div>
 
   </div>
 
-  <div class="videos-wrapper">
-
-    <div class="video-box">
-      <div class="video-label">Dancer Left</div>
-      <iframe
-        id="leftVid"
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <div class="video-box">
-      <div class="video-label">Dancer Right</div>
-      <iframe
-        id="rightVid"
-        src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-  </div>
-
+  <!-- Footer -->
   <div class="footer">
     © 2026 Dance-Offs — Built by Baz
   </div>
 
+  <!-- Script -->
   <script>
     function extractVideoID(url) {
       try {
