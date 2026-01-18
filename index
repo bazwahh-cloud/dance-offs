@@ -68,69 +68,6 @@
         color: #ccc;
     }
 
-    /* Battle Layout */
-    .battle {
-        background: #111;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 30px;
-        border: 1px solid #333;
-    }
-
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 25px;
-        justify-content: center;
-    }
-
-    .side {
-        flex: 1 1 350px;
-        max-width: 420px;
-        text-align: center;
-    }
-
-    .thumb-wrapper {
-        width: 100%;
-        height: 0;
-        padding-bottom: 56.25%;
-        position: relative;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid #444;
-        margin-bottom: 10px;
-    }
-
-    .thumb-video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-
-    .vote-btn {
-        padding: 12px 25px;
-        background: #ff5500;
-        border: none;
-        border-radius: 6px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 18px;
-        margin-top: 10px;
-    }
-
-    .vote-btn:hover {
-        background: #ff7733;
-    }
-
-    .vote-count {
-        margin-top: 8px;
-        font-size: 16px;
-        color: #ccc;
-    }
-
     /* Overlay */
     #fullOverlay {
         position: fixed;
@@ -171,7 +108,7 @@
 <body>
 
 <!-- Overlay -->
-<div id="fullOverlay">
+<div id="fullOverlay" onclick="this.style.display='none'">
     <div>dance-offs</div>
 </div>
 
@@ -186,7 +123,7 @@
 
 <section id="home">
     <h2>Welcome to Dance-Offs</h2>
-    <p>The ultimate arena for dancers, DJs, and fans to battle, vibe, and vote.</p>
+    <p>This is the safe fallback version. No JavaScript is running, so nothing can break. This confirms GitHub Pages is working correctly.</p>
 </section>
 
 <section id="dj">
@@ -200,121 +137,13 @@
 </section>
 
 <section id="vote">
-    <h2>Vote for Your Champion</h2>
-    <div id="battleContainer"></div>
-</section>
-
-<section id="soundcloud" style="text-align:center; margin-top:50px;">
-    <h2>Latest Track</h2>
-    <div id="scPlayer"></div>
+    <h2>Vote</h2>
+    <p>Voting system will be added once the layout is confirmed working.</p>
 </section>
 
 <footer>
     © 2026 Dance-Offs. All rights reserved.
 </footer>
-
-<script>
-const BASE_URL =
-  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-function getYouTubeID(url) {
-    const patterns = [/v=([^&]+)/, /youtu\\.be\\/([^?]+)/, /shorts\\/([^?]+)/, /embed\\/([^?]+)/];
-    for (const p of patterns) {
-        const m = url.match(p);
-        if (m) return m[1];
-    }
-    return null;
-}
-
-function vote(battleIndex, winner) {
-    fetch(BASE_URL + "?mode=vote&battle=" + battleIndex + "&winner=" + winner)
-        .then(() => {
-            alert("Vote recorded for " + winner);
-            loadBattles();
-        });
-}
-
-async function loadLatestSoundCloud() {
-    const res = await fetch(BASE_URL + "?mode=lastsoundcloud&cache=" + Math.random());
-    const data = await res.json();
-    if (!data || !data.url) return;
-
-    const src = "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(data.url) +
-        "&color=%23ff5500&inverse=false&show_user=true&auto_play=true";
-
-    document.getElementById("scPlayer").innerHTML =
-        "<iframe width='100%' height='150' frameborder='0' allow='autoplay' src='" + src + "'></iframe>";
-}
-
-async function loadBattles() {
-    const [res, voteRes] = await Promise.all([
-        fetch(BASE_URL + "?mode=read&cache=" + Math.random()),
-        fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random())
-    ]);
-
-    const data = await res.json();
-    const voteTotals = await voteRes.json();
-
-    const container = document.getElementById("battleContainer");
-    container.innerHTML = "";
-
-    const clean = data.filter(r => r.performer && r.youtube);
-    const lefts = clean.filter(r => r.performer.toLowerCase().includes("left"));
-    const rights = clean.filter(r => r.performer.toLowerCase().includes("right"));
-
-    const battleCount = Math.min(lefts.length, rights.length);
-
-    for (let i = 0; i < battleCount; i++) {
-        const left = lefts[i];
-        const right = rights[i];
-
-        const leftID = getYouTubeID(left.youtube);
-        const rightID = getYouTubeID(right.youtube);
-
-        const leftVotes = voteTotals[left.youtube] || 0;
-        const rightVotes = voteTotals[right.youtube] || 0;
-
-        const div = document.createElement("div");
-        div.className = "battle";
-
-        div.innerHTML = `
-            <div class="row">
-                <div class="side">
-                    <div class="thumb-wrapper">
-                        <iframe class="thumb-video"
-                            src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${leftID}">
-                        </iframe>
-                    </div>
-                    <strong>${left.performer}</strong>
-                    <div class="vote-count">Votes: ${leftVotes}</div>
-                    <button class="vote-btn" onclick="vote(${i}, 'Left')">Vote Left</button>
-                </div>
-
-                <div class="side">
-                    <div class="thumb-wrapper">
-                        <iframe class="thumb-video"
-                            src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${rightID}">
-                        </iframe>
-                    </div>
-                    <strong>${right.performer}</strong>
-                    <div class="vote-count">Votes: ${rightVotes}</div>
-                    <button class="vote-btn" onclick="vote(${i}, 'Right')">Vote Right</button>
-                </div>
-            </div>
-        `;
-
-        container.appendChild(div);
-    }
-}
-
-document.getElementById("fullOverlay").onclick = () => {
-    document.getElementById("fullOverlay").style.display = "none";
-};
-
-loadLatestSoundCloud();
-loadBattles();
-</script>
 
 </body>
 </html>
