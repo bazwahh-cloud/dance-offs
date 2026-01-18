@@ -16,12 +16,39 @@
     <a href="merch.html">Merch</a>
   </div>
 
+  <!-- User Input Section -->
+  <div style="width: 90%; max-width: 900px; margin: 20px auto; text-align: center;">
+    <h2>Load Your Own Battle Videos</h2>
+
+    <input 
+      id="leftInput" 
+      type="text" 
+      placeholder="Enter YouTube URL for Left Dancer"
+      style="width: 45%; padding: 10px; margin: 10px; font-size: 16px;"
+    >
+
+    <input 
+      id="rightInput" 
+      type="text" 
+      placeholder="Enter YouTube URL for Right Dancer"
+      style="width: 45%; padding: 10px; margin: 10px; font-size: 16px;"
+    >
+
+    <button 
+      onclick="loadVideos()"
+      style="padding: 12px 25px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px;"
+    >
+      Load Videos
+    </button>
+  </div>
+
   <h1>Dance-Offs: Battle</h1>
 
   <div class="videos-wrapper">
     <div class="video-box">
       <div class="video-label">Dancer Left</div>
       <iframe
+        id="leftVid"
         src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1"
         allow="autoplay; encrypted-media"
         allowfullscreen>
@@ -31,6 +58,7 @@
     <div class="video-box">
       <div class="video-label">Dancer Right</div>
       <iframe
+        id="rightVid"
         src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
         allow="autoplay; encrypted-media"
         allowfullscreen>
@@ -41,6 +69,45 @@
   <div class="footer">
     © 2026 Dance-Offs — Built by Baz
   </div>
+
+  <script>
+    function extractVideoID(url) {
+      try {
+        const urlObj = new URL(url);
+
+        if (urlObj.hostname.includes("youtube.com")) {
+          return urlObj.searchParams.get("v");
+        }
+
+        if (urlObj.hostname.includes("youtu.be")) {
+          return urlObj.pathname.substring(1);
+        }
+
+      } catch (e) {
+        return null;
+      }
+
+      return null;
+    }
+
+    function loadVideos() {
+      const leftURL = document.getElementById("leftInput").value;
+      const rightURL = document.getElementById("rightInput").value;
+
+      const leftID = extractVideoID(leftURL);
+      const rightID = extractVideoID(rightURL);
+
+      if (leftID) {
+        document.getElementById("leftVid").src =
+          `https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&playsinline=1`;
+      }
+
+      if (rightID) {
+        document.getElementById("rightVid").src =
+          `https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&playsinline=1`;
+      }
+    }
+  </script>
 
 </body>
 </html>
