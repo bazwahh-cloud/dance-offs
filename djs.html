@@ -51,17 +51,6 @@
     const BASE_URL =
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    async function expandSoundCloudURL(url) {
-      if (!url.includes("on.soundcloud.com")) return url;
-
-      try {
-        const response = await fetch(url, { redirect: "follow" });
-        return response.url;
-      } catch (e) {
-        return null;
-      }
-    }
-
     async function getNextSide() {
       const res = await fetch(BASE_URL + "?mode=readdj&cache=" + Math.random());
       const data = await res.json();
@@ -70,25 +59,31 @@
       return last.includes("left") ? "DJ Right" : "DJ Left";
     }
 
+    async function validateSoundCloudURL(url) {
+      try {
+        const res = await fetch("https://soundcloud.com/oembed?url=" + encodeURIComponent(url) + "&format=json");
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.html.includes("iframe") ? url : null;
+      } catch {
+        return null;
+      }
+    }
+
     async function updatePreview() {
-      let url = document.getElementById("scURL").value.trim();
+      const input = document.getElementById("scURL").value.trim();
       const preview = document.getElementById("previewPlayer");
       const frame = document.getElementById("scPlayerFrame");
 
-      if (!url.includes("soundcloud.com")) {
-        preview.style.display = "none";
-        return;
-      }
-
-      const expanded = await expandSoundCloudURL(url);
-      if (!expanded || !expanded.includes("soundcloud.com")) {
+      const validURL = await validateSoundCloudURL(input);
+      if (!validURL) {
         preview.style.display = "none";
         return;
       }
 
       const embedURL =
         "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(expanded) +
+        encodeURIComponent(validURL) +
         "&color=%230077cc&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false";
 
       frame.src = embedURL;
@@ -96,18 +91,12 @@
     }
 
     async function submitDJ() {
-      let url = document.getElementById("scURL").value.trim();
+      const input = document.getElementById("scURL").value.trim();
       const status = document.getElementById("status");
 
-      if (!url.includes("soundcloud.com")) {
-        status.textContent = "Please enter a valid SoundCloud URL.";
-        status.style.color = "red";
-        return;
-      }
-
-      const expanded = await expandSoundCloudURL(url);
-      if (!expanded || !expanded.includes("soundcloud.com")) {
-        status.textContent = "That SoundCloud link couldn't be expanded. Please check the URL.";
+      const validURL = await validateSoundCloudURL(input);
+      if (!validURL) {
+        status.textContent = "That SoundCloud link couldn't be validated. Please check the URL.";
         status.style.color = "red";
         return;
       }
@@ -117,7 +106,7 @@
         BASE_URL +
         "?mode=logdj" +
         "&dj=" + encodeURIComponent(side) +
-        "&soundcloud=" + encodeURIComponent(expanded);
+        "&soundcloud=" + encodeURIComponent(validURL);
 
       fetch(logURL, { method: "GET", mode: "no-cors" })
         .then(() => {
