@@ -92,22 +92,4 @@
       const leftURL = document.getElementById("leftInput").value;
       const leftID = extractVideoID(leftURL);
 
-      if (leftID) {
-        document.getElementById("leftVid").src =
-          `https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&playsinline=1`;
-      }
-    }
-
-    function loadRight() {
-      const rightURL = document.getElementById("rightInput").value;
-      const rightID = extractVideoID(rightURL);
-
-      if (rightID) {
-        document.getElementById("rightVid").src =
-          `https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&playsinline=1`;
-      }
-    }
-  </script>
-
-</body>
-</html>
+      if (leftID
