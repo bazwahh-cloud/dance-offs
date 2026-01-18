@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=3">
+  <link rel="stylesheet" href="style2.css?v=24">
 </head>
 
 <body>
@@ -18,10 +18,8 @@
     <a href="merch.html">Merch</a>
   </div>
 
-  <!-- Content wrapper -->
+  <!-- Page container -->
   <div class="page-container">
-
-    <h1>Dance-Off Battles</h1>
 
     <div id="battleContainer"></div>
 
@@ -87,4 +85,30 @@ function vote(battleIndex, winner) {
 
 async function loadBattles() {
   const container = document.getElementById("battleContainer");
-  container.inner
+  container.innerHTML = "<p>Loading battles...</p>";
+
+  try {
+    const response = await fetch(getDataURL());
+    const data = await response.json();
+
+    const voteCountsResponse = await fetch(getVoteCountsURL());
+    const voteCounts = await voteCountsResponse.json();
+
+    container.innerHTML = "";
+
+    data.forEach((battle, index) => {
+      const leftID = getYouTubeID(battle.left);
+      const rightID = getYouTubeID(battle.right);
+
+      const leftVotes = voteCounts[index]?.left || 0;
+      const rightVotes = voteCounts[index]?.right || 0;
+
+      const battleHTML = `
+        <div class="battle-card">
+          <div class="battle-wrapper">
+
+            <div class="battle-column">
+              <div class="video-label">Dancer Left</div>
+              <div class="video-box">
+                <iframe 
+                  src="https://www.youtube.com/embed
