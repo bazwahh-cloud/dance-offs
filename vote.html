@@ -97,16 +97,28 @@ async function loadBattles() {
     return;
   }
 
-  // FIXED: use "dancer" instead of "performer"
+  // Use correct sheet fields
   const clean = data.filter(r =>
-    r.dancer &&
-    r.dancer.trim() !== "" &&
-    r.youtube &&
-    r.youtube.trim() !== ""
+    r["Performer"] &&
+    r["Performer"].trim() !== "" &&
+    r["YouTube URL"] &&
+    r["YouTube URL"].trim() !== ""
   );
 
-  const lefts = clean.filter(r => r.dancer.toLowerCase().includes("left"));
-  const rights = clean.filter(r => r.dancer.toLowerCase().includes("right"));
+  // Only dancer battles (ignore DJ rows)
+  const dancers = clean.filter(r =>
+    r["Performer"].toLowerCase().includes("dancer") ||
+    r["Performer"].toLowerCase() === "left" ||
+    r["Performer"].toLowerCase() === "right"
+  );
+
+  const lefts = dancers.filter(r =>
+    r["Performer"].toLowerCase().includes("left")
+  );
+
+  const rights = dancers.filter(r =>
+    r["Performer"].toLowerCase().includes("right")
+  );
 
   const battleCount = Math.min(lefts.length, rights.length);
 
@@ -116,59 +128,9 @@ async function loadBattles() {
     const left = lefts[i];
     const right = rights[i];
 
-    const leftID = getYouTubeID(left.youtube);
-    const rightID = getYouTubeID(right.youtube);
+    const leftID = getYouTubeID(left["YouTube URL"]);
+    const rightID = getYouTubeID(right["YouTube URL"]);
 
     if (!leftID || !rightID) continue;
 
-    const leftVotes = voteTotals[left.youtube] || 0;
-    const rightVotes = voteTotals[right.youtube] || 0;
-
-    const div = document.createElement("div");
-    div.className = "battle-card";
-
-    div.innerHTML = `
-      <div class="battle-wrapper">
-
-        <div class="battle-column">
-          <div class="video-box">
-            <div class="video-label">Left</div>
-            <iframe
-              src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${leftID}"
-              allow="autoplay"
-              allowfullscreen>
-            </iframe>
-          </div>
-          <div class="vote-count">Votes: ${leftVotes}</div>
-          <button class="vote-button" onclick="vote(${i}, 'Left')">Vote Left</button>
-        </div>
-
-        <div class="battle-column">
-          <div class="video-box">
-            <div class="video-label">Right</div>
-            <iframe
-              src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${rightID}"
-              allow="autoplay"
-              allowfullscreen>
-            </iframe>
-          </div>
-          <div class="vote-count">Votes: ${rightVotes}</div>
-          <button class="vote-button" onclick="vote(${i}, 'Right')">Vote Right</button>
-        </div>
-
-      </div>
-    `;
-
-    container.appendChild(div);
-  }
-
-  if (battleCount === 0) {
-    container.innerHTML = "<p style='color:black; text-align:center;'>No battles found yet.</p>";
-  }
-}
-
-loadBattles();
-</script>
-
-</body>
-</html>
+    const leftVotes = voteTotals[left["YouTube URL
