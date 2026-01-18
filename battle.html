@@ -9,9 +9,9 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #000;
+      background-color: #fff;
       font-family: sans-serif;
-      color: #fff;
+      color: #000;
     }
 
     .input-area {
@@ -25,18 +25,20 @@
       padding: 10px;
       font-size: 16px;
       border-radius: 6px;
-      border: none;
+      border: 1px solid #ccc;
       margin-bottom: 10px;
+      color: #000;
+      background: #fff;
     }
 
     .input-area button {
       padding: 10px 20px;
       font-size: 16px;
-      border: none;
+      border: 1px solid #000;
       border-radius: 6px;
       cursor: pointer;
-      background-color: #444;
-      color: #fff;
+      background-color: #f0f0f0;
+      color: #000;
       margin-bottom: 20px;
     }
 
@@ -51,6 +53,7 @@
       flex: 1 1 50%;
       max-width: 50%;
       position: relative;
+      background: #fff;
     }
 
     .video-label {
@@ -63,11 +66,12 @@
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #fff;
-      background: rgba(0,0,0,0.5);
+      color: #000;
+      background: rgba(255,255,255,0.8);
       padding: 6px 12px;
       border-radius: 6px;
       pointer-events: none;
+      border: 1px solid #000;
     }
 
     .video-wrapper iframe {
@@ -75,7 +79,7 @@
       aspect-ratio: 9 / 16;
       border: none;
       display: block;
-      background-color: #000;
+      background-color: #fff;
       pointer-events: none;
     }
 
@@ -107,7 +111,7 @@
   <div class="video-wrapper">
     <div class="video-label">Dancer Left</div>
     <iframe id="video1"
-      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      allow="autoplay *; encrypted-media; fullscreen; picture-in-picture"
       playsinline
       allowfullscreen></iframe>
   </div>
@@ -115,13 +119,12 @@
   <div class="video-wrapper">
     <div class="video-label">Dancer Right</div>
     <iframe id="video2"
-      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      allow="autoplay *; encrypted-media; fullscreen; picture-in-picture"
       playsinline
       allowfullscreen></iframe>
   </div>
 </div>
 
-<!-- Hidden iframe for logging -->
 <iframe id="loggerFrame" style="display:none;"></iframe>
 
 <script>
