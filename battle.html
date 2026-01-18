@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style2.css?v=21">
+  <link rel="stylesheet" href="style2.css?v=23">
 </head>
 
 <body>
@@ -20,8 +20,6 @@
 
   <!-- Page container -->
   <div class="page-container">
-
-    <h1>Dance Battle Arena</h1>
 
     <div class="battle-wrapper">
 
@@ -88,3 +86,33 @@
       if (match) return match[1];
 
       match = url.match(/youtu\.be\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/shorts\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/embed\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      return null;
+    }
+
+    function loadLeft() {
+      const raw = document.getElementById("leftInput").value;
+      const id = extractVideoID(raw);
+      if (!id) return alert("Invalid YouTube URL");
+      document.getElementById("leftVid").src =
+        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1`;
+    }
+
+    function loadRight() {
+      const raw = document.getElementById("rightInput").value;
+      const id = extractVideoID(raw);
+      if (!id) return alert("Invalid YouTube URL");
+      document.getElementById("rightVid").src =
+        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1`;
+    }
+  </script>
+
+</body>
+</html>
