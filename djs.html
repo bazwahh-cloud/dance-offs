@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>DJs</title>
-  <link rel="stylesheet" href="style.css?v=1">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
@@ -48,74 +48,4 @@
   </div>
 
   <script>
-    const BASE_URL =
-      "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-    // Determine next side automatically
-    async function getNextSide() {
-      const res = await fetch(BASE_URL + "?mode=readdj&cache=" + Math.random());
-      const data = await res.json();
-
-      if (!data || data.length === 0) {
-        return "DJ Left"; // first entry
-      }
-
-      const last = data[data.length - 1].DJ.toLowerCase();
-      return last.includes("left") ? "DJ Right" : "DJ Left";
-    }
-
-    // Live SoundCloud preview player
-    function updatePreview() {
-      const url = document.getElementById("scURL").value.trim();
-      const preview = document.getElementById("previewPlayer");
-      const frame = document.getElementById("scPlayerFrame");
-
-      if (!url.includes("soundcloud.com")) {
-        preview.style.display = "none";
-        return;
-      }
-
-      const embedURL =
-        "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(url) +
-        "&color=%230077cc&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false";
-
-      frame.src = embedURL;
-      preview.style.display = "block";
-    }
-
-    // Submit DJ mix
-    async function submitDJ() {
-      const url = document.getElementById("scURL").value.trim();
-      const status = document.getElementById("status");
-
-      if (!url || !url.includes("soundcloud.com")) {
-        status.textContent = "Please enter a valid SoundCloud URL.";
-        status.style.color = "red";
-        return;
-      }
-
-      const side = await getNextSide();
-
-      const logURL =
-        BASE_URL +
-        "?mode=logdj" +
-        "&dj=" + encodeURIComponent(side) +
-        "&soundcloud=" + encodeURIComponent(url);
-
-      fetch(logURL, { method: "GET", mode: "no-cors" })
-        .then(() => {
-          status.textContent = "Mix submitted as " + side + "!";
-          status.style.color = "#0077cc";
-          document.getElementById("scURL").value = "";
-          document.getElementById("previewPlayer").style.display = "none";
-        })
-        .catch(() => {
-          status.textContent = "Error submitting mix.";
-          status.style.color = "red";
-        });
-    }
-  </script>
-
-</body>
-</html>
+    const BASE_URL
