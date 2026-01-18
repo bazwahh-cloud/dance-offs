@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 
 <body>
@@ -69,30 +69,28 @@
 
   <!-- Script -->
   <script>
+    // Your existing Google Apps Script endpoint
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbx1xYxJt6k0xJq2p8x0m0p7k1w2e0u1f2g3h4i5j6k7l8m9n/exec";
+
+    // Extract YouTube video ID from ANY format
     function extractVideoID(raw) {
       if (!raw) return null;
-
       const url = raw.trim();
 
-      // 1) ?v=ID
       const vMatch = url.match(/[?&]v=([^&#]+)/);
-      if (vMatch && vMatch[1]) return vMatch[1];
+      if (vMatch) return vMatch[1];
 
-      // 2) youtu.be/ID
       const shortMatch = url.match(/youtu\.be\/([^?&#]+)/);
-      if (shortMatch && shortMatch[1]) return shortMatch[1];
+      if (shortMatch) return shortMatch[1];
 
-      // 3) /shorts/ID
       const shortsMatch = url.match(/shorts\/([^?&#]+)/);
-      if (shortsMatch && shortsMatch[1]) return shortsMatch[1];
+      if (shortsMatch) return shortsMatch[1];
 
-      // 4) /embed/ID
       const embedMatch = url.match(/embed\/([^?&#]+)/);
-      if (embedMatch && embedMatch[1]) return embedMatch[1];
+      if (embedMatch) return embedMatch[1];
 
-      // 5) Last path segment as a fallback
       const pathMatch = url.match(/youtube\.com\/([^?&#]+)/);
-      if (pathMatch && pathMatch[1]) {
+      if (pathMatch) {
         const parts = pathMatch[1].split("/");
         return parts.pop();
       }
@@ -100,30 +98,12 @@
       return null;
     }
 
-    function loadLeft() {
-      const leftURL = document.getElementById("leftInput").value;
-      const leftID = extractVideoID(leftURL);
+    // Log to your existing Google Sheet
+    function logToSheet(side, url) {
+      const fullURL =
+        `${SHEET_URL}?dancer=${encodeURIComponent(side)}&url=${encodeURIComponent(url)}`;
 
-      if (leftID) {
-        document.getElementById("leftVid").src =
-          "https://www.youtube.com/embed/" + leftID + "?autoplay=1&mute=1&playsinline=1";
-      } else {
-        alert("That doesn't look like a valid YouTube URL for the left side.");
-      }
+      // Fire-and-forget GET request
+      fetch(fullURL, { mode: "no-cors" });
     }
 
-    function loadRight() {
-      const rightURL = document.getElementById("rightInput").value;
-      const rightID = extractVideoID(rightURL);
-
-      if (rightID) {
-        document.getElementById("rightVid").src =
-          "https://www.youtube.com/embed/" + rightID + "?autoplay=1&mute=1&playsinline=1";
-      } else {
-        alert("That doesn't look like a valid YouTube URL for the right side.");
-      }
-    }
-  </script>
-
-</body>
-</html>
