@@ -8,6 +8,7 @@
 
 <body>
 
+  <!-- Navigation -->
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -25,6 +26,7 @@
       <label>SoundCloud Mix URL</label>
       <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/..." oninput="updatePreview()">
 
+      <!-- Live SoundCloud Preview -->
       <div id="previewPlayer" style="margin-top:20px; display:none;">
         <iframe 
           id="scPlayerFrame"
@@ -49,9 +51,9 @@
     const BASE_URL =
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    /* ------------------------------
-       OLD WORKING FUNCTIONS RESTORED
-    ------------------------------ */
+    /* ----------------------------------------------------
+       OLD WORKING FUNCTIONS (RESTORED EXACTLY)
+    ---------------------------------------------------- */
 
     function extractUrlFromInput(raw) {
       let text = raw.trim();
@@ -92,8 +94,6 @@
       }
     }
 
-    /* ------------------------------ */
-
     async function expandSoundCloudURL(url) {
       url = extractUrlFromInput(url);
 
@@ -109,6 +109,8 @@
       return url;
     }
 
+    /* ---------------------------------------------------- */
+
     async function getNextSide() {
       const res = await fetch(BASE_URL + "?mode=readdj&cache=" + Math.random());
       const data = await res.json();
@@ -116,6 +118,10 @@
       const last = data[data.length - 1].DJ.toLowerCase();
       return last.includes("left") ? "DJ Right" : "DJ Left";
     }
+
+    /* ----------------------------------------------------
+       PREVIEW (NO AUTOPLAY)
+    ---------------------------------------------------- */
 
     async function updatePreview() {
       let url = document.getElementById("scURL").value.trim();
@@ -132,11 +138,15 @@
       const embedURL =
         "https://w.soundcloud.com/player/?url=" +
         encodeURIComponent(url) +
-        "&color=%230077cc&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false";
+        "&color=%230077cc&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false";
 
       frame.src = embedURL;
       preview.style.display = "block";
     }
+
+    /* ----------------------------------------------------
+       SUBMIT (AUTOPLAY ENABLED)
+    ---------------------------------------------------- */
 
     async function submitDJ() {
       let url = document.getElementById("scURL").value.trim();
@@ -162,8 +172,18 @@
         .then(() => {
           status.textContent = "Mix submitted as " + side + "!";
           status.style.color = "#0077cc";
+
+          // AUTOPLAY AFTER SUBMISSION
+          const frame = document.getElementById("scPlayerFrame");
+          const embedURL =
+            "https://w.soundcloud.com/player/?url=" +
+            encodeURIComponent(url) +
+            "&color=%230077cc&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false";
+
+          frame.src = embedURL;
+          document.getElementById("previewPlayer").style.display = "block";
+
           document.getElementById("scURL").value = "";
-          document.getElementById("previewPlayer").style.display = "none";
         })
         .catch(() => {
           status.textContent = "Error submitting mix.";
