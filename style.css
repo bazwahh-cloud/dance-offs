@@ -1,174 +1,156 @@
-/* ------------------------------
-   GLOBAL
------------------------------- */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Vote</title>
+  <link rel="stylesheet" href="style.css?v=1">
+</head>
 
-body {
-  background: #000;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
+<body>
+
+  <!-- Navigation -->
+  <div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="dancers.html">Dancers</a>
+    <a href="battle.html">Battle</a>
+    <a href="djs.html">DJs</a>
+    <a href="vote.html" class="active">Vote</a>
+    <a href="merch.html">Merch</a>
+  </div>
+
+  <!-- White content wrapper -->
+  <div class="page-container">
+
+    <h1>Dance-Off Battles</h1>
+
+    <div id="battleContainer"></div>
+
+  </div>
+
+  <div class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </div>
+
+<script>
+const BASE_URL =
+  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+// Prevent caching on GitHub Pages
+function getDataURL() {
+  return BASE_URL + "?mode=read&cache=" + Math.random();
 }
 
-h1, h2, h3 {
-  text-align: center;
-  letter-spacing: 1px;
+function getVoteCountsURL() {
+  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
 }
 
-/* ------------------------------
-   NAVIGATION BAR
------------------------------- */
-
-.navbar {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 15px 0;
-  background: rgba(0, 0, 0, 0.7);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+// Extract YouTube ID from any format
+function getYouTubeID(url) {
+  if (!url) return null;
+  const patterns = [
+    /v=([^&]+)/,
+    /youtu\.be\/([^?]+)/,
+    /shorts\/([^?]+)/,
+    /embed\/([^?]+)/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
 }
 
-.navbar a {
-  color: white;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: 0.2s;
+// Submit vote
+function vote(battleIndex, winner) {
+  const url =
+    BASE_URL +
+    "?mode=vote" +
+    "&battle=" + battleIndex +
+    "&winner=" + encodeURIComponent(winner);
+
+  fetch(url, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + winner);
+      loadBattles(); // refresh counts
+    })
+    .catch(() => alert("Error recording vote"));
 }
 
-.navbar a:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
+// Load battles + vote counts
+async function loadBattles() {
+  const container = document.getElementById("battleContainer");
+  container.innerHTML = "<p style='color:black; text-align:center;'>Loading battles…</p>";
 
-.navbar a.active {
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
-  font-weight: bold;
-}
+  let res, voteRes;
+  try {
+    [res, voteRes] = await Promise.all([
+      fetch(getDataURL()),
+      fetch(getVoteCountsURL())
+    ]);
+  } catch (e) {
+    container.innerHTML = "<p style='color:red;'>Error loading data.</p>";
+    return;
+  }
 
-/* ------------------------------
-   WHITE CONTENT WRAPPER
------------------------------- */
+  let data, voteTotals;
+  try {
+    data = await res.json();
+    voteTotals = await voteRes.json();
+  } catch (e) {
+    container.innerHTML = "<p style='color:red;'>Error reading data.</p>";
+    return;
+  }
 
-.page-container {
-  background: #fff;
-  color: #000;
-  padding: 25px;
-  border-radius: 12px;
-  max-width: 1100px;
-  margin: 30px auto;
-  box-shadow: 0 0 20px rgba(255,255,255,0.15);
-}
+  // Filter only YouTube rows
+  const clean = data.filter(r =>
+    r.performer &&
+    r.performer.trim() !== "" &&
+    r.youtube &&
+    r.youtube.trim() !== ""
+  );
 
-/* ------------------------------
-   BATTLE LAYOUT (Battle, DJs, Vote)
------------------------------- */
+  const lefts = clean.filter(r => r.performer.toLowerCase().includes("left"));
+  const rights = clean.filter(r => r.performer.toLowerCase().includes("right"));
 
-.battle-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 20px;
-  flex-wrap: wrap;
-}
+  const battleCount = Math.min(lefts.length, rights.length);
 
-.battle-column {
-  width: 420px;
-  max-width: 100%;
-  text-align: center;
-}
+  container.innerHTML = "";
 
-/* ------------------------------
-   VIDEO BOXES
------------------------------- */
+  for (let i = 0; i < battleCount; i++) {
+    const left = lefts[i];
+    const right = rights[i];
 
-.video-box {
-  background: #111;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #333;
-  margin-bottom: 15px;
-}
+    const leftID = getYouTubeID(left.youtube);
+    const rightID = getYouTubeID(right.youtube);
 
-.video-label {
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: #ff5500;
-}
+    if (!leftID || !rightID) continue;
 
-iframe {
-  width: 100%;
-  height: 240px;
-  border: none;
-  border-radius: 8px;
-}
+    const leftVotes = voteTotals[left.youtube] || 0;
+    const rightVotes = voteTotals[right.youtube] || 0;
 
-/* ------------------------------
-   INPUT BOXES (DJs page)
------------------------------- */
+    const div = document.createElement("div");
+    div.className = "battle-card";
 
-.input-box {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
+    div.innerHTML = `
+      <div class="battle-wrapper">
 
-.input-box input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #222;
-  color: white;
-}
+        <div class="battle-column">
+          <div class="video-box">
+            <div class="video-label">Left</div>
+            <iframe
+              src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${leftID}"
+              allow="autoplay"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="vote-count">Votes: ${leftVotes}</div>
+          <button class="vote-button" onclick="vote(${i}, 'Left')">Vote Left</button>
+        </div>
 
-.input-box button {
-  padding: 10px 15px;
-  background: #ff5500;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: white;
-  transition: 0.2s;
-}
-
-.input-box button:hover {
-  background: #ff7733;
-}
-
-/* ------------------------------
-   VOTE BUTTONS
------------------------------- */
-
-.vote-button,
-.vote-btn {
-  padding: 10px 20px;
-  background: #ff5500;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 16px;
-  transition: 0.2s;
-}
-
-.vote-button:hover,
-.vote-btn:hover {
-  background: #ff7733;
-}
-
-.vote-count {
-  margin-top: 6px;
-  font-size: 14px;
-  color: #333;
-}
-
-/* ------------------------------
-   BATTLE CARDS (Vote page)
------------------------------- */
-
-.battle-card {
-  background: #f7
+        <div class="battle-column">
+          <div class="video-box">
+            <div class="video-label">Right</div>
+            <iframe
+              src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${rightID}"
+              allow="autoplay"
+              allow
