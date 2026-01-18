@@ -67,6 +67,29 @@ h1 {
 }
 
 /* --------------------------------------------------
+   INPUT FIELDS (Used on DJs page)
+-------------------------------------------------- */
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.battle-card label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.battle-card input {
+  margin-bottom: 15px;
+}
+
+/* --------------------------------------------------
    BATTLE CARDS
 -------------------------------------------------- */
 
@@ -94,7 +117,7 @@ h1 {
 }
 
 /* --------------------------------------------------
-   VIDEO BOXES
+   VIDEO BOXES (YouTube)
 -------------------------------------------------- */
 
 .video-box {
@@ -124,6 +147,15 @@ h1 {
 }
 
 /* --------------------------------------------------
+   SOUNDCLOUD PREVIEW PLAYER (DJs page)
+-------------------------------------------------- */
+
+#previewPlayer iframe {
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+/* --------------------------------------------------
    VOTE COUNTS & BUTTONS
 -------------------------------------------------- */
 
@@ -140,55 +172,4 @@ h1 {
   background-color: #0077cc;
   color: white;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.vote-button:hover {
-  background-color: #005fa3;
-  transform: scale(1.05);
-}
-
-/* --------------------------------------------------
-   SOUNDCLOUD PLAYER FOOTER
--------------------------------------------------- */
-
-.sc-player-wrapper {
-  width: 100%;
-  max-width: 1100px;
-  margin: 40px auto 0 auto;
-  padding: 0 20px;
-}
-
-/* --------------------------------------------------
-   FOOTER
--------------------------------------------------- */
-
-.footer {
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-  background: #111;
-  color: #ccc;
-  font-size: 0.9rem;
-}
-
-/* --------------------------------------------------
-   RESPONSIVE DESIGN
--------------------------------------------------- */
-
-@media (max-width: 768px) {
-  .battle-wrapper {
-    flex-direction: column;
-  }
-
-  .battle-column {
-    width: 100%;
-  }
-
-  .navbar {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-}
+  border-radius:
