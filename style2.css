@@ -63,4 +63,63 @@ h1 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 2.2rem;
-  color
+  color: #111;
+}
+
+/* --------------------------------------------------
+   INPUT FIELDS (Used on DJs page)
+-------------------------------------------------- */
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.battle-card label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.battle-card input {
+  margin-bottom: 15px;
+}
+
+/* --------------------------------------------------
+   BATTLE CARDS (Vote Page)
+-------------------------------------------------- */
+
+#battleContainer {
+  display: block;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.battle-card {
+  margin: 30px auto;
+  padding: 20px;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  overflow: visible; /* REQUIRED for YouTube */
+}
+
+/* --------------------------------------------------
+   BATTLE WRAPPER (Battle Page + Vote Page)
+-------------------------------------------------- */
+
+.battle-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  width: 100%; /* FIX: prevents collapse */
+}
+
+.battle-column {
+  flex: 1 1 45%;
