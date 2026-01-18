@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: DJs</title>
+  <title>DJs</title>
   <link rel="stylesheet" href="style.css?v=1">
 </head>
 
@@ -14,131 +14,68 @@
     <a href="dancers.html">Dancers</a>
     <a href="battle.html">Battle</a>
     <a href="djs.html" class="active">DJs</a>
+    <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
   </div>
 
-  <h1 style="text-align:center; margin-top:20px; color:white;">DJ Mix Battle</h1>
+  <div class="page-container">
+    <h1>Submit Your DJ Mix</h1>
 
-  <div class="battle-wrapper">
+    <p style="text-align:center; margin-bottom:20px;">
+      Paste your SoundCloud mix URL and choose Left or Right.
+    </p>
 
-    <!-- LEFT DJ -->
-    <div class="battle-column">
+    <div class="battle-card" style="max-width:600px;">
 
-      <div class="input-box">
-        <input id="leftDJInput" type="text" placeholder="Left DJ SoundCloud URL">
-        <button type="button" onclick="loadLeftDJ()">Load DJ Left</button>
-      </div>
+      <label>DJ Side</label>
+      <select id="djSide" class="input-field">
+        <option value="DJ Left">DJ Left</option>
+        <option value="DJ Right">DJ Right</option>
+      </select>
 
-      <div class="video-box">
-        <div class="video-label">DJ Left</div>
-        <iframe
-          id="leftDJFrame"
-          src=""
-          allow="autoplay"
-          allowfullscreen>
-        </iframe>
-      </div>
+      <label style="margin-top:15px;">SoundCloud Mix URL</label>
+      <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/...">
 
-    </div>
+      <button class="vote-button" style="margin-top:20px;" onclick="submitDJ()">
+        Submit Mix
+      </button>
 
-    <!-- RIGHT DJ -->
-    <div class="battle-column">
-
-      <div class="input-box">
-        <input id="rightDJInput" type="text" placeholder="Right DJ SoundCloud URL">
-        <button type="button" onclick="loadRightDJ()">Load DJ Right</button>
-      </div>
-
-      <div class="video-box">
-        <div class="video-label">DJ Right</div>
-        <iframe
-          id="rightDJFrame"
-          src=""
-          allow="autoplay"
-          allowfullscreen>
-        </iframe>
-      </div>
+      <p id="status" style="text-align:center; margin-top:15px; color:#0077cc;"></p>
 
     </div>
-
-  </div>
-
-  <div class="footer">
-    © 2026 Dance-Offs — Built by Baz
   </div>
 
   <script>
-    const SHEET_URL =
+    const BASE_URL =
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    // Expand shortened SoundCloud links using a safe redirect trick
-    async function expandSoundCloud(url) {
-      if (!url.includes("on.soundcloud.com")) {
-        return url; // Already full URL
+    function submitDJ() {
+      const side = document.getElementById("djSide").value;
+      const url = document.getElementById("scURL").value.trim();
+      const status = document.getElementById("status");
+
+      if (!url || !url.includes("soundcloud.com")) {
+        status.textContent = "Please enter a valid SoundCloud URL.";
+        status.style.color = "red";
+        return;
       }
 
-      try {
-        const response = await fetch(url, { method: "GET", redirect: "follow" });
-        return response.url || url;
-      } catch (e) {
-        return url; // Fallback
-      }
-    }
-
-    function buildSoundCloudEmbed(url) {
-      if (!url || !url.includes("soundcloud.com")) return null;
-
-      return (
-        "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(url) +
-        "&auto_play=true&visual=true"
-      );
-    }
-
-    function logToSheet(side, url) {
-      const fullURL =
-        SHEET_URL +
-        "?dancer=" + encodeURIComponent(side) +
+      const logURL =
+        BASE_URL +
+        "?mode=logdj" +
+        "&dj=" + encodeURIComponent(side) +
         "&soundcloud=" + encodeURIComponent(url);
 
-      fetch(fullURL, { method: "GET", mode: "no-cors" })
-        .catch(() => {});
-    }
-
-    async function loadLeftDJ() {
-      let url = document.getElementById("leftDJInput").value;
-
-      // Expand shortened link if needed
-      url = await expandSoundCloud(url);
-
-      const embed = buildSoundCloudEmbed(url);
-
-      if (!embed) {
-        alert("Please enter a valid SoundCloud URL for DJ Left.");
-        return;
-      }
-
-      document.getElementById("leftDJFrame").src = embed;
-
-      setTimeout(() => logToSheet("DJ Left", url), 200);
-    }
-
-    async function loadRightDJ() {
-      let url = document.getElementById("rightDJInput").value;
-
-      // Expand shortened link if needed
-      url = await expandSoundCloud(url);
-
-      const embed = buildSoundCloudEmbed(url);
-
-      if (!embed) {
-        alert("Please enter a valid SoundCloud URL for DJ Right.");
-        return;
-      }
-
-      document.getElementById("rightDJFrame").src = embed;
-
-      setTimeout(() => logToSheet("DJ Right", url), 200);
+      fetch(logURL, { method: "GET", mode: "no-cors" })
+        .then(() => {
+          status.textContent = "Mix submitted successfully!";
+          status.style.color = "#0077cc";
+          document.getElementById("scURL").value = "";
+        })
+        .catch(() => {
+          status.textContent = "Error submitting mix.";
+          status.style.color = "red";
+        });
     }
   </script>
 
