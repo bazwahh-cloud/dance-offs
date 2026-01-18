@@ -48,62 +48,31 @@ body {
   border: 2px solid #000;
 }
 
-/* Page title */
-h1 {
-  text-align: center;
-  margin: 15px 0 10px;
-  font-size: 30px;
-}
-
-/* Videos wrapper */
-.videos-wrapper {
+/* Input row */
+.input-row {
   width: 90%;
-  max-width: 1100px;
-  margin: 15px auto 40px;
+  max-width: 900px;
+  margin: 15px auto 5px;
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Each video box */
-.video-box {
+.input-row input {
   flex: 1;
-  border: 2px solid #000;
-  border-radius: 10px;
-  padding: 10px;
-  background: #fff;
-  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #000;
+  border-radius: 4px;
 }
 
-/* Label above each video */
-.video-label {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-/* Iframe sizing */
-iframe {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border: none;
-}
-
-/* Footer */
-.footer {
-  width: 100%;
-  text-align: center;
-  padding: 15px 0;
-  border-top: 2px solid #000;
-  background: #fff;
+.input-row button {
+  padding: 8px 14px;
   font-size: 14px;
   font-weight: bold;
-  margin-top: auto;
-}
-
-/* Responsive: stack videos on narrow screens */
-@media (max-width: 800px) {
-  .videos-wrapper {
-    flex-direction: column;
-  }
-}
+  cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background: #000;
+  color:
