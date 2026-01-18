@@ -71,6 +71,20 @@
     // Your real Google Apps Script endpoint
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
+    // Expand shortened SoundCloud links (on.soundcloud.com)
+    async function expandSoundCloud(url) {
+      if (!url.includes("on.soundcloud.com")) {
+        return url; // Already a full URL
+      }
+
+      try {
+        const response = await fetch(url, { redirect: "follow" });
+        return response.url; // Final resolved URL
+      } catch (e) {
+        return url; // Fallback
+      }
+    }
+
     // Build SoundCloud embed URL
     function buildSoundCloudEmbed(url) {
       if (!url || !url.includes("soundcloud.com")) return null;
@@ -93,8 +107,12 @@
         .catch(() => {});
     }
 
-    function loadLeftDJ() {
-      const url = document.getElementById("leftDJInput").value;
+    async function loadLeftDJ() {
+      let url = document.getElementById("leftDJInput").value;
+
+      // Expand shortened link if needed
+      url = await expandSoundCloud(url);
+
       const embed = buildSoundCloudEmbed(url);
 
       if (!embed) {
@@ -108,21 +126,5 @@
       setTimeout(() => logToSheet("DJ Left", url), 200);
     }
 
-    function loadRightDJ() {
-      const url = document.getElementById("rightDJInput").value;
-      const embed = buildSoundCloudEmbed(url);
-
-      if (!embed) {
-        alert("Please enter a valid SoundCloud URL for DJ Right.");
-        return;
-      }
-
-      document.getElementById("rightDJFrame").src = embed;
-
-      // Log after load
-      setTimeout(() => logToSheet("DJ Right", url), 200);
-    }
-  </script>
-
-</body>
-</html>
+    async function loadRightDJ() {
+      let url = document.getElementById("rightDJInput").value
