@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 
       <div class="input-box">
         <input id="leftInput" type="text" placeholder="Left YouTube URL">
-        <button onclick="loadLeft()">Load Left</button>
+        <button type="button" onclick="loadLeft()">Load Left</button>
       </div>
 
       <div class="video-box">
@@ -45,7 +45,7 @@
 
       <div class="input-box">
         <input id="rightInput" type="text" placeholder="Right YouTube URL">
-        <button onclick="loadRight()">Load Right</button>
+        <button type="button" onclick="loadRight()">Load Right</button>
       </div>
 
       <div class="video-box">
@@ -69,18 +69,61 @@
 
   <!-- Script -->
   <script>
-    function extractVideoID(url) {
-      try {
-        const urlObj = new URL(url);
+    function extractVideoID(raw) {
+      if (!raw) return null;
 
-        // Standard YouTube links
-        if (urlObj.searchParams.get("v")) {
-          return urlObj.searchParams.get("v");
-        }
+      const url = raw.trim();
 
-        // youtu.be short links
-        if (urlObj.hostname.includes("youtu.be")) {
-          return urlObj.pathname.replace("/", "");
-        }
+      // 1) ?v=ID
+      const vMatch = url.match(/[?&]v=([^&#]+)/);
+      if (vMatch && vMatch[1]) return vMatch[1];
 
-        // Shorts format
+      // 2) youtu.be/ID
+      const shortMatch = url.match(/youtu\.be\/([^?&#]+)/);
+      if (shortMatch && shortMatch[1]) return shortMatch[1];
+
+      // 3) /shorts/ID
+      const shortsMatch = url.match(/shorts\/([^?&#]+)/);
+      if (shortsMatch && shortsMatch[1]) return shortsMatch[1];
+
+      // 4) /embed/ID
+      const embedMatch = url.match(/embed\/([^?&#]+)/);
+      if (embedMatch && embedMatch[1]) return embedMatch[1];
+
+      // 5) Last path segment as a fallback
+      const pathMatch = url.match(/youtube\.com\/([^?&#]+)/);
+      if (pathMatch && pathMatch[1]) {
+        const parts = pathMatch[1].split("/");
+        return parts.pop();
+      }
+
+      return null;
+    }
+
+    function loadLeft() {
+      const leftURL = document.getElementById("leftInput").value;
+      const leftID = extractVideoID(leftURL);
+
+      if (leftID) {
+        document.getElementById("leftVid").src =
+          "https://www.youtube.com/embed/" + leftID + "?autoplay=1&mute=1&playsinline=1";
+      } else {
+        alert("That doesn't look like a valid YouTube URL for the left side.");
+      }
+    }
+
+    function loadRight() {
+      const rightURL = document.getElementById("rightInput").value;
+      const rightID = extractVideoID(rightURL);
+
+      if (rightID) {
+        document.getElementById("rightVid").src =
+          "https://www.youtube.com/embed/" + rightID + "?autoplay=1&mute=1&playsinline=1";
+      } else {
+        alert("That doesn't look like a valid YouTube URL for the right side.");
+      }
+    }
+  </script>
+
+</body>
+</html>
