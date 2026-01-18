@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Vote</title>
+  <link rel="stylesheet" href="style.css?v=1">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="dancers.html">Dancers</a>
+    <a href="battle.html">Battle</a>
+    <a href="djs.html">DJs</a>
+    <a href="vote.html" class="active">Vote</a>
+    <a href="merch.html">Merch</a>
+  </div>
+
+  <h1 style="text-align:center; margin-top:20px; color:white;">Dance-Off Battles</h1>
+
+  <div id="battleContainer" style="margin-top:30px;"></div>
+
+  <div class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </div>
+
+<script>
+const BASE_URL =
+  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+// Prevent caching on GitHub Pages
+function getDataURL() {
+  return BASE_URL + "?mode=read&cache=" + Math.random();
+}
+
+function getVoteCountsURL() {
+  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
+}
+
+// Extract YouTube ID from any format
+function getYouTubeID(url) {
+  if (!url) return null;
+  const patterns = [
+    /v=([^&]+)/,
+    /youtu\.be\/([^?]+)/,
+    /shorts\/([^?]+)/,
+    /embed\/([^?]+)/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+// Submit vote
+function vote(battleIndex, winner) {
+  const url =
+    BASE_URL +
+    "?mode=vote" +
+    "&battle=" + battleIndex +
+    "&winner=" + encodeURIComponent(winner);
+
+  fetch(url, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + winner);
+      loadBattles(); // refresh counts
+    })
+    .catch(() => alert("Error recording vote"));
+}
+
+// Load battles + vote counts
+async function loadBattles() {
+  const container = document.getElementById("battleContainer");
+  container.innerHTML = "<p style='color:white; text-align:center;'>Loading battles…</p>";
+
+  let res, voteRes;
+  try {
+    [res, voteRes] = await Promise.all([
+      fetch(getDataURL()),
+      fetch(getVoteCountsURL())
+    ]);
+  } catch (e) {
+    container.innerHTML = "<p style='color:red;'>Error loading data.</p>";
+    return;
+  }
+
+  let data, voteTotals;
+  try {
+    data = await res.json();
+    voteTotals = await voteRes.json();
+  } catch (e) {
+    container.innerHTML = "<p style='color:red;'>Error reading data.</p>";
+    return;
+  }
+
+  // Filter only YouTube rows
+  const clean = data.filter(r =>
+    r.performer &&
+    r.performer.trim() !== "" &&
+    r.youtube &&
+    r.youtube.trim() !== ""
+  );
+
+  const lefts = clean.filter(r => r.performer.toLowerCase().includes("left"));
+  const rights = clean.filter(r => r.performer.toLowerCase().includes("right"));
+
+  const battleCount = Math.min(lefts.length, rights.length);
+
+  container.innerHTML = "";
+
+  for (let i = 0; i < battleCount; i++) {
+    const left = lefts[i];
+    const right = rights[i];
+
+    const leftID = getYouTubeID(left.youtube);
+    const rightID = getYouTubeID(right.youtube);
+
+    if (!leftID || !rightID) continue;
+
+    const leftVotes = voteTotals[left.youtube] || 0;
+    const rightVotes = voteTotals[right.youtube] || 0;
+
+    const div = document.createElement("div");
+    div.className = "battle-card"; // uses your site CSS
+
+    div.innerHTML = `
+      <div class="battle-wrapper">
+
+        <div class="battle-column">
+          <div class="video-box">
+            <div class="video-label">Left</div>
+            <iframe
+              src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${leftID}"
+              allow="autoplay"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="vote-count">Votes: ${leftVotes}</div>
+          <button class="vote-button" onclick="vote(${i}, 'Left')">Vote Left</button>
+        </div>
+
+        <div class="battle-column">
+          <div class="video-box">
+            <div class="video-label">Right</div>
+            <iframe
+              src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${rightID}"
+              allow="autoplay"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="vote-count">Votes: ${rightVotes}</div>
+          <button class="vote-button" onclick="vote(${i}, 'Right')">Vote Right</button>
+        </div>
+
+      </div>
+    `;
+
+    container.appendChild(div);
+  }
+}
+
+loadBattles();
+</script>
+
+</body>
+</html>
