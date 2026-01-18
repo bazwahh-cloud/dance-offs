@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 
 <body>
@@ -69,8 +69,8 @@
 
   <!-- Script -->
   <script>
-    // Your existing Google Apps Script endpoint
-    const SHEET_URL = "https://script.google.com/macros/s/AKfycbx1xYxJt6k0xJq2p8x0m0p7k1w2e0u1f2g3h4i5j6k7l8m9n/exec";
+    // Your real Google Apps Script endpoint
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
     // Extract YouTube video ID from ANY format
     function extractVideoID(raw) {
@@ -87,23 +87,4 @@
       if (shortsMatch) return shortsMatch[1];
 
       const embedMatch = url.match(/embed\/([^?&#]+)/);
-      if (embedMatch) return embedMatch[1];
-
-      const pathMatch = url.match(/youtube\.com\/([^?&#]+)/);
-      if (pathMatch) {
-        const parts = pathMatch[1].split("/");
-        return parts.pop();
-      }
-
-      return null;
-    }
-
-    // Log to your existing Google Sheet
-    function logToSheet(side, url) {
-      const fullURL =
-        `${SHEET_URL}?dancer=${encodeURIComponent(side)}&url=${encodeURIComponent(url)}`;
-
-      // Fire-and-forget GET request
-      fetch(fullURL, { mode: "no-cors" });
-    }
-
+      if (embedMatch) return
