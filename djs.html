@@ -8,7 +8,6 @@
 
 <body>
 
-  <!-- Navigation -->
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -26,7 +25,6 @@
       <label>SoundCloud Mix URL</label>
       <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/...">
 
-      <!-- Player loads ONLY after submit -->
       <div id="previewPlayer" style="margin-top:20px; display:none;">
         <iframe 
           id="scPlayerFrame"
@@ -52,7 +50,7 @@
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
     /* ----------------------------------------------------
-       SOUNDLOUD URL EXPANSION (EXACTLY LIKE YOUR WORKING LOADER)
+       EXACT WORKING LOGIC FROM YOUR OLD LOADER
     ---------------------------------------------------- */
 
     function extractUrlFromInput(raw) {
@@ -97,7 +95,7 @@
     async function expandSoundCloudURL(url) {
       url = extractUrlFromInput(url);
 
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      if (!url.startsWith("http")) {
         url = "https://" + url;
       }
 
@@ -114,8 +112,6 @@
       return url;
     }
 
-    /* ---------------------------------------------------- */
-
     async function getNextSide() {
       const res = await fetch(BASE_URL + "?mode=readdj&cache=" + Math.random());
       const data = await res.json();
@@ -125,7 +121,7 @@
     }
 
     /* ----------------------------------------------------
-       SUBMIT — LOAD PLAYER → AUTOPLAY → THEN TIMESTAMP
+       SUBMIT → EXPAND → VALIDATE → LOAD PLAYER → AUTOPLAY → TIMESTAMP
     ---------------------------------------------------- */
 
     async function submitDJ() {
@@ -143,8 +139,10 @@
         return;
       }
 
+      // EXPAND FIRST (critical)
       let url = await expandSoundCloudURL(raw);
 
+      // VALIDATE AFTER EXPANSION (matches your working loader)
       if (!url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
         status.textContent = "Invalid SoundCloud URL.";
         status.style.color = "red";
@@ -153,7 +151,7 @@
 
       const side = await getNextSide();
 
-      // 1️⃣ Load player with autoplay
+      // LOAD PLAYER WITH AUTOPLAY (visual mode)
       const embedURL =
         "https://w.soundcloud.com/player/?url=" +
         encodeURIComponent(url) +
@@ -162,7 +160,7 @@
       frame.src = embedURL;
       preview.style.display = "block";
 
-      // 2️⃣ Log to backend
+      // LOG TO BACKEND
       const logURL =
         BASE_URL +
         "?mode=logdj" +
@@ -171,7 +169,6 @@
 
       fetch(logURL, { method: "GET", mode: "no-cors" })
         .then(() => {
-          // 3️⃣ Show timestamp AFTER player loads
           const now = new Date();
           const timeString = now.toLocaleTimeString();
 
