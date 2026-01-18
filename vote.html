@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=51">
+  <link rel="stylesheet" href="style2.css?v=52">
 
   <style>
     .battle-card {
@@ -67,7 +67,6 @@
       font-weight: bold;
     }
 
-    /* SoundCloud container fix */
     .soundcloud-wrapper {
       width: 100%;
       padding: 40px 0;
@@ -99,15 +98,8 @@
     <div id="battleContainer"></div>
   </main>
 
-  <!-- Fully visible SoundCloud player -->
-  <div class="soundcloud-wrapper">
-    <iframe 
-      scrolling="no" 
-      frameborder="no" 
-      allow="autoplay"
-      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/YOUR-SOUNDCLOUD-TRACK&color=%230077cc&inverse=false&auto_play=false&show_user=false">
-    </iframe>
-  </div>
+  <!-- SoundCloud player injected dynamically -->
+  <div class="soundcloud-wrapper" id="soundcloudContainer"></div>
 
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
@@ -157,6 +149,7 @@ function vote(battleIndex, winner) {
 
 async function loadBattles() {
   const container = document.getElementById("battleContainer");
+  const soundcloudContainer = document.getElementById("soundcloudContainer");
   container.innerHTML = "<p>Loading battles...</p>";
 
   try {
@@ -167,6 +160,9 @@ async function loadBattles() {
     const voteCounts = await voteCountsResponse.json();
 
     container.innerHTML = "";
+    soundcloudContainer.innerHTML = "";
+
+    let lastSoundCloudURL = null;
 
     data.forEach((battle, index) => {
       const leftID = getYouTubeID(battle.left);
@@ -174,6 +170,10 @@ async function loadBattles() {
 
       const leftVotes = voteCounts[index]?.left || 0;
       const rightVotes = voteCounts[index]?.right || 0;
+
+      if (battle.soundcloud && battle.soundcloud.includes("soundcloud.com")) {
+        lastSoundCloudURL = battle.soundcloud;
+      }
 
       const leftURL =
         "https://www.youtube.com/embed/" +
@@ -183,4 +183,56 @@ async function loadBattles() {
       const rightURL =
         "https://www.youtube.com/embed/" +
         rightID +
-        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding
+        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1";
+
+      const battleHTML = `
+        <div class="battle-card">
+          <div class="battle-wrapper">
+
+            <div class="battle-column">
+              <div class="video-box">
+                <div class="video-overlay">Dancer Left</div>
+                <iframe src="${leftURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+              <div class="vote-count">Votes: ${leftVotes}</div>
+              <button class="vote-button" onclick="vote(${index}, 'left')">Vote Left</button>
+            </div>
+
+            <div class="battle-column">
+              <div class="video-box">
+                <div class="video-overlay">Dancer Right</div>
+                <iframe src="${rightURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+              <div class="vote-count">Votes: ${rightVotes}</div>
+              <button class="vote-button" onclick="vote(${index}, 'right')">Vote Right</button>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      container.innerHTML += battleHTML;
+    });
+
+    if (lastSoundCloudURL) {
+      soundcloudContainer.innerHTML = `
+        <iframe 
+          scrolling="no" 
+          frameborder="no" 
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=${encodeURIComponent(lastSoundCloudURL)}&color=%230077cc&inverse=false&auto_play=false&show_user=false">
+        </iframe>
+      `;
+    }
+
+  } catch (err) {
+    container.innerHTML = "<p>Error loading battles.</p>";
+    soundcloudContainer.innerHTML = "<p>Unable to load SoundCloud player.</p>";
+  }
+}
+
+loadBattles();
+</script>
+
+</body>
+</html>
