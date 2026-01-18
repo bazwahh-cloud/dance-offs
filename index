@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DANCE-OFFS</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #0a0a0a;
+        color: #fff;
+    }
+
+    /* Graffiti Header */
+    header {
+        background: linear-gradient(90deg, #ff5500, #ff00aa);
+        padding: 25px;
+        text-align: center;
+        font-size: 52px;
+        font-weight: bold;
+        color: #fff;
+        letter-spacing: 3px;
+        text-shadow: 3px 3px #000;
+        font-family: Impact, sans-serif;
+    }
+
+    /* Navigation */
+    nav {
+        background: #111;
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        padding: 18px 0;
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: 2px solid #ff5500;
+    }
+
+    nav a {
+        color: #ff5500;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    nav a:hover {
+        color: #fff;
+    }
+
+    /* Sections */
+    section {
+        padding: 40px 20px;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    h2 {
+        font-size: 34px;
+        margin-bottom: 20px;
+        color: #ff00aa;
+        text-shadow: 1px 1px #000;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #ccc;
+    }
+
+    /* Battle Layout */
+    .battle {
+        background: #111;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border: 1px solid #333;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        justify-content: center;
+    }
+
+    .side {
+        flex: 1 1 350px;
+        max-width: 420px;
+        text-align: center;
+    }
+
+    .thumb-wrapper {
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%;
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #444;
+        margin-bottom: 10px;
+    }
+
+    .thumb-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .vote-btn {
+        padding: 12px 25px;
+        background: #ff5500;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    .vote-btn:hover {
+        background: #ff7733;
+    }
+
+    .vote-count {
+        margin-top: 8px;
+        font-size: 16px;
+        color: #ccc;
+    }
+
+    /* Overlay */
+    #fullOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        cursor: pointer;
+    }
+
+    #fullOverlay div {
+        padding: 25px 50px;
+        background: #ff5500;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 32px;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px #000;
+        font-family: Impact, sans-serif;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        background: #111;
+        color: #777;
+        font-size: 14px;
+        border-top: 1px solid #333;
+        margin-top: 40px;
+    }
+</style>
+</head>
+<body>
+
+<!-- Overlay -->
+<div id="fullOverlay">
+    <div>dance-offs</div>
+</div>
+
+<header>DANCE-OFFS</header>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#dj">DJ</a>
+    <a href="#dancer">Dancer</a>
+    <a href="#vote">Vote</a>
+</nav>
+
+<section id="home">
+    <h2>Welcome to Dance-Offs</h2>
+    <p>The ultimate arena for dancers, DJs, and fans to battle, vibe, and vote.</p>
+</section>
+
+<section id="dj">
+    <h2>DJ Zone</h2>
+    <p>Upload your mixes and fuel the battles with beats that slap.</p>
+</section>
+
+<section id="dancer">
+    <h2>Dancer Zone</h2>
+    <p>Submit your YouTube clips and showcase your moves.</p>
+</section>
+
+<section id="vote">
+    <h2>Vote for Your Champion</h2>
+    <div id="battleContainer"></div>
+</section>
+
+<section id="soundcloud" style="text-align:center; margin-top:50px;">
+    <h2>Latest Track</h2>
+    <div id="scPlayer"></div>
+</section>
+
+<footer>
+    © 2026 Dance-Offs. All rights reserved.
+</footer>
+
+<script>
+const BASE_URL =
+  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+function getYouTubeID(url) {
+    const patterns = [/v=([^&]+)/, /youtu\\.be\\/([^?]+)/, /shorts\\/([^?]+)/, /embed\\/([^?]+)/];
+    for (const p of patterns) {
+        const m = url.match(p);
+        if (m) return m[1];
+    }
+    return null;
+}
+
+function vote(battleIndex, winner) {
+    fetch(BASE_URL + "?mode=vote&battle=" + battleIndex + "&winner=" + winner)
+        .then(() => {
+            alert("Vote recorded for " + winner);
+            loadBattles();
+        });
+}
+
+async function loadLatestSoundCloud() {
+    const res = await fetch(BASE_URL + "?mode=lastsoundcloud&cache=" + Math.random());
+    const data = await res.json();
+    if (!data || !data.url) return;
+
+    const src = "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(data.url) +
+        "&color=%23ff5500&inverse=false&show_user=true&auto_play=true";
+
+    document.getElementById("scPlayer").innerHTML =
+        "<iframe width='100%' height='150' frameborder='0' allow='autoplay' src='" + src + "'></iframe>";
+}
+
+async function loadBattles() {
+    const [res, voteRes] = await Promise.all([
+        fetch(BASE_URL + "?mode=read&cache=" + Math.random()),
+        fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random())
+    ]);
+
+    const data = await res.json();
+    const voteTotals = await voteRes.json();
+
+    const container = document.getElementById("battleContainer");
+    container.innerHTML = "";
+
+    const clean = data.filter(r => r.performer && r.youtube);
+    const lefts = clean.filter(r => r.performer.toLowerCase().includes("left"));
+    const rights = clean.filter(r => r.performer.toLowerCase().includes("right"));
+
+    const battleCount = Math.min(lefts.length, rights.length);
+
+    for (let i = 0; i < battleCount; i++) {
+        const left = lefts[i];
+        const right = rights[i];
+
+        const leftID = getYouTubeID(left.youtube);
+        const rightID = getYouTubeID(right.youtube);
+
+        const leftVotes = voteTotals[left.youtube] || 0;
+        const rightVotes = voteTotals[right.youtube] || 0;
+
+        const div = document.createElement("div");
+        div.className = "battle";
+
+        div.innerHTML = `
+            <div class="row">
+                <div class="side">
+                    <div class="thumb-wrapper">
+                        <iframe class="thumb-video"
+                            src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${leftID}">
+                        </iframe>
+                    </div>
+                    <strong>${left.performer}</strong>
+                    <div class="vote-count">Votes: ${leftVotes}</div>
+                    <button class="vote-btn" onclick="vote(${i}, 'Left')">Vote Left</button>
+                </div>
+
+                <div class="side">
+                    <div class="thumb-wrapper">
+                        <iframe class="thumb-video"
+                            src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${rightID}">
+                        </iframe>
+                    </div>
+                    <strong>${right.performer}</strong>
+                    <div class="vote-count">Votes: ${rightVotes}</div>
+                    <button class="vote-btn" onclick="vote(${i}, 'Right')">Vote Right</button>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    }
+}
+
+document.getElementById("fullOverlay").onclick = () => {
+    document.getElementById("fullOverlay").style.display = "none";
+};
+
+loadLatestSoundCloud();
+loadBattles();
+</script>
+
+</body>
+</html>
