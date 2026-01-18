@@ -112,6 +112,11 @@ body {
   margin-bottom: 8px;
 }
 
+/* Disable clicking ONLY on the right video */
+.battle-column:last-child iframe {
+  pointer-events: none;
+}
+
 iframe {
   width: 100%;
   height: 315px;
@@ -125,28 +130,4 @@ iframe {
   padding: 15px 0;
   border-top: 2px solid #000;
   background: #fff;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: auto;
-}
-
-/* Responsive layout */
-@media (max-width: 800px) {
-  .battle-wrapper {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .battle-column {
-    width: 100%;
-  }
-
-  .input-box {
-    flex-direction: column;
-  }
-
-  .input-box input,
-  .input-box button {
-    width: 100%;
-  }
-}
+  font-size
