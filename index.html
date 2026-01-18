@@ -8,137 +8,59 @@
 <style>
     body {
         margin: 0;
+        background: #000;
+        color: #fff;
         font-family: 'Segoe UI', sans-serif;
-        background: #0a0a0a;
-        color: #fff;
-    }
-
-    header {
-        background: linear-gradient(90deg, #ff5500, #ff00aa);
-        padding: 25px;
-        text-align: center;
-        font-size: 52px;
-        font-weight: bold;
-        color: #fff;
-        letter-spacing: 3px;
-        text-shadow: 3px 3px #000;
-        font-family: Impact, sans-serif;
-    }
-
-    nav {
-        background: #111;
         display: flex;
+        flex-direction: column;
         justify-content: center;
-        gap: 50px;
-        padding: 18px 0;
-        font-size: 20px;
-        font-weight: bold;
-        border-bottom: 2px solid #ff5500;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
     }
 
-    nav a {
+    h1 {
+        font-size: 70px;
+        font-weight: bold;
         color: #ff5500;
+        letter-spacing: 4px;
+        text-shadow: 4px 4px #000;
+        font-family: Impact, sans-serif;
+        margin: 0 0 20px 0;
+    }
+
+    p {
+        font-size: 22px;
+        color: #ccc;
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+        line-height: 1.5;
+    }
+
+    .enter-btn {
+        padding: 15px 40px;
+        background: #ff5500;
+        color: #fff;
+        font-size: 22px;
+        font-weight: bold;
+        border-radius: 8px;
         text-decoration: none;
         transition: 0.3s;
     }
 
-    nav a:hover {
-        color: #fff;
-    }
-
-    section {
-        padding: 40px 20px;
-        max-width: 900px;
-        margin: auto;
-    }
-
-    h2 {
-        font-size: 34px;
-        margin-bottom: 20px;
-        color: #ff00aa;
-        text-shadow: 1px 1px #000;
-    }
-
-    p {
-        font-size: 18px;
-        line-height: 1.6;
-        color: #ccc;
-    }
-
-    #fullOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        cursor: pointer;
-    }
-
-    #fullOverlay div {
-        padding: 25px 50px;
-        background: #ff5500;
-        border-radius: 10px;
-        color: #fff;
-        font-size: 32px;
-        letter-spacing: 2px;
-        text-shadow: 2px 2px #000;
-        font-family: Impact, sans-serif;
-    }
-
-    footer {
-        text-align: center;
-        padding: 20px;
-        background: #111;
-        color: #777;
-        font-size: 14px;
-        border-top: 1px solid #333;
-        margin-top: 40px;
+    .enter-btn:hover {
+        background: #ff00aa;
     }
 </style>
 </head>
 <body>
 
-<div id="fullOverlay" onclick="this.style.display='none'">
-    <div>dance-offs</div>
-</div>
+<h1>DANCE-OFFS</h1>
 
-<header>DANCE-OFFS</header>
+<p>The home of battles, beats, and bold moves.  
+A new platform for dancers and DJs to compete, vote, and rise.</p>
 
-<nav>
-    <a href="#home">Home</a>
-    <a href="#dj">DJ</a>
-    <a href="#dancer">Dancer</a>
-    <a href="#vote">Vote</a>
-</nav>
-
-<section id="home">
-    <h2>Welcome to Dance-Offs</h2>
-    <p>This is the safe fallback version. No JavaScript is running, so nothing can break. This confirms GitHub Pages is working correctly.</p>
-</section>
-
-<section id="dj">
-    <h2>DJ Zone</h2>
-    <p>Upload your mixes and fuel the battles with beats that slap.</p>
-</section>
-
-<section id="dancer">
-    <h2>Dancer Zone</h2>
-    <p>Submit your YouTube clips and showcase your moves.</p>
-</section>
-
-<section id="vote">
-    <h2>Vote</h2>
-    <p>Voting system will be added once the layout is confirmed working.</p>
-</section>
-
-<footer>
-    © 2026 Dance-Offs. All rights reserved.
-</footer>
+<a class="enter-btn" href="#home">Enter</a>
 
 </body>
 </html>
