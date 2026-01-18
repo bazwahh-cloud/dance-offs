@@ -3,33 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=30">
-
+  <link rel="stylesheet" href="style2.css?v=31">
   <style>
-    /* Extra styling for vote page only */
-
     .battle-card {
       margin: 40px 0;
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     }
-
     .battle-card:nth-child(odd) {
       background: #eef6ff;
     }
     .battle-card:nth-child(even) {
       background: #f7ecff;
     }
-
-    /* FIXED: restore aspect ratio + allow overlay */
     .video-box {
       position: relative;
       width: 100%;
-      padding-top: 72%; /* restores height */
+      height: 220px;
       overflow: hidden;
     }
-
     .video-box iframe {
       position: absolute;
       top: 0;
@@ -37,8 +30,6 @@
       width: 100%;
       height: 100%;
     }
-
-    /* Overlay label on video */
     .video-overlay {
       position: absolute;
       top: 10px;
@@ -52,8 +43,6 @@
       z-index: 10;
       pointer-events: none;
     }
-
-    /* Vote buttons */
     .vote-button {
       width: 100%;
       padding: 14px;
@@ -67,12 +56,10 @@
       color: white;
       transition: 0.2s ease;
     }
-
     .vote-button:hover {
       background: #0059c9;
       transform: scale(1.03);
     }
-
     .vote-count {
       margin-top: 10px;
       font-size: 16px;
@@ -80,10 +67,8 @@
     }
   </style>
 </head>
-
 <body>
 
-  <!-- Navigation -->
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -93,12 +78,10 @@
     <a href="merch.html">Merch</a>
   </div>
 
-  <!-- Main content -->
   <main class="page-container">
     <div id="battleContainer"></div>
   </main>
 
-  <!-- SoundCloud Player (fully isolated) -->
   <aside style="width:100%; margin:50px 0;">
     <iframe 
       width="100%" 
@@ -110,7 +93,6 @@
     </iframe>
   </aside>
 
-  <!-- Footer -->
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
   </footer>
@@ -184,3 +166,43 @@ async function loadBattles() {
             <div class="battle-column">
               <div class="video-box">
                 <div class="video-overlay">Dancer Left</div>
+                <iframe 
+                  src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&playsinline=1"
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="vote-count">Votes: ${leftVotes}</div>
+              <button class="vote-button" onclick="vote(${index}, 'left')">Vote Left</button>
+            </div>
+
+            <div class="battle-column">
+              <div class="video-box">
+                <div class="video-overlay">Dancer Right</div>
+                <iframe 
+                  src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&playsinline=1"
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="vote-count">Votes: ${rightVotes}</div>
+              <button class="vote-button" onclick="vote(${index}, 'right')">Vote Right</button>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      container.innerHTML += battleHTML;
+    });
+
+  } catch (err) {
+    container.innerHTML = "<p>Error loading battles.</p>";
+  }
+}
+
+loadBattles();
+</script>
+
+</body>
+</html>
