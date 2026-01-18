@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=31">
+  <link rel="stylesheet" href="style2.css?v=32">
+
   <style>
     .battle-card {
       margin: 40px 0;
@@ -17,6 +18,8 @@
     .battle-card:nth-child(even) {
       background: #f7ecff;
     }
+
+    /* SAFE FIXED HEIGHT */
     .video-box {
       position: relative;
       width: 100%;
@@ -30,6 +33,7 @@
       width: 100%;
       height: 100%;
     }
+
     .video-overlay {
       position: absolute;
       top: 10px;
@@ -43,6 +47,7 @@
       z-index: 10;
       pointer-events: none;
     }
+
     .vote-button {
       width: 100%;
       padding: 14px;
@@ -60,6 +65,7 @@
       background: #0059c9;
       transform: scale(1.03);
     }
+
     .vote-count {
       margin-top: 10px;
       font-size: 16px;
@@ -67,6 +73,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="navbar">
@@ -89,120 +96,4 @@
       scrolling="no" 
       frameborder="no" 
       allow="autoplay"
-      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/YOUR-SOUNDCLOUD-TRACK&color=%230077cc&inverse=false&auto_play=false&show_user=false">
-    </iframe>
-  </aside>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-<script>
-const BASE_URL =
-  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-function getDataURL() {
-  return BASE_URL + "?mode=read&cache=" + Math.random();
-}
-
-function getVoteCountsURL() {
-  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
-}
-
-function getYouTubeID(url) {
-  if (!url) return null;
-  const patterns = [
-    /v=([^&]+)/,
-    /youtu\.be\/([^?]+)/,
-    /shorts\/([^?]+)/,
-    /embed\/([^?]+)/
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-function vote(battleIndex, winner) {
-  const url =
-    BASE_URL +
-    "?mode=vote" +
-    "&battle=" + battleIndex +
-    "&winner=" + encodeURIComponent(winner);
-
-  fetch(url, { method: "GET", mode: "no-cors" })
-    .then(() => {
-      alert("Vote recorded for " + winner);
-      loadBattles();
-    })
-    .catch(() => alert("Error recording vote"));
-}
-
-async function loadBattles() {
-  const container = document.getElementById("battleContainer");
-  container.innerHTML = "<p>Loading battles...</p>";
-
-  try {
-    const response = await fetch(getDataURL());
-    const data = await response.json();
-
-    const voteCountsResponse = await fetch(getVoteCountsURL());
-    const voteCounts = await voteCountsResponse.json();
-
-    container.innerHTML = "";
-
-    data.forEach((battle, index) => {
-      const leftID = getYouTubeID(battle.left);
-      const rightID = getYouTubeID(battle.right);
-
-      const leftVotes = voteCounts[index]?.left || 0;
-      const rightVotes = voteCounts[index]?.right || 0;
-
-      const battleHTML = `
-        <div class="battle-card">
-          <div class="battle-wrapper">
-
-            <div class="battle-column">
-              <div class="video-box">
-                <div class="video-overlay">Dancer Left</div>
-                <iframe 
-                  src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&playsinline=1"
-                  allow="autoplay; encrypted-media"
-                  allowfullscreen>
-                </iframe>
-              </div>
-              <div class="vote-count">Votes: ${leftVotes}</div>
-              <button class="vote-button" onclick="vote(${index}, 'left')">Vote Left</button>
-            </div>
-
-            <div class="battle-column">
-              <div class="video-box">
-                <div class="video-overlay">Dancer Right</div>
-                <iframe 
-                  src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&playsinline=1"
-                  allow="autoplay; encrypted-media"
-                  allowfullscreen>
-                </iframe>
-              </div>
-              <div class="vote-count">Votes: ${rightVotes}</div>
-              <button class="vote-button" onclick="vote(${index}, 'right')">Vote Right</button>
-            </div>
-
-          </div>
-        </div>
-      `;
-
-      container.innerHTML += battleHTML;
-    });
-
-  } catch (err) {
-    container.innerHTML = "<p>Error loading battles.</p>";
-  }
-}
-
-loadBattles();
-</script>
-
-</body>
-</html>
+      src="https://w.soundcloud.com/player/?url=https%3A//
