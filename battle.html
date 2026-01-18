@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
 </head>
 
 <body>
@@ -72,12 +72,82 @@
     // Your real Google Apps Script endpoint
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    // Extract YouTube video ID from ANY format
+    // Ultra‑robust YouTube ID extractor
     function extractVideoID(raw) {
       if (!raw) return null;
       const url = raw.trim();
 
-      const vMatch = url.match(/[?&]v=([^&#]+)/);
-      if (vMatch) return vMatch[1];
+      let match;
 
-      const
+      match = url.match(/[?&]v=([^&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/youtu\.be\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/shorts\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/embed\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/youtube\.com\/.*\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      return null;
+    }
+
+    // Log to your existing Google Sheet
+    function logToSheet(side, url) {
+      const fullURL =
+        SHEET_URL +
+        "?dancer=" + encodeURIComponent(side) +
+        "&url=" + encodeURIComponent(url);
+
+      fetch(fullURL, { method: "GET", mode: "no-cors" })
+        .catch(() => {});
+    }
+
+    // Load left video + log URL
+    function loadLeft() {
+      const url = document.getElementById("leftInput").value;
+      const id = extractVideoID(url);
+
+      if (!id) {
+        alert("Invalid YouTube URL for the left side.");
+        return;
+      }
+
+      const embedURL =
+        "https://www.youtube.com/embed/" +
+        id +
+        "?autoplay=1&mute=1&playsinline=1";
+
+      document.getElementById("leftVid").src = embedURL;
+
+      setTimeout(() => logToSheet("Left", url), 300);
+    }
+
+    // Load right video + log URL
+    function loadRight() {
+      const url = document.getElementById("rightInput").value;
+      const id = extractVideoID(url);
+
+      if (!id) {
+        alert("Invalid YouTube URL for the right side.");
+        return;
+      }
+
+      const embedURL =
+        "https://www.youtube.com/embed/" +
+        id +
+        "?autoplay=1&mute=1&playsinline=1";
+
+      document.getElementById("rightVid").src = embedURL;
+
+      setTimeout(() => logToSheet("Right", url), 300);
+    }
+  </script>
+
+</body>
+</html>
