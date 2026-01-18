@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Side-by-Side Shorts</title>
+  <title>Dance-Offs: Battle</title>
 
   <style>
     * { box-sizing: border-box; }
@@ -74,14 +74,10 @@
       border: 1px solid #000;
     }
 
-    .video-wrapper iframe {
+    .player {
       width: 100%;
       aspect-ratio: 9 / 16;
-      border: none;
-      display: block;
-      background-color: #fff;
-      /* IMPORTANT: autoplay fix */
-      pointer-events: auto;
+      background: #fff;
     }
 
     @media (max-width: 768px) {
@@ -99,39 +95,75 @@
 
   <div>
     <input id="leftInput" type="text" placeholder="Paste YouTube link for Dancer Left">
-    <button onclick="loadVideo('leftInput', 'video1', 'Dancer Left')">Load Left Video</button>
+    <button onclick="loadVideo('leftInput', leftPlayer, 'Dancer Left')">Load Left Video</button>
   </div>
 
   <div>
     <input id="rightInput" type="text" placeholder="Paste YouTube link for Dancer Right">
-    <button onclick="loadVideo('rightInput', 'video2', 'Dancer Right')">Load Right Video</button>
+    <button onclick="loadVideo('rightInput', rightPlayer, 'Dancer Right')">Load Right Video</button>
   </div>
 </div>
 
 <div class="video-container">
   <div class="video-wrapper">
     <div class="video-label">Dancer Left</div>
-    <iframe id="video1"
-      allow="autoplay *; encrypted-media; fullscreen; picture-in-picture"
-      playsinline
-      allowfullscreen></iframe>
+    <div id="leftPlayer" class="player"></div>
   </div>
 
   <div class="video-wrapper">
     <div class="video-label">Dancer Right</div>
-    <iframe id="video2"
-      allow="autoplay *; encrypted-media; fullscreen; picture-in-picture"
-      playsinline
-      allowfullscreen></iframe>
+    <div id="rightPlayer" class="player"></div>
   </div>
 </div>
 
-<!-- Hidden iframe for logging -->
 <iframe id="loggerFrame" style="display:none;"></iframe>
 
 <script>
 const LOG_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
+// DEFAULT VIDEO IDs (replace these with your dancers)
+let defaultLeft = "dQw4w9WgXcQ";   // Replace with your dancer
+let defaultRight = "3JZ_D3ELwOQ";  // Replace with your dancer
+
+let leftPlayer, rightPlayer;
+
+// Load YouTube API
+let tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+// Create players when API is ready
+function onYouTubeIframeAPIReady() {
+  leftPlayer = new YT.Player("leftPlayer", {
+    videoId: defaultLeft,
+    playerVars: {
+      autoplay: 1,
+      mute: 1,
+      loop: 1,
+      playlist: defaultLeft,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1
+    }
+  });
+
+  rightPlayer = new YT.Player("rightPlayer", {
+    videoId: defaultRight,
+    playerVars: {
+      autoplay: 1,
+      mute: 1,
+      loop: 1,
+      playlist: defaultRight,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1
+    }
+  });
+}
+
+// Extract ID from any YouTube link
 function extractYouTubeID(url) {
   const patterns = [
     /shorts\/([^?&/]+)/,
@@ -147,23 +179,20 @@ function extractYouTubeID(url) {
   return null;
 }
 
-function buildEmbedURL(id) {
-  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0`;
-}
-
 function logToSheet(name, url) {
   const logger = document.getElementById("loggerFrame");
   const fullURL = LOG_URL + "?dancer=" + encodeURIComponent(name) + "&url=" + encodeURIComponent(url);
   logger.src = fullURL;
 }
 
-function loadVideo(inputId, iframeId, dancerName) {
+function loadVideo(inputId, player, dancerName) {
   const url = document.getElementById(inputId).value.trim();
   const id = extractYouTubeID(url);
   if (!id) return;
 
-  const embed = buildEmbedURL(id);
-  document.getElementById(iframeId).src = embed;
+  player.loadVideoById(id);
+  player.mute();
+  player.playVideo();
 
   logToSheet(dancerName, "https://www.youtube.com/watch?v=" + id);
 }
