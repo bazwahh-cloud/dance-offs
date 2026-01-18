@@ -56,7 +56,7 @@ body {
 -------------------------------------------------- */
 
 .page-container {
-  max-width: 1300px;
+  max-width: 1400px;
   margin: 40px auto;
   padding-left: 20px;
   padding-right: 20px;
@@ -76,14 +76,16 @@ h1 {
 .battle-wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 30px;
+  gap: 40px;
   flex-wrap: wrap;
   width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .battle-column {
   flex: 1 1 48%;
-  min-width: 300px;
+  min-width: 320px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -108,4 +110,24 @@ h1 {
   background: #eef6ff;
   color: #111;
   box-shadow: 0 0 8px rgba(0, 119, 204, 0.25);
-  transition:
+  transition: all 0.25s ease;
+}
+
+.input-box input::placeholder {
+  color: #555;
+  opacity: 0.8;
+}
+
+.input-box input:focus {
+  outline: none;
+  border-color: #005fa3;
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 119, 204, 0.45);
+  transform: scale(1.02);
+}
+
+.input-box button {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font
