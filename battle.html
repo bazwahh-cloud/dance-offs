@@ -134,6 +134,13 @@
 </head>
 <body>
 
+<!-- FORCE YOUTUBE API TO LOAD FIRST (FIXES AUTOPLAY) -->
+<script>
+let tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+</script>
+
 <!-- NAVIGATION -->
 <nav class="navbar">
   <a href="index.html">Home</a>
@@ -153,4 +160,81 @@
 
   <div>
     <input id="rightInput" type="text" placeholder="Paste YouTube link for Dancer Right">
-    <button onclick="loadVideo('rightInput', rightPlayer, 'Dancer Right')">Load Right Video
+    <button onclick="loadVideo('rightInput', rightPlayer, 'Dancer Right')">Load Right Video</button>
+  </div>
+</div>
+
+<div class="video-container">
+  <div class="video-wrapper">
+    <div class="video-label">Dancer Left</div>
+    <div id="leftPlayer" class="player"></div>
+  </div>
+
+  <div class="video-wrapper">
+    <div class="video-label">Dancer Right</div>
+    <div id="rightPlayer" class="player"></div>
+  </div>
+</div>
+
+<!-- Hidden iframe for logging -->
+<iframe id="loggerFrame" style="display:none;"></iframe>
+
+<script>
+const LOG_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+// DEFAULT SHORTS
+let defaultLeft = "W-jKGWTthm8";
+let defaultRight = "SJKl6PEXklU";
+
+let leftPlayer, rightPlayer;
+
+// Create players when API is ready
+function onYouTubeIframeAPIReady() {
+  leftPlayer = new YT.Player("leftPlayer", {
+    videoId: defaultLeft,
+    playerVars: {
+      autoplay: 1,
+      mute: 1,
+      loop: 1,
+      playlist: defaultLeft,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1
+    }
+  });
+
+  rightPlayer = new YT.Player("rightPlayer", {
+    videoId: defaultRight,
+    playerVars: {
+      autoplay: 1,
+      mute: 1,
+      loop: 1,
+      playlist: defaultRight,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1
+    }
+  });
+}
+
+// Extract ID from any YouTube link
+function extractYouTubeID(url) {
+  const patterns = [
+    /shorts\/([^?&/]+)/,
+    /v=([^?&/]+)/,
+    /youtu\.be\/([^?&/]+)/,
+    /embed\/([^?&/]+)/
+  ];
+  for (const p of patterns) {
+    const match = url.match(p);
+    if (match && match[1]) return match[1];
+  }
+  alert("Invalid YouTube link");
+  return null;
+}
+
+function logToSheet(name, url) {
+  const logger = document.getElementById("loggerFrame");
+  const fullURL = LOG_URL + "?dancer
