@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=29">
+  <link rel="stylesheet" href="style2.css?v=30">
 
   <style>
     /* Extra styling for vote page only */
@@ -117,4 +117,70 @@
 
 <script>
 const BASE_URL =
-  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy
+  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+function getDataURL() {
+  return BASE_URL + "?mode=read&cache=" + Math.random();
+}
+
+function getVoteCountsURL() {
+  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
+}
+
+function getYouTubeID(url) {
+  if (!url) return null;
+  const patterns = [
+    /v=([^&]+)/,
+    /youtu\.be\/([^?]+)/,
+    /shorts\/([^?]+)/,
+    /embed\/([^?]+)/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function vote(battleIndex, winner) {
+  const url =
+    BASE_URL +
+    "?mode=vote" +
+    "&battle=" + battleIndex +
+    "&winner=" + encodeURIComponent(winner);
+
+  fetch(url, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + winner);
+      loadBattles();
+    })
+    .catch(() => alert("Error recording vote"));
+}
+
+async function loadBattles() {
+  const container = document.getElementById("battleContainer");
+  container.innerHTML = "<p>Loading battles...</p>";
+
+  try {
+    const response = await fetch(getDataURL());
+    const data = await response.json();
+
+    const voteCountsResponse = await fetch(getVoteCountsURL());
+    const voteCounts = await voteCountsResponse.json();
+
+    container.innerHTML = "";
+
+    data.forEach((battle, index) => {
+      const leftID = getYouTubeID(battle.left);
+      const rightID = getYouTubeID(battle.right);
+
+      const leftVotes = voteCounts[index]?.left || 0;
+      const rightVotes = voteCounts[index]?.right || 0;
+
+      const battleHTML = `
+        <div class="battle-card">
+          <div class="battle-wrapper">
+
+            <div class="battle-column">
+              <div class="video-box">
+                <div class="video-overlay">Dancer Left</div>
