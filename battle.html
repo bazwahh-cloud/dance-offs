@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Side-by-Side Shorts</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: sans-serif;
+      color: #fff;
+    }
+
+    .input-area {
+      text-align: center;
+      padding: 15px;
+    }
+
+    .input-area input {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 10px;
+    }
+
+    .input-area button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #444;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 100vw;
+      margin: 0 auto;
+    }
+
+    .video-wrapper {
+      flex: 1 1 50%;
+      max-width: 50%;
+      position: relative;
+    }
+
+    .video-label {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 22px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #fff;
+      background: rgba(0,0,0,0.5);
+      padding: 6px 12px;
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    .video-wrapper iframe {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      border: none;
+      display: block;
+      background-color: #000;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .video-wrapper {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="input-area">
+  <h2>Paste YouTube Links for Each Dancer</h2>
+
+  <div>
+    <input id="leftInput" type="text" placeholder="Paste YouTube link for Dancer Left">
+    <button onclick="loadVideo('leftInput', 'video1', 'Dancer Left')">Load Left Video</button>
+  </div>
+
+  <div>
+    <input id="rightInput" type="text" placeholder="Paste YouTube link for Dancer Right">
+    <button onclick="loadVideo('rightInput', 'video2', 'Dancer Right')">Load Right Video</button>
+  </div>
+</div>
+
+<div class="video-container">
+  <div class="video-wrapper">
+    <div class="video-label">Dancer Left</div>
+    <iframe id="video1"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      playsinline
+      allowfullscreen></iframe>
+  </div>
+
+  <div class="video-wrapper">
+    <div class="video-label">Dancer Right</div>
+    <iframe id="video2"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      playsinline
+      allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- Hidden iframe for logging -->
+<iframe id="loggerFrame" style="display:none;"></iframe>
+
+<script>
+const LOG_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+function extractYouTubeID(url) {
+  const patterns = [
+    /shorts\/([^?&/]+)/,
+    /v=([^?&/]+)/,
+    /youtu\.be\/([^?&/]+)/,
+    /embed\/([^?&/]+)/
+  ];
+  for (const p of patterns) {
+    const match = url.match(p);
+    if (match && match[1]) return match[1];
+  }
+  alert("Invalid YouTube link");
+  return null;
+}
+
+function buildEmbedURL(id) {
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0`;
+}
+
+function logToSheet(name, url) {
+  const logger = document.getElementById("loggerFrame");
+  const fullURL = LOG_URL + "?dancer=" + encodeURIComponent(name) + "&url=" + encodeURIComponent(url);
+  logger.src = fullURL;
+}
+
+function loadVideo(inputId, iframeId, dancerName) {
+  const url = document.getElementById(inputId).value.trim();
+  const id = extractYouTubeID(url);
+  if (!id) return;
+
+  const embed = buildEmbedURL(id);
+  document.getElementById(iframeId).src = embed;
+
+  logToSheet(dancerName, "https://www.youtube.com/watch?v=" + id);
+}
+</script>
+
+</body>
+</html>
