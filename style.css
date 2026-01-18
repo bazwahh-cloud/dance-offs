@@ -1,156 +1,179 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style.css?v=1">
-</head>
+/* --------------------------------------------------
+   GLOBAL RESET & BASE STYLES
+-------------------------------------------------- */
 
-<body>
-
-  <!-- Navigation -->
-  <div class="navbar">
-    <a href="index.html">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="battle.html">Battle</a>
-    <a href="djs.html">DJs</a>
-    <a href="vote.html" class="active">Vote</a>
-    <a href="merch.html">Merch</a>
-  </div>
-
-  <!-- White content wrapper -->
-  <div class="page-container">
-
-    <h1>Dance-Off Battles</h1>
-
-    <div id="battleContainer"></div>
-
-  </div>
-
-  <div class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </div>
-
-<script>
-const BASE_URL =
-  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-// Prevent caching on GitHub Pages
-function getDataURL() {
-  return BASE_URL + "?mode=read&cache=" + Math.random();
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-function getVoteCountsURL() {
-  return BASE_URL + "?mode=votecounts&cache=" + Math.random();
+body {
+  background: #f4f4f4;
+  color: #222;
+  line-height: 1.5;
 }
 
-// Extract YouTube ID from any format
-function getYouTubeID(url) {
-  if (!url) return null;
-  const patterns = [
-    /v=([^&]+)/,
-    /youtu\.be\/([^?]+)/,
-    /shorts\/([^?]+)/,
-    /embed\/([^?]+)/
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
+/* --------------------------------------------------
+   NAVIGATION BAR
+-------------------------------------------------- */
+
+.navbar {
+  background: #111;
+  padding: 15px 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navbar a:hover {
+  background: #333;
+  color: #fff;
+}
+
+.navbar a.active {
+  background: #0077cc;
+  color: #fff;
+}
+
+/* --------------------------------------------------
+   PAGE CONTAINER
+-------------------------------------------------- */
+
+.page-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  color: #111;
+}
+
+/* --------------------------------------------------
+   BATTLE CARDS
+-------------------------------------------------- */
+
+.battle-card {
+  margin: 30px auto;
+  padding: 20px;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.battle-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.battle-column {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --------------------------------------------------
+   VIDEO BOXES
+-------------------------------------------------- */
+
+.video-box {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.video-box iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* --------------------------------------------------
+   VOTE COUNTS & BUTTONS
+-------------------------------------------------- */
+
+.vote-count {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.vote-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.vote-button:hover {
+  background-color: #005fa3;
+  transform: scale(1.05);
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  background: #111;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+/* --------------------------------------------------
+   RESPONSIVE DESIGN
+-------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .battle-wrapper {
+    flex-direction: column;
   }
-  return null;
-}
 
-// Submit vote
-function vote(battleIndex, winner) {
-  const url =
-    BASE_URL +
-    "?mode=vote" +
-    "&battle=" + battleIndex +
-    "&winner=" + encodeURIComponent(winner);
-
-  fetch(url, { method: "GET", mode: "no-cors" })
-    .then(() => {
-      alert("Vote recorded for " + winner);
-      loadBattles(); // refresh counts
-    })
-    .catch(() => alert("Error recording vote"));
-}
-
-// Load battles + vote counts
-async function loadBattles() {
-  const container = document.getElementById("battleContainer");
-  container.innerHTML = "<p style='color:black; text-align:center;'>Loading battles…</p>";
-
-  let res, voteRes;
-  try {
-    [res, voteRes] = await Promise.all([
-      fetch(getDataURL()),
-      fetch(getVoteCountsURL())
-    ]);
-  } catch (e) {
-    container.innerHTML = "<p style='color:red;'>Error loading data.</p>";
-    return;
+  .battle-column {
+    width: 100%;
   }
 
-  let data, voteTotals;
-  try {
-    data = await res.json();
-    voteTotals = await voteRes.json();
-  } catch (e) {
-    container.innerHTML = "<p style='color:red;'>Error reading data.</p>";
-    return;
+  .navbar {
+    flex-wrap: wrap;
+    gap: 10px;
   }
-
-  // Filter only YouTube rows
-  const clean = data.filter(r =>
-    r.performer &&
-    r.performer.trim() !== "" &&
-    r.youtube &&
-    r.youtube.trim() !== ""
-  );
-
-  const lefts = clean.filter(r => r.performer.toLowerCase().includes("left"));
-  const rights = clean.filter(r => r.performer.toLowerCase().includes("right"));
-
-  const battleCount = Math.min(lefts.length, rights.length);
-
-  container.innerHTML = "";
-
-  for (let i = 0; i < battleCount; i++) {
-    const left = lefts[i];
-    const right = rights[i];
-
-    const leftID = getYouTubeID(left.youtube);
-    const rightID = getYouTubeID(right.youtube);
-
-    if (!leftID || !rightID) continue;
-
-    const leftVotes = voteTotals[left.youtube] || 0;
-    const rightVotes = voteTotals[right.youtube] || 0;
-
-    const div = document.createElement("div");
-    div.className = "battle-card";
-
-    div.innerHTML = `
-      <div class="battle-wrapper">
-
-        <div class="battle-column">
-          <div class="video-box">
-            <div class="video-label">Left</div>
-            <iframe
-              src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${leftID}"
-              allow="autoplay"
-              allowfullscreen>
-            </iframe>
-          </div>
-          <div class="vote-count">Votes: ${leftVotes}</div>
-          <button class="vote-button" onclick="vote(${i}, 'Left')">Vote Left</button>
-        </div>
-
-        <div class="battle-column">
-          <div class="video-box">
-            <div class="video-label">Right</div>
-            <iframe
-              src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${rightID}"
-              allow="autoplay"
-              allow
+}
