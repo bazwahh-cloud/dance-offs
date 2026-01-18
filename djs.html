@@ -8,7 +8,6 @@
 
 <body>
 
-  <!-- Navigation -->
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -26,7 +25,6 @@
       <label>SoundCloud Mix URL</label>
       <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/..." oninput="updatePreview()">
 
-      <!-- Live SoundCloud Preview -->
       <div id="previewPlayer" style="margin-top:20px; display:none;">
         <iframe 
           id="scPlayerFrame"
@@ -51,6 +49,66 @@
     const BASE_URL =
       "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
+    /* ------------------------------
+       OLD WORKING FUNCTIONS RESTORED
+    ------------------------------ */
+
+    function extractUrlFromInput(raw) {
+      let text = raw.trim();
+      if (text.includes("<iframe")) {
+        const srcMatch = text.match(/src="([^"]+)"/i);
+        if (srcMatch) text = srcMatch[1];
+      }
+      return text;
+    }
+
+    function getInnerUrlIfPlayer(url) {
+      if (url.includes("w.soundcloud.com/player")) {
+        try {
+          const u = new URL(url);
+          const inner = u.searchParams.get("url");
+          if (inner) return decodeURIComponent(inner);
+        } catch (e) {}
+      }
+      return url;
+    }
+
+    async function resolveViaOEmbed(url) {
+      try {
+        const oembedUrl = "https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url);
+        const res = await fetch(oembedUrl);
+        if (!res.ok) return url;
+
+        const data = await res.json();
+        const html = data.html || "";
+        const srcMatch = html.match(/src="([^"]+)"/i);
+        if (!srcMatch) return url;
+
+        let playerUrl = srcMatch[1];
+        playerUrl = getInnerUrlIfPlayer(playerUrl);
+        return playerUrl || url;
+      } catch (e) {
+        return url;
+      }
+    }
+
+    /* ------------------------------ */
+
+    async function expandSoundCloudURL(url) {
+      url = extractUrlFromInput(url);
+
+      if (!url.startsWith("http")) {
+        url = "https://" + url;
+      }
+
+      if (url.includes("on.soundcloud.com") || url.includes("snd.sc")) {
+        url = await resolveViaOEmbed(url);
+      }
+
+      url = getInnerUrlIfPlayer(url);
+      return url;
+    }
+
     async function getNextSide() {
       const res = await fetch(BASE_URL + "?mode=readdj&cache=" + Math.random());
       const data = await res.json();
@@ -59,15 +117,17 @@
       return last.includes("left") ? "DJ Right" : "DJ Left";
     }
 
-    function updatePreview() {
-      const url = document.getElementById("scURL").value.trim();
+    async function updatePreview() {
+      let url = document.getElementById("scURL").value.trim();
       const preview = document.getElementById("previewPlayer");
       const frame = document.getElementById("scPlayerFrame");
 
-      if (!url.startsWith("http") || !url.includes("soundcloud.com")) {
+      if (!url.includes("soundcloud.com")) {
         preview.style.display = "none";
         return;
       }
+
+      url = await expandSoundCloudURL(url);
 
       const embedURL =
         "https://w.soundcloud.com/player/?url=" +
@@ -79,16 +139,19 @@
     }
 
     async function submitDJ() {
-      const url = document.getElementById("scURL").value.trim();
+      let url = document.getElementById("scURL").value.trim();
       const status = document.getElementById("status");
 
-      if (!url.startsWith("http") || !url.includes("soundcloud.com")) {
-        status.textContent = "Please enter a valid SoundCloud URL.";
+      url = await expandSoundCloudURL(url);
+
+      if (!url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
+        status.textContent = "Invalid SoundCloud URL.";
         status.style.color = "red";
         return;
       }
 
       const side = await getNextSide();
+
       const logURL =
         BASE_URL +
         "?mode=logdj" +
