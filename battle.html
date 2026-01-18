@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style2.css?v=19">
+  <link rel="stylesheet" href="style2.css?v=21">
 </head>
 
 <body>
@@ -62,3 +62,29 @@
             src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
             allow="autoplay; encrypted-media"
             allowfullscreen>
+          </iframe>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </div>
+
+  <!-- Script -->
+  <script>
+    function extractVideoID(raw) {
+      if (!raw) return null;
+      const url = raw.trim();
+
+      let match;
+
+      match = url.match(/[?&]v=([^&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/youtu\.be\/([^?&#]+)/i);
