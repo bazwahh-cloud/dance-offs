@@ -82,6 +82,7 @@
       max-width: 50%;
       position: relative;
       background: #fff;
+      pointer-events: none; /* BLOCK CLICK-THROUGH */
     }
 
     .video-label {
@@ -179,97 +180,4 @@ document.head.appendChild(tag);
 <iframe id="loggerFrame" style="display:none;"></iframe>
 
 <script>
-const LOG_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-// DEFAULT SHORTS
-let defaultLeft = "W-jKGWTthm8";
-let defaultRight = "SJKl6PEXklU";
-
-let leftPlayer, rightPlayer;
-
-function onYouTubeIframeAPIReady() {
-  leftPlayer = new YT.Player("leftPlayer", {
-    videoId: defaultLeft,
-    playerVars: {
-      autoplay: 1,
-      mute: 1,
-      loop: 1,
-      playlist: defaultLeft,
-      controls: 0,
-      modestbranding: 1,
-      rel: 0,
-      playsinline: 1
-    },
-    events: {
-      onReady: onLeftReady
-    }
-  });
-
-  rightPlayer = new YT.Player("rightPlayer", {
-    videoId: defaultRight,
-    playerVars: {
-      autoplay: 1,
-      mute: 1,
-      loop: 1,
-      playlist: defaultRight,
-      controls: 0,
-      modestbranding: 1,
-      rel: 0,
-      playsinline: 1
-    },
-    events: {
-      onReady: onRightReady
-    }
-  });
-}
-
-function onLeftReady(event) {
-  event.target.mute();
-  event.target.playVideo();
-}
-
-function onRightReady(event) {
-  event.target.mute();
-  event.target.playVideo();
-}
-
-function extractYouTubeID(url) {
-  const patterns = [
-    /shorts\/([^?&/]+)/,
-    /v=([^?&/]+)/,
-    /youtu\.be\/([^?&/]+)/,
-    /embed\/([^?&/]+)/
-  ];
-  for (const p of patterns) {
-    const match = url.match(p);
-    if (match && match[1]) return match[1];
-  }
-  alert("Invalid YouTube link");
-  return null;
-}
-
-function logToSheet(name, url) {
-  const logger = document.getElementById("loggerFrame");
-  const fullURL = LOG_URL + "?dancer=" + encodeURIComponent(name) + "&url=" + encodeURIComponent(url);
-  logger.src = fullURL;
-}
-
-function loadVideo(inputId, player, dancerName) {
-  const url = document.getElementById(inputId).value.trim();
-  const id = extractYouTubeID(url);
-  if (!id) return;
-
-  player.loadVideoById(id);
-  player.mute();
-  player.playVideo();
-
-  logToSheet(dancerName, "https://www.youtube.com/watch?v=" + id);
-}
-</script>
-
-<footer class="footer">
-  <p>© 2025 Dance-Offs. All Rights Reserved.</p>
-</footer>
-
-</body>
-</html>
+const LOG_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec
