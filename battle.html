@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style.css?v=17">
+  <link rel="stylesheet" href="style2.css?v=17">
 </head>
 
 <body>
@@ -69,10 +69,8 @@
 
   <!-- Script -->
   <script>
-    // Your real Google Apps Script endpoint
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-    // Ultra‑robust YouTube ID extractor
     function extractVideoID(raw) {
       if (!raw) return null;
       const url = raw.trim();
@@ -97,7 +95,6 @@
       return null;
     }
 
-    // Log to your existing Google Sheet
     function logToSheet(side, url) {
       const fullURL =
         SHEET_URL +
@@ -108,7 +105,6 @@
         .catch(() => {});
     }
 
-    // Load left video + log URL
     function loadLeft() {
       const url = document.getElementById("leftInput").value;
       const id = extractVideoID(url);
@@ -128,7 +124,6 @@
       setTimeout(() => logToSheet("Left", url), 300);
     }
 
-    // Load right video + log URL
     function loadRight() {
       const url = document.getElementById("rightInput").value;
       const id = extractVideoID(url);
