@@ -17,35 +17,18 @@
   </div>
 
   <!-- Compact Input Bar Row -->
-  <div style="
-    width: 90%;
-    max-width: 900px;
-    margin: 15px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  ">
+  <div class="input-row">
     <input 
       id="leftInput" 
       type="text" 
       placeholder="Left YouTube URL"
-      style="flex: 1; padding: 8px; font-size: 14px;"
     >
-
     <input 
       id="rightInput" 
       type="text" 
       placeholder="Right YouTube URL"
-      style="flex: 1; padding: 8px; font-size: 14px;"
     >
-
-    <button 
-      onclick="loadVideos()"
-      style="padding: 9px 15px; font-size: 14px; font-weight: bold; cursor: pointer;"
-    >
-      Load
-    </button>
+    <button onclick="loadVideos()">Load</button>
   </div>
 
   <h1>Dance-Offs: Battle</h1>
@@ -55,4 +38,65 @@
       <div class="video-label">Dancer Left</div>
       <iframe
         id="leftVid"
-        src="https://www.youtube.com/embed
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="video-box">
+      <div class="video-label">Dancer Right</div>
+      <iframe
+        id="rightVid"
+        src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <div class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </div>
+
+  <script>
+    function extractVideoID(url) {
+      try {
+        const urlObj = new URL(url);
+
+        if (urlObj.hostname.includes("youtube.com")) {
+          return urlObj.searchParams.get("v");
+        }
+
+        if (urlObj.hostname.includes("youtu.be")) {
+          return urlObj.pathname.substring(1);
+        }
+
+      } catch (e) {
+        return null;
+      }
+
+      return null;
+    }
+
+    function loadVideos() {
+      const leftURL = document.getElementById("leftInput").value;
+      const rightURL = document.getElementById("rightInput").value;
+
+      const leftID = extractVideoID(leftURL);
+      const rightID = extractVideoID(rightURL);
+
+      if (leftID) {
+        document.getElementById("leftVid").src =
+          `https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&playsinline=1`;
+      }
+
+      if (rightID) {
+        document.getElementById("rightVid").src =
+          `https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&playsinline=1`;
+      }
+    }
+  </script>
+
+</body>
+</html>
