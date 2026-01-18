@@ -134,7 +134,7 @@
 </head>
 <body>
 
-<!-- FORCE YOUTUBE API TO LOAD FIRST (FIXES AUTOPLAY) -->
+<!-- LOAD YOUTUBE API EARLY -->
 <script>
 let tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
@@ -176,7 +176,6 @@ document.head.appendChild(tag);
   </div>
 </div>
 
-<!-- Hidden iframe for logging -->
 <iframe id="loggerFrame" style="display:none;"></iframe>
 
 <script>
@@ -188,7 +187,6 @@ let defaultRight = "SJKl6PEXklU";
 
 let leftPlayer, rightPlayer;
 
-// Create players when API is ready
 function onYouTubeIframeAPIReady() {
   leftPlayer = new YT.Player("leftPlayer", {
     videoId: defaultLeft,
@@ -201,6 +199,9 @@ function onYouTubeIframeAPIReady() {
       modestbranding: 1,
       rel: 0,
       playsinline: 1
+    },
+    events: {
+      onReady: onLeftReady
     }
   });
 
@@ -215,11 +216,23 @@ function onYouTubeIframeAPIReady() {
       modestbranding: 1,
       rel: 0,
       playsinline: 1
+    },
+    events: {
+      onReady: onRightReady
     }
   });
 }
 
-// Extract ID from any YouTube link
+function onLeftReady(event) {
+  event.target.mute();
+  event.target.playVideo();
+}
+
+function onRightReady(event) {
+  event.target.mute();
+  event.target.playVideo();
+}
+
 function extractYouTubeID(url) {
   const patterns = [
     /shorts\/([^?&/]+)/,
@@ -237,4 +250,26 @@ function extractYouTubeID(url) {
 
 function logToSheet(name, url) {
   const logger = document.getElementById("loggerFrame");
-  const fullURL = LOG_URL + "?dancer
+  const fullURL = LOG_URL + "?dancer=" + encodeURIComponent(name) + "&url=" + encodeURIComponent(url);
+  logger.src = fullURL;
+}
+
+function loadVideo(inputId, player, dancerName) {
+  const url = document.getElementById(inputId).value.trim();
+  const id = extractYouTubeID(url);
+  if (!id) return;
+
+  player.loadVideoById(id);
+  player.mute();
+  player.playVideo();
+
+  logToSheet(dancerName, "https://www.youtube.com/watch?v=" + id);
+}
+</script>
+
+<footer class="footer">
+  <p>© 2025 Dance-Offs. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
