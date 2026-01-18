@@ -91,15 +91,16 @@ h1 {
 .videos-wrapper {
   width: 90%;
   max-width: 1100px;
-  margin: 10px auto 40px;
+  margin: 20px auto 40px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
 }
 
 /* Each video box */
 .video-box {
-  flex: 1;
+  flex: 1 1 500px;
   border: 2px solid #000;
   border-radius: 10px;
   padding: 10px;
@@ -126,27 +127,4 @@ iframe {
 .footer {
   width: 100%;
   text-align: center;
-  padding: 15px 0;
-  border-top: 2px solid #000;
-  background: #fff;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: auto;
-}
-
-/* Responsive: stack videos and inputs on narrow screens */
-@media (max-width: 800px) {
-  .videos-wrapper {
-    flex-direction: column;
-  }
-
-  .input-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .input-row input,
-  .input-row button {
-    width: 100%;
-  }
-}
+  padding
