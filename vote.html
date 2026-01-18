@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=40">
+  <link rel="stylesheet" href="style2.css?v=50">
 
   <style>
     .battle-card {
@@ -20,6 +20,13 @@
       width: 100%;
       height: 220px;
       overflow: hidden;
+    }
+    .video-box iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
 
     .video-overlay {
@@ -64,9 +71,6 @@
 
 <body>
 
-  <!-- Hidden autoplay unlock button -->
-  <button id="unlock" style="display:none;">unlock</button>
-
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -95,14 +99,9 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-<!-- Load YouTube API -->
-<script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
 const BASE_URL =
   "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-let players = [];
 
 function getDataURL() {
   return BASE_URL + "?mode=read&cache=" + Math.random();
@@ -154,7 +153,6 @@ async function loadBattles() {
     const voteCounts = await voteCountsResponse.json();
 
     container.innerHTML = "";
-    players = [];
 
     data.forEach((battle, index) => {
       const leftID = getYouTubeID(battle.left);
@@ -163,6 +161,16 @@ async function loadBattles() {
       const leftVotes = voteCounts[index]?.left || 0;
       const rightVotes = voteCounts[index]?.right || 0;
 
+      const leftURL =
+        "https://www.youtube.com/embed/" +
+        leftID +
+        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1";
+
+      const rightURL =
+        "https://www.youtube.com/embed/" +
+        rightID +
+        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1";
+
       const battleHTML = `
         <div class="battle-card">
           <div class="battle-wrapper">
@@ -170,7 +178,7 @@ async function loadBattles() {
             <div class="battle-column">
               <div class="video-box">
                 <div class="video-overlay">Dancer Left</div>
-                <div id="player_left_${index}"></div>
+                <iframe src="${leftURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
               </div>
               <div class="vote-count">Votes: ${leftVotes}</div>
               <button class="vote-button" onclick="vote(${index}, 'left')">Vote Left</button>
@@ -179,7 +187,7 @@ async function loadBattles() {
             <div class="battle-column">
               <div class="video-box">
                 <div class="video-overlay">Dancer Right</div>
-                <div id="player_right_${index}"></div>
+                <iframe src="${rightURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
               </div>
               <div class="vote-count">Votes: ${rightVotes}</div>
               <button class="vote-button" onclick="vote(${index}, 'right')">Vote Right</button>
@@ -190,42 +198,12 @@ async function loadBattles() {
       `;
 
       container.innerHTML += battleHTML;
-
-      players.push({
-        left: { id: leftID, element: `player_left_${index}` },
-        right: { id: rightID, element: `player_right_${index}` }
-      });
     });
-
-    document.getElementById("unlock").click();
 
   } catch (err) {
     container.innerHTML = "<p>Error loading battles.</p>";
   }
 }
-
-function onYouTubeIframeAPIReady() {
-  players.forEach((pair) => {
-    pair.left.player = new YT.Player(pair.left.element, {
-      videoId: pair.left.id,
-      playerVars: { autoplay: 0, mute: 1, controls: 0, playsinline: 1 }
-    });
-
-    pair.right.player = new YT.Player(pair.right.element, {
-      videoId: pair.right.id,
-      playerVars: { autoplay: 0, mute: 1, controls: 0, playsinline: 1 }
-    });
-  });
-}
-
-document.getElementById("unlock").addEventListener("click", () => {
-  setTimeout(() => {
-    players.forEach((pair) => {
-      pair.left.player.playVideo();
-      pair.right.player.playVideo();
-    });
-  }, 500);
-});
 
 loadBattles();
 </script>
