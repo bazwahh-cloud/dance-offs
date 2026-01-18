@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=50">
+  <link rel="stylesheet" href="style2.css?v=51">
 
   <style>
     .battle-card {
@@ -66,6 +66,21 @@
       font-size: 16px;
       font-weight: bold;
     }
+
+    /* SoundCloud container fix */
+    .soundcloud-wrapper {
+      width: 100%;
+      padding: 40px 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+    }
+    .soundcloud-wrapper iframe {
+      max-width: 900px;
+      width: 100%;
+      height: 140px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 
@@ -84,16 +99,15 @@
     <div id="battleContainer"></div>
   </main>
 
-  <aside style="width:100%; margin:50px 0;">
+  <!-- Fully visible SoundCloud player -->
+  <div class="soundcloud-wrapper">
     <iframe 
-      width="100%" 
-      height="60" 
       scrolling="no" 
       frameborder="no" 
       allow="autoplay"
       src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/YOUR-SOUNDCLOUD-TRACK&color=%230077cc&inverse=false&auto_play=false&show_user=false">
     </iframe>
-  </aside>
+  </div>
 
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
@@ -169,44 +183,4 @@ async function loadBattles() {
       const rightURL =
         "https://www.youtube.com/embed/" +
         rightID +
-        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1";
-
-      const battleHTML = `
-        <div class="battle-card">
-          <div class="battle-wrapper">
-
-            <div class="battle-column">
-              <div class="video-box">
-                <div class="video-overlay">Dancer Left</div>
-                <iframe src="${leftURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-              </div>
-              <div class="vote-count">Votes: ${leftVotes}</div>
-              <button class="vote-button" onclick="vote(${index}, 'left')">Vote Left</button>
-            </div>
-
-            <div class="battle-column">
-              <div class="video-box">
-                <div class="video-overlay">Dancer Right</div>
-                <iframe src="${rightURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-              </div>
-              <div class="vote-count">Votes: ${rightVotes}</div>
-              <button class="vote-button" onclick="vote(${index}, 'right')">Vote Right</button>
-            </div>
-
-          </div>
-        </div>
-      `;
-
-      container.innerHTML += battleHTML;
-    });
-
-  } catch (err) {
-    container.innerHTML = "<p>Error loading battles.</p>";
-  }
-}
-
-loadBattles();
-</script>
-
-</body>
-</html>
+        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding
