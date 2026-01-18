@@ -13,7 +13,6 @@
         color: #fff;
     }
 
-    /* Graffiti Header */
     header {
         background: linear-gradient(90deg, #ff5500, #ff00aa);
         padding: 25px;
@@ -26,7 +25,6 @@
         font-family: Impact, sans-serif;
     }
 
-    /* Navigation */
     nav {
         background: #111;
         display: flex;
@@ -48,7 +46,6 @@
         color: #fff;
     }
 
-    /* Sections */
     section {
         padding: 40px 20px;
         max-width: 900px;
@@ -68,7 +65,6 @@
         color: #ccc;
     }
 
-    /* Overlay */
     #fullOverlay {
         position: fixed;
         top: 0;
@@ -107,7 +103,6 @@
 </head>
 <body>
 
-<!-- Overlay -->
 <div id="fullOverlay" onclick="this.style.display='none'">
     <div>dance-offs</div>
 </div>
