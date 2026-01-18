@@ -35,7 +35,6 @@
 const BASE_URL =
   "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
-// Prevent caching on GitHub Pages
 function getDataURL() {
   return BASE_URL + "?mode=read&cache=" + Math.random();
 }
@@ -44,7 +43,6 @@ function getVoteCountsURL() {
   return BASE_URL + "?mode=votecounts&cache=" + Math.random();
 }
 
-// Extract YouTube ID from any format
 function getYouTubeID(url) {
   if (!url) return null;
   const patterns = [
@@ -60,7 +58,6 @@ function getYouTubeID(url) {
   return null;
 }
 
-// Submit vote
 function vote(battleIndex, winner) {
   const url =
     BASE_URL +
@@ -71,12 +68,11 @@ function vote(battleIndex, winner) {
   fetch(url, { method: "GET", mode: "no-cors" })
     .then(() => {
       alert("Vote recorded for " + winner);
-      loadBattles(); // refresh counts
+      loadBattles();
     })
     .catch(() => alert("Error recording vote"));
 }
 
-// Load battles + vote counts
 async function loadBattles() {
   const container = document.getElementById("battleContainer");
   container.innerHTML = "<p style='color:black; text-align:center;'>Loading battles…</p>";
@@ -101,6 +97,5 @@ async function loadBattles() {
     return;
   }
 
-  // Filter only YouTube rows
-  const clean = data.filter(r =>
-    r.performer &&
+  // FIXED: use "dancer" instead of "performer"
+  const clean = data
