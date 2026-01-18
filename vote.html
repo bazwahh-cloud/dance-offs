@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=60">
+  <link rel="stylesheet" href="style2.css?v=61">
 
   <style>
     .battle-card {
@@ -74,9 +74,11 @@
       display: flex;
       justify-content: center;
     }
-    .soundcloud-wrapper .sc-container {
+    .soundcloud-wrapper iframe {
       max-width: 900px;
       width: 100%;
+      height: 140px;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -98,7 +100,7 @@
 
   <!-- SoundCloud player injected dynamically -->
   <div class="soundcloud-wrapper">
-    <div id="soundcloudContainer" class="sc-container"></div>
+    <div id="soundcloudContainer"></div>
   </div>
 
   <footer class="footer">
@@ -132,48 +134,4 @@ function getYouTubeID(url) {
   return null;
 }
 
-function vote(battleIndex, winner) {
-  const url =
-    BASE_URL +
-    "?mode=vote" +
-    "&battle=" + battleIndex +
-    "&winner=" + encodeURIComponent(winner);
-
-  fetch(url, { method: "GET", mode: "no-cors" })
-    .then(() => {
-      alert("Vote recorded for " + winner);
-      loadBattles();
-    })
-    .catch(() => alert("Error recording vote"));
-}
-
-async function loadBattles() {
-  const container = document.getElementById("battleContainer");
-  const soundcloudContainer = document.getElementById("soundcloudContainer");
-  container.innerHTML = "<p>Loading battles...</p>";
-
-  try {
-    const response = await fetch(getDataURL());
-    const data = await response.json();
-
-    const voteCountsResponse = await fetch(getVoteCountsURL());
-    const voteCounts = await voteCountsResponse.json();
-
-    container.innerHTML = "";
-    soundcloudContainer.innerHTML = "";
-
-    let lastSoundCloudURL = null;
-
-    data.forEach((battle, index) => {
-      const leftID = getYouTubeID(battle.left);
-      const rightID = getYouTubeID(battle.right);
-
-      const leftVotes = voteCounts[index]?.left || 0;
-      const rightVotes = voteCounts[index]?.right || 0;
-
-      // Track last valid SoundCloud URL
-      if (battle.soundcloud && battle.soundcloud.includes("soundcloud.com")) {
-        lastSoundCloudURL = battle.soundcloud;
-      }
-
-      const left
+function vote(battleIndex
