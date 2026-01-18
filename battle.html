@@ -67,7 +67,7 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #000;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.9);
       padding: 6px 12px;
       border-radius: 6px;
       pointer-events: none;
@@ -80,7 +80,8 @@
       border: none;
       display: block;
       background-color: #fff;
-      pointer-events: none;
+      /* IMPORTANT: autoplay fix */
+      pointer-events: auto;
     }
 
     @media (max-width: 768px) {
@@ -125,6 +126,7 @@
   </div>
 </div>
 
+<!-- Hidden iframe for logging -->
 <iframe id="loggerFrame" style="display:none;"></iframe>
 
 <script>
