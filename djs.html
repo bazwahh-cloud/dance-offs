@@ -24,9 +24,9 @@
     <div class="battle-card" style="max-width:600px;">
 
       <label>SoundCloud Mix URL</label>
-      <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/..." oninput="updatePreview()">
+      <input id="scURL" class="input-field" type="text" placeholder="https://soundcloud.com/...">
 
-      <!-- Live SoundCloud Preview -->
+      <!-- Player loads ONLY after submit -->
       <div id="previewPlayer" style="margin-top:20px; display:none;">
         <iframe 
           id="scPlayerFrame"
@@ -55,38 +55,4 @@
        OLD WORKING FUNCTIONS (EXACTLY LIKE DEBUG LOADER)
     ---------------------------------------------------- */
 
-    function extractUrlFromInput(raw) {
-      let text = raw.trim();
-      if (text.includes("<iframe")) {
-        const srcMatch = text.match(/src="([^"]+)"/i);
-        if (srcMatch) text = srcMatch[1];
-      }
-      return text;
-    }
-
-    function getInnerUrlIfPlayer(url) {
-      if (url.includes("w.soundcloud.com/player")) {
-        try {
-          const u = new URL(url);
-          const inner = u.searchParams.get("url");
-          if (inner) return decodeURIComponent(inner);
-        } catch (e) {}
-      }
-      return url;
-    }
-
-    async function resolveViaOEmbed(url) {
-      try {
-        const oembedUrl = "https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url);
-        const res = await fetch(oembedUrl);
-        if (!res.ok) return url;
-
-        const data = await res.json();
-        const html = data.html || "";
-        const srcMatch = html.match(/src="([^"]+)"/i);
-        if (!srcMatch) return url;
-
-        let playerUrl = srcMatch[1];
-        playerUrl = getInnerUrlIfPlayer(playerUrl);
-        return playerUrl || url;
-      }
+    function extractUrlFromInput
