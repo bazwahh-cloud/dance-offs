@@ -14,6 +14,34 @@
       color: #000;
     }
 
+    /* NAVIGATION BAR */
+    .navbar {
+      width: 100%;
+      background: #ffffff;
+      border-bottom: 2px solid #000;
+      padding: 15px 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .navbar a {
+      color: #000;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0 20px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .navbar a:hover {
+      background: #000;
+      color: #fff;
+    }
+
     .input-area {
       text-align: center;
       padding: 15px;
@@ -86,9 +114,34 @@
         max-width: 100%;
       }
     }
+
+    /* FOOTER */
+    .footer {
+      width: 100%;
+      background: #ffffff;
+      border-top: 2px solid #000;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .footer p {
+      margin: 0;
+      font-size: 16px;
+      color: #000;
+    }
   </style>
 </head>
 <body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <a href="index.html">Home</a>
+  <a href="dancers.html">Dancers</a>
+  <a href="battle.html">Battle</a>
+  <a href="djs.html">DJs</a>
+  <a href="merch.html">Merch</a>
+</nav>
 
 <div class="input-area">
   <h2>Paste YouTube Links for Each Dancer</h2>
@@ -100,103 +153,4 @@
 
   <div>
     <input id="rightInput" type="text" placeholder="Paste YouTube link for Dancer Right">
-    <button onclick="loadVideo('rightInput', rightPlayer, 'Dancer Right')">Load Right Video</button>
-  </div>
-</div>
-
-<div class="video-container">
-  <div class="video-wrapper">
-    <div class="video-label">Dancer Left</div>
-    <div id="leftPlayer" class="player"></div>
-  </div>
-
-  <div class="video-wrapper">
-    <div class="video-label">Dancer Right</div>
-    <div id="rightPlayer" class="player"></div>
-  </div>
-</div>
-
-<iframe id="loggerFrame" style="display:none;"></iframe>
-
-<script>
-const LOG_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-// DEFAULT SHORTS (your dancers)
-let defaultLeft = "W-jKGWTthm8";
-let defaultRight = "SJKl6PEXklU";
-
-let leftPlayer, rightPlayer;
-
-// Load YouTube API
-let tag = document.createElement("script");
-tag.src = "https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
-
-// Create players when API is ready
-function onYouTubeIframeAPIReady() {
-  leftPlayer = new YT.Player("leftPlayer", {
-    videoId: defaultLeft,
-    playerVars: {
-      autoplay: 1,
-      mute: 1,
-      loop: 1,
-      playlist: defaultLeft,
-      controls: 0,
-      modestbranding: 1,
-      rel: 0,
-      playsinline: 1
-    }
-  });
-
-  rightPlayer = new YT.Player("rightPlayer", {
-    videoId: defaultRight,
-    playerVars: {
-      autoplay: 1,
-      mute: 1,
-      loop: 1,
-      playlist: defaultRight,
-      controls: 0,
-      modestbranding: 1,
-      rel: 0,
-      playsinline: 1
-    }
-  });
-}
-
-// Extract ID from any YouTube link
-function extractYouTubeID(url) {
-  const patterns = [
-    /shorts\/([^?&/]+)/,
-    /v=([^?&/]+)/,
-    /youtu\.be\/([^?&/]+)/,
-    /embed\/([^?&/]+)/
-  ];
-  for (const p of patterns) {
-    const match = url.match(p);
-    if (match && match[1]) return match[1];
-  }
-  alert("Invalid YouTube link");
-  return null;
-}
-
-function logToSheet(name, url) {
-  const logger = document.getElementById("loggerFrame");
-  const fullURL = LOG_URL + "?dancer=" + encodeURIComponent(name) + "&url=" + encodeURIComponent(url);
-  logger.src = fullURL;
-}
-
-function loadVideo(inputId, player, dancerName) {
-  const url = document.getElementById(inputId).value.trim();
-  const id = extractYouTubeID(url);
-  if (!id) return;
-
-  player.loadVideoById(id);
-  player.mute();
-  player.playVideo();
-
-  logToSheet(dancerName, "https://www.youtube.com/watch?v=" + id);
-}
-</script>
-
-</body>
-</html>
+    <button onclick="loadVideo('rightInput', rightPlayer, 'Dancer Right')">Load Right Video
