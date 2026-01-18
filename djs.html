@@ -59,31 +59,19 @@
       return last.includes("left") ? "DJ Right" : "DJ Left";
     }
 
-    async function validateSoundCloudURL(url) {
-      try {
-        const res = await fetch("https://soundcloud.com/oembed?url=" + encodeURIComponent(url) + "&format=json");
-        if (!res.ok) return null;
-        const data = await res.json();
-        return data.html.includes("iframe") ? url : null;
-      } catch {
-        return null;
-      }
-    }
-
-    async function updatePreview() {
-      const input = document.getElementById("scURL").value.trim();
+    function updatePreview() {
+      const url = document.getElementById("scURL").value.trim();
       const preview = document.getElementById("previewPlayer");
       const frame = document.getElementById("scPlayerFrame");
 
-      const validURL = await validateSoundCloudURL(input);
-      if (!validURL) {
+      if (!url.startsWith("http") || !url.includes("soundcloud.com")) {
         preview.style.display = "none";
         return;
       }
 
       const embedURL =
         "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(validURL) +
+        encodeURIComponent(url) +
         "&color=%230077cc&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false";
 
       frame.src = embedURL;
@@ -91,12 +79,11 @@
     }
 
     async function submitDJ() {
-      const input = document.getElementById("scURL").value.trim();
+      const url = document.getElementById("scURL").value.trim();
       const status = document.getElementById("status");
 
-      const validURL = await validateSoundCloudURL(input);
-      if (!validURL) {
-        status.textContent = "That SoundCloud link couldn't be validated. Please check the URL.";
+      if (!url.startsWith("http") || !url.includes("soundcloud.com")) {
+        status.textContent = "Please enter a valid SoundCloud URL.";
         status.style.color = "red";
         return;
       }
@@ -106,7 +93,7 @@
         BASE_URL +
         "?mode=logdj" +
         "&dj=" + encodeURIComponent(side) +
-        "&soundcloud=" + encodeURIComponent(validURL);
+        "&soundcloud=" + encodeURIComponent(url);
 
       fetch(logURL, { method: "GET", mode: "no-cors" })
         .then(() => {
