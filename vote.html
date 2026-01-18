@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=24">
+  <link rel="stylesheet" href="style2.css?v=25">
 </head>
 
 <body>
@@ -18,15 +18,13 @@
     <a href="merch.html">Merch</a>
   </div>
 
-  <!-- Page container -->
+  <!-- Main content -->
   <div class="page-container">
-
     <div id="battleContainer"></div>
-
   </div>
 
-  <!-- SoundCloud Player -->
-  <div class="sc-player-wrapper">
+  <!-- SoundCloud Player (moved OUTSIDE the main container) -->
+  <div class="sc-player-wrapper" style="margin-top:40px;">
     <iframe 
       width="100%" 
       height="60" 
@@ -37,6 +35,7 @@
     </iframe>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     © 2026 Dance-Offs — Built by Baz
   </div>
@@ -84,31 +83,4 @@ function vote(battleIndex, winner) {
 }
 
 async function loadBattles() {
-  const container = document.getElementById("battleContainer");
-  container.innerHTML = "<p>Loading battles...</p>";
-
-  try {
-    const response = await fetch(getDataURL());
-    const data = await response.json();
-
-    const voteCountsResponse = await fetch(getVoteCountsURL());
-    const voteCounts = await voteCountsResponse.json();
-
-    container.innerHTML = "";
-
-    data.forEach((battle, index) => {
-      const leftID = getYouTubeID(battle.left);
-      const rightID = getYouTubeID(battle.right);
-
-      const leftVotes = voteCounts[index]?.left || 0;
-      const rightVotes = voteCounts[index]?.right || 0;
-
-      const battleHTML = `
-        <div class="battle-card">
-          <div class="battle-wrapper">
-
-            <div class="battle-column">
-              <div class="video-label">Dancer Left</div>
-              <div class="video-box">
-                <iframe 
-                  src="https://www.youtube.com/embed
+  const container
