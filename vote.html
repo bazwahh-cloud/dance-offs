@@ -2,80 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=200">
-
+  <title>Dance-Offs: Battle</title>
+  <link rel="stylesheet" href="style2.css?v=23">
   <style>
-    .battle-card {
-      margin: 25px 0;
-      padding: 18px;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      min-height: 260px;
-    }
-    .battle-card:nth-child(odd) { background: #eef6ff; }
-
-    .battle-wrapper {
-      display: flex;
-      gap: 20px;
-    }
-
-    .battle-column {
-      flex: 1;
-    }
-
-    .video-box {
-      position: relative;
-      width: 100%;
-      height: 160px;
-      overflow: hidden;
-      background: #000;
-      border-radius: 6px;
-    }
-    .video-box iframe {
-      width: 100%;
-      height: 100%;
-    }
-
-    .video-overlay {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      background: rgba(0,0,0,0.65);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 13px;
-      font-weight: bold;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    .vote-button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 15px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #0077ff;
-      color: white;
-      transition: 0.2s ease;
-    }
-    .vote-button:hover {
-      background: #0059c9;
-      transform: scale(1.03);
-    }
-
-    .vote-count {
-      margin-top: 6px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    /* --- SoundCloud Player Box --- */
     .dj-box {
       margin-top: 30px;
       padding: 15px;
@@ -83,7 +12,6 @@
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-
     .dj-box h3 {
       margin-top: 0;
       font-size: 16px;
@@ -94,34 +22,135 @@
 
 <body>
 
+  <!-- Navigation -->
   <div class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
-    <a href="battle.html">Battle</a>
+    <a href="battle.html" class="active">Battle</a>
     <a href="djs.html">DJs</a>
-    <a href="vote.html" class="active">Vote</a>
+    <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
   </div>
 
-  <main class="page-container">
+  <!-- Page container -->
+  <div class="page-container">
 
-    <!-- YouTube Battle Container -->
-    <div id="battleContainer"></div>
+    <div class="battle-wrapper">
 
-    <!-- SoundCloud Player Container -->
+      <!-- LEFT COLUMN -->
+      <div class="battle-column">
+
+        <div class="input-box">
+          <input id="leftInput" type="text" placeholder="Left YouTube URL">
+          <button type="button" onclick="loadLeft()">Load Left</button>
+        </div>
+
+        <div class="video-label">Dancer Left</div>
+
+        <div class="video-box">
+          <iframe
+            id="leftVid"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="battle-column">
+
+        <div class="input-box">
+          <input id="rightInput" type="text" placeholder="Right YouTube URL">
+          <button type="button" onclick="loadRight()">Load Right</button>
+        </div>
+
+        <div class="video-label">Dancer Right</div>
+
+        <div class="video-box">
+          <iframe
+            id="rightVid"
+            src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SoundCloud Player -->
     <div id="djContainer" class="dj-box">
       <h3>Now Playing</h3>
-      <iframe 
+      <iframe
         id="scPlayer"
-        width="100%" 
-        height="120" 
-        scrolling="no" 
-        frameborder="no" 
+        width="100%"
+        height="120"
+        scrolling="no"
+        frameborder="no"
         allow="autoplay">
       </iframe>
     </div>
 
-  </main>
+  </div>
 
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by
+  <!-- Footer -->
+  <div class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </div>
+
+  <!-- Script -->
+  <script>
+    function extractVideoID(raw) {
+      if (!raw) return null;
+      const url = raw.trim();
+
+      let match;
+
+      match = url.match(/[?&]v=([^&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/youtu\.be\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/shorts\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      match = url.match(/embed\/([^?&#]+)/i);
+      if (match) return match[1];
+
+      return null;
+    }
+
+    function loadLeft() {
+      const raw = document.getElementById("leftInput").value;
+      const id = extractVideoID(raw);
+      if (!id) return alert("Invalid YouTube URL");
+      document.getElementById("leftVid").src =
+        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1`;
+    }
+
+    function loadRight() {
+      const raw = document.getElementById("rightInput").value;
+      const id = extractVideoID(raw);
+      if (!id) return alert("Invalid YouTube URL");
+      document.getElementById("rightVid").src =
+        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1`;
+    }
+
+    function loadDJ() {
+      const scURL = "https://soundcloud.com/forss/flickermood"; // replace with your track
+      const embedURL =
+        "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(scURL) +
+        "&color=%23ff5500&inverse=false&auto_play=false&show_user=true";
+      document.getElementById("scPlayer").src = embedURL;
+    }
+
+    loadDJ();
+  </script>
+
+</body>
+</html>
