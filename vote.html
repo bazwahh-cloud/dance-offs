@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=90">
+  <link rel="stylesheet" href="style2.css?v=100">
 
   <style>
     .battle-card {
@@ -11,12 +11,10 @@
       padding: 18px;
       border-radius: 10px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      min-height: 260px; /* prevents collapse */
+      min-height: 260px;
     }
     .battle-card:nth-child(odd) { background: #eef6ff; }
-    .battle-card:nth-child(even) { background: #f7ecff; }
 
-    /* LOCKED VIDEO HEIGHT */
     .video-box {
       position: relative;
       width: 100%;
@@ -72,7 +70,6 @@
       font-weight: bold;
     }
 
-    /* TINY, SAFE SOUNDCLOUD PLAYER */
     .soundcloud-wrapper {
       width: 100%;
       padding: 10px 0;
@@ -84,7 +81,7 @@
     .soundcloud-wrapper iframe {
       max-width: 900px;
       width: 100%;
-      height: 20px; /* TINY + SAFE */
+      height: 20px;
       border-radius: 4px;
     }
   </style>
@@ -105,7 +102,6 @@
     <div id="battleContainer"></div>
   </main>
 
-  <!-- SoundCloud player injected dynamically -->
   <div class="soundcloud-wrapper">
     <div id="soundcloudContainer"></div>
   </div>
@@ -126,4 +122,106 @@ function getVoteCountsURL() {
   return BASE_URL + "?mode=votecounts&cache=" + Math.random();
 }
 
-function getYouTubeID(url
+function getYouTubeID(url) {
+  if (!url) return null;
+  const patterns = [
+    /v=([^&]+)/,
+    /youtu\.be\/([^?]+)/,
+    /shorts\/([^?]+)/,
+    /embed\/([^?]+)/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function vote(battleIndex, winner) {
+  const url =
+    BASE_URL +
+    "?mode=vote" +
+    "&battle=" + battleIndex +
+    "&winner=" + encodeURIComponent(winner);
+
+  fetch(url, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + winner);
+      loadBattles();
+    })
+    .catch(() => alert("Error recording vote"));
+}
+
+async function loadBattles() {
+  const container = document.getElementById("battleContainer");
+  const soundcloudContainer = document.getElementById("soundcloudContainer");
+
+  container.innerHTML = "<p>Loading battle...</p>";
+
+  try {
+    const response = await fetch(getDataURL());
+    const data = await response.json();
+
+    const voteCountsResponse = await fetch(getVoteCountsURL());
+    const voteCounts = await voteCountsResponse.json();
+
+    container.innerHTML = "";
+    soundcloudContainer.innerHTML = "";
+
+    // --- ONLY ONE ROW ---
+    const battle = data[0]; // FIRST ROW ONLY
+
+    const leftID = getYouTubeID(battle.left);
+    const rightID = getYouTubeID(battle.right);
+
+    const leftVotes = voteCounts[0]?.left || 0;
+    const rightVotes = voteCounts[0]?.right || 0;
+
+    let lastSoundCloudURL = battle.soundcloud || null;
+
+    const leftURL =
+      "https://www.youtube.com/embed/" +
+      leftID +
+      "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1";
+
+    const rightURL =
+      "https://www.youtube.com/embed/" +
+      rightID +
+      "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1";
+
+    const battleHTML = `
+      <div class="battle-card">
+        <div class="battle-wrapper">
+
+          <div class="battle-column">
+            <div class="video-box">
+              <div class="video-overlay">Dancer Left</div>
+              <iframe src="${leftURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="vote-count">Votes: ${leftVotes}</div>
+            <button class="vote-button" onclick="vote(0, 'left')">Vote Left</button>
+          </div>
+
+          <div class="battle-column">
+            <div class="video-box">
+              <div class="video-overlay">Dancer Right</div>
+              <iframe src="${rightURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="vote-count">Votes: ${rightVotes}</div>
+            <button class="vote-button" onclick="vote(0, 'right')">Vote Right</button>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = battleHTML;
+
+    // --- TINY SOUNDCLOUD PLAYER ---
+    if (lastSoundCloudURL && lastSoundCloudURL.includes("soundcloud.com")) {
+      const embedURL =
+        "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(lastSoundCloudURL) +
+        "&visual=false&show_artwork=false&show_user=false&height=20";
+
+      soundcloudContainer.innerHTML
