@@ -126,4 +126,51 @@ async function loadBattles() {
     const leftID = getYouTubeID(data.left.url);
     const rightID = getYouTubeID(data.right.url);
 
-    const leftURL = "https://www.youtube.com
+    const leftURL = "https://www.youtube.com/embed/" + leftID + "?autoplay=1&mute=1";
+    const rightURL = "https://www.youtube.com/embed/" + rightID + "?autoplay=1&mute=1";
+
+    container.innerHTML = `
+      <div class="battle-card">
+        <div class="battle-wrapper">
+
+          <div class="battle-column">
+            <div class="video-box">
+              <div class="video-overlay">Dancer Left</div>
+              <iframe src="${leftURL}" allow="autoplay; encrypted-media"></iframe>
+            </div>
+            <div class="vote-count">Votes: ${data.left.votes}</div>
+            <button class="vote-button" onclick="vote('left')">Vote Left</button>
+          </div>
+
+          <div class="battle-column">
+            <div class="video-box">
+              <div class="video-overlay">Dancer Right</div>
+              <iframe src="${rightURL}" allow="autoplay; encrypted-media"></iframe>
+            </div>
+            <div class="vote-count">Votes: ${data.right.votes}</div>
+            <button class="vote-button" onclick="vote('right')">Vote Right</button>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+  } catch (err) {
+    console.error("LOAD ERROR:", err);
+    container.innerHTML = "<p>Error loading.</p>";
+  }
+}
+
+function vote(side) {
+  fetch(BASE_URL + "?mode=vote&winner=" + side, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + side);
+      loadBattles();
+    });
+}
+
+loadBattles();
+</script>
+
+</body>
+</html>
