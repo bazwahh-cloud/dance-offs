@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=100">
+  <link rel="stylesheet" href="style2.css?v=110">
 
   <style>
     .battle-card {
@@ -169,7 +169,7 @@ async function loadBattles() {
     soundcloudContainer.innerHTML = "";
 
     // --- ONLY ONE ROW ---
-    const battle = data[0]; // FIRST ROW ONLY
+    const battle = data[0];
 
     const leftID = getYouTubeID(battle.left);
     const rightID = getYouTubeID(battle.right);
@@ -199,29 +199,3 @@ async function loadBattles() {
               <iframe src="${leftURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <div class="vote-count">Votes: ${leftVotes}</div>
-            <button class="vote-button" onclick="vote(0, 'left')">Vote Left</button>
-          </div>
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Right</div>
-              <iframe src="${rightURL}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-            <div class="vote-count">Votes: ${rightVotes}</div>
-            <button class="vote-button" onclick="vote(0, 'right')">Vote Right</button>
-          </div>
-
-        </div>
-      </div>
-    `;
-
-    container.innerHTML = battleHTML;
-
-    // --- TINY SOUNDCLOUD PLAYER ---
-    if (lastSoundCloudURL && lastSoundCloudURL.includes("soundcloud.com")) {
-      const embedURL =
-        "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(lastSoundCloudURL) +
-        "&visual=false&show_artwork=false&show_user=false&height=20";
-
-      soundcloudContainer.innerHTML
