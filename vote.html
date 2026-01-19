@@ -74,18 +74,6 @@
       font-size: 14px;
       font-weight: bold;
     }
-
-    .soundcloud-wrapper {
-      width: 100%;
-      padding: 10px 0;
-      background: #111;
-      display: flex;
-      justify-content: center;
-    }
-    .soundcloud-wrapper iframe {
-      width: 100%;
-      height: 20px;
-    }
   </style>
 </head>
 
@@ -103,10 +91,6 @@
   <main class="page-container">
     <div id="battleContainer"></div>
   </main>
-
-  <div class="soundcloud-wrapper">
-    <div id="soundcloudContainer"></div>
-  </div>
 
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
@@ -133,16 +117,11 @@ function getYouTubeID(url) {
 
 async function loadBattles() {
   const container = document.getElementById("battleContainer");
-  const soundcloudContainer = document.getElementById("soundcloudContainer");
-
   container.innerHTML = "<p>Loading...</p>";
 
   try {
     const votesRes = await fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random());
-    const djRes = await fetch(BASE_URL + "?mode=djs&cache=" + Math.random());
-
     const votes = await votesRes.json();
-    const djUrls = await djRes.json();
 
     // latest left + right videos
     const latestLeft = votes.filter(v => v.dancer === "Dancer Left").pop();
@@ -176,3 +155,29 @@ async function loadBattles() {
               <iframe src="${rightURL}" allow="autoplay; encrypted-media"></iframe>
             </div>
             <div class="vote-count">Votes: ${rightVotes}</div>
+            <button class="vote-button" onclick="vote('right')">Vote Right</button>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = "<p>Error loading.</p>";
+  }
+}
+
+function vote(side) {
+  fetch(BASE_URL + "?mode=vote&winner=" + side, { method: "GET", mode: "no-cors" })
+    .then(() => {
+      alert("Vote recorded for " + side);
+      loadBattles();
+    });
+}
+
+loadBattles();
+</script>
+
+</body>
+</html>
