@@ -120,64 +120,10 @@ async function loadBattles() {
   container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const votesRes = await fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random());
-    const votes = await votesRes.json();
+    const res = await fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random());
+    const data = await res.json();
 
-    // latest left + right videos
-    const latestLeft = votes.filter(v => v.dancer === "Dancer Left").pop();
-    const latestRight = votes.filter(v => v.dancer === "Dancer Right").pop();
+    const leftID = getYouTubeID(data.left.url);
+    const rightID = getYouTubeID(data.right.url);
 
-    const leftID = getYouTubeID(latestLeft?.url);
-    const rightID = getYouTubeID(latestRight?.url);
-
-    const leftVotes = votes.filter(v => v.dancer === "Dancer Left").length;
-    const rightVotes = votes.filter(v => v.dancer === "Dancer Right").length;
-
-    const leftURL = "https://www.youtube.com/embed/" + leftID + "?autoplay=1&mute=1";
-    const rightURL = "https://www.youtube.com/embed/" + rightID + "?autoplay=1&mute=1";
-
-    container.innerHTML = `
-      <div class="battle-card">
-        <div class="battle-wrapper">
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Left</div>
-              <iframe src="${leftURL}" allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="vote-count">Votes: ${leftVotes}</div>
-            <button class="vote-button" onclick="vote('left')">Vote Left</button>
-          </div>
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Right</div>
-              <iframe src="${rightURL}" allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="vote-count">Votes: ${rightVotes}</div>
-            <button class="vote-button" onclick="vote('right')">Vote Right</button>
-          </div>
-
-        </div>
-      </div>
-    `;
-
-  } catch (err) {
-    console.error(err);
-    container.innerHTML = "<p>Error loading.</p>";
-  }
-}
-
-function vote(side) {
-  fetch(BASE_URL + "?mode=vote&winner=" + side, { method: "GET", mode: "no-cors" })
-    .then(() => {
-      alert("Vote recorded for " + side);
-      loadBattles();
-    });
-}
-
-loadBattles();
-</script>
-
-</body>
-</html>
+    const leftURL = "https://www.youtube.com
