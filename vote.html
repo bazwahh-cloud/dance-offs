@@ -74,6 +74,21 @@
       font-size: 14px;
       font-weight: bold;
     }
+
+    /* --- SoundCloud Player Box --- */
+    .dj-box {
+      margin-top: 30px;
+      padding: 15px;
+      background: #f7f7f7;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .dj-box h3 {
+      margin-top: 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -89,88 +104,24 @@
   </div>
 
   <main class="page-container">
+
+    <!-- YouTube Battle Container -->
     <div id="battleContainer"></div>
+
+    <!-- SoundCloud Player Container -->
+    <div id="djContainer" class="dj-box">
+      <h3>Now Playing</h3>
+      <iframe 
+        id="scPlayer"
+        width="100%" 
+        height="120" 
+        scrolling="no" 
+        frameborder="no" 
+        allow="autoplay">
+      </iframe>
+    </div>
+
   </main>
 
   <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-<script>
-const BASE_URL =
-  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-function getYouTubeID(url) {
-  if (!url) return null;
-  const patterns = [
-    /v=([^&]+)/,
-    /youtu\.be\/([^?]+)/,
-    /shorts\/([^?]+)/,
-    /embed\/([^?]+)/
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-async function loadBattles() {
-  const container = document.getElementById("battleContainer");
-  container.innerHTML = "<p>Loading...</p>";
-
-  try {
-    const res = await fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random());
-    const data = await res.json();
-
-    const leftID = getYouTubeID(data.left.url);
-    const rightID = getYouTubeID(data.right.url);
-
-    const leftURL = "https://www.youtube.com/embed/" + leftID + "?autoplay=1&mute=1";
-    const rightURL = "https://www.youtube.com/embed/" + rightID + "?autoplay=1&mute=1";
-
-    container.innerHTML = `
-      <div class="battle-card">
-        <div class="battle-wrapper">
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Left</div>
-              <iframe src="${leftURL}" allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="vote-count">Votes: ${data.left.votes}</div>
-            <button class="vote-button" onclick="vote('left')">Vote Left</button>
-          </div>
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Right</div>
-              <iframe src="${rightURL}" allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="vote-count">Votes: ${data.right.votes}</div>
-            <button class="vote-button" onclick="vote('right')">Vote Right</button>
-          </div>
-
-        </div>
-      </div>
-    `;
-
-  } catch (err) {
-    console.error("LOAD ERROR:", err);
-    container.innerHTML = "<p>Error loading.</p>";
-  }
-}
-
-function vote(side) {
-  fetch(BASE_URL + "?mode=vote&winner=" + side, { method: "GET", mode: "no-cors" })
-    .then(() => {
-      alert("Vote recorded for " + side);
-      loadBattles();
-    });
-}
-
-loadBattles();
-</script>
-
-</body>
-</html>
+    © 2026 Dance-Offs — Built by
