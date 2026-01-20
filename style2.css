@@ -32,9 +32,9 @@ body {
   border-bottom: 2px solid #00ccff;
 }
 
-/* HERO SECTION — FORCED CORRECT IMAGE */
+/* HERO SECTION — NOW USING hero-dance.jpg */
 .hero-dancers {
-  background-image: url('graffiti-hero.jpg') !important;
+  background-image: url('hero-dance.jpg') !important;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -60,7 +60,7 @@ body {
   margin: 0 auto;
 }
 
-/* CTA BUTTONS — TRANSPARENT + EXACT POSITIONING */
+/* CTA BUTTONS */
 .cta-row {
   position: absolute;
   top: 62%;
@@ -116,4 +116,8 @@ body {
     gap: 14px;
   }
 
-  .
+  .hero-button {
+    font-size: 1.2rem;
+    padding: 12px 22px;
+  }
+}
