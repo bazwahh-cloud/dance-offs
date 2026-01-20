@@ -32,9 +32,9 @@ body {
   border-bottom: 2px solid #00ccff;
 }
 
-/* HERO SECTION */
+/* HERO SECTION — uses dancers-specific image */
 .hero-dancers {
-  background: url('graffiti-hero.jpg') center center / cover no-repeat;
+  background: url('dancers-hero.jpg') center center / cover no-repeat;
   height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
@@ -52,4 +52,69 @@ body {
 
 .logo-block img {
   width: 100%;
-  height: auto
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* CTA BUTTONS — transparent and positioned over artwork */
+.cta-row {
+  position: absolute;
+  top: 62%;                     /* tuned to match dancers-hero layout */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 24px;
+  z-index: 5;
+}
+
+.hero-button {
+  background: rgba(0, 0, 0, 0); /* fully transparent */
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 12px 26px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 3px solid #fff;       /* clean white outline */
+  backdrop-filter: blur(2px);   /* subtle clarity effect */
+  transition: 0.2s ease;
+}
+
+.hero-button:hover {
+  background: rgba(255, 255, 255, 0.15); /* faint glow */
+  transform: scale(1.05);
+}
+
+/* FOOTER */
+.footer {
+  background-color: #111;
+  color: #aaa;
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 0.9rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 1rem;
+  }
+
+  .logo-block {
+    max-width: 300px;
+  }
+
+  .cta-row {
+    top: 68%;                  /* slightly lower for mobile */
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .hero-button {
+    font-size: 1.2rem;
+    padding: 12px 22px;
+  }
+}
