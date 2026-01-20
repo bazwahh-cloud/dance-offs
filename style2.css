@@ -32,9 +32,9 @@ body {
   border-bottom: 2px solid #00ccff;
 }
 
-/* HERO SECTION — NOW USING hero-dance.jpg */
+/* HERO SECTION — USING hero-dance.png */
 .hero-dancers {
-  background-image: url('hero-dance.jpg') !important;
+  background-image: url('hero-dance.png') !important;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -54,70 +54,4 @@ body {
 }
 
 .logo-block img {
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-/* CTA BUTTONS */
-.cta-row {
-  position: absolute;
-  top: 62%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  gap: 24px;
-  z-index: 5;
-}
-
-.hero-button {
-  background: rgba(0, 0, 0, 0);
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: bold;
-  padding: 12px 26px;
-  border-radius: 10px;
-  text-decoration: none;
-  border: 3px solid #fff;
-  backdrop-filter: blur(2px);
-  transition: 0.2s ease;
-}
-
-.hero-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.05);
-}
-
-/* FOOTER */
-.footer {
-  background-color: #111;
-  color: #aaa;
-  text-align: center;
-  padding: 30px 20px;
-  font-size: 0.9rem;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .navbar {
-    flex-wrap: wrap;
-    gap: 20px;
-    font-size: 1rem;
-  }
-
-  .logo-block {
-    max-width: 300px;
-  }
-
-  .cta-row {
-    top: 68%;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .hero-button {
-    font-size: 1.2rem;
-    padding: 12px 22px;
-  }
-}
+  width: 
