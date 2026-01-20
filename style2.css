@@ -1,4 +1,4 @@
-/* Fonts */
+/* GLOBAL */
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
@@ -6,7 +6,7 @@ body {
   color: #fff;
 }
 
-/* Navigation Bar */
+/* NAVIGATION */
 .navbar {
   background-color: #111;
   padding: 20px;
@@ -32,7 +32,7 @@ body {
   border-bottom: 2px solid #00ccff;
 }
 
-/* Hero Section for Dancers Page */
+/* HERO SECTION (DANCERS PAGE) */
 .hero-dancers {
   background: url('graffiti-hero.jpg') center center / cover no-repeat;
   height: calc(100vh - 80px);
@@ -43,33 +43,7 @@ body {
   position: relative;
 }
 
+/* LOGO IN HERO */
 .logo-block {
-  max-width: 600px;
-  width: 100%;
-  position: relative;
-}
-
-.logo-block img {
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-/* CTA Buttons */
-.cta-row {
-  position: absolute;
-  bottom: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.hero-button {
-  background: #0077cc;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+  max-width: 420px; /* smaller so buttons overlay correctly */
+  width
