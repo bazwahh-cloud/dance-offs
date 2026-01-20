@@ -1,39 +1,44 @@
 /* --------------------------------------------------
-   GLOBAL RESET & BASE STYLES
+   NAVBAR DROPDOWNS — HIDDEN UNTIL HOVER
 -------------------------------------------------- */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+.navbar .dropdown {
+  position: relative;
 }
 
-body {
-  background: #f4f4f4;
-  color: #222;
-  line-height: 1.5;
-  padding-left: 20px;
-  padding-right: 20px;
+.navbar .dropdown > a {
+  display: inline-block;
 }
 
-/* --------------------------------------------------
-   NAVIGATION BAR
--------------------------------------------------- */
-
-.navbar {
+/* Hidden by default */
+.navbar .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
   background: #111;
-  padding: 15px 20px;
-  display: flex;
-  gap: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  padding: 10px 0;
+  min-width: 140px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  border-radius: 4px;
+  z-index: 2000;
 }
 
-.navbar a {
+/* Dropdown links */
+.navbar .dropdown-menu a {
+  display: block;
+  padding: 8px 14px;
   color: #ddd;
   text-decoration: none;
-  font-size: 1rem;
-  padding
+  white-space: nowrap;
+}
+
+.navbar .dropdown-menu a:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* Show ONLY on hover */
+.navbar .dropdown:hover .dropdown-menu {
+  display: block;
+}
