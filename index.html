@@ -3,89 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Home</title>
+
+  <!-- Your main stylesheet -->
   <link rel="stylesheet" href="style2.css?v=200">
 
-  <style>
-    .home-container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-      line-height: 1.6;
-    }
-
-    .home-container h1 {
-      margin-top: 0;
-      font-size: 28px;
-      text-align: center;
-    }
-
-    .nav-section {
-      margin-top: 25px;
-    }
-
-    .nav-section h2 {
-      margin-bottom: 10px;
-      font-size: 20px;
-    }
-
-    .nav-section ul {
-      padding-left: 20px;
-    }
-
-    .nav-section li {
-      margin-bottom: 8px;
-    }
-  </style>
+  <!-- Graffiti fonts (safe, home-page only) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
   <!-- Navigation -->
-  <div class="navbar">
+  <nav class="navbar">
     <a href="index.html" class="active">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="battle.html">Battle</a>
-    <a href="djs.html">DJs</a>
+
+    <!-- Dancers dropdown -->
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <!-- DJs dropdown -->
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
-  </div>
+  </nav>
 
   <main class="page-container">
 
-    <div class="home-container">
+    <section class="home-container">
       <h1>Welcome to Dance-Offs</h1>
 
       <p>
-        This site is your hub for all things Dance-Offs — battles, DJs, voting, and more.
-        Use the navigation bar above to explore each section. Whether you're here to compete,
-        vote, or just enjoy the show, everything you need is one click away.
-      </p>
-
-      <div class="nav-section">
-        <h2>How to Navigate</h2>
-        <ul>
-          <li><strong>Dancers</strong> — Browse the dancers who compete in the battles.</li>
-          <li><strong>Battle</strong> — Load two YouTube videos and compare them side-by-side.</li>
-          <li><strong>DJs</strong> — Explore DJ mixes and SoundCloud tracks.</li>
-          <li><strong>Vote</strong> — Watch the current matchup and cast your vote.</li>
-          <li><strong>Merch</strong> — Grab official Dance-Offs gear.</li>
-        </ul>
-      </div>
-
-      <p>
-        New battles and mixes are added regularly, so check back often.  
-        Have fun exploring — and may the best dancer win.
-      </p>
-    </div>
-
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-</body>
-</html>
+        This is your hub for all things Dance-Offs — battles, DJs, voting, and more.
+        Use the navigation above to explore each
