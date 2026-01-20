@@ -3,89 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Dancers</title>
+
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="style2.css?v=200">
 
-  <style>
-    .dancer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .dancer-card {
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      padding: 10px;
-      text-align: center;
-      transition: transform 0.2s ease;
-    }
-
-    .dancer-card:hover {
-      transform: scale(1.05);
-    }
-
-    .dancer-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    .dancer-name {
-      margin-top: 10px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-  </style>
+  <!-- Brand fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
   <!-- Navigation -->
-  <div class="navbar">
+  <nav class="navbar">
     <a href="index.html">Home</a>
-    <a href="dancers.html" class="active">Dancers</a>
-    <a href="battle.html">Battle</a>
-    <a href="djs.html">DJs</a>
+
+    <div class="dropdown">
+      <a href="dancers.html" class="active">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
-  </div>
+  </nav>
 
   <main class="page-container">
 
-    <h1>Dancers</h1>
-    <p>Meet the dancers competing in the Dance-Offs. Click a profile to learn more.</p>
+    <section class="home-container">
+      <h1>Dancers</h1>
 
-    <div class="dancer-grid">
+      <p>
+        Browse the dancers who compete in Dance-Offs battles.  
+        This page can list profiles, images, stats, or links to their battles.
+      </p>
 
-      <!-- Dancer 1 -->
-      <div class="dancer-card">
-        <img src="images/dancer1.jpg" alt="Dancer 1">
-        <div class="dancer-name">Dancer One</div>
-      </div>
-
-      <!-- Dancer 2 -->
-      <div class="dancer-card">
-        <img src="images/dancer2.jpg" alt="Dancer 2">
-        <div class="dancer-name">Dancer Two</div>
-      </div>
-
-      <!-- Dancer 3 -->
-      <div class="dancer-card">
-        <img src="images/dancer3.jpg" alt="Dancer 3">
-        <div class="dancer-name">Dancer Three</div>
-      </div>
-
-      <!-- Dancer 4 -->
-      <div class="dancer-card">
-        <img src="images/dancer4.jpg" alt="Dancer 4">
-        <div class="dancer-name">Dancer Four</div>
-      </div>
-
-      <!-- Add more dancers as needed -->
-    </div>
+      <p>
+        If you want, I can help you design a full dancer directory layout with  
+        cards, images, filters, and links to their battle videos.
+      </p>
+    </section>
 
   </main>
 
