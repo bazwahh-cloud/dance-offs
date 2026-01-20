@@ -45,3 +45,11 @@ body {
 
 /* LOGO BLOCK */
 .logo-block {
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+}
+
+.logo-block img {
+  width: 100%;
+  height: auto
