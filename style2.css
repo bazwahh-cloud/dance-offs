@@ -32,9 +32,12 @@ body {
   border-bottom: 2px solid #00ccff;
 }
 
-/* HERO SECTION — uses dancers-specific image */
+/* HERO SECTION — FORCED CORRECT IMAGE */
 .hero-dancers {
-  background: url('dancers-hero.jpg') center center / cover no-repeat;
+  background-image: url('graffiti-hero.jpg') !important;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
@@ -57,10 +60,10 @@ body {
   margin: 0 auto;
 }
 
-/* CTA BUTTONS — transparent and positioned over artwork */
+/* CTA BUTTONS — TRANSPARENT + EXACT POSITIONING */
 .cta-row {
   position: absolute;
-  top: 62%;                     /* tuned to match dancers-hero layout */
+  top: 62%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -69,20 +72,20 @@ body {
 }
 
 .hero-button {
-  background: rgba(0, 0, 0, 0); /* fully transparent */
+  background: rgba(0, 0, 0, 0);
   color: #fff;
   font-size: 1.3rem;
   font-weight: bold;
   padding: 12px 26px;
   border-radius: 10px;
   text-decoration: none;
-  border: 3px solid #fff;       /* clean white outline */
-  backdrop-filter: blur(2px);   /* subtle clarity effect */
+  border: 3px solid #fff;
+  backdrop-filter: blur(2px);
   transition: 0.2s ease;
 }
 
 .hero-button:hover {
-  background: rgba(255, 255, 255, 0.15); /* faint glow */
+  background: rgba(255, 255, 255, 0.15);
   transform: scale(1.05);
 }
 
@@ -108,13 +111,9 @@ body {
   }
 
   .cta-row {
-    top: 68%;                  /* slightly lower for mobile */
+    top: 68%;
     flex-direction: column;
     gap: 14px;
   }
 
-  .hero-button {
-    font-size: 1.2rem;
-    padding: 12px 22px;
-  }
-}
+  .
