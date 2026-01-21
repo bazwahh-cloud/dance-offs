@@ -38,12 +38,13 @@ body {
   padding-bottom: 20px;   /* extends hover zone downward */
 }
 
-/* TIGHT + CLOSE DROPDOWN */
+/* CENTERED + TIGHT + CLOSE DROPDOWN */
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 36px;              /* MUCH closer to the parent link */
-  left: 0;
+  top: 36px;              /* close to parent link */
+  left: 50%;              /* center anchor */
+  transform: translateX(-50%); /* perfect centering */
   background: #111;
   padding: 4px 10px;      /* tight padding */
   border: 1px solid #333;
@@ -52,7 +53,7 @@ body {
   z-index: 10;
 }
 
-/* KEEP MENU OPEN WHILE MOVING MOUSE */
+/* SHOW ON HOVER */
 .dropdown:hover .dropdown-menu {
   display: block;
 }
