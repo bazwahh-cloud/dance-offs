@@ -1,52 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dance-Offs: Dancers</title>
+/* GLOBAL */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #000;
+  color: #fff;
+}
 
-  <!-- Main stylesheet (updated version number to load latest CSS) -->
-  <link rel="stylesheet" href="style2.css?v=202">
+/* NAVIGATION */
+.navbar {
+  background: #111;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  position: relative;
+  z-index: 50;
+}
 
-  <!-- Brand fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
+.navbar a {
+  color: #ccc;
+  text-decoration: none;
+  transition: 0.2s;
+}
 
-<body>
+.navbar a:hover {
+  color: #fff;
+}
 
-  <!-- Navigation (same as home page, only Dancers is active) -->
-  <nav class="navbar">
-    <a href="index.html">Home</a>
+.navbar .active {
+  color: #00ccff;
+  border-bottom: 2px solid #00ccff;
+}
 
-    <div class="dropdown">
-      <a href="dancers.html" class="active">Dancers</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
+/* DROPDOWN WRAPPER */
+.dropdown {
+  position: relative;
+}
 
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
+/* DROPDOWN MENU */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  padding: 6px 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 100;
+}
 
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </nav>
+.dropdown-menu a {
+  display: block;
+  padding: 6px 0;
+  color: #ccc;
+}
 
-  <!-- HERO IMAGE UNDER NAV (responsive via CSS) -->
-  <div class="dancer-hero">
-    <img src="dancer-hero1.jpg" alt="Dance-Offs Hero Banner">
-  </div>
+.dropdown-menu a:hover {
+  color: #fff;
+}
 
-  <main class="page-container">
-    <section class="dancers-container"></section>
-  </main>
+/* SHOW DROPDOWN ON HOVER */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
 
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
+/* HERO BANNER — bigger on desktop, responsive on mobile */
+.dancer-hero img {
+  width: 35%;          /* 40% bigger than previous 25% */
+  max-width: 520px;    /* proportional cap */
+  display: block;
+  margin: 20px auto 20px auto;
+  border-radius: 10px;
+}
 
-</body>
-</html>
+/* Tablet */
+@media (max-width: 768px) {
+  .dancer-hero img {
+    width: 80%;
+    max-width: none;
+    margin: 20px auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .dancer-hero img {
+    width: 95%;
+  }
+}
+
+/* CTA BUTTONS (Battle now / Vote now) */
+.cta-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #00ccff;
+  color: #000;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.2s;
+  margin: 10px;
+}
+
+.cta-button:hover {
+  background: #00a3cc;
+}
+
+/* PAGE CONTAINER */
+.page-container {
+  padding: 20px;
+}
+
+/* FOOTER — tighter spacing */
+.footer {
+  background: #000;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+  color: #aaa;
+  font-size: 0.9rem;
+}
