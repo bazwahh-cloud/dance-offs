@@ -3,114 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
-  <link rel="stylesheet" href="style2.css?v=23">
+
+  <link rel="stylesheet" href="style2.css?v=999">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- Navigation -->
-  <div class="navbar">
+  <!-- NAVIGATION -->
+  <nav class="navbar">
     <a href="index.html">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="battle.html" class="active">Battle</a>
-    <a href="djs.html">DJs</a>
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </div>
 
-  <!-- Page container -->
-  <div class="page-container">
-
-    <div class="battle-wrapper">
-
-      <!-- LEFT COLUMN -->
-      <div class="battle-column">
-
-        <div class="input-box">
-          <input id="leftInput" type="text" placeholder="Left YouTube URL">
-          <button type="button" onclick="loadLeft()">Load Left</button>
-        </div>
-
-        <div class="video-label">Dancer Left</div>
-
-        <div class="video-box">
-          <iframe
-            id="leftVid"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-          </iframe>
-        </div>
-
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html" class="active">Battle</a>
       </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="battle-column">
-
-        <div class="input-box">
-          <input id="rightInput" type="text" placeholder="Right YouTube URL">
-          <button type="button" onclick="loadRight()">Load Right</button>
-        </div>
-
-        <div class="video-label">Dancer Right</div>
-
-        <div class="video-box">
-          <iframe
-            id="rightVid"
-            src="https://www.youtube.com/embed/3JZ_D3ELwOQ?autoplay=1&mute=1&playsinline=1"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-          </iframe>
-        </div>
-
-      </div>
-
     </div>
 
-  </div>
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-  <!-- Footer -->
-  <div class="footer">
+    <a href="vote.html">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
+
+    <h1 style="font-family: 'Bangers', cursive; font-size: 48px; margin-bottom: 20px;">
+      Battle Mode
+    </h1>
+
+    <!-- INPUTS -->
+    <div style="margin-bottom: 30px;">
+      <div style="margin-bottom: 20px;">
+        <input id="leftUrl" type="text" placeholder="Left YouTube URL" style="width: 300px; padding: 8px;">
+        <button onclick="loadLeft()" style="padding: 8px 16px;">Load Left</button>
+      </div>
+
+      <div>
+        <input id="rightUrl" type="text" placeholder="Right YouTube URL" style="width: 300px; padding: 8px;">
+        <button onclick="loadRight()" style="padding: 8px 16px;">Load Right</button>
+      </div>
+    </div>
+
+    <!-- VIDEO CONTAINER -->
+    <div class="battle-videos" id="battleVideos">
+      <!-- iframes will be injected here -->
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
-  </div>
+  </footer>
 
-  <!-- Script -->
+  <!-- SCRIPT -->
   <script>
-    function extractVideoID(raw) {
-      if (!raw) return null;
-      const url = raw.trim();
-
-      let match;
-
-      match = url.match(/[?&]v=([^&#]+)/i);
-      if (match) return match[1];
-
-      match = url.match(/youtu\.be\/([^?&#]+)/i);
-      if (match) return match[1];
-
-      match = url.match(/shorts\/([^?&#]+)/i);
-      if (match) return match[1];
-
-      match = url.match(/embed\/([^?&#]+)/i);
-      if (match) return match[1];
-
-      return null;
+    function extractID(url) {
+      try {
+        const u = new URL(url);
+        if (u.hostname.includes("youtu.be")) {
+          return u.pathname.slice(1);
+        }
+        return u.searchParams.get("v");
+      } catch {
+        return null;
+      }
     }
 
     function loadLeft() {
-      const raw = document.getElementById("leftInput").value;
-      const id = extractVideoID(raw);
-      if (!id) return alert("Invalid YouTube URL");
-      document.getElementById("leftVid").src =
-        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1`;
+      const url = document.getElementById("leftUrl").value;
+      const id = extractID(url);
+      if (!id) return;
+
+      const container = document.getElementById("battleVideos");
+      let right = container.querySelector(".right-video");
+
+      container.innerHTML = `
+        <iframe class="left-video" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+        ${right ? right.outerHTML : ""}
+      `;
     }
 
     function loadRight() {
-      const raw = document.getElementById("rightInput").value;
-      const id = extractVideoID(raw);
-      if (!id) return alert("Invalid YouTube URL");
-      document.getElementById("rightVid").src =
-        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1`;
+      const url = document.getElementById("rightUrl").value;
+      const id = extractID(url);
+      if (!id) return;
+
+      const container = document.getElementById("battleVideos");
+      let left = container.querySelector(".left-video");
+
+      container.innerHTML = `
+        ${left ? left.outerHTML : ""}
+        <iframe class="right-video" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+      `;
     }
   </script>
 
