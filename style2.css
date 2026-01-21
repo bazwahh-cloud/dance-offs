@@ -15,7 +15,7 @@ img {
 }
 
 /* --------------------------------------------------
-   NAVIGATION BAR — TIGHTER + MATCH HOMEPAGE
+   NAVIGATION BAR — TIGHT + CLEAN
 -------------------------------------------------- */
 
 .navbar {
@@ -23,21 +23,20 @@ img {
   justify-content: center;
   align-items: center;
 
-  gap: 18px;          /* tighter horizontal spacing */
-  padding: 8px 0;     /* tighter vertical spacing */
+  gap: 18px;
+  padding: 6px 0;       /* tighter so hero aligns better */
   background: #111;
 
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  line-height: 1;     /* removes extra vertical space */
+  line-height: 1;
 }
 
 .navbar a {
   color: #fff;
   text-decoration: none;
-  padding-bottom: 3px;  /* tighter underline spacing */
+  padding-bottom: 3px;
   transition: 0.2s;
 }
 
@@ -47,4 +46,75 @@ img {
 
 .navbar .active {
   color: #00ccff;
-  border-bottom: 3px solid
+  border-bottom: 3px solid #00ccff;
+}
+
+/* --------------------------------------------------
+   DROPDOWNS — HIDDEN UNTIL HOVER + EASY TO SELECT
+-------------------------------------------------- */
+
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-bottom: 12px;   /* prevents hover gap */
+}
+
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #111;
+  padding: 8px 0;
+  border-radius: 6px;
+  min-width: 140px;
+  text-align: center;
+  z-index: 50;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 18px;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dropdown-menu a:hover {
+  background: #222;
+  color: #00ccff;
+}
+
+/* --------------------------------------------------
+   HERO — RESPONSIVE + 15% SMALLER + FULL VISIBILITY
+-------------------------------------------------- */
+
+.hero {
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.hero-img-wrap {
+  position: relative;
+  display: inline-block;
+
+  width: 100%;           /* responsive */
+  max-width: 268px;      /* EXACT 15% smaller than
