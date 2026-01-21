@@ -35,24 +35,24 @@ body {
 /* DROPDOWN WRAPPER */
 .dropdown {
   position: relative;
-  padding-bottom: 12px;   /* extends hover zone downward */
+  padding-bottom: 20px;   /* extends hover zone downward */
 }
 
-/* ULTRA-TIGHT DROPDOWN MENU */
+/* TIGHT + CLOSE DROPDOWN */
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 52px;              /* hangs lower so cursor can reach it */
+  top: 36px;              /* MUCH closer to the parent link */
   left: 0;
   background: #111;
-  padding: 4px 10px;      /* very tight padding */
+  padding: 4px 10px;      /* tight padding */
   border: 1px solid #333;
   border-radius: 3px;
   white-space: nowrap;
   z-index: 10;
 }
 
-/* SHOW ON HOVER */
+/* KEEP MENU OPEN WHILE MOVING MOUSE */
 .dropdown:hover .dropdown-menu {
   display: block;
 }
