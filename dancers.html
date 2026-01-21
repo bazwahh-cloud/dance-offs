@@ -2,144 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dancers</title>
+  <title>Dance-Offs: Dancers</title>
 
-  <style>
-    /* GLOBAL */
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #000;
-      color: #fff;
-    }
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style2.css?v=200">
 
-    /* NAVIGATION BAR */
-    .navbar {
-      background: #111;
-      padding: 20px;
-      display: flex;
-      justify-content: center;   /* center the whole nav */
-      align-items: center;
-      gap: 40px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      position: relative;
-      z-index: 20;               /* sit above hero + dropdowns */
-    }
-
-    .navbar a {
-      color: #ccc;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-
-    .navbar a:hover {
-      color: #fff;
-    }
-
-    .navbar .active {
-      color: #00ccff;
-      border-bottom: 2px solid #00ccff;
-    }
-
-    /* DROPDOWN WRAPPER */
-    .dropdown {
-      position: relative;
-      padding-bottom: 20px;      /* extends hover zone downward */
-    }
-
-    /* DROPDOWN MENU */
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 36px;                 /* close to parent link */
-      left: 50%;
-      transform: translateX(-50%);
-      background: #111;
-      padding: 4px 10px;
-      border: 1px solid #333;
-      border-radius: 3px;
-      white-space: nowrap;
-      z-index: 30;               /* above everything */
-    }
-
-    .dropdown-menu a {
-      display: block;
-      color: #ccc;
-      text-decoration: none;
-      padding: 4px 0;
-      font-size: 0.95rem;
-    }
-
-    .dropdown-menu a:hover {
-      color: #fff;
-    }
-
-    /* SHOW ON HOVER */
-    .dropdown:hover .dropdown-menu {
-      display: block;
-    }
-
-    /* HERO IMAGE UNDER NAV */
-    .dancer-hero img {
-      width: 60%;
-      max-width: 900px;
-      display: block;
-      margin: 30px auto 40px auto;
-      border-radius: 10px;
-    }
-
-    /* FOOTER */
-    footer {
-      background: #000;
-      padding: 20px;
-      text-align: center;
-      margin-top: 60px;
-      color: #aaa;
-      font-size: 0.9rem;
-    }
-  </style>
+  <!-- Brand fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- NAVIGATION BAR -->
-  <div class="navbar">
+  <!-- Navigation (IDENTICAL to home page, only Dancers is active) -->
+  <nav class="navbar">
     <a href="index.html">Home</a>
 
+    <!-- Dancers dropdown -->
     <div class="dropdown">
-      <a href="battles.html">Battles</a>
+      <a href="dancers.html" class="active">Dancers</a>
       <div class="dropdown-menu">
-        <a href="battles.html">All Battles</a>
-        <a href="winners.html">Winners</a>
+        <a href="battle.html">Battle</a>
       </div>
     </div>
 
+    <!-- DJs dropdown -->
     <div class="dropdown">
-      <a href="vote.html">Vote</a>
+      <a href="djs.html">DJs</a>
       <div class="dropdown-menu">
-        <a href="vote.html">Vote Now</a>
-        <a href="results.html">Results</a>
+        <a href="battle.html">Battle</a>
       </div>
     </div>
 
-    <a href="dancers.html" class="active">Dancers</a>
-  </div>
+    <a href="vote.html">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
 
   <!-- HERO IMAGE UNDER NAV -->
   <div class="dancer-hero">
     <img src="dancer-hero1.jpg" alt="Dance-Offs Hero Banner">
   </div>
 
-  <!-- PAGE CONTENT -->
-  <div class="content">
-    <!-- Your dancer content goes here -->
-  </div>
+  <main class="page-container">
 
-  <!-- FOOTER -->
-  <footer>
-    © 2026 Dance-Offs
+    <section class="dancers-container">
+      <h1>Dancers</h1>
+
+      <p>
+        Browse the dancers who compete in Dance-Offs battles.  
+        More profiles coming soon.
+      </p>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
   </footer>
 
 </body>
