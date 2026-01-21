@@ -5,7 +5,7 @@
   <title>Dance-Offs: Home</title>
 
   <!-- Main stylesheet -->
-  <link rel="stylesheet" href="style2.css?v=200">
+  <link rel="stylesheet" href="style2.css?v=203">
 
   <!-- Brand fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
   <nav class="navbar">
     <a href="index.html" class="active">Home</a>
 
-    <!-- Dancers dropdown -->
     <div class="dropdown">
       <a href="dancers.html">Dancers</a>
       <div class="dropdown-menu">
@@ -25,7 +24,6 @@
       </div>
     </div>
 
-    <!-- DJs dropdown -->
     <div class="dropdown">
       <a href="djs.html">DJs</a>
       <div class="dropdown-menu">
@@ -37,34 +35,19 @@
     <a href="merch.html">Merch</a>
   </nav>
 
+  <!-- HERO IMAGE WITH INVISIBLE CLICKABLE ZONES -->
+  <div class="dancer-hero">
+    <div class="hero-img-wrap">
+      <img src="home-hero1.jpg" alt="Dance-Offs Home Banner">
+
+      <!-- Invisible clickable zones -->
+      <a href="dancers.html" class="hero-zone hero-left" aria-label="Go to Dancers page"></a>
+      <a href="djs.html" class="hero-zone hero-right" aria-label="Go to DJs page"></a>
+    </div>
+  </div>
+
   <main class="page-container">
-
-    <section class="home-container">
-      <h1>Welcome to Dance-Offs</h1>
-
-      <p>
-        This site is your hub for all things Dance-Offs — battles, DJs, voting, and more.
-        Use the navigation bar above to explore each section. Whether you're here to compete,
-        vote, or just enjoy the show, everything you need is one click away.
-      </p>
-
-      <div class="nav-section">
-        <h2>How to Navigate</h2>
-        <ul>
-          <li><strong>Dancers</strong> — Browse the dancers who compete in the battles.</li>
-          <li><strong>Battle</strong> — Load two YouTube videos and compare them side-by-side.</li>
-          <li><strong>DJs</strong> — Explore DJ mixes and SoundCloud tracks.</li>
-          <li><strong>Vote</strong> — Watch the current matchup and cast your vote.</li>
-          <li><strong>Merch</strong> — Grab official Dance-Offs gear.</li>
-        </ul>
-      </div>
-
-      <p>
-        New battles and mixes are added regularly, so check back often.  
-        Have fun exploring — and may the best dancer win.
-      </p>
-    </section>
-
+    <section class="home-container"></section>
   </main>
 
   <footer class="footer">
