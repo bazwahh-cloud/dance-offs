@@ -15,28 +15,29 @@ img {
 }
 
 /* --------------------------------------------------
-   NAVIGATION BAR — MATCH HOMEPAGE
+   NAVIGATION BAR — TIGHTER + MATCH HOMEPAGE
 -------------------------------------------------- */
 
 .navbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 24px;
-  padding: 14px 0;
+
+  gap: 18px;          /* tighter horizontal spacing */
+  padding: 8px 0;     /* tighter vertical spacing */
   background: #111;
 
-  /* EXACT homepage font */
   font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.01em;
+  line-height: 1;     /* removes extra vertical space */
 }
 
 .navbar a {
   color: #fff;
   text-decoration: none;
-  padding-bottom: 4px;
+  padding-bottom: 3px;  /* tighter underline spacing */
   transition: 0.2s;
 }
 
@@ -46,129 +47,4 @@ img {
 
 .navbar .active {
   color: #00ccff;
-  border-bottom: 3px solid #00ccff;
-}
-
-/* --------------------------------------------------
-   DROPDOWNS — CENTERED + TIGHTENED
--------------------------------------------------- */
-
-.dropdown {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* keeps parent link centered */
-}
-
-/* hidden by default */
-.dropdown-menu {
-  display: none !important;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-
-  position: absolute;
-  top: calc(100% + 6px);
-
-  /* ALWAYS centered under parent */
-  left: 50%;
-  transform: translateX(-50%);
-
-  background: #111;
-  padding: 6px 0;          /* tighter */
-  border-radius: 6px;
-  min-width: 120px;        /* tighter width */
-  text-align: center;      /* center text */
-  z-index: 50;
-}
-
-/* show on hover */
-.dropdown:hover .dropdown-menu {
-  display: block !important;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* dropdown items */
-.dropdown-menu a {
-  display: block;
-  padding: 6px 14px;       /* tighter padding */
-  white-space: nowrap;
-  color: #fff;
-
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.dropdown-menu a:hover {
-  background: #222;
-  color: #00ccff;
-}
-
-/* --------------------------------------------------
-   HERO — 30% SMALLER
--------------------------------------------------- */
-
-.hero {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.hero-img-wrap {
-  position: relative;
-  display: inline-block;
-
-  /* 30% smaller than 260px → 182px */
-  width: 182px !important;
-  max-width: 90%;
-  margin: 0 auto;
-}
-
-.hero-img-wrap img {
-  width: 100% !important;
-  height: auto;
-}
-
-/* clickable zones */
-.hero-zone {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-}
-
-.hero-left {
-  left: 0;
-}
-
-.hero-right {
-  right: 0;
-}
-
-/* --------------------------------------------------
-   PAGE LAYOUT
--------------------------------------------------- */
-
-.page-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.dancers-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-}
-
-/* --------------------------------------------------
-   FOOTER
--------------------------------------------------- */
-
-.footer {
-  text-align: center;
-  padding: 30px 0;
-  color: #888;
-  font-size: 14px;
-}
+  border-bottom: 3px solid
