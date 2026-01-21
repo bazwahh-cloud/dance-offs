@@ -1,168 +1,64 @@
-/* --------------------------------------------------
-   GLOBAL
--------------------------------------------------- */
-
 body {
   margin: 0;
-  background: #000;
+  font-family: Arial, sans-serif;
+  background-color: #111;
   color: #fff;
-  font-family: 'Inter', sans-serif;
 }
 
-img {
-  max-width: 100%;
-  display: block;
+/* Navigation */
+nav {
+  background-color: #000;
+  padding: 15px;
 }
 
-/* --------------------------------------------------
-   NAVIGATION BAR
--------------------------------------------------- */
-
-.navbar {
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  padding: 6px 0;
-  background: #111;
-  width: 100%;
-  box-sizing: border-box;
-
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1;
-}
-
-.navbar a {
-  color: #fff;
-  text-decoration: none;
-  padding-bottom: 3px;
-  transition: 0.2s;
-}
-
-.navbar a:hover {
-  color: #00ccff;
-}
-
-.navbar .active {
-  color: #00ccff;
-  border-bottom: 3px solid #00ccff;
-}
-
-/* --------------------------------------------------
-   DROPDOWNS
--------------------------------------------------- */
-
-.dropdown {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dropdown-menu {
-  display: none;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-
-  position: absolute;
-  top: 90%;
-  left: 50%;
-  transform: translateX(-50%);
-
-  background: #111;
-  padding: 8px 0;
-  border-radius: 6px;
-  min-width: 140px;
-  text-align: center;
-  z-index: 50;
-
-  margin-top: -4px;
-}
-
-.dropdown:hover .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 10px 18px;
-  white-space: nowrap;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.dropdown-menu a:hover {
-  background: #222;
-  color: #00ccff;
-}
-
-/* --------------------------------------------------
-   HERO — SMALL WORKING VERSION (230px)
--------------------------------------------------- */
-
-.hero {
-  display: flex;
-  justify-content: center;
-  margin-top: 0;
-}
-
-.hero-img-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 230px;   /* the size from your working version */
-  margin: 0 auto;
-}
-
-.hero-img-wrap img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* clickable zones */
-.hero-zone {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  z-index: 5;
-}
-
-.hero-left { left: 0; }
-.hero-right { right: 0; }
-
-/* --------------------------------------------------
-   PAGE LAYOUT
--------------------------------------------------- */
-
-.page-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.dancers-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
 }
 
-/* --------------------------------------------------
-   FOOTER
--------------------------------------------------- */
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+}
 
-.footer {
-  text-align: center;
-  margin: 0 auto;
-  padding: 30px 0;
-  color: #888;
-  font-size: 14px;
+nav a:hover {
+  color: #f39c12;
+}
+
+/* Hero Section */
+.hero {
   width: 100%;
+  height: 350px;
+  background: url('dancer-hero2.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 48px;
+  text-shadow: 0 0 10px #000;
+}
+
+/* Content */
+.content {
+  padding: 40px;
+  text-align: center;
+}
+
+.content h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.content p {
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
 }
