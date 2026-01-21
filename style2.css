@@ -15,7 +15,7 @@ img {
 }
 
 /* --------------------------------------------------
-   NAVIGATION BAR (MATCH HOMEPAGE)
+   NAVIGATION BAR — MATCH HOMEPAGE
 -------------------------------------------------- */
 
 .navbar {
@@ -40,25 +40,24 @@ img {
   transition: 0.2s;
 }
 
-/* active tab */
+.navbar a:hover {
+  color: #00ccff;
+}
+
 .navbar .active {
   color: #00ccff;
   border-bottom: 3px solid #00ccff;
 }
 
-.navbar a:hover {
-  color: #00ccff;
-}
-
 /* --------------------------------------------------
-   DROPDOWN (HIDDEN UNTIL HOVER)
+   DROPDOWNS — CENTERED + TIGHTENED
 -------------------------------------------------- */
 
 .dropdown {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* keeps parent link centered */
 }
 
 /* hidden by default */
@@ -70,14 +69,16 @@ img {
 
   position: absolute;
   top: calc(100% + 6px);
+
+  /* ALWAYS centered under parent */
   left: 50%;
   transform: translateX(-50%);
 
   background: #111;
-  padding: 10px 0;
+  padding: 6px 0;          /* tighter */
   border-radius: 6px;
-  min-width: 140px;
-  text-align: left;
+  min-width: 120px;        /* tighter width */
+  text-align: center;      /* center text */
   z-index: 50;
 }
 
@@ -91,5 +92,81 @@ img {
 /* dropdown items */
 .dropdown-menu a {
   display: block;
-  padding: 8px 20px;
+  padding: 6px 14px;       /* tighter padding */
   white-space: nowrap;
+  color: #fff;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dropdown-menu a:hover {
+  background: #222;
+  color: #00ccff;
+}
+
+/* --------------------------------------------------
+   HERO — SMALLER + CENTERED
+-------------------------------------------------- */
+
+.hero {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.hero-img-wrap {
+  position: relative;
+  display: inline-block;
+  width: 260px !important;   /* final size */
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.hero-img-wrap img {
+  width: 100% !important;
+  height: auto;
+}
+
+/* clickable zones */
+.hero-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+
+.hero-left {
+  left: 0;
+}
+
+.hero-right {
+  right: 0;
+}
+
+/* --------------------------------------------------
+   PAGE LAYOUT
+-------------------------------------------------- */
+
+.page-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.dancers-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  color: #888;
+  font-size: 14px;
+}
