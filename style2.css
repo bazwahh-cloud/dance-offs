@@ -35,18 +35,19 @@ body {
 /* DROPDOWN WRAPPER */
 .dropdown {
   position: relative;
+  padding-bottom: 12px;   /* extends hover zone downward */
 }
 
-/* TIGHT DROPDOWN MENU */
+/* ULTRA-TIGHT DROPDOWN MENU */
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 48px;        /* closer to nav */
+  top: 52px;              /* hangs lower so cursor can reach it */
   left: 0;
   background: #111;
-  padding: 6px 12px; /* tighter padding */
+  padding: 4px 10px;      /* very tight padding */
   border: 1px solid #333;
-  border-radius: 4px;
+  border-radius: 3px;
   white-space: nowrap;
   z-index: 10;
 }
