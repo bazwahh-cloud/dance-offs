@@ -15,7 +15,7 @@ img {
 }
 
 /* --------------------------------------------------
-   NAVIGATION BAR — CENTERED + CLEAN
+   NAVIGATION BAR
 -------------------------------------------------- */
 
 .navbar {
@@ -51,7 +51,7 @@ img {
 }
 
 /* --------------------------------------------------
-   DROPDOWNS — TIGHT + NO GAP
+   DROPDOWNS
 -------------------------------------------------- */
 
 .dropdown {
@@ -59,7 +59,6 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 0;
 }
 
 .dropdown-menu {
@@ -80,3 +79,90 @@ img {
   text-align: center;
   z-index: 50;
 
+  margin-top: -4px;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 18px;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dropdown-menu a:hover {
+  background: #222;
+  color: #00ccff;
+}
+
+/* --------------------------------------------------
+   HERO — SMALL WORKING VERSION (230px)
+-------------------------------------------------- */
+
+.hero {
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.hero-img-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 230px;   /* the size from your working version */
+  margin: 0 auto;
+}
+
+.hero-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* clickable zones */
+.hero-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 5;
+}
+
+.hero-left { left: 0; }
+.hero-right { right: 0; }
+
+/* --------------------------------------------------
+   PAGE LAYOUT
+-------------------------------------------------- */
+
+.page-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.dancers-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+
+.footer {
+  text-align: center;
+  margin: 0 auto;
+  padding: 30px 0;
+  color: #888;
+  font-size: 14px;
+  width: 100%;
+}
