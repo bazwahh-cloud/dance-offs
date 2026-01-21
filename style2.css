@@ -24,7 +24,7 @@ img {
   align-items: center;
 
   gap: 18px;
-  padding: 6px 0;       /* tighter so hero aligns better */
+  padding: 6px 0;
   background: #111;
 
   font-size: 20px;
@@ -59,7 +59,7 @@ img {
   flex-direction: column;
   align-items: center;
 
-  padding-bottom: 12px;   /* prevents hover gap */
+  padding-bottom: 12px; /* prevents hover gap */
 }
 
 .dropdown-menu {
@@ -103,18 +103,8 @@ img {
 }
 
 /* --------------------------------------------------
-   HERO — RESPONSIVE + 15% SMALLER + FULL VISIBILITY
+   HERO — RESPONSIVE + 10% BIGGER + FULL VISIBILITY
 -------------------------------------------------- */
 
 .hero {
   display: flex;
-  justify-content: center;
-  margin-top: 0;
-}
-
-.hero-img-wrap {
-  position: relative;
-  display: inline-block;
-
-  width: 100%;           /* responsive */
-  max-width: 268px;      /* EXACT 15% smaller than
