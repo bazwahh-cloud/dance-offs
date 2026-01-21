@@ -60,7 +60,7 @@ img {
   flex-direction: column;
   align-items: center;
 
-  padding-bottom: 0;   /* tightened */
+  padding-bottom: 0; /* tightened */
 }
 
 .dropdown-menu {
@@ -70,7 +70,7 @@ img {
   transition: opacity 0.15s ease;
 
   position: absolute;
-  top: 90%;            /* lifted upward */
+  top: 90%; /* lifted upward */
   left: 50%;
   transform: translateX(-50%);
 
@@ -81,11 +81,4 @@ img {
   text-align: center;
   z-index: 50;
 
-  margin-top: -4px;    /* micro‑tightening */
-}
-
-.dropdown:hover .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  pointer-events
+  margin-top: -4px; /* micro‑tight
