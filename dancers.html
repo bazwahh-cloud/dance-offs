@@ -2,32 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dancers | Dance-Offs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dancer Page</title>
 
-  <link rel="stylesheet" href="style2.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+    }
+
+    /* HERO BANNER */
+    .hero-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* PAGE CONTENT */
+    .content {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .dancer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .dancer-card {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid #333;
+    }
+
+    .dancer-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .dancer-card h3 {
+      margin: 10px 0;
+      font-size: 1.4rem;
+    }
+
+    .dancer-card p {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+  </style>
 </head>
 
 <body>
 
-  <nav class="navbar">
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <img src="dancer-hero1.jpg" alt="Dance-Offs Hero Banner">
+  </div>
 
-    <a href="index.html">Home</a>
+  <!-- PAGE CONTENT -->
+  <div class="content">
+    <h1>Meet the Dancers</h1>
 
-    <div class="dropdown">
-      <a href="dancers.html" class="active">Dancers</a>
-      <a href="battle.html" class="dropdown-menu">Battle</a>
-    </div>
+    <div class="dancer-grid">
 
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-      <a href="battle.html" class="dropdown-menu">Battle</a>
-    </div>
-
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-
-  </nav>
-
-</body>
-</html>
+      <!-- DANCER CARD EXAMPLE -->
+      <div class="dancer-card">
+        <img src="dancer1.jpg" alt="Dancer 1">
+        <h3>Dancer Name</h3>
+        <p>Short description or style.</p>
