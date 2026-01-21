@@ -14,15 +14,18 @@
       color: #fff;
     }
 
-    /* NAVIGATION */
+    /* NAVIGATION BAR */
     .navbar {
       background: #111;
       padding: 20px;
       display: flex;
-      justify-content: center;
+      justify-content: center;   /* center the whole nav */
+      align-items: center;
       gap: 40px;
       font-size: 1.2rem;
       font-weight: 600;
+      position: relative;
+      z-index: 20;               /* sit above hero + dropdowns */
     }
 
     .navbar a {
@@ -43,14 +46,14 @@
     /* DROPDOWN WRAPPER */
     .dropdown {
       position: relative;
-      padding-bottom: 20px;
+      padding-bottom: 20px;      /* extends hover zone downward */
     }
 
-    /* CENTERED + TIGHT + CLOSE DROPDOWN */
+    /* DROPDOWN MENU */
     .dropdown-menu {
       display: none;
       position: absolute;
-      top: 36px;
+      top: 36px;                 /* close to parent link */
       left: 50%;
       transform: translateX(-50%);
       background: #111;
@@ -58,7 +61,19 @@
       border: 1px solid #333;
       border-radius: 3px;
       white-space: nowrap;
-      z-index: 10;
+      z-index: 30;               /* above everything */
+    }
+
+    .dropdown-menu a {
+      display: block;
+      color: #ccc;
+      text-decoration: none;
+      padding: 4px 0;
+      font-size: 0.95rem;
+    }
+
+    .dropdown-menu a:hover {
+      color: #fff;
     }
 
     /* SHOW ON HOVER */
@@ -89,14 +104,14 @@
 
 <body>
 
-  <!-- NAVIGATION BAR (your real one) -->
+  <!-- NAVIGATION BAR -->
   <div class="navbar">
     <a href="index.html">Home</a>
 
     <div class="dropdown">
       <a href="battles.html">Battles</a>
       <div class="dropdown-menu">
-        <a href="battles.html">All Battles</a><br>
+        <a href="battles.html">All Battles</a>
         <a href="winners.html">Winners</a>
       </div>
     </div>
@@ -104,7 +119,7 @@
     <div class="dropdown">
       <a href="vote.html">Vote</a>
       <div class="dropdown-menu">
-        <a href="vote.html">Vote Now</a><br>
+        <a href="vote.html">Vote Now</a>
         <a href="results.html">Results</a>
       </div>
     </div>
