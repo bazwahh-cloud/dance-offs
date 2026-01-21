@@ -70,4 +70,22 @@ img {
   transition: opacity 0.15s ease;
 
   position: absolute;
-  top: 90%;           
+  top: 90%;            /* lifted upward */
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #111;
+  padding: 8px 0;
+  border-radius: 6px;
+  min-width: 140px;
+  text-align: center;
+  z-index: 50;
+
+  margin-top: -4px;    /* micro‑tightening */
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+  opacity: 1;
+  pointer-events
