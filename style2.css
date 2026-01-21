@@ -79,7 +79,7 @@ body {
 .hero-img-wrap {
   position: relative;
   display: inline-block;
-  width: 420px; /* matches your banner pixel width */
+  width: 420px;
 }
 
 .hero img {
