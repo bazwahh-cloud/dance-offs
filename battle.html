@@ -35,10 +35,6 @@
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
-    <h1 style="font-family: 'Bangers', cursive; font-size: 48px; margin-bottom: 20px;">
-      Battle Mode
-    </h1>
-
     <!-- INPUTS -->
     <div style="margin-bottom: 30px;">
       <div style="margin-bottom: 20px;">
@@ -53,9 +49,7 @@
     </div>
 
     <!-- VIDEO CONTAINER -->
-    <div class="battle-videos" id="battleVideos">
-      <!-- iframes will be injected here -->
-    </div>
+    <div class="battle-videos" id="battleVideos"></div>
 
   </main>
 
@@ -84,7 +78,7 @@
       if (!id) return;
 
       const container = document.getElementById("battleVideos");
-      let right = container.querySelector(".right-video");
+      const right = container.querySelector(".right-video");
 
       container.innerHTML = `
         <iframe class="left-video" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
@@ -98,7 +92,7 @@
       if (!id) return;
 
       const container = document.getElementById("battleVideos");
-      let left = container.querySelector(".left-video");
+      const left = container.querySelector(".left-video");
 
       container.innerHTML = `
         ${left ? left.outerHTML : ""}
