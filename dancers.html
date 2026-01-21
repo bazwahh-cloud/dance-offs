@@ -1,131 +1,44 @@
-/* GLOBAL */
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #000;
-  color: #fff;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dancers | Dance-Offs</title>
 
-/* NAVIGATION */
-.navbar {
-  background-color: #111;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
+  <!-- Connects to your cleaned style2.css -->
+  <link rel="stylesheet" href="style2.css">
 
-.navbar a {
-  color: #ccc;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
 
-.navbar a:hover {
-  color: #fff;
-}
+<body>
 
-.navbar .active {
-  color: #00ccff;
-  border-bottom: 2px solid #00ccff;
-}
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="dancers.html" class="active">Dancers</a>
+    <a href="djs.html">DJs</a>
+    <a href="vote.html">Vote</a>
+    <a href="battle.html">Battle</a>
+    <a href="merch.html">Merch</a>
+  </nav>
 
-/* HERO SECTION — CLEANED + USING hero-dance.png */
-.hero-dancers {
-  background-image: url('hero-dance.png') !important;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  <!-- Hero Section -->
+  <main class="hero-dancers">
 
-  /* style3 sizing */
-  height: calc(100vh - 80px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
+    <div class="logo-block">
+      <img src="logo.png" alt="Dance-Offs Logo">
+    </div>
 
-  /* remove any accidental overlays */
-  overflow: hidden;
-}
+    <div class="cta-row">
+      <a href="battle.html" class="hero-button">Battle Now</a>
+      <a href="vote.html" class="hero-button">Vote Now</a>
+    </div>
 
-/* LOGO BLOCK */
-.logo-block {
-  max-width: 420px;
-  width: 100%;
-  position: relative;
-}
+  </main>
 
-.logo-block img {
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
 
-  /* ensure no rotation ever applies */
-  transform: none !important;
-}
-
-/* CTA BUTTONS */
-.cta-row {
-  position: absolute;
-  top: 62%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  gap: 24px;
-  z-index: 5;
-}
-
-.hero-button {
-  background: rgba(0, 0, 0, 0);
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: bold;
-  padding: 12px 26px;
-  border-radius: 10px;
-  text-decoration: none;
-  border: 3px solid #fff;
-  backdrop-filter: blur(2px);
-  transition: 0.2s ease;
-}
-
-.hero-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.05);
-}
-
-/* FOOTER */
-.footer {
-  background-color: #111;
-  color: #aaa;
-  text-align: center;
-  padding: 30px 20px;
-  font-size: 0.9rem;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .navbar {
-    flex-wrap: wrap;
-    gap: 20px;
-    font-size: 1rem;
-  }
-
-  .logo-block {
-    max-width: 300px;
-  }
-
-  .cta-row {
-    top: 68%;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .hero-button {
-    font-size: 1.2rem;
-    padding: 12px 22px;
-  }
-}
+</body>
+</html>
