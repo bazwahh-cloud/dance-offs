@@ -1,58 +1,179 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dance-Offs: Home</title>
+/* --------------------------------------------------
+   GLOBAL
+-------------------------------------------------- */
 
-  <!-- Main stylesheet -->
-  <link rel="stylesheet" href="style2.css?v=999">
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
 
-  <!-- Brand fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
+img {
+  max-width: 100%;
+  display: block;
+}
 
-<body>
+/* --------------------------------------------------
+   NAVIGATION BAR — TIGHTER + MATCH HOMEPAGE
+-------------------------------------------------- */
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <a href="index.html" class="active">Home</a>
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
+  gap: 18px;          /* tighter horizontal spacing */
+  padding: 8px 0;     /* tighter vertical spacing */
+  background: #111;
 
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
 
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </nav>
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  padding-bottom: 3px;
+  transition: 0.2s;
+}
 
-  <!-- HERO IMAGE WITH INVISIBLE CLICKABLE ZONES -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="home-hero2.jpg" alt="Dance-Offs Home Banner">
+.navbar a:hover {
+  color: #00ccff;
+}
 
-      <!-- Invisible clickable zones -->
-      <a href="dancers.html" class="hero-zone hero-left" aria-label="Go to Dancers page"></a>
-      <a href="djs.html" class="hero-zone hero-right" aria-label="Go to DJs page"></a>
-    </div>
-  </div>
+.navbar .active {
+  color: #00ccff;
+  border-bottom: 3px solid #00ccff;
+}
 
-  <main class="page-container">
-    <section class="home-container"></section>
-  </main>
+/* --------------------------------------------------
+   DROPDOWNS — EASY TO SELECT, NO HOVER GAP
+-------------------------------------------------- */
 
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-</body>
-</html>
+  /* EXPAND HOVER ZONE so menu doesn't collapse */
+  padding-bottom: 12px;
+}
+
+/* hidden by default */
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  position: absolute;
+  top: 100%;               /* sits directly under parent */
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #111;
+  padding: 8px 0;
+  border-radius: 6px;
+  min-width: 140px;        /* wider for easier clicking */
+  text-align: center;
+  z-index: 50;
+}
+
+/* KEEP MENU OPEN when hovering parent OR menu */
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* dropdown items */
+.dropdown-menu a {
+  display: block;
+  padding: 10px 18px;      /* bigger click target */
+  white-space: nowrap;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dropdown-menu a:hover {
+  background: #222;
+  color: #00ccff;
+}
+
+/* --------------------------------------------------
+   HERO — FIXED COLLAPSE + 315px WIDTH
+-------------------------------------------------- */
+
+.hero {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.hero-img-wrap {
+  position: relative;
+  display: inline-block;
+
+  width: 315px !important;
+  max-width: 90%;
+  margin: 0 auto;
+
+  /* prevents collapse even if image loads late */
+  min-height: 120px;
+}
+
+.hero-img-wrap img {
+  width: 100% !important;
+  height: auto;
+  display: block; /* ensures it occupies space */
+}
+
+/* clickable zones */
+.hero-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+
+.hero-left {
+  left: 0;
+}
+
+.hero-right {
+  right: 0;
+}
+
+/* --------------------------------------------------
+   PAGE LAYOUT
+-------------------------------------------------- */
+
+.page-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.dancers-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  color: #888;
+  font-size: 14px;
+}
