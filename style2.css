@@ -15,12 +15,14 @@ body {
   gap: 40px;
   font-size: 1.2rem;
   font-weight: 600;
+  position: relative;
 }
 
 .navbar a {
   color: #ccc;
   text-decoration: none;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .navbar a:hover {
@@ -30,4 +32,27 @@ body {
 .navbar .active {
   color: #00ccff;
   border-bottom: 2px solid #00ccff;
+}
+
+/* HOVER‑REVEAL BATTLE LINK */
+.battle-hover {
+  display: none;
+  position: absolute;
+  top: 60px;
+  background: #111;
+  padding: 10px 20px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Reveal when hovering Dancers */
+.navbar a[href="dancers.html"]:hover + .battle-hover {
+  display: block;
+}
+
+/* Reveal when hovering DJs */
+.navbar a[href="djs.html"]:hover + .battle-hover {
+  display: block;
 }
