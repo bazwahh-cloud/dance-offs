@@ -68,22 +68,22 @@ body {
   display: block;
 }
 
-/* HERO IMAGE + OVERLAY BUTTON SYSTEM */
+/* HERO IMAGE + HITBOX SYSTEM */
 .dancer-hero {
   text-align: center;
   margin-top: 20px;
 }
 
-/* Wrap image so hitboxes match its width */
+/* This wrapper controls the width of the clickable area */
 .hero-img-wrap {
   position: relative;
-  display: inline-block; /* matches image width */
+  display: inline-block;
+  width: 420px;          /* Adjust this to match the width of the blue buttons */
 }
 
 /* Hero image */
 .dancer-hero img {
-  width: 35%;
-  max-width: 520px;
+  width: 100%;           /* Image fills the wrapper */
   border-radius: 10px;
   display: block;
 }
@@ -93,7 +93,7 @@ body {
   position: absolute;
   top: 0;
   height: 100%;
-  width: 50%;        /* left half / right half of image */
+  width: 50%;            /* Split evenly across the center */
   cursor: pointer;
   z-index: 10;
 }
@@ -115,14 +115,16 @@ body {
 
 /* RESPONSIVE HERO IMAGE */
 @media (max-width: 768px) {
-  .dancer-hero img {
+  .hero-img-wrap {
     width: 80%;
+    max-width: 420px;
   }
 }
 
 @media (max-width: 480px) {
-  .dancer-hero img {
+  .hero-img-wrap {
     width: 95%;
+    max-width: 420px;
   }
 }
 
