@@ -15,47 +15,43 @@ img {
 }
 
 /* --------------------------------------------------
-   NAVIGATION BAR
+   NAVIGATION BAR (MATCH HOMEPAGE)
 -------------------------------------------------- */
 
 .navbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 22px;
+  gap: 24px;
   padding: 14px 0;
   background: #111;
 
-  /* lock the correct font */
+  /* EXACT homepage font */
   font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .navbar a {
   color: #fff;
   text-decoration: none;
   padding-bottom: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
   transition: 0.2s;
+}
+
+/* active tab */
+.navbar .active {
+  color: #00ccff;
+  border-bottom: 3px solid #00ccff;
 }
 
 .navbar a:hover {
   color: #00ccff;
 }
 
-.navbar .active {
-  color: #00ccff;
-  border-bottom: 3px solid #00ccff;
-  font-weight: 700;
-}
-
 /* --------------------------------------------------
-   DROPDOWN
+   DROPDOWN (HIDDEN UNTIL HOVER)
 -------------------------------------------------- */
 
 .dropdown {
@@ -70,4 +66,30 @@ img {
   display: none !important;
   opacity: 0;
   pointer-events: none;
-  transition
+  transition: opacity 0.15s ease;
+
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #111;
+  padding: 10px 0;
+  border-radius: 6px;
+  min-width: 140px;
+  text-align: left;
+  z-index: 50;
+}
+
+/* show on hover */
+.dropdown:hover .dropdown-menu {
+  display: block !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* dropdown items */
+.dropdown-menu a {
+  display: block;
+  padding: 8px 20px;
+  white-space: nowrap;
