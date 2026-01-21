@@ -1,44 +1,46 @@
 /* --------------------------------------------------
-   NAVIGATION BAR — IMPROVED + FULLY COMPATIBLE
+   GLOBAL
+-------------------------------------------------- */
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* --------------------------------------------------
+   NAVIGATION BAR
 -------------------------------------------------- */
 
 .navbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 26px;                 /* slightly tighter, more balanced */
-  padding: 16px 0;           /* cleaner vertical spacing */
+  gap: 22px;
+  padding: 14px 0;
   background: #111;
-  font-size: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-/* All nav links */
 .navbar a {
   color: #fff;
   text-decoration: none;
-  padding-bottom: 4px;       /* keeps your underline spacing */
-  display: flex;             /* ensures perfect vertical centering */
+  padding-bottom: 4px;
+  display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
   transition: 0.2s;
 }
 
-/* Hover state */
 .navbar a:hover {
-  color: #00ccff;
-}
-
-/* Active page indicator */
-.navbar .active {
-  color: #00ccff;
-  border-bottom: 3px solid #00ccff;
-  font-weight: 700;
-}
-
-/* Dropdown wrapper */
-.dropdown {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align
+  color
