@@ -1,146 +1,44 @@
 /* --------------------------------------------------
-   GLOBAL RESET & BASE
+   NAVIGATION BAR — IMPROVED + FULLY COMPATIBLE
 -------------------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body {
-  background: #000;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  text-align: center;
-}
-
-/* --------------------------------------------------
-   NAVIGATION BAR
--------------------------------------------------- */
 .navbar {
   display: flex;
   justify-content: center;
-  align-items: center;   /* FIX: keeps nav text vertically centered */
-  gap: 30px;
-  padding: 20px 0;
+  align-items: center;
+  gap: 26px;                 /* slightly tighter, more balanced */
+  padding: 16px 0;           /* cleaner vertical spacing */
   background: #111;
   font-size: 20px;
 }
 
+/* All nav links */
 .navbar a {
   color: #fff;
   text-decoration: none;
-  padding-bottom: 4px;
+  padding-bottom: 4px;       /* keeps your underline spacing */
+  display: flex;             /* ensures perfect vertical centering */
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
   transition: 0.2s;
 }
 
+/* Hover state */
 .navbar a:hover {
   color: #00ccff;
 }
 
+/* Active page indicator */
 .navbar .active {
   color: #00ccff;
   border-bottom: 3px solid #00ccff;
   font-weight: 700;
 }
 
-/* Dropdown containers */
+/* Dropdown wrapper */
 .dropdown {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;   /* FIX: keeps dropdown label centered */
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 28px;
-  left: 50%;
-  transform: translateX(-50%); /* FIX: centers dropdown under label */
-  background: #111;
-  padding: 10px 0;
-  border-radius: 6px;
-  min-width: 120px;
-  text-align: left;
-}
-
-.dropdown:hover .dropdown-menu {
-  display: block;
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 8px 20px;
-  white-space: nowrap;
-}
-
-/* --------------------------------------------------
-   HERO IMAGE SYSTEM
--------------------------------------------------- */
-.hero {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.hero-img-wrap {
-  position: relative;
-  display: inline-block;
-  width: 420px;
-}
-
-.hero img {
-  width: 100%;
-  border-radius: 10px;
-  display: block;
-}
-
-/* Invisible clickable zones */
-.hero-zone {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50%;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.hero-left { left: 0; }
-.hero-right { right: 0; }
-
-/* --------------------------------------------------
-   BATTLE PAGE — SIDE-BY-SIDE VIDEOS
--------------------------------------------------- */
-.battle-videos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-
-.battle-videos iframe {
-  width: 420px;
-  height: 236px;
-  border-radius: 10px;
-  border: none;
-}
-
-/* --------------------------------------------------
-   PAGE CONTAINER
--------------------------------------------------- */
-.page-container {
-  margin-top: 40px;
-  padding-bottom: 60px;
-}
-
-/* --------------------------------------------------
-   FOOTER
--------------------------------------------------- */
-.footer {
-  margin-top: 60px;
-  padding: 20px 0;
-  background: #111;
-  color: #888;
-  font-size: 14px;
-}
+  align
