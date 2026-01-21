@@ -1,24 +1,97 @@
-<nav class="navbar">
+/* --------------------------------------------------
+   GLOBAL
+-------------------------------------------------- */
 
-  <a href="index.html">Home</a>
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
 
-  <!-- DANCERS DROPDOWN -->
-  <div class="dropdown">
-    <a href="dancers.html" class="active">Dancers</a>
-    <div class="dropdown-menu">
-      <a href="battle.html">Battle</a>
-    </div>
-  </div>
+img {
+  max-width: 100%;
+  display: block;
+}
 
-  <!-- DJS DROPDOWN -->
-  <div class="dropdown">
-    <a href="djs.html">DJs</a>
-    <div class="dropdown-menu">
-      <a href="battle.html">Battle</a>
-    </div>
-  </div>
+/* --------------------------------------------------
+   NAVIGATION BAR — CENTERED + CLEAN
+-------------------------------------------------- */
 
-  <a href="vote.html">Vote</a>
-  <a href="merch.html">Merch</a>
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: 6px 0;
+  background: #111;
+  width: 100%;
+  box-sizing: border-box;
 
-</nav>
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  padding-bottom: 3px;
+  transition: 0.2s;
+}
+
+.navbar a:hover {
+  color: #00ccff;
+}
+
+.navbar .active {
+  color: #00ccff;
+  border-bottom: 3px solid #00ccff;
+}
+
+/* --------------------------------------------------
+   DROPDOWNS — TIGHT + NO GAP
+-------------------------------------------------- */
+
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #111;
+  padding: 8px 0;
+  border-radius: 6px;
+  min-width: 140px;
+  text-align: center;
+  z-index: 50;
+
+  margin-top: -4px;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 18px;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 18px
