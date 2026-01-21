@@ -32,18 +32,23 @@ body {
   border-bottom: 2px solid #00ccff;
 }
 
-/* HERO SECTION — USING STYLE3 SIZING + hero-dance.png */
+/* HERO SECTION — CLEANED + USING hero-dance.png */
 .hero-dancers {
   background-image: url('hero-dance.png') !important;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+
+  /* style3 sizing */
   height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   position: relative;
+
+  /* remove any accidental overlays */
+  overflow: hidden;
 }
 
 /* LOGO BLOCK */
@@ -58,9 +63,12 @@ body {
   height: auto;
   display: block;
   margin: 0 auto;
+
+  /* ensure no rotation ever applies */
+  transform: none !important;
 }
 
-/* CTA BUTTONS — TRANSPARENT + POSITIONED */
+/* CTA BUTTONS */
 .cta-row {
   position: absolute;
   top: 62%;
