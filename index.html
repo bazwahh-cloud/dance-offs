@@ -15,19 +15,19 @@ img {
 }
 
 /* --------------------------------------------------
-   NAVIGATION BAR — TIGHTER + MATCH HOMEPAGE
+   NAVIGATION BAR — CENTERED + CLEAN
 -------------------------------------------------- */
 
 .navbar {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  gap: 18px;          /* tighter horizontal spacing */
-  padding: 8px 0;     /* tighter vertical spacing */
+  gap: 18px;
+  padding: 6px 0;
   background: #111;
+  width: 100%;
+  box-sizing: border-box;
 
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -51,7 +51,7 @@ img {
 }
 
 /* --------------------------------------------------
-   DROPDOWNS — EASY TO SELECT, NO HOVER GAP
+   DROPDOWNS — TIGHT + NO GAP
 -------------------------------------------------- */
 
 .dropdown {
@@ -60,11 +60,9 @@ img {
   flex-direction: column;
   align-items: center;
 
-  /* EXPAND HOVER ZONE so menu doesn't collapse */
-  padding-bottom: 12px;
+  padding-bottom: 0; /* tightened */
 }
 
-/* hidden by default */
 .dropdown-menu {
   display: none;
   opacity: 0;
@@ -72,19 +70,20 @@ img {
   transition: opacity 0.15s ease;
 
   position: absolute;
-  top: 100%;               /* sits directly under parent */
+  top: 90%; /* lifted upward */
   left: 50%;
   transform: translateX(-50%);
 
   background: #111;
   padding: 8px 0;
   border-radius: 6px;
-  min-width: 140px;        /* wider for easier clicking */
+  min-width: 140px;
   text-align: center;
   z-index: 50;
+
+  margin-top: -4px; /* micro‑tightening */
 }
 
-/* KEEP MENU OPEN when hovering parent OR menu */
 .dropdown:hover .dropdown-menu,
 .dropdown-menu:hover {
   display: block;
@@ -92,10 +91,9 @@ img {
   pointer-events: auto;
 }
 
-/* dropdown items */
 .dropdown-menu a {
   display: block;
-  padding: 10px 18px;      /* bigger click target */
+  padding: 10px 18px;
   white-space: nowrap;
   color: #fff;
   font-size: 18px;
@@ -108,31 +106,31 @@ img {
 }
 
 /* --------------------------------------------------
-   HERO — FIXED COLLAPSE + 315px WIDTH
+   HERO — RESPONSIVE + 270px MAX
 -------------------------------------------------- */
 
 .hero {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .hero-img-wrap {
   position: relative;
   display: inline-block;
 
-  width: 315px !important;
-  max-width: 90%;
+  width: 100%;
+  max-width: 270px; /* updated */
   margin: 0 auto;
 
-  /* prevents collapse even if image loads late */
-  min-height: 120px;
+  min-height: 150px;
+  overflow: visible;
 }
 
 .hero-img-wrap img {
-  width: 100% !important;
+  width: 100%;
   height: auto;
-  display: block; /* ensures it occupies space */
+  display: block;
 }
 
 /* clickable zones */
@@ -141,15 +139,11 @@ img {
   top: 0;
   bottom: 0;
   width: 50%;
+  z-index: 5;
 }
 
-.hero-left {
-  left: 0;
-}
-
-.hero-right {
-  right: 0;
-}
+.hero-left { left: 0; }
+.hero-right { right: 0; }
 
 /* --------------------------------------------------
    PAGE LAYOUT
@@ -168,12 +162,14 @@ img {
 }
 
 /* --------------------------------------------------
-   FOOTER
+   FOOTER — FULLY CENTERED
 -------------------------------------------------- */
 
 .footer {
   text-align: center;
+  margin: 0 auto;
   padding: 30px 0;
   color: #888;
   font-size: 14px;
+  width: 100%;
 }
