@@ -25,6 +25,8 @@ img {
   gap: 22px;
   padding: 14px 0;
   background: #111;
+
+  /* lock the correct font */
   font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 600;
@@ -43,4 +45,29 @@ img {
 }
 
 .navbar a:hover {
-  color
+  color: #00ccff;
+}
+
+.navbar .active {
+  color: #00ccff;
+  border-bottom: 3px solid #00ccff;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------
+   DROPDOWN
+-------------------------------------------------- */
+
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* hidden by default */
+.dropdown-menu {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transition
