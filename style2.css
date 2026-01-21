@@ -12,9 +12,12 @@ body {
   padding: 20px;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 40px;
   font-size: 1.2rem;
   font-weight: 600;
+  position: relative;
+  z-index: 50;
 }
 
 .navbar a {
@@ -35,25 +38,58 @@ body {
 /* DROPDOWN WRAPPER */
 .dropdown {
   position: relative;
-  padding-bottom: 20px;   /* extends hover zone downward */
 }
 
-/* CENTERED + TIGHT + CLOSE DROPDOWN */
+/* DROPDOWN MENU */
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 36px;              /* close to parent link */
-  left: 50%;              /* center anchor */
-  transform: translateX(-50%); /* perfect centering */
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   background: #111;
-  padding: 4px 10px;      /* tight padding */
+  padding: 6px 12px;
   border: 1px solid #333;
-  border-radius: 3px;
+  border-radius: 4px;
   white-space: nowrap;
-  z-index: 10;
+  z-index: 100;
 }
 
-/* SHOW ON HOVER */
+.dropdown-menu a {
+  display: block;
+  padding: 6px 0;
+  color: #ccc;
+}
+
+.dropdown-menu a:hover {
+  color: #fff;
+}
+
+/* SHOW DROPDOWN ON HOVER */
 .dropdown:hover .dropdown-menu {
   display: block;
+}
+
+/* HERO BANNER (reduced by 40% then another 30%) */
+.dancer-hero img {
+  width: 25%;          /* final size */
+  max-width: 380px;    /* proportional cap */
+  display: block;
+  margin: 20px auto 20px auto;
+  border-radius: 10px;
+}
+
+/* PAGE CONTAINER */
+.page-container {
+  padding: 20px;
+}
+
+/* FOOTER (tighter spacing) */
+.footer {
+  background: #000;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;   /* was 60px */
+  color: #aaa;
+  font-size: 0.9rem;
 }
