@@ -1,161 +1,59 @@
-/* GLOBAL */
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #000;
-  color: #fff;
-}
 
-/* NAVIGATION */
-.navbar {
-  background: #111;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  position: relative;
-  z-index: 50;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Home</title>
 
-.navbar a {
-  color: #ccc;
-  text-decoration: none;
-  transition: 0.2s;
-}
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style2.css?v=300">
 
-.navbar a:hover {
-  color: #fff;
-}
+  <!-- Brand fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
 
-.navbar .active {
-  color: #00ccff;
-  border-bottom: 2px solid #00ccff;
-}
+<body>
 
-/* DROPDOWN */
-.dropdown {
-  position: relative;
-}
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="active">Home</a>
 
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #111;
-  padding: 6px 12px;
-  border: 1px solid #333;
-  border-radius: 4px;
-  white-space: nowrap;
-  z-index: 100;
-}
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-.dropdown-menu a {
-  display: block;
-  padding: 6px 0;
-  color: #ccc;
-}
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-.dropdown-menu a:hover {
-  color: #fff;
-}
+    <a href="vote.html">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
 
-.dropdown:hover .dropdown-menu {
-  display: block;
-}
+  <!-- HERO IMAGE WITH INVISIBLE CLICKABLE ZONES -->
+  <div class="hero">
+    <div class="hero-img-wrap">
+      <img src="home-hero1.jpg" alt="Dance-Offs Home Banner">
 
-/* HERO IMAGE + HITBOX SYSTEM */
-.dancer-hero {
-  text-align: center;
-  margin-top: 20px;
-}
+      <!-- Invisible clickable zones -->
+      <a href="dancers.html" class="hero-zone hero-left" aria-label="Go to Dancers page"></a>
+      <a href="djs.html" class="hero-zone hero-right" aria-label="Go to DJs page"></a>
+    </div>
+  </div>
 
-/* This wrapper controls the width of the clickable area */
-.hero-img-wrap {
-  position: relative;
-  display: inline-block;
-  width: 420px;          /* Adjust this to match the width of the blue buttons */
-}
+  <main class="page-container">
+    <section class="home-container"></section>
+  </main>
 
-/* Hero image */
-.dancer-hero img {
-  width: 100%;           /* Image fills the wrapper */
-  border-radius: 10px;
-  display: block;
-}
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
 
-/* Invisible clickable zones */
-.hero-zone {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50%;            /* Split evenly across the center */
-  cursor: pointer;
-  z-index: 10;
-}
-
-/* Left half */
-.hero-left {
-  left: 0;
-}
-
-/* Right half */
-.hero-right {
-  right: 0;
-}
-
-/* Debug outline (optional) */
-.hero-zone:hover {
-  outline: 2px dashed rgba(0, 204, 255, 0.4);
-}
-
-/* RESPONSIVE HERO IMAGE */
-@media (max-width: 768px) {
-  .hero-img-wrap {
-    width: 80%;
-    max-width: 420px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-img-wrap {
-    width: 95%;
-    max-width: 420px;
-  }
-}
-
-/* CTA BUTTONS (used on other pages) */
-.cta-button {
-  display: inline-block;
-  padding: 12px 24px;
-  background: #00ccff;
-  color: #000;
-  font-weight: 700;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: 0.2s;
-  margin: 10px;
-}
-
-.cta-button:hover {
-  background: #00a3cc;
-}
-
-/* PAGE CONTAINER */
-.page-container {
-  padding: 20px;
-}
-
-/* FOOTER */
-.footer {
-  background: #000;
-  padding: 20px;
-  text-align: center;
-  margin-top: 20px;
-  color: #aaa;
-  font-size: 0.9rem;
-}
+</body>
+</html>
