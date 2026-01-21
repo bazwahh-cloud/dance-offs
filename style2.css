@@ -106,7 +106,7 @@ img {
 }
 
 /* --------------------------------------------------
-   HERO — SMALLER + CENTERED
+   HERO — 30% SMALLER
 -------------------------------------------------- */
 
 .hero {
@@ -118,7 +118,9 @@ img {
 .hero-img-wrap {
   position: relative;
   display: inline-block;
-  width: 260px !important;   /* final size */
+
+  /* 30% smaller than 260px → 182px */
+  width: 182px !important;
   max-width: 90%;
   margin: 0 auto;
 }
