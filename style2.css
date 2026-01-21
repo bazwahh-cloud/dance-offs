@@ -105,7 +105,7 @@ img {
 }
 
 /* --------------------------------------------------
-   HERO — RESPONSIVE WITH MAX WIDTH 230px
+   HERO — RESPONSIVE WITH MAX WIDTH 250px
 -------------------------------------------------- */
 
 .hero {
@@ -117,8 +117,8 @@ img {
 .hero-img-wrap {
   position: relative;
   width: 100%;
-  max-width: 230px;   /* resized for text balance */
-  margin: 0 auto;
+  max-width: 250px;   /* reduced black space */
+  margin: 10px auto 0; /* slight top margin */
 }
 
 .hero-img-wrap img {
@@ -145,7 +145,7 @@ img {
 
 .page-container {
   max-width: 900px;
-  margin: 40px auto;
+  margin: 30px auto;  /* reduced from 40px */
   padding: 0 20px;
 }
 
