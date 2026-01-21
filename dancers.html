@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dancer Page</title>
+  <title>Dancers</title>
 
   <style>
     body {
@@ -13,17 +13,19 @@
       color: #fff;
     }
 
-    /* NAVIGATION (placeholder – keep your existing nav here) */
+    /* NAVIGATION */
     nav {
       background: #000;
-      padding: 15px 20px;
       color: #fff;
+      padding: 15px 20px;
       font-size: 1.2rem;
+      position: relative;
+      z-index: 10;
     }
 
     /* HERO IMAGE UNDER NAV */
     .dancer-hero img {
-      width: 60%;          /* adjust size here */
+      width: 60%;          /* adjust size as needed */
       max-width: 900px;
       display: block;
       margin: 30px auto 40px auto;
@@ -46,8 +48,10 @@
 
   <!-- NAVIGATION -->
   <nav>
-    <!-- Replace this with your real nav -->
-    Navigation Bar
+    <a href="index.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+    <a href="battles.html" style="color:white; text-decoration:none; margin-right:20px;">Battles</a>
+    <a href="vote.html" style="color:white; text-decoration:none; margin-right:20px;">Vote</a>
+    <a href="dancers.html" style="color:white; text-decoration:none;">Dancers</a>
   </nav>
 
   <!-- HERO IMAGE UNDER NAV -->
@@ -55,7 +59,7 @@
     <img src="dancer-hero1.jpg" alt="Dance-Offs Hero Banner">
   </div>
 
-  <!-- PAGE CONTENT (optional) -->
+  <!-- PAGE CONTENT -->
   <div class="content">
     <!-- Your dancer content goes here -->
   </div>
