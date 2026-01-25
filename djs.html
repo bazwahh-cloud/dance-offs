@@ -4,84 +4,53 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1040">
+  <link rel="stylesheet" href="style2.css?v=1042">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- FIX FOOTER CUT-OFF -->
+  <!-- FIX FOOTER + PAGE HEIGHT + HERO CENTERING -->
   <style>
     html, body {
       min-height: 100vh !important;
       height: auto !important;
       overflow-y: auto !important;
+      margin: 0;
+      padding: 0;
     }
+
     body {
       display: flex;
       flex-direction: column;
     }
+
     main {
       flex: 1 0 auto;
+      width: 100%;
     }
+
     footer {
       flex-shrink: 0;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* Center hero banner */
+    .hero-img-wrap {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+    }
+
+    .hero-img-wrap img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Ensure hero wrapper never blocks scrolling */
+    .hero-wrapper {
+      overflow: visible !important;
+      height: auto !important;
     }
   </style>
 </head>
-
-<body>
-
-  <!-- NAVIGATION -->
-  <nav class="navbar">
-    <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html" class="active">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </nav>
-
-  <!-- MAIN CONTENT WRAPPER -->
-  <main>
-
-    <!-- HERO WRAPPER -->
-    <section class="hero-wrapper" style="display:block; width:100%;">
-      <div class="hero-img-wrap">
-        <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
-        <a href="battle.html" class="hero-zone hero-left"></a>
-        <a href="vote.html" class="hero-zone hero-right"></a>
-      </div>
-    </section>
-
-    <!-- FORM + PLAYER BLOCK -->
-    <section class="dj-form-block" style="margin-top:30px; text-align:center;">
-      <p class="instruction-line">Submit your DJ mix below.</p>
-
-      <form id="djMixForm">
-        <input 
-          type="text" 
-          id="djMixInput" 
-          placeholder="SoundCloud URL"
-          style="width:80%; max-width:400px; padding:10px; margin-bottom:10px;"
-        >
-        <button type="submit">Submit</button>
-      </form>
-
-      <div id="playerContainer" style="margin-top:20px;"></div>
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer" style="padding:20px 0; text-align:center;">
-    <p>&copy; 202
