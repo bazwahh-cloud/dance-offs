@@ -101,9 +101,14 @@
       const SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
+      /* ---------------------------------------------------------
+         UNIVERSAL NORMALIZER + STRICT VALIDATOR (BAZ-GRADE)
+      --------------------------------------------------------- */
+
       async function normalizeSoundCloudURL(rawUrl) {
         let url = rawUrl.trim();
 
+        // Resolve shortlinks
         if (url.includes("on.soundcloud.com")) {
           try {
             const oembed = await fetch(
@@ -114,26 +119,46 @@
 
             const match = data.html.match(/https%3A%2F%2Fsoundcloud.com[^&"]+/);
             if (match && match[0]) {
-              return decodeURIComponent(match[0]);
+              url = decodeURIComponent(match[0]);
             }
           } catch (e) {
-            console.log("oEmbed failed", e);
+            console.log("Shortlink resolution failed", e);
           }
         }
+
+        // Strip tracking params
+        try {
+          const u = new URL(url);
+          u.search = "";
+          url = u.toString();
+        } catch {}
 
         return url;
       }
 
-      function looksLikeSoundCloudTrack(url) {
+      function isValidSoundCloudTrack(url) {
         try {
           const u = new URL(url);
-          if (!u.hostname.includes("soundcloud.com")) return false;
+
+          if (u.hostname !== "soundcloud.com") return false;
+
           const parts = u.pathname.split("/").filter(Boolean);
-          return parts.length >= 2;
+
+          // Track: /artist/track
+          if (parts.length === 2) return true;
+
+          // Playlist: /artist/sets/playlist
+          if (parts.length === 3 && parts[1] === "sets") return true;
+
+          return false;
         } catch {
           return false;
         }
       }
+
+      /* ---------------------------------------------------------
+         FORM HANDLER
+      --------------------------------------------------------- */
 
       const form = document.getElementById("djMixForm");
       const input = document.getElementById("djMixInput");
@@ -150,7 +175,7 @@
 
         const url = await normalizeSoundCloudURL(rawUrl);
 
-        if (!looksLikeSoundCloudTrack(url)) {
+        if (!isValidSoundCloudTrack(url)) {
           alert("Please paste a full SoundCloud track or playlist URL.");
           return;
         }
