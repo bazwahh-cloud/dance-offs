@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1047">
+  <link rel="stylesheet" href="style2.css?v=1043">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Page height, footer, hero centering -->
+  <!-- FIX PAGE HEIGHT, FOOTER, HERO CENTERING -->
   <style>
     html, body {
       min-height: 100vh !important;
@@ -33,6 +33,7 @@
       padding: 20px 0;
     }
 
+    /* Center hero banner */
     .hero-wrapper {
       width: 100%;
       overflow: visible !important;
@@ -121,6 +122,7 @@
 
       const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
 
+      // Resolve on.soundcloud.com redirect links
       async function resolveSoundCloudURL(url) {
         try {
           const response = await fetch(url, { method: "GET", redirect: "follow" });
