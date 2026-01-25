@@ -182,26 +182,34 @@ p {
 /* BATTLE TABLE LAYOUT */
 .battle-table {
   margin: 10px auto;
-  border-spacing: 16px;
+  border-spacing: 12px;
+  table-layout: fixed; /* prevents width collapse */
 }
 
 .battle-cell {
   text-align: center;
   vertical-align: top;
   width: 420px;
+  min-width: 300px;
+  min-height: 260px; /* prevents collapse */
 }
 
 .video-slot {
   margin-top: 12px;
-  min-height: 236px;
+  min-height: 260px; /* keeps cell open before iframe loads */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .battle-frame {
   width: 100%;
   height: 236px;
-  border: none;
+  min-height: 236px; /* forces iframe to hold space */
+  display: block;
   background: #000;
   border-radius: 8px;
+  border: none;
 }
 
 /* MOBILE RESPONSIVE — stack layout under 700px */
