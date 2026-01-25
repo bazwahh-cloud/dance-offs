@@ -122,4 +122,12 @@ p {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 50
+  width: 50%;
+  z-index: 5;
+}
+
+.hero-left { left: 0; }
+.hero-right { right: 0; }
+
+/* INSTRUCTION LINE */
+.instruction
