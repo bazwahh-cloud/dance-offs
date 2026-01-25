@@ -101,9 +101,9 @@ img {
   position: relative;
   display: inline-block;
   width: 100%;
-  max-width: 324px; /* Increased from 270px */
+  max-width: 389px; /* 40% larger than original */
   margin: 0 auto;
-  min-height: 180px; /* Increased from 150px */
+  min-height: 216px; /* 40% larger than original */
   overflow: visible;
 }
 
@@ -121,28 +121,4 @@ img {
   z-index: 5;
 }
 
-.hero-left { left: 0; }
-.hero-right { right: 0; }
-
-/* PAGE LAYOUT */
-.page-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.dancers-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-}
-
-/* FOOTER */
-.footer {
-  text-align: center;
-  margin: 0 auto;
-  padding: 30px 0;
-  color: #888;
-  font-size: 14px;
-  width: 100%;
-}
+.hero-left { left
