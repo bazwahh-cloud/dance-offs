@@ -1,3 +1,4 @@
+/* BASE STYLES */
 body {
   margin: 0;
   background: #000;
@@ -11,7 +12,6 @@ img {
 }
 
 /* NAVBAR */
-
 .navbar {
   display: flex;
   justify-content: center;
@@ -44,7 +44,6 @@ img {
 }
 
 /* DROPDOWN */
-
 .dropdown {
   position: relative;
   display: flex;
@@ -92,7 +91,6 @@ img {
 }
 
 /* HERO */
-
 .hero {
   display: flex;
   justify-content: center;
@@ -103,9 +101,9 @@ img {
   position: relative;
   display: inline-block;
   width: 100%;
-  max-width: 270px;
+  max-width: 324px; /* Increased from 270px */
   margin: 0 auto;
-  min-height: 150px;
+  min-height: 180px; /* Increased from 150px */
   overflow: visible;
 }
 
@@ -126,8 +124,7 @@ img {
 .hero-left { left: 0; }
 .hero-right { right: 0; }
 
-/* LAYOUT + FOOTER */
-
+/* PAGE LAYOUT */
 .page-container {
   max-width: 900px;
   margin: 40px auto;
@@ -140,6 +137,7 @@ img {
   gap: 20px;
 }
 
+/* FOOTER */
 .footer {
   text-align: center;
   margin: 0 auto;
