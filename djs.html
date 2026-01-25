@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1035">
+  <link rel="stylesheet" href="style2.css?v=1036">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -32,7 +32,7 @@
     <a href="merch.html">Merch</a>
   </nav>
 
-  <!-- HERO WRAPPER (prevents collapse) -->
+  <!-- HERO WRAPPER -->
   <section class="hero-wrapper" style="display:block; width:100%;">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
@@ -41,3 +41,93 @@
     </div>
   </section>
 
+  <!-- FORM + PLAYER BLOCK -->
+  <section class="dj-form-block" style="margin-top:30px; text-align:center;">
+    <p class="instruction-line">Submit your DJ mix below.</p>
+
+    <form id="djMixForm">
+      <input 
+        type="text" 
+        id="djMixInput" 
+        placeholder="SoundCloud URL"
+        style="width:80%; max-width:400px; padding:10px; margin-bottom:10px;"
+      >
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="playerContainer" style="margin-top:20px;"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" style="margin-top:60px;">
+    <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+      async function resolveSoundCloudURL(url) {
+        try {
+          const response = await fetch(url, { method: "HEAD" });
+          return response.url || url;
+        } catch (e) {
+          return url;
+        }
+      }
+
+      function looksLikeSoundCloudTrack(url) {
+        if (!url.includes("soundcloud.com")) return false;
+        try {
+          const u = new URL(url);
+          const parts = u.pathname.split("/").filter(Boolean);
+          return parts.length >= 2;
+        } catch {
+          return false;
+        }
+      }
+
+      const form = document.getElementById("djMixForm");
+      const input = document.getElementById("djMixInput");
+      const playerContainer = document.getElementById("playerContainer");
+
+      if (form && input && playerContainer) {
+        form.addEventListener("submit", async function(e) {
+          e.preventDefault();
+
+          const rawUrl = input.value.trim();
+          if (!rawUrl) {
+            alert("Please enter a SoundCloud URL.");
+            return;
+          }
+
+          const url = await resolveSoundCloudURL(rawUrl);
+
+          if (!looksLikeSoundCloudTrack(url)) {
+            alert("Please paste a full SoundCloud track or playlist URL.");
+            return;
+          }
+
+          const dj = "left";
+          const endpoint = `${SCRIPT_URL}?mode=submitmix&dj=${dj}&url=${encodeURIComponent(url)}`;
+          fetch(endpoint);
+
+          playerContainer.innerHTML = `
+            <iframe 
+              width="100%" 
+              height="166" 
+              scrolling="no" 
+              frameborder="no" 
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true">
+            </iframe>
+          `;
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
