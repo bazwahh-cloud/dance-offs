@@ -1,74 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dance-Offs | Battle</title>
-  <link rel="stylesheet" href="battle.css?v=2">
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Battle</title>
+
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="djs.html">DJs</a>
+
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html" class="active">Battle</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
-    <a class="active" href="battle.html">Battle</a>
   </nav>
 
   <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Banner">
-      <div class="hero-zone hero-left"></div>
-      <div class="hero-zone hero-right"></div>
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
   </div>
 
-  <!-- INSTRUCTION LINE -->
+  <!-- INSTRUCTION -->
   <p class="instruction-line">Load your battle videos below.</p>
 
-  <!-- PAGE CONTAINER -->
-  <div class="page-container">
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
 
-    <table class="battle-table">
+    <!-- TABLE LAYOUT FOR PERFECT ALIGNMENT -->
+    <table class="battle-table" cellspacing="12" align="center">
       <tr>
-
-        <!-- LEFT SIDE -->
+        <!-- LEFT INPUT -->
         <td class="battle-cell">
           <label for="leftUrl">Left YouTube URL</label>
-          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
-          <button class="vote-button" onclick="loadLeftVideo()">Load Left Video</button>
-
-          <div class="video-slot">
-            <iframe id="leftFrame" class="battle-frame" allowfullscreen></iframe>
-          </div>
+          <input id="leftUrl" class="input-field" type="text" placeholder="https://youtube.com/watch?v=...">
+          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
         </td>
 
-        <!-- RIGHT SIDE -->
+        <!-- RIGHT INPUT -->
         <td class="battle-cell">
           <label for="rightUrl">Right YouTube URL</label>
-          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
-          <button class="vote-button" onclick="loadRightVideo()">Load Right Video</button>
+          <input id="rightUrl" class="input-field" type="text" placeholder="https://youtube.com/watch?v=...">
+          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+        </td>
+      </tr>
 
-          <div class="video-slot">
-            <iframe id="rightFrame" class="battle-frame" allowfullscreen></iframe>
-          </div>
+      <tr>
+        <!-- LEFT VIDEO -->
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
         </td>
 
+        <!-- RIGHT VIDEO -->
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
       </tr>
     </table>
 
-  </div>
+  </main>
 
   <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- JS -->
+  <!-- SCRIPT -->
   <script>
-    /* Extract YouTube
+    function extractID(url) {
+      try {
+        const u = new URL(url);
+        if (u.hostname.includes("youtu.be")) {
+          return u.pathname.slice(1);
+        }
+        return u.searchParams.get("v");
+      } catch {
+        return null;
+      }
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value;
+      const id = extractID(url);
+      if (!id) return;
+
+      document.getElementById("leftVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+      `;
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value;
+      const id = extractID(url);
+      if (!id) return;
+
+      document.getElementById("rightVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+      `;
+    }
+
+    /* DEFAULT VIDEOS ON LOAD */
+    window.onload = function () {
+      document.getElementById("leftVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+      `;
+      document.getElementById("rightVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/3JZ_D3ELwOQ" allowfullscreen></iframe>
+      `;
+    };
+  </script>
+
+</body>
+</html>
