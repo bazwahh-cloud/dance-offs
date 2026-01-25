@@ -32,7 +32,7 @@
     <a href="merch.html">Merch</a>
   </nav>
 
-  <!-- HERO (both zones stay on this page) -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Vote Banner">
@@ -160,4 +160,34 @@
                             </div>
                         </a>
                         <div><strong>${left.performer}</strong></div>
-                        <div class="vote-count">
+                        <div class="vote-count">Votes: ${leftVotes}</div>
+                        <button class="vote-btn" onclick="vote(${i}, 'Left')">Vote Left</button>
+                    </div>
+
+                    <div class="side">
+                        <a href="${right.youtube}" target="_blank">
+                            <div class="thumb-wrapper">
+                                <img 
+                                  src="https://img.youtube.com/vi/${rightID}/hqdefault.jpg"
+                                  class="thumb-video"
+                                  style="object-fit: cover; width: 100%; height: 100%;"
+                                />
+                            </div>
+                        </a>
+                        <div><strong>${right.performer}</strong></div>
+                        <div class="vote-count">Votes: ${rightVotes}</div>
+                        <button class="vote-btn" onclick="vote(${i}, 'Right')">Vote Right</button>
+                    </div>
+
+                </div>
+            `;
+
+            container.appendChild(div);
+        }
+    }
+
+    loadBattles();
+  </script>
+
+</body>
+</html>
