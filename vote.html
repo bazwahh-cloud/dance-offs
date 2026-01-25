@@ -32,30 +32,20 @@
     <a href="merch.html">Merch</a>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO (both zones stay on this page) -->
   <section class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Vote Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="djs.html" class="hero-zone hero-right"></a>
+      <a href="vote.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
   </section>
 
   <!-- PAGE CONTENT -->
   <section class="page-container" style="text-align:center;">
-    <p class="instruction-line">Cast your vote below.</p>
+    <p class="instruction-line">Vote for your favorite in each battle.</p>
 
-    <form id="voteForm">
-      <input 
-        type="text" 
-        id="voteInput" 
-        class="input-field"
-        placeholder="Enter dancer or DJ name"
-      >
-      <button type="submit" class="vote-button">Vote</button>
-    </form>
-
-    <div id="voteResult" style="margin-top:20px; min-height:40px;"></div>
+    <div id="battleContainer"></div>
   </section>
 
   <!-- FOOTER -->
@@ -65,18 +55,5 @@
 
   <!-- SCRIPT -->
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-      const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-      const form = document.getElementById("voteForm");
-      const input = document.getElementById("voteInput");
-      const result = document.getElementById("voteResult");
-
-      form.addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        const name = input.value.trim();
-        if (!name) {
-          alert("Please enter a name to vote for
+    const BASE_URL =
+      "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIa
