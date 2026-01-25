@@ -47,29 +47,101 @@
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
-    <!-- TABLE LAYOUT FOR PERFECT ALIGNMENT -->
-    <table class="battle-table" cellspacing="12" align="center">
+    <table class="battle-table" cellspacing="10" align="center">
       <tr>
-        <!-- LEFT INPUT -->
         <td class="battle-cell">
           <label for="leftUrl">Left YouTube URL</label>
-          <input id="leftUrl" class="input-field" type="text" placeholder="https://youtube.com/shorts/...">
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
           <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
         </td>
 
-        <!-- RIGHT INPUT -->
         <td class="battle-cell">
           <label for="rightUrl">Right YouTube URL</label>
-          <input id="rightUrl" class="input-field" type="text" placeholder="https://youtube.com/shorts/...">
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
           <button class="vote-button" onclick="loadRight()">Load Right Video</button>
         </td>
       </tr>
 
       <tr>
-        <!-- LEFT VIDEO -->
         <td class="battle-cell">
-          <div id="leftVideo" class="video-slot"></div>
+          <div id="leftVideo" class="video-slot">
+            <!-- iframe injected here -->
+          </div>
         </td>
 
-        <!-- RIGHT VIDEO -->
         <td class="battle-cell">
+          <div id="rightVideo" class="video-slot">
+            <!-- iframe injected here -->
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    // Bulletproof YouTube Shorts extractor
+    function extractID(url) {
+      const patterns = [
+        /shorts\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /embed\/([^?&/]+)/
+      ];
+      for (const p of patterns) {
+        const match = url.match(p);
+        if (match && match[1]) return match[1];
+      }
+      return null;
+    }
+
+    function embed(id) {
+      return `
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}"
+          allowfullscreen>
+        </iframe>`;
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("leftVideo").innerHTML = embed(id);
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("rightVideo").innerHTML = embed(id);
+    }
+
+    // Load defaults on page load
+    window.onload = function () {
+      const videoURL1 = "https://youtube.com/shorts/W-jKGWTthm8?si=FVNkbSrJ4oM3fyEj";
+      const videoURL2 = "https://youtube.com/shorts/SJKl6PEXklU?si=456";
+
+      const id1 = extractID(videoURL1);
+      const id2 = extractID(videoURL2);
+
+      if (id1) {
+        document.getElementById("leftVideo").innerHTML = embed(id1);
+        document.getElementById("leftUrl").value = videoURL1;
+      }
+
+      if (id2) {
+        document.getElementById("rightVideo").innerHTML = embed(id2);
+        document.getElementById("rightUrl").value = videoURL2;
+      }
+    };
+  </script>
+
+</body>
+</html>
