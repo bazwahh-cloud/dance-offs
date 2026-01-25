@@ -69,5 +69,21 @@
     <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
   </footer>
 
+  <!-- FUNCTIONAL SUBMISSION HANDLER -->
+  <script>
+    document.getElementById("djMixForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // prevent reload
+
+      const url = document.getElementById("djMixInput").value.trim();
+
+      if (!url) {
+        alert("Please enter a SoundCloud URL.");
+        return;
+      }
+
+      alert("Submitted: " + url);
+    });
+  </script>
+
 </body>
 </html>
