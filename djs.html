@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: DJs</title>
+  <title>Dance-Offs: DJs — Diagnostic Mode</title>
 
   <link rel="stylesheet" href="style2.css?v=1035">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -15,86 +15,3 @@
     <a href="index.html">Home</a>
 
     <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html" class="active">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
-    </div>
-  </div>
-
-  <p class="instruction-line">Submit your DJ mix below.</p>
-
-  <!-- MAIN -->
-  <main class="page-container">
-
-    <form id="djMixForm" style="text-align:center;">
-      <input 
-        type="text" 
-        id="djMixInput" 
-        placeholder="SoundCloud URL"
-      >
-      <button type="submit">Submit</button>
-    </form>
-
-    <!-- Player appears here -->
-    <div id="playerContainer" style="margin-top:20px; text-align:center;"></div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
-  </footer>
-
-  <!-- SCRIPT -->
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-    document.getElementById("djMixForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-
-      const url = document.getElementById("djMixInput").value.trim();
-      if (!url) {
-        alert("Please enter a SoundCloud URL.");
-        return;
-      }
-
-      const dj = "left"; // Change to "right" if needed
-
-      const endpoint = `${SCRIPT_URL}?mode=submitmix&dj=${dj}&url=${encodeURIComponent(url)}`;
-      await fetch(endpoint);
-
-      document.getElementById("playerContainer").innerHTML = `
-        <iframe 
-          width="100%" 
-          height="166" 
-          scrolling="no" 
-          frameborder="no" 
-          allow="autoplay"
-          src="https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true">
-        </iframe>
-      `;
-    });
-  </script>
-
-</body>
-</html>
