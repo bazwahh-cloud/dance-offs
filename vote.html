@@ -3,218 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
-  <link rel="stylesheet" href="style2.css?v=200">
 
-  <style>
-    .battle-card {
-      margin: 25px 0;
-      padding: 18px;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      min-height: 260px;
-    }
-    .battle-card:nth-child(odd) { background: #eef6ff; }
-
-    .battle-wrapper {
-      display: flex;
-      gap: 20px;
-    }
-
-    .battle-column {
-      flex: 1;
-    }
-
-    .video-box {
-      position: relative;
-      width: 100%;
-      height: 160px;
-      overflow: hidden;
-      background: #000;
-      border-radius: 6px;
-    }
-    .video-box iframe {
-      width: 100%;
-      height: 100%;
-    }
-
-    .video-overlay {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      background: rgba(0,0,0,0.65);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 13px;
-      font-weight: bold;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    .vote-button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 15px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #0077ff;
-      color: white;
-      transition: 0.2s ease;
-    }
-    .vote-button:hover {
-      background: #0059c9;
-      transform: scale(1.03);
-    }
-
-    .vote-count {
-      margin-top: 6px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    /* SoundCloud Player Box */
-    .dj-box {
-      margin-top: 30px;
-      padding: 15px;
-      background: #f7f7f7;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-
-    .dj-box h3 {
-      margin-top: 0;
-      font-size: 16px;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style2.css?v=1048">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- Navigation -->
-  <div class="navbar">
+  <!-- NAVIGATION -->
+  <nav class="navbar">
     <a href="index.html">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="battle.html">Battle</a>
-    <a href="djs.html">DJs</a>
-    <a href="vote.html" class="active">Vote</a>
-    <a href="merch.html">Merch</a>
-  </div>
 
-  <main class="page-container">
-
-    <!-- YouTube Battle Container -->
-    <div id="battleContainer"></div>
-
-    <!-- SoundCloud Player -->
-    <div id="djContainer" class="dj-box">
-      <h3>Now Playing</h3>
-      <iframe
-        id="scPlayer"
-        width="100%"
-        height="120"
-        scrolling="no"
-        frameborder="no"
-        allow="autoplay">
-      </iframe>
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
     </div>
 
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-<script>
-const BASE_URL =
-  "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-function getYouTubeID(url) {
-  if (!url) return null;
-  const patterns = [
-    /v=([^&]+)/,
-    /youtu\.be\/([^?]+)/,
-    /shorts\/([^?]+)/,
-    /embed\/([^?]+)/
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-async function loadBattles() {
-  const container = document.getElementById("battleContainer");
-  container.innerHTML = "<p>Loading...</p>";
-
-  try {
-    const res = await fetch(BASE_URL + "?mode=votecounts&cache=" + Math.random());
-    const data = await res.json();
-
-    const leftID = getYouTubeID(data.left.url);
-    const rightID = getYouTubeID(data.right.url);
-
-    const leftURL = "https://www.youtube.com/embed/" + leftID + "?autoplay=1&mute=1";
-    const rightURL = "https://www.youtube.com/embed/" + rightID + "?autoplay=1&mute=1";
-
-    container.innerHTML = `
-      <div class="battle-card">
-        <div class="battle-wrapper">
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Left</div>
-              <iframe src="${leftURL}" allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="vote-count">Votes: ${data.left.votes}</div>
-            <button class="vote-button" onclick="vote('left')">Vote Left</button>
-          </div>
-
-          <div class="battle-column">
-            <div class="video-box">
-              <div class="video-overlay">Dancer Right</div>
-              <iframe src="${rightURL}" allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="vote-count">Votes: ${data.right.votes}</div>
-            <button class="vote-button" onclick="vote('right')">Vote Right</button>
-          </div>
-
-        </div>
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
       </div>
-    `;
+    </div>
 
-  } catch (err) {
-    console.error("LOAD ERROR:", err);
-    container.innerHTML = "<p>Error loading.</p>";
-  }
-}
+    <a href="vote.html" class="active">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
 
-function vote(side) {
-  fetch(BASE_URL + "?mode=vote&winner=" + side, { method: "GET", mode: "no-cors" })
-    .then(() => {
-      alert("Vote recorded for " + side);
-      loadBattles();
-    });
-}
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-img-wrap">
+      <img src="dancer-hero2.jpg" alt="Vote Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="djs.html" class="hero-zone hero-right"></a>
+    </div>
+  </section>
 
-function loadDJ() {
-  const scURL = "https://soundcloud.com/forss/flickermood"; // Replace with your DJ track
+  <!-- PAGE CONTENT -->
+  <section class="page-container" style="text-align:center;">
+    <p class="instruction-line">Cast your vote below.</p>
 
-  const embedURL =
-    "https://w.soundcloud.com/player/?url=" +
-    encodeURIComponent(scURL) +
-    "&color=%23ff5500&inverse=false&auto_play=true&show_user=true";
+    <form id="voteForm">
+      <input 
+        type="text" 
+        id="voteInput" 
+        class="input-field"
+        placeholder="Enter dancer or DJ name"
+      >
+      <button type="submit" class="vote-button">Vote</button>
+    </form>
 
-  document.getElementById("scPlayer").src = embedURL;
-}
+    <div id="voteResult" style="margin-top:20px; min-height:40px;"></div>
+  </section>
 
-loadBattles();
-loadDJ();
-</script>
-
-</body>
-</html>
+  <!-- FOOTER -->
+  <footer class="footer">
