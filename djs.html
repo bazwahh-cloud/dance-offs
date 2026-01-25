@@ -4,8 +4,54 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1050">
+  <link rel="stylesheet" href="style2.css?v=1048">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      min-height: 100vh;
+      height: auto;
+      overflow-y: auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1 0 auto;
+      width: 100%;
+    }
+
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .hero-wrapper {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .hero-img-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 100%;
+    }
+
+    .hero-img-wrap img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
@@ -28,4 +74,13 @@
       </div>
     </div>
 
-    <a href="vote.html">
+    <a href="vote.html">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-wrapper">
+      <div class="hero-img-wrap">
