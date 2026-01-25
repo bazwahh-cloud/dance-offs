@@ -1,82 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dance-Offs</title>
-  <link rel="stylesheet" href="style.css?v=1052" />
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Home</title>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style2.css?v=1035">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
-  <div class="navbar">
+  <!-- NAVIGATION -->
+  <nav class="navbar">
     <a href="index.html" class="active">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="djs.html">DJs</a>
+
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
-  </div>
+  </nav>
 
-  <!-- HERO -->
+  <!-- HERO BANNER -->
   <div class="hero">
     <div class="hero-img-wrap">
-      <img src="assets/danceoffs-banner.png" alt="Dance-Offs Banner" onerror="this.style.display='none'" />
-
-      <!-- CLICK ZONES (trimmed by 5% in CSS) -->
-      <div class="hero-zone hero-left"></div>
-      <div class="hero-zone hero-right"></div>
-    </div>
-  </div>
-
-  <!-- INSTRUCTION LINE -->
-  <div class="instruction-line">Load your battle videos below.</div>
-
-  <!-- PAGE CONTENT -->
-  <div class="page-container">
-
-    <div>
-      <label for="left-url">Left YouTube URL:</label>
-      <input type="text" id="left-url" class="input-field" />
-      <button class="vote-button" onclick="loadLeftVideo()">Load Left Video</button>
-    </div>
-
-    <div>
-      <label for="right-url">Right YouTube URL:</label>
-      <input type="text" id="right-url" class="input-field" />
-      <button class="vote-button" onclick="loadRightVideo()">Load Right Video</button>
-    </div>
-
-    <table class="battle-table">
-      <tr>
-        <td class="battle-cell">
-          <div class="video-slot" id="left-video-slot"></div>
-        </td>
-        <td class="battle-cell">
-          <div class="video-slot" id="right-video-slot"></div>
-        </td>
-      </tr>
-    </table>
-
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer">© 2026 Dance-Offs. All rights reserved.</div>
-
-  <!-- SCRIPTS -->
-  <script>
-    function loadLeftVideo() {
-      const url = document.getElementById("left-url").value;
-      document.getElementById("left-video-slot").innerHTML =
-        `<iframe class="battle-frame" src="${url}" frameborder="0" allowfullscreen></iframe>`;
-    }
-
-    function loadRightVideo() {
-      const url = document.getElementById("right-url").value;
-      document.getElementById("right-video-slot").innerHTML =
-        `<iframe class="battle-frame" src="${url}" frameborder="0" allowfullscreen></iframe>`;
-    }
-  </script>
-
-</body>
-</html>
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right">
