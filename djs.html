@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1037">
+  <link rel="stylesheet" href="style2.css?v=1039">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<!-- FULL HEIGHT FLEX LAYOUT TO PREVENT FOOTER CUT-OFF -->
+<body style="min-height:100vh; display:flex; flex-direction:column;">
 
   <!-- NAVIGATION -->
   <nav class="navbar">
@@ -22,42 +23,4 @@
     </div>
 
     <div class="dropdown">
-      <a href="djs.html" class="active">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </nav>
-
-  <!-- HERO WRAPPER -->
-  <section class="hero-wrapper" style="display:block; width:100%;">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
-    </div>
-  </section>
-
-  <!-- FORM + PLAYER BLOCK -->
-  <section class="dj-form-block" style="margin-top:30px; text-align:center;">
-    <p class="instruction-line">Submit your DJ mix below.</p>
-
-    <form id="djMixForm">
-      <input 
-        type="text" 
-        id="djMixInput" 
-        placeholder="SoundCloud URL"
-        style="width:80%; max-width:400px; padding:10px; margin-bottom:10px;"
-      >
-      <button type="submit">Submit</button>
-    </form>
-
-    <div id="playerContainer" style="margin-top:20px;"></div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer" style="margin-top:60px;">
-    <p>&copy; 202
+      <a href="djs.html" class="active">
