@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
 
-  <link rel="stylesheet" href="style2.css?v=999">
+  <link rel="stylesheet" href="style2.css?v=1040">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
@@ -32,74 +32,13 @@
     <a href="merch.html">Merch</a>
   </nav>
 
-  <!-- PAGE CONTENT -->
-  <main class="page-container">
-
-    <!-- INPUTS -->
-    <div style="margin-bottom: 30px;">
-      <div style="margin-bottom: 20px;">
-        <input id="leftUrl" type="text" placeholder="Left YouTube URL" style="width: 300px; padding: 8px;">
-        <button onclick="loadLeft()" style="padding: 8px 16px;">Load Left</button>
-      </div>
-
-      <div>
-        <input id="rightUrl" type="text" placeholder="Right YouTube URL" style="width: 300px; padding: 8px;">
-        <button onclick="loadRight()" style="padding: 8px 16px;">Load Right</button>
-      </div>
+  <!-- HERO BANNER -->
+  <div class="hero">
+    <div class="hero-img-wrap">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
+  </div>
 
-    <!-- VIDEO CONTAINER -->
-    <div class="battle-videos" id="battleVideos"></div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <!-- SCRIPT -->
-  <script>
-    function extractID(url) {
-      try {
-        const u = new URL(url);
-        if (u.hostname.includes("youtu.be")) {
-          return u.pathname.slice(1);
-        }
-        return u.searchParams.get("v");
-      } catch {
-        return null;
-      }
-    }
-
-    function loadLeft() {
-      const url = document.getElementById("leftUrl").value;
-      const id = extractID(url);
-      if (!id) return;
-
-      const container = document.getElementById("battleVideos");
-      const right = container.querySelector(".right-video");
-
-      container.innerHTML = `
-        <iframe class="left-video" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
-        ${right ? right.outerHTML : ""}
-      `;
-    }
-
-    function loadRight() {
-      const url = document.getElementById("rightUrl").value;
-      const id = extractID(url);
-      if (!id) return;
-
-      const container = document.getElementById("battleVideos");
-      const left = container.querySelector(".left-video");
-
-      container.innerHTML = `
-        ${left ? left.outerHTML : ""}
-        <iframe class="right-video" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
-      `;
-    }
-  </script>
-
-</body>
-</html>
+  <!-- INSTRUCTION LINE -->
