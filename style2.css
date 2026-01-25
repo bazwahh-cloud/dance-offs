@@ -128,22 +128,63 @@ p {
 .hero-left { left: 0; }
 .hero-right { right: 0; }
 
-/* INSTRUCTION LINE */
+/* INSTRUCTION LINE — tighter spacing */
 .instruction-line {
   text-align: center;
-  margin-top: 6px;
+  margin: 20px 0 10px;
   font-size: 18px;
   color: #ccc;
 }
 
-/* PAGE LAYOUT */
+/* PAGE LAYOUT — reduced vertical spacing */
 .page-container {
   max-width: 900px;
-  margin: 40px auto;
+  margin: 20px auto;
   padding: 0 20px;
   min-height: 200px;
 }
 
 /* BUTTONS */
 .vote-button {
-  background:
+  background: #00ccff;
+  color: #000;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.vote-button:hover {
+  background: #00a3cc;
+}
+
+/* INPUT FIELDS */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 8px;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  margin: 40px auto 0;
+  padding: 30px 0;
+  color: #888;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* BATTLE TABLE LAYOUT */
+.battle-table {
+  margin: 20px auto;
+  border-spacing: 20px;
+}
+
+.battle-cell {
+  text-align: center;
+  vertical-align: top;
+  width: 
