@@ -118,10 +118,11 @@ p {
   display: block;
 }
 
+/* OVERLAY CLICK ZONES — trimmed by 5% */
 .hero-zone {
   position: absolute;
   top: 0;
-  bottom: 0;
+  height: 95%;   /* ← the ONLY change */
   width: 50%;
   z-index: 5;
 }
