@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
 
-  <link rel="stylesheet" href="style2.css?v=1045">
+  <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
@@ -42,15 +42,13 @@
   </div>
 
   <!-- INSTRUCTION -->
-  <p class="instruction-line">
-    Load your battle videos below.
-  </p>
+  <p class="instruction-line">Load your battle videos below.</p>
 
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
     <!-- TABLE LAYOUT FOR PERFECT ALIGNMENT -->
-    <table class="battle-table" cellspacing="20" align="center">
+    <table class="battle-table" cellspacing="12" align="center">
       <tr>
         <!-- LEFT INPUT -->
         <td class="battle-cell">
@@ -78,3 +76,59 @@
           <div id="rightVideo" class="video-slot"></div>
         </td>
       </tr>
+    </table>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    function extractID(url) {
+      try {
+        const u = new URL(url);
+        if (u.hostname.includes("youtu.be")) {
+          return u.pathname.slice(1);
+        }
+        return u.searchParams.get("v");
+      } catch {
+        return null;
+      }
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value;
+      const id = extractID(url);
+      if (!id) return;
+
+      document.getElementById("leftVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+      `;
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value;
+      const id = extractID(url);
+      if (!id) return;
+
+      document.getElementById("rightVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+      `;
+    }
+
+    /* DEFAULT VIDEOS ON LOAD */
+    window.onload = function () {
+      document.getElementById("leftVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+      `;
+      document.getElementById("rightVideo").innerHTML = `
+        <iframe class="battle-frame" src="https://www.youtube.com/embed/3JZ_D3ELwOQ" allowfullscreen></iframe>
+      `;
+    };
+  </script>
+
+</body>
+</html>
