@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Battle</title>
 
-  <link rel="stylesheet" href="style2.css?v=1050">
+  <link rel="stylesheet" href="style2.css?v=1052">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
@@ -36,3 +36,49 @@
   <div class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
+    </div>
+  </div>
+
+  <!-- INSTRUCTION -->
+  <p class="instruction-line">Load your battle videos below.</p>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
+
+    <table class="battle-table" cellspacing="12" align="center">
+      <tr>
+        <!-- LEFT INPUT -->
+        <td class="battle-cell">
+          <label for="leftUrl">Left YouTube URL</label>
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste a YouTube link">
+          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
+        </td>
+
+        <!-- RIGHT INPUT -->
+        <td class="battle-cell">
+          <label for="rightUrl">Right YouTube URL</label>
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste a YouTube link">
+          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+        </td>
+      </tr>
+
+      <tr>
+        <!-- LEFT VIDEO -->
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <!-- RIGHT VIDEO -->
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by
