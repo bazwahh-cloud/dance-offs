@@ -60,3 +60,45 @@
 
   <!-- FOOTER -->
   <footer class="footer">
+    <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+      const form = document.getElementById("voteForm");
+      const input = document.getElementById("voteInput");
+      const result = document.getElementById("voteResult");
+
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = input.value.trim();
+        if (!name) {
+          alert("Please enter a name to vote for.");
+          return;
+        }
+
+        const endpoint =
+          `${SCRIPT_URL}?mode=submitvote&name=` +
+          encodeURIComponent(name);
+
+        fetch(endpoint)
+          .then(() => {
+            result.innerHTML = `<p style="color:#00ccff;">Vote submitted for <strong>${name}</strong>.</p>`;
+            input.value = "";
+          })
+          .catch(() => {
+            result.innerHTML = `<p style="color:red;">There was an error submitting your vote.</p>`;
+          });
+      });
+
+    });
+  </script>
+
+</body>
+</html>
