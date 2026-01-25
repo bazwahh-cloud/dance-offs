@@ -13,24 +13,27 @@
   <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
+
     <div class="dropdown">
       <a href="dancers.html">Dancers</a>
       <div class="dropdown-menu">
         <a href="battle.html">Battle</a>
       </div>
     </div>
+
     <div class="dropdown">
       <a href="djs.html" class="active">DJs</a>
       <div class="dropdown-menu">
         <a href="battle.html">Battle</a>
       </div>
     </div>
+
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
+  <!-- HERO WRAPPER (prevents collapse) -->
+  <section class="hero-wrapper" style="display:block; width:100%;">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
       <a href="battle.html" class="hero-zone hero-left"></a>
@@ -38,23 +41,3 @@
     </div>
   </section>
 
-  <!-- FORM + PLAYER BLOCK -->
-  <section class="dj-form-block" style="margin-top:30px; text-align:center;">
-    <p class="instruction-line">Submit your DJ mix below.</p>
-
-    <form id="djMixForm">
-      <input 
-        type="text" 
-        id="djMixInput" 
-        placeholder="SoundCloud URL"
-        style="width:80%; max-width:400px; padding:10px; margin-bottom:10px;"
-      >
-      <button type="submit">Submit</button>
-    </form>
-
-    <div id="playerContainer" style="margin-top:20px;"></div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer" style="margin-top:60px;">
-    <p>&copy; 2026 Dance-Offs. All
