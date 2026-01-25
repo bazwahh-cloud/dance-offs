@@ -11,7 +11,6 @@ img {
   display: block;
 }
 
-/* Remove default paragraph top margin */
 p {
   margin-top: 0;
 }
@@ -145,39 +144,5 @@ p {
   min-height: 200px;
 }
 
-/* GRID FOR DANCERS PAGE */
-.dancers-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-}
-
-/* FOOTER */
-.footer {
-  text-align: center;
-  margin: 40px auto 0;
-  padding: 30px 0;
-  color: #888;
-  font-size: 14px;
-  width: 100%;
-}
-
-/* ----------------------------------------------------
-   DJ PAGE FIXES — MUST STAY AT BOTTOM
----------------------------------------------------- */
-
-.battle-card {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-.input-field {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-#status {
-  text-align: center;
-}
+/* DANCERS GRID */
+.dancers-container
