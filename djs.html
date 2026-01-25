@@ -38,3 +38,45 @@
 
   <!-- NAVIGATION -->
   <nav class="navbar">
+    <a href="index.html">Home</a>
+
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html" class="active">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <a href="vote.html">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-wrapper hero">
+      <div class="hero-img-wrap">
+        <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
+        <a href="battle.html" class="hero-zone hero-left"></a>
+        <a href="vote.html" class="hero-zone hero-right"></a>
+      </div>
+    </section>
+
+    <!-- FORM + PLAYER -->
+    <section class="dj-form-block" style="margin-top:30px; text-align:center;">
+      <p class="instruction-line">Submit your DJ mix below.</p>
+
+      <form id="djMixForm">
+        <input 
+          type="text" 
+          id="djMixInput" 
+          class="input-field"
+          placeholder="SoundCloud URL"
