@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: DJs</title>
 
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="style2.css?v=1035">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -20,70 +17,3 @@
     <div class="dropdown">
       <a href="dancers.html">Dancers</a>
       <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html" class="active">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
-  </nav>
-
-  <!-- HERO BANNER -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
-    </div>
-  </div>
-
-  <!-- INSTRUCTION LINE -->
-  <p class="instruction-line">
-    Submit your DJ mix below.
-  </p>
-
-  <!-- MAIN CONTENT -->
-  <main class="page-container">
-
-    <!-- CENTERED DJ MIX INPUT -->
-    <form id="djMixForm" style="text-align:center;">
-      <input 
-        type="text" 
-        id="djMixInput" 
-        placeholder="SoundCloud URL"
-      >
-      <button type="submit">Submit</button>
-    </form>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
-  </footer>
-
-  <!-- FUNCTIONAL SUBMISSION HANDLER -->
-  <script>
-    document.getElementById("djMixForm").addEventListener("submit", function(e) {
-      e.preventDefault(); // prevent reload
-
-      const url = document.getElementById("djMixInput").value.trim();
-
-      if (!url) {
-        alert("Please enter a SoundCloud URL.");
-        return;
-      }
-
-      alert("Submitted: " + url);
-    });
-  </script>
-
-</body>
-</html>
