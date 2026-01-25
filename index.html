@@ -21,8 +21,62 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
-      <img src="assets/danceoffs-banner.png" alt="Dance-Offs Banner" />
+      <img src="assets/danceoffs-banner.png" alt="Dance-Offs Banner" onerror="this.style.display='none'" />
 
-      <!-- CLICK ZONES (trimmed by 5% in your CSS) -->
+      <!-- CLICK ZONES (trimmed by 5% in CSS) -->
       <div class="hero-zone hero-left"></div>
-      <div class="hero-zone hero-right">
+      <div class="hero-zone hero-right"></div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTION LINE -->
+  <div class="instruction-line">Load your battle videos below.</div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-container">
+
+    <div>
+      <label for="left-url">Left YouTube URL:</label>
+      <input type="text" id="left-url" class="input-field" />
+      <button class="vote-button" onclick="loadLeftVideo()">Load Left Video</button>
+    </div>
+
+    <div>
+      <label for="right-url">Right YouTube URL:</label>
+      <input type="text" id="right-url" class="input-field" />
+      <button class="vote-button" onclick="loadRightVideo()">Load Right Video</button>
+    </div>
+
+    <table class="battle-table">
+      <tr>
+        <td class="battle-cell">
+          <div class="video-slot" id="left-video-slot"></div>
+        </td>
+        <td class="battle-cell">
+          <div class="video-slot" id="right-video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">© 2026 Dance-Offs. All rights reserved.</div>
+
+  <!-- SCRIPTS -->
+  <script>
+    function loadLeftVideo() {
+      const url = document.getElementById("left-url").value;
+      document.getElementById("left-video-slot").innerHTML =
+        `<iframe class="battle-frame" src="${url}" frameborder="0" allowfullscreen></iframe>`;
+    }
+
+    function loadRightVideo() {
+      const url = document.getElementById("right-url").value;
+      document.getElementById("right-video-slot").innerHTML =
+        `<iframe class="battle-frame" src="${url}" frameborder="0" allowfullscreen></iframe>`;
+    }
+  </script>
+
+</body>
+</html>
