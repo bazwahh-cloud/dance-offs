@@ -106,9 +106,9 @@ p {
   position: relative;
   display: inline-block;
   width: 100%;
-  max-width: 389px; /* 40% larger */
+  max-width: 389px;
   margin: 0 auto;
-  min-height: 216px; /* 40% larger */
+  min-height: 216px;
   overflow: visible;
 }
 
@@ -124,10 +124,3 @@ p {
   bottom: 0;
   width: 50%;
   z-index: 5;
-}
-
-.hero-left { left: 0; }
-.hero-right { right: 0; }
-
-/* INSTRUCTION LINE */
-.instruction
