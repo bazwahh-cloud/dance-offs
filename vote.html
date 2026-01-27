@@ -4,51 +4,55 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=1054">
+  <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
 
-  <style>
-    body {
-      background: #fff;
-      color: #000;
-    }
+<body>
 
-    .page-container {
-      min-height: 100vh;
-      padding: 20px;
-      background: #fff;
-    }
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
 
-    .video-wrapper {
-      width: 100%;
-      max-width: 360px;
-      margin: 0 auto;
-      background: #000;
-      border-radius: 8px;
-      padding: 5px;
-    }
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-    .battle-frame {
-      width: 100%;
-      height: 220px;
-      border-radius: 8px;
-    }
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-    .soundcloud-frame {
-      width: 100%;
-      max-width: 500px;
-      height: 120px;
-      border-radius: 8px;
-    }
+    <!-- ACTIVE PAGE -->
+    <a href="vote.html" class="active">Vote</a>
 
-    .center {
-      text-align: center;
-    }
+    <!-- SHOP DROPDOWN -->
+    <div class="dropdown">
+      <a href="#">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+        <a href="tickets.html">Tickets</a>
+      </div>
+    </div>
+  </nav>
 
-    .battle-table {
-      margin: 0 auto;
-    }
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
 
-    .battle-cell {
-      padding: 10px;
-      vertical-align: top;
+    <p class="instruction-line">Watch the battle and listen to the mix before voting.</p>
+
+    <!-- YOUTUBE GRID -->
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
