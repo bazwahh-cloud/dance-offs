@@ -21,3 +21,28 @@
     <div>
       <iframe id="rightVideo" src=""></iframe>
       <p>Right Dancer</p>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------------------------------------
+    // 1. SET YOUR TWO VIDEO URLs HERE
+    // ---------------------------------------------------------
+    const leftURL  = "https://www.youtube.com/watch?v=udvqYiVxuqq";   // example
+    const rightURL = "https://www.youtube.com/watch?v=GpnFm0Lf6bA";   // example
+
+    // Load videos into iframes
+    document.getElementById("leftVideo").src  = leftURL.replace("watch?v=", "embed/");
+    document.getElementById("rightVideo").src = rightURL.replace("watch?v=", "embed/");
+
+    // ---------------------------------------------------------
+    // 2. SEND URLs TO GOOGLE SHEET AUTOMATICALLY
+    // ---------------------------------------------------------
+    function sendToSheet() {
+      const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+      const url =
+        endpoint +
+        "?mode=setbattle" +
+        "&left=" + encodeURIComponent(leftURL) +
+        "&
