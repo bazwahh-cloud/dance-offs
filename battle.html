@@ -1,48 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dance-Off Battle</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; }
-    .videos { display: flex; justify-content: center; gap: 40px; margin-top: 40px; }
-    iframe { width: 420px; height: 236px; border: none; }
-  </style>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Battle</title>
+
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <h1>Dance-Off Battle</h1>
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
 
-  <div class="videos">
-    <div>
-      <iframe id="leftVideo" src=""></iframe>
-      <p>Left Dancer</p>
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html" class="active">Battle</a>
+      </div>
     </div>
 
-    <div>
-      <iframe id="rightVideo" src=""></iframe>
-      <p>Right Dancer</p>
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <a href="vote.html">Vote</a>
+    <a href="merch.html">Merch</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-img-wrap">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
   </div>
 
+  <!-- INSTRUCTION -->
+  <p class="instruction-line">Load your battle videos below.</p>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
+
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <label for="leftUrl">Left YouTube URL</label>
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
+        </td>
+
+        <td class="battle-cell">
+          <label for="rightUrl">Right YouTube URL</label>
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
   <script>
-    // ---------------------------------------------------------
-    // 1. SET YOUR TWO VIDEO URLs HERE
-    // ---------------------------------------------------------
-    const leftURL  = "https://www.youtube.com/watch?v=udvqYiVxuqq";   // example
-    const rightURL = "https://www.youtube.com/watch?v=GpnFm0Lf6bA";   // example
+    // Bulletproof YouTube Shorts extractor
+    function extractID(url) {
+      const patterns = [
+        /shorts\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /embed\/([^?&/]+)/
+      ];
+      for (const p of patterns) {
+        const match = url.match(p);
+        if (match && match[1]) return match[1];
+      }
+      return null;
+    }
 
-    // Load videos into iframes
-    document.getElementById("leftVideo").src  = leftURL.replace("watch?v=", "embed/");
-    document.getElementById("rightVideo").src = rightURL.replace("watch?v=", "embed/");
+    function embed(id) {
+      return `
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}"
+          allowfullscreen>
+        </iframe>`;
+    }
 
-    // ---------------------------------------------------------
-    // 2. SEND URLs TO GOOGLE SHEET AUTOMATICALLY
-    // ---------------------------------------------------------
+    // NEW: Send URLs to Google Sheet
     function sendToSheet() {
-      const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+      const left = document.getElementById("leftUrl").value.trim();
+      const right = document.getElementById("rightUrl").value.trim();
+
+      if (!left || !right) return;
+
+      const endpoint =
+        "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
       const url =
         endpoint +
         "?mode=setbattle" +
-        "&left=" + encodeURIComponent(leftURL) +
-        "&
+        "&left=" + encodeURIComponent(left) +
+        "&right=" + encodeURIComponent(right);
+
+      fetch(url)
+        .then(r => r.text())
+        .then(t => console.log("Sheet updated:", t))
+        .catch(err => console.error("Error sending to sheet:", err));
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("leftVideo").innerHTML = embed(id);
+      sendToSheet(); // NEW
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("rightVideo").innerHTML = embed(id);
+      sendToSheet(); // NEW
+    }
+
+    // Load defaults on page load
+    window.onload = function () {
+      const videoURL1 = "https://youtube.com/shorts/W-jKGWTthm8?si=FVNkbSrJ4oM3fyEj";
+      const videoURL2 = "https://youtube.com/shorts/SJKl6PEXklU?si=456";
+
+      const id1 = extractID(videoURL1);
+      const id2 = extractID(videoURL2);
+
+      if (id1) {
+        document.getElementById("leftVideo").innerHTML = embed(id1);
+        document.getElementById("leftUrl").value = videoURL1;
+      }
+
+      if (id2) {
+        document.getElementById("rightVideo").innerHTML = embed(id2);
+        document
