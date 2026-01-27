@@ -94,3 +94,109 @@
     <p class="instruction-line">Watch the battle and listen to the mix before voting.</p>
 
     <!-- VIDEO GRID -->
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- SOUNDCLOUD PLAYER -->
+    <div id="playerContainer" style="margin-top:20px; text-align:center;"></div>
+
+    <!-- VOTE BUTTONS -->
+    <div style="text-align:center; margin-top:20px;">
+      <button class="vote-button" onclick="vote('left')">Vote Left</button>
+      <button class="vote-button" onclick="vote('right')">Vote Right</button>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    // Bulletproof YouTube ID extractor
+    function extractID(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    // Embed with autoplay + click-blocking overlay
+    function embed(id) {
+      return `
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&modestbranding=1&rel=0&controls=1&disablekb=1&fs=0"
+            allow="autoplay; encrypted-media">
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
+    }
+
+    function loadBattle() {
+      fetch(SCRIPT_URL + "?mode=getbattle")
+        .then(r => r.json())
+        .then(data => {
+          const fallback = "9tE2ldPYqoQ";
+          const leftID = extractID(data.left) || fallback;
+          const rightID = extractID(data.right) || fallback;
+
+          document.getElementById("leftVideo").innerHTML = embed(leftID);
+          document.getElementById("rightVideo").innerHTML = embed(rightID);
+        })
+        .catch(err => {
+          console.error("Error loading battle:", err);
+          const fallback = "9tE2ldPYqoQ";
+          document.getElementById("leftVideo").innerHTML = embed(fallback);
+          document.getElementById("rightVideo").innerHTML = embed(fallback);
+        });
+    }
+
+    function loadPlayer() {
+      const playerHTML = `
+        <iframe
+          width="100%"
+          height="120"
+          scrolling="no"
+          frameborder="no"
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123456789&color=%23ff5500&inverse=false&auto_play=false&show_user=true">
+        </iframe>
+      `;
+      document.getElementById("playerContainer").innerHTML = playerHTML;
+    }
+
+    function vote(side) {
+      fetch(SCRIPT_URL + "?mode=vote&side=" + encodeURIComponent(side))
+        .then(r => r.text())
+        .then(t => {
+          alert("Vote recorded for " + side.toUpperCase());
+        })
+        .catch(err => {
+          console.error("Vote error:", err);
+          alert("There was a problem recording your vote.");
+        });
+    }
+
+    window.onload = function () {
+      loadBattle();
+      loadPlayer();
+    };
+  </script>
+
+</body>
+</html>
