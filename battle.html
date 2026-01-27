@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Battle</title>
+  <title>Dance-Offs: Dancers</title>
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -15,9 +15,9 @@
     <a href="index.html">Home</a>
 
     <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
+      <a href="dancers.html" class="active">Dancers</a>
       <div class="dropdown-menu">
-        <a href="battle.html" class="active">Battle</a>
+        <a href="battle.html">Battle</a>
       </div>
     </div>
 
@@ -35,20 +35,25 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Banner">
       <a href="battle.html" class="hero-zone hero-left"></a>
       <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
   </div>
 
+  <!-- BUTTONS -->
+  <div style="text-align:center; margin-top:20px;">
+    <a href="battle.html">BATTLE</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="vote.html">VOTE</a>
+  </div>
+
   <!-- INSTRUCTION -->
-  <p class="instruction-line">Load your battle videos below.</p>
+  <p class="instruction-line">Click the button to start a dance battle.</p>
 
-  <!-- PAGE CONTENT -->
-  <main class="page-container">
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
 
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
-        <td class="battle-cell">
-          <label for="leftUrl">Left YouTube URL</label>
-          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+</body>
+</html>
