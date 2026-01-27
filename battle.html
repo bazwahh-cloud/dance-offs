@@ -148,4 +148,33 @@
     }
 
     function loadRight() {
-      const url = document.getElementById("rightUrl").value.trim
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("rightVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    /* DEFAULT TEST VIDEOS */
+    window.onload = function () {
+
+      const defaultLeft = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+      const defaultRight = "https://www.youtube.com/watch?v=3GwjfUFyY6M";
+
+      const id1 = extractID(defaultLeft);
+      const id2 = extractID(defaultRight);
+
+      if (id1) {
+        document.getElementById("leftVideo").innerHTML = embed(id1);
+        document.getElementById("leftUrl").value = defaultLeft;
+      }
+
+      if (id2) {
+        document.getElementById("rightVideo").innerHTML = embed(id2);
+        document.getElementById("rightUrl").value = defaultRight;
+      }
+    };
+  </script>
+
+</body>
+</html>
