@@ -67,15 +67,6 @@
     </div>
   </nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Vote Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
-    </div>
-  </div>
-
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
@@ -124,7 +115,8 @@
       return `
         <iframe 
           class="battle-frame"
-          src="https://www.youtube.com/embed/${id}"
+          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&modestbranding=1&rel=0"
+          allow="autoplay; encrypted-media"
           allowfullscreen>
         </iframe>`;
     }
