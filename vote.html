@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- Local safety net so video slots never collapse -->
   <style>
     .video-slot {
       min-height: 220px;
@@ -18,6 +17,19 @@
       width: 100%;
       height: 220px;
       border-radius: 8px;
+    }
+    .vote-button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 6px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .vote-button:hover {
+      background-color: #005fa3;
     }
   </style>
 </head>
@@ -83,82 +95,3 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <!-- SCRIPT -->
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-    function extractID(url) {
-      const patterns = [
-        /shorts\/([^?&/]+)/,
-        /v=([^?&/]+)/,
-        /youtu\.be\/([^?&/]+)/,
-        /embed\/([^?&/]+)/
-      ];
-      for (const p of patterns) {
-        const match = url.match(p);
-        if (match && match[1]) return match[1];
-      }
-      return null;
-    }
-
-    function embedYouTube(id) {
-      return `
-        <iframe 
-          class="battle-frame"
-          src="https://www.youtube.com/embed/${id}?rel=0&modestbranding=1&controls=0"
-          allowfullscreen>
-        </iframe>`;
-    }
-
-    function embedSoundCloud(url) {
-      return `
-        <iframe 
-          width="100%" 
-          height="166" 
-          scrolling="no" 
-          frameborder="no" 
-          allow="autoplay"
-          src="https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=false">
-        </iframe>`;
-    }
-
-    async function loadVideosFromSheet() {
-      try {
-        const res = await fetch(SCRIPT_URL + "?mode=getbattle");
-        const data = await res.json();
-
-        const fallbackLeft = "https://youtube.com/shorts/W-jKGWTthm8";
-        const fallbackRight = "https://youtube.com/shorts/SJKl6PEXklU";
-
-        const id1 = extractID(data.left || fallbackLeft);
-        const id2 = extractID(data.right || fallbackRight);
-
-        document.getElementById("leftVideo").innerHTML = embedYouTube(id1);
-        document.getElementById("rightVideo").innerHTML = embedYouTube(id2);
-
-      } catch (err) {
-        console.error("Error loading videos:", err);
-      }
-    }
-
-    function loadSoundCloud() {
-      const defaultMix = "https://soundcloud.com/your-track-url-here";
-      document.getElementById("playerContainer").innerHTML = embedSoundCloud(defaultMix);
-    }
-
-    function vote(side) {
-      alert("You voted for the " + side + " side!");
-    }
-
-    window.onload = function () {
-      loadVideosFromSheet();
-      loadSoundCloud();
-    };
-  </script>
-
-</body>
-</html>
