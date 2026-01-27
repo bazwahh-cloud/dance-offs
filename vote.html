@@ -28,10 +28,8 @@
       </div>
     </div>
 
-    <!-- ACTIVE PAGE -->
     <a href="vote.html" class="active">Vote</a>
 
-    <!-- SHOP DROPDOWN -->
     <div class="dropdown">
       <a href="#">Shop</a>
       <div class="dropdown-menu">
@@ -52,7 +50,104 @@
         <td class="battle-cell">
           <div id="leftVideo" class="video-slot"></div>
         </td>
-
         <td class="battle-cell">
           <div id="rightVideo" class="video-slot"></div>
         </td>
+      </tr>
+    </table>
+
+    <!-- SOUNDCLOUD PLAYER -->
+    <div id="playerContainer" style="margin-top:30px; text-align:center;">
+      <!-- SoundCloud iframe injected here -->
+    </div>
+
+    <!-- VOTE BUTTONS -->
+    <div style="text-align:center; margin-top:20px;">
+      <button class="vote-button" onclick="vote('left')">Vote Left</button>
+      <button class="vote-button" onclick="vote('right')">Vote Right</button>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
+
+    function extractID(url) {
+      const patterns = [
+        /shorts\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /embed\/([^?&/]+)/
+      ];
+      for (const p of patterns) {
+        const match = url.match(p);
+        if (match && match[1]) return match[1];
+      }
+      return null;
+    }
+
+    function embedYouTube(id) {
+      return `
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}"
+          allowfullscreen>
+        </iframe>`;
+    }
+
+    function embedSoundCloud(url) {
+      return `
+        <iframe 
+          width="100%" 
+          height="166" 
+          scrolling="no" 
+          frameborder="no" 
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=false">
+        </iframe>`;
+    }
+
+    async function loadVideosFromSheet() {
+      try {
+        const res = await fetch(SCRIPT_URL + "?mode=getbattle");
+        const data = await res.json();
+
+        const fallbackLeft = "https://youtube.com/shorts/W-jKGWTthm8";
+        const fallbackRight = "https://youtube.com/shorts/SJKl6PEXklU";
+
+        const id1 = extractID(data.left || fallbackLeft);
+        const id2 = extractID(data.right || fallbackRight);
+
+        if (id1) document.getElementById("leftVideo").innerHTML = embedYouTube(id1);
+        if (id2) document.getElementById("rightVideo").innerHTML = embedYouTube(id2);
+
+      } catch (err) {
+        console.error("Error loading videos:", err);
+        document.getElementById("leftVideo").innerHTML = embedYouTube("W-jKGWTthm8");
+        document.getElementById("rightVideo").innerHTML = embedYouTube("SJKl6PEXklU");
+      }
+    }
+
+    function loadSoundCloud() {
+      const defaultMix = "https://soundcloud.com/your-track-url-here";
+      document.getElementById("playerContainer").innerHTML = embedSoundCloud(defaultMix);
+    }
+
+    function vote(side) {
+      alert("You voted for the " + side + " side!");
+    }
+
+    window.onload = function () {
+      loadVideosFromSheet();
+      loadSoundCloud();
+    };
+  </script>
+
+</body>
+</html>
