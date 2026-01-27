@@ -6,35 +6,6 @@
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <style>
-    /* Prevent collapsing video containers */
-    .video-slot {
-      min-height: 260px;
-      background: #000;
-      border-radius: 8px;
-    }
-    .battle-frame {
-      width: 100%;
-      height: 260px;
-      border-radius: 8px;
-    }
-
-    /* Vote buttons */
-    .vote-button {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 6px;
-      background-color: #0077cc;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .vote-button:hover {
-      background-color: #005fa3;
-    }
-  </style>
 </head>
 
 <body>
@@ -58,22 +29,23 @@
     </div>
 
     <a href="vote.html" class="active">Vote</a>
-
-    <div class="dropdown">
-      <a href="#">Shop</a>
-      <div class="dropdown-menu">
-        <a href="merch.html">Merch</a>
-        <a href="tickets.html">Tickets</a>
-      </div>
-    </div>
+    <a href="merch.html">Merch</a>
   </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-img-wrap">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Vote Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
+    </div>
+  </div>
+
+  <p class="instruction-line">Vote for your favourite dancer.</p>
 
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
-    <p class="instruction-line">Watch the battle and listen to the mix before voting.</p>
-
-    <!-- YOUTUBE GRID -->
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
         <td class="battle-cell">
@@ -86,22 +58,22 @@
       </tr>
     </table>
 
-    <!-- SOUNDCLOUD PLAYER (reduced height) -->
-    <div id="playerContainer" style="margin-top:20px; text-align:center;"></div>
-
-    <!-- VOTE BUTTONS -->
-    <div style="text-align:center; margin-top:20px;">
-      <button class="vote-button" onclick="vote('left')">Vote Left</button>
-      <button class="vote-button" onclick="vote('right')">Vote Right</button>
-    </div>
-
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
   <!-- SCRIPT -->
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AK
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    function extractID(url) {
+      try {
+        url = url.trim();
+
+        if (url.includes("/shorts/")) {
+          return url.split("/shorts/")[1].split(/[?&]/)[0];
+        }
+        if (url
