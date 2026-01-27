@@ -8,16 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    /* Prevent collapsing video containers */
     .video-slot {
-      min-height: 220px;
+      min-height: 260px;
       background: #000;
       border-radius: 8px;
     }
     .battle-frame {
       width: 100%;
-      height: 220px;
+      height: 260px;
       border-radius: 8px;
     }
+
+    /* Vote buttons */
     .vote-button {
       font-size: 18px;
       padding: 10px 20px;
@@ -83,8 +86,8 @@
       </tr>
     </table>
 
-    <!-- SOUNDCLOUD PLAYER -->
-    <div id="playerContainer" style="margin-top:30px; text-align:center;"></div>
+    <!-- SOUNDCLOUD PLAYER (reduced height) -->
+    <div id="playerContainer" style="margin-top:20px; text-align:center;"></div>
 
     <!-- VOTE BUTTONS -->
     <div style="text-align:center; margin-top:20px;">
@@ -95,3 +98,10 @@
   </main>
 
   <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AK
