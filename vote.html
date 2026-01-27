@@ -12,12 +12,24 @@
       min-height: 260px;
       background: #000;
       border-radius: 8px;
+      position: relative;
     }
     .battle-frame {
       width: 100%;
       height: 260px;
       border-radius: 8px;
       border: none;
+    }
+
+    /* Overlay that blocks all clicks */
+    .blocker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: default;
+      z-index: 10;
     }
 
     .vote-button {
@@ -114,19 +126,25 @@
     const SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
+    // Bulletproof YouTube ID extractor
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
       return match ? match[1] : null;
     }
 
+    // Embed with click-blocking overlay
     function embed(id) {
       return `
-        <iframe 
-          class="battle-frame"
-          src="https://www.youtube.com/embed/${id}"
-          allowfullscreen>
-        </iframe>`;
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?modestbranding=1&rel=0&controls=1&disablekb=1&fs=0"
+            allow="autoplay; encrypted-media">
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
     }
 
     function loadBattle() {
