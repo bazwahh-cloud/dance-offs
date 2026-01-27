@@ -12,6 +12,7 @@
       min-height: 260px;
       background: #000;
       border-radius: 8px;
+      position: relative;
     }
     .battle-frame {
       width: 100%;
@@ -32,6 +33,17 @@
     }
     .vote-button:hover {
       background-color: #005fa3;
+    }
+
+    /* Click-block overlay */
+    .blocker {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      cursor:default;
+      z-index:10;
     }
   </style>
 </head>
@@ -111,14 +123,19 @@
       return match ? match[1] : null;
     }
 
+    /* AUTOPLAY + LOOP + CLICK-BLOCK */
     function embed(id) {
       return `
-        <iframe 
-          class="battle-frame"
-          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&modestbranding=1&rel=0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen>
-        </iframe>`;
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
     }
 
     function loadBattle() {
