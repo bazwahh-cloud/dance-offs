@@ -6,6 +6,20 @@
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Local safety net so slots never collapse -->
+  <style>
+    .video-slot {
+      min-height: 220px;
+      background: #000;
+      border-radius: 8px;
+    }
+    .battle-frame {
+      width: 100%;
+      height: 220px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 
 <body>
@@ -112,39 +126,4 @@
         </iframe>`;
     }
 
-    async function loadVideosFromSheet() {
-      try {
-        const res = await fetch(SCRIPT_URL + "?mode=getbattle");
-        const data = await res.json();
-
-        const fallbackLeft = "https://youtube.com/shorts/W-jKGWTthm8";
-        const fallbackRight = "https://youtube.com/shorts/SJKl6PEXklU";
-
-        const id1 = extractID(data.left || fallbackLeft);
-        const id2 = extractID(data.right || fallbackRight);
-
-        document.getElementById("leftVideo").innerHTML = embedYouTube(id1);
-        document.getElementById("rightVideo").innerHTML = embedYouTube(id2);
-
-      } catch (err) {
-        console.error("Error loading videos:", err);
-      }
-    }
-
-    function loadSoundCloud() {
-      const defaultMix = "https://soundcloud.com/your-track-url-here";
-      document.getElementById("playerContainer").innerHTML = embedSoundCloud(defaultMix);
-    }
-
-    function vote(side) {
-      alert("You voted for the " + side + " side!");
-    }
-
-    window.onload = function () {
-      loadVideosFromSheet();
-      loadSoundCloud();
-    };
-  </script>
-
-</body>
-</html>
+    async function
