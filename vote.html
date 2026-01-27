@@ -20,7 +20,6 @@
       border-radius: 8px;
       border: none;
     }
-
     .vote-button {
       font-size: 18px;
       padding: 10px 20px;
@@ -35,7 +34,6 @@
     .vote-button:hover {
       background-color: #005fa3;
     }
-
     .blocker {
       position:absolute;
       top:0;
@@ -45,13 +43,18 @@
       cursor:default;
       z-index:10;
     }
-
     #voteMessage {
       text-align:center;
       font-size:15px;
       color:#ddd;
       margin:15px 0;
       min-height:20px;
+    }
+    .vote-count {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #bbb;
+      text-align: center;
     }
   </style>
 </head>
@@ -90,20 +93,22 @@
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
-    <!-- VOTE MESSAGE REPLACES INSTRUCTION -->
+    <!-- MESSAGE AREA (replaces instruction text) -->
     <div id="voteMessage">Watch the battle and listen to the mix before voting.</div>
 
-    <!-- VIDEO GRID WITH BUTTONS UNDER EACH VIDEO -->
+    <!-- VIDEO GRID WITH BUTTONS + COUNTS -->
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
         <td class="battle-cell">
           <div id="leftVideo" class="video-slot"></div>
           <button class="vote-button" onclick="vote('left')">Vote Left</button>
+          <div id="leftCount" class="vote-count">Left Votes: 0</div>
         </td>
 
         <td class="battle-cell">
           <div id="rightVideo" class="video-slot"></div>
           <button class="vote-button" onclick="vote('right')">Vote Right</button>
+          <div id="rightCount" class="vote-count">Right Votes: 0</div>
         </td>
       </tr>
     </table>
@@ -117,10 +122,8 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- SCRIPT -->
   <script>
-    const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
     function extractID(url) {
       if (!url) return null;
@@ -175,15 +178,31 @@
       document.getElementById("playerContainer").innerHTML = playerHTML;
     }
 
+    function loadVoteCounts() {
+      fetch(SCRIPT_URL + "?mode=getvotes")
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById("leftCount").innerText = `Left Votes: ${data.left}`;
+          document.getElementById("rightCount").innerText = `Right Votes: ${data.right}`;
+        })
+        .catch(err => {
+          console.error("Error loading vote counts:", err);
+        });
+    }
+
     function vote(side) {
-      fetch(SCRIPT_URL + "?mode=vote&side=" + encodeURIComponent(side))
+      const now = new Date();
+      const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      // UID still sent if you later want to use it; backend ignores it now
+      const uid = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+      fetch(`${SCRIPT_URL}?mode=vote&side=${encodeURIComponent(side)}&uid=${uid}`)
         .then(r => r.text())
         .then(t => {
-          const now = new Date();
-          const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-          const uid = Math.random().toString(36).substring(2, 8).toUpperCase();
           document.getElementById("voteMessage").innerText =
-            `You voted ${side.toUpperCase()} at ${time} — ID: ${uid}`;
+            `You voted ${side.toUpperCase()} at ${time}`;
+          loadVoteCounts();
         })
         .catch(err => {
           console.error("Vote error:", err);
@@ -195,9 +214,9 @@
     window.onload = function () {
       loadBattle();
       loadPlayer();
+      loadVoteCounts();
     };
   </script>
 
 </body>
 </html>
-
