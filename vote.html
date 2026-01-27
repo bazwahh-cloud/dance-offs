@@ -2,126 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dance-Off Vote</title>
+  <title>Dance-Offs: Vote</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-    }
-
-    .battle {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      margin-bottom: 60px;
-      flex-wrap: wrap;
-    }
-
-    .side {
-      width: 300px;
-    }
-
-    .side img {
-      width: 100%;
-      border-radius: 10px;
-      border: 3px solid #444;
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #ff0066;
-      color: white;
-    }
-
-    button:hover {
-      background: #ff3385;
-    }
-
-    .votes {
-      margin-top: 10px;
-      font-size: 16px;
-      color: #ccc;
-    }
-  </style>
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <h1>Vote for the Winner</h1>
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
 
-  <div id="battles"></div>
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
+
+    <!-- ACTIVE PAGE -->
+    <a href="vote.html" class="active">Vote</a>
+
+    <!-- SHOP DROPDOWN -->
+    <div class="dropdown">
+      <a href="#">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+        <a href="tickets.html">Tickets</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
+
+    <p class="instruction-line">Watch the battle and listen to the mix before voting.</p>
+
+    <!-- YOUTUBE GRID -->
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- SOUNDCLOUD PLAYER (NO INPUT BOX) -->
+    <div id="playerContainer" style="margin-top:30px; text-align:center;">
+      <!-- SoundCloud iframe injected here -->
+    </div>
+
+    <!-- VOTE BUTTONS -->
+    <div style="text-align:center; margin-top:20px;">
+      <button class="vote-button" onclick="vote('left')">Vote Left</button>
+      <button class="vote-button" onclick="vote('right')">Vote Right</button>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
   <script>
-    const BASE_URL = "https://script.google.com/macros/s/AKfycbyfiIlExm-_OC9ULZHPaNkIaJ7RWKRDbkTSplu6_8A37cEy5Ph1YAdjF58dwF3uEntOdQ/exec";
-
-    // Load battle data from Sheet1
-    async function loadBattles() {
-      const res = await fetch(BASE_URL + "?mode=read");
-      const data = await res.json();
-
-      // Expecting rows like:
-      // { Performer: "Left", YouTube: "https://youtube.com/..." }
-
-      // Pair Left/Right rows
-      const lefts = data.filter(r => r.Performer.toLowerCase() === "left");
-      const rights = data.filter(r => r.Performer.toLowerCase() === "right");
-
-      const container = document.getElementById("battles");
-      container.innerHTML = "";
-
-      for (let i = 0; i < lefts.length && i < rights.length; i++) {
-        const left = lefts[i];
-        const right = rights[i];
-
-        const battleIndex = i;
-
-        const leftID = extractYouTubeID(left.YouTube);
-        const rightID = extractYouTubeID(right.YouTube);
-
-        const html = `
-          <div class="battle">
-            <div class="side">
-              <img src="https://img.youtube.com/vi/${leftID}/0.jpg">
-              <button onclick="vote(${battleIndex}, 'Left')">Vote Left</button>
-              <div class="votes" id="left-${battleIndex}"></div>
-            </div>
-
-            <div class="side">
-              <img src="https://img.youtube.com/vi/${rightID}/0.jpg">
-              <button onclick="vote(${battleIndex}, 'Right')">Vote Right</button>
-              <div class="votes" id="right-${battleIndex}"></div>
-            </div>
-          </div>
-        `;
-
-        container.innerHTML += html;
+    /* ------------------------------
+       YOUTUBE LOADING (same as battle)
+    ------------------------------ */
+    function extractID(url) {
+      const patterns = [
+        /shorts\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /embed\/([^?&/]+)/
+      ];
+      for (const p of patterns) {
+        const match = url.match(p);
+        if (match && match[1]) return match[1];
       }
-
-      loadVoteCounts();
+      return null;
     }
 
-    // Extract YouTube ID from URL
-    function extractYouTubeID(url) {
-      const match = url.match(/v=([^&]+)/);
-      return match ? match[1] : "";
+    function embedYouTube(id) {
+      return `
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}"
+          allowfullscreen>
+        </iframe>`;
     }
 
-    // Record a vote
-    async function vote(battle, winner) {
-      await fetch(`${BASE_URL}?mode
+    /* ------------------------------
+       SOUNDCLOUD PLAYER (NO INPUT)
+    ------------------------------ */
+    function embedSoundCloud(url) {
+      return `
+        <iframe 
+          width="100%" 
+          height="166" 
+          scrolling="no" 
+          frameborder="no" 
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=false">
+        </iframe>`;
