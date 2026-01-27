@@ -2,28 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Vote</title>
-
-  <link rel="stylesheet" href="style2.css?v=1050">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <title>Vote Test</title>
   <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
     .video-slot {
       min-height: 260px;
-      background: #000;
-      border-radius: 8px;
+      margin: 20px;
     }
-    .battle-frame {
+    iframe {
       width: 100%;
       height: 260px;
-      border-radius: 8px;
       border: none;
+      border-radius: 8px;
     }
+  </style>
+</head>
+<body>
 
-    .vote-button {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 6px;
-      background-color: #0077cc;
-      color: white
+  <h1>Vote Test</h1>
+  <p>Two fallback videos should appear below.</p>
+
+  <div class="video-slot">
+    <iframe src="https://www.youtube.com/embed/9tE2ldPYqoQ" allowfullscreen></iframe>
+  </div>
+
+  <div class="video-slot">
+    <iframe src="https://www.youtube.com/embed/9tE2ldPYqoQ" allowfullscreen></iframe>
+  </div>
+
+</body>
+</html>
