@@ -81,6 +81,9 @@
 
   <!-- SCRIPT -->
   <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
     function extractID(url) {
       try {
         url = url.trim();
@@ -122,5 +125,55 @@
 
       if (!extractID(left) || !extractID(right)) return;
 
-      const endpoint =
-        "https://script.google.com
+      const url =
+        endpoint +
+        "?mode=setbattle" +
+        "&left=" + encodeURIComponent(left) +
+        "&right=" + encodeURIComponent(right);
+
+      fetch(url)
+        .then(r => r.text())
+        .then(t => console.log("Sheet updated:", t))
+        .catch(err => console.error("Error sending to sheet:", err));
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("leftVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("rightVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    // Load the latest battle from the sheet
+    window.onload = function () {
+      fetch(endpoint + "?mode=getbattle")
+        .then(r => r.json())
+        .then(data => {
+          const id1 = extractID(data.left);
+          const id2 = extractID(data.right);
+
+          if (id1) {
+            document.getElementById("leftVideo").innerHTML = embed(id1);
+            document.getElementById("leftUrl").value = data.left;
+          }
+
+          if (id2) {
+            document.getElementById("rightVideo").innerHTML = embed(id2);
+            document.getElementById("rightUrl").value = data.right;
+          }
+        })
+        .catch(err => console.error("Error loading battle:", err));
+    };
+  </script>
+
+</body>
+</html>
