@@ -46,3 +46,74 @@
 
   <!-- PAGE CONTENT -->
   <main class="page-container">
+
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <label for="leftUrl">Left YouTube URL</label>
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
+        </td>
+
+        <td class="battle-cell">
+          <label for="rightUrl">Right YouTube URL</label>
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    function extractID(url) {
+      try {
+        url = url.trim();
+
+        if (url.includes("/shorts/")) {
+          return url.split("/shorts/")[1].split(/[?&]/)[0];
+        }
+
+        if (url.includes("watch?v=")) {
+          return url.split("watch?v=")[1].split(/[?&]/)[0];
+        }
+
+        if (url.includes("youtu.be/")) {
+          return url.split("youtu.be/")[1].split(/[?&]/)[0];
+        }
+
+        if (url.includes("/embed/")) {
+          return url.split("/embed/")[1].split(/[?&]/)[0];
+        }
+
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    /* INLINE HEIGHT FIX — prevents collapse */
+    function embed(id) {
+      return `
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}"
+          style="width:100%; height:260px; border:none;"
