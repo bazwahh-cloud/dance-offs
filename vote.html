@@ -4,58 +4,41 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=1053">
+  <link rel="stylesheet" href="style2.css?v=1054">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     body {
-      background-color: #fff;
+      background: #fff;
       color: #000;
     }
 
     .page-container {
       min-height: 100vh;
       padding: 20px;
-      background-color: #fff;
+      background: #fff;
     }
 
     .video-wrapper {
-      position: relative;
       width: 100%;
       max-width: 360px;
       margin: 0 auto;
+      background: #000;
+      border-radius: 8px;
+      padding: 5px;
     }
 
     .battle-frame {
       width: 100%;
       height: 220px;
-      pointer-events: none;
       border-radius: 8px;
-      background-color: #000;
-    }
-
-    .vote-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: white;
-      text-shadow: 0 0 8px black;
     }
 
     .soundcloud-frame {
       width: 100%;
       max-width: 500px;
       height: 120px;
-      pointer-events: none;
       border-radius: 8px;
-      background-color: #000;
     }
 
     .center {
@@ -69,33 +52,3 @@
     .battle-cell {
       padding: 10px;
       vertical-align: top;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- NAVIGATION -->
-  <nav class="navbar">
-    <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
-    </div>
-
-    <a href="vote.html" class="active">Vote</a>
-
-    <div class="dropdown">
-      <a href="#">Shop</a>
-      <div class="dropdown-menu">
-        <a href="merch.html">Merch</a>
