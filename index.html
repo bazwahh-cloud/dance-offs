@@ -1,46 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dance Offs</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Dance-Offs</title>
+
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Home</a></li>
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html" class="active">Home</a>
 
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Dancers</a>
-                    <div class="dropdown-content">
-                        <a href="battle.html">Battle</a>
-                    </div>
-                </li>
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Shop</a>
-                    <div class="dropdown-content">
-                        <a href="merch.html">Merch</a>
-                    </div>
-                </li>
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
+    </div>
 
-                <li><a href="vote.html">Vote</a></li>
-            </ul>
-        </nav>
+    <a href="vote.html">Vote</a>
 
-        <div class="hero">
-            <h1>Dance Offs</h1>
-            <p>Watch. Vote. Decide the winner.</p>
-        </div>
-    </header>
+    <!-- NEW SHOP DROPDOWN (replaces old Merch link) -->
+    <div class="dropdown">
+      <a href="#">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+      </div>
+    </div>
+  </nav>
 
-    <main>
-        <section class="intro">
-            <h2>Welcome to Dance Offs</h2>
-            <p>Watch epic dance battles and vote for your favourite dancer. New battles added regularly.</p>
-        </section>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-img-wrap">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Banner">
+      <a href="dancers.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
+    </div>
+  </div>
 
-        <section class="cta-buttons">
+  <!-- PAGE CONTENT (required for footer visibility) -->
+  <main class="page-container">
+
+    <p class="instruction-line">
+      Use the menu above to explore dancers, battles, DJs, voting, and merch.
+    </p>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+</body>
+</html>
