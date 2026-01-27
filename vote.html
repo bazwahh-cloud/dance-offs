@@ -90,7 +90,7 @@
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
-    <!-- MESSAGE NOW LIVES HERE -->
+    <!-- VOTE MESSAGE REPLACES INSTRUCTION -->
     <div id="voteMessage">Watch the battle and listen to the mix before voting.</div>
 
     <!-- VIDEO GRID WITH BUTTONS UNDER EACH VIDEO -->
@@ -128,7 +128,6 @@
       return match ? match[1] : null;
     }
 
-    /* AUTOPLAY + LOOP + CLICK-BLOCK */
     function embed(id) {
       return `
         <div style="position:relative;">
@@ -144,3 +143,61 @@
     }
 
     function loadBattle() {
+      fetch(SCRIPT_URL + "?mode=getbattle")
+        .then(r => r.json())
+        .then(data => {
+          const fallback = "9tE2ldPYqoQ";
+          const leftID = extractID(data.left) || fallback;
+          const rightID = extractID(data.right) || fallback;
+
+          document.getElementById("leftVideo").innerHTML = embed(leftID);
+          document.getElementById("rightVideo").innerHTML = embed(rightID);
+        })
+        .catch(err => {
+          console.error("Error loading battle:", err);
+          const fallback = "9tE2ldPYqoQ";
+          document.getElementById("leftVideo").innerHTML = embed(fallback);
+          document.getElementById("rightVideo").innerHTML = embed(fallback);
+        });
+    }
+
+    function loadPlayer() {
+      const playerHTML = `
+        <iframe
+          width="100%"
+          height="120"
+          scrolling="no"
+          frameborder="no"
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123456789&color=%23ff5500&inverse=false&auto_play=false&show_user=true">
+        </iframe>
+      `;
+      document.getElementById("playerContainer").innerHTML = playerHTML;
+    }
+
+    function vote(side) {
+      fetch(SCRIPT_URL + "?mode=vote&side=" + encodeURIComponent(side))
+        .then(r => r.text())
+        .then(t => {
+          const now = new Date();
+          const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const uid = Math.random().toString(36).substring(2, 8).toUpperCase();
+          document.getElementById("voteMessage").innerText =
+            `You voted ${side.toUpperCase()} at ${time} — ID: ${uid}`;
+        })
+        .catch(err => {
+          console.error("Vote error:", err);
+          document.getElementById("voteMessage").innerText =
+            "There was a problem recording your vote.";
+        });
+    }
+
+    window.onload = function () {
+      loadBattle();
+      loadPlayer();
+    };
+  </script>
+
+</body>
+</html>
+
