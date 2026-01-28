@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=1050">
+  <link rel="stylesheet" href="style2.css?v=1051">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -172,4 +172,45 @@
               scrolling="no"
               frameborder="no"
               allow="autoplay"
-              src
+              src="${embedURL}">
+            </iframe>
+          `;
+        });
+    }
+
+    /* ⭐ Load Left Video */
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+
+      document.getElementById("leftVideo").innerHTML = embed(id);
+      sendToSheet();
+
+      // Trigger SoundCloud autoplay
+      loadSoundCloud(true);
+    }
+
+    /* ⭐ Load Right Video */
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+
+      document.getElementById("rightVideo").innerHTML = embed(id);
+      sendToSheet();
+
+      // Trigger SoundCloud autoplay
+      loadSoundCloud(true);
+    }
+
+    function sendToSheet() {
+      const left = document.getElementById("leftUrl").value.trim();
+      const right = document.getElementById("rightUrl").value.trim();
+
+      if (!extractID(left) || !extractID(right)) return;
+
+      fetch(endpoint + "?mode=setbattle&left=" + encodeURIComponent(left) + "&right=" + encodeURIComponent(right))
+        .then(r => r.text())
+        .then(t => console.log("Saved:", t))
+        .
