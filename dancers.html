@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: DJs</title>
+  <title>Dance-Offs: Battle</title>
 
-  <link rel="stylesheet" href="style2.css?v=1048">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -14,156 +14,157 @@
   <nav class="navbar">
     <a href="index.html">Home</a>
 
-    <!-- CLEANED: no dropdown under Dancers -->
     <div class="dropdown">
       <a href="dancers.html">Dancers</a>
     </div>
 
-    <!-- CLEANED: no dropdown under DJs -->
     <div class="dropdown">
-      <a href="djs.html" class="active">DJs</a>
+      <a href="djs.html">DJs</a>
     </div>
 
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
   </nav>
 
-  <!-- MAIN CONTENT -->
-  <main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-img-wrap">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <a href="battle.html" class="hero-zone hero-left"></a>
+      <a href="vote.html" class="hero-zone hero-right"></a>
+    </div>
+  </div>
 
-    <!-- HERO -->
-    <section class="hero-wrapper hero">
-      <div class="hero-img-wrap">
-        <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
-        <a href="battle.html" class="hero-zone hero-left"></a>
-        <a href="vote.html" class="hero-zone hero-right"></a>
-      </div>
-    </section>
+  <!-- INSTRUCTION -->
+  <p class="instruction-line">Load your battle videos below.</p>
 
-    <!-- FORM + PLAYER -->
-    <section class="page-container" style="text-align:center;">
-      <p class="instruction-line">Submit your DJ mix below.</p>
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
 
-      <form id="djMixForm">
-        <input 
-          type="text" 
-          id="djMixInput" 
-          class="input-field"
-          placeholder="SoundCloud URL"
-        >
-        <button type="submit" class="vote-button">Submit</button>
-      </form>
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <label for="leftUrl">Left YouTube URL</label>
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
+        </td>
 
-      <div id="playerContainer" style="margin-top:20px; min-height:180px;"></div>
-    </section>
+        <td class="battle-cell">
+          <label for="rightUrl">Right YouTube URL</label>
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
-    <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
+    © 2026 Dance-Offs — Built by Baz
   </footer>
 
   <!-- SCRIPT -->
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
-      const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxjLSixiGLXduYYaxwusK4hbXudEUbCi7ZyfqlKNDum/dev";
+    function extractID(url) {
+      try {
+        url = url.trim();
 
-      function extractUrlFromInput(raw) {
-        let text = raw.trim();
-        if (text.includes("<iframe")) {
-          const srcMatch = text.match(/src=\"([^\"]+)\"/i);
-          if (srcMatch) text = srcMatch[1];
+        if (url.includes("/shorts/")) {
+          return url.split("/shorts/")[1].split(/[?&]/)[0];
         }
-        return text;
+
+        if (url.includes("watch?v=")) {
+          return url.split("watch?v=")[1].split(/[?&]/)[0];
+        }
+
+        if (url.includes("youtu.be/")) {
+          return url.split("youtu.be/")[1].split(/[?&]/)[0];
+        }
+
+        if (url.includes("/embed/")) {
+          return url.split("/embed/")[1].split(/[?&]/)[0];
+        }
+
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    function embed(id) {
+      return `
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}"
+          style="width:100%; height:260px; border:none;"
+          allowfullscreen>
+        </iframe>`;
+    }
+
+    function sendToSheetIfReady() {
+      const left = document.getElementById("leftUrl").value.trim();
+      const right = document.getElementById("rightUrl").value.trim();
+
+      if (!extractID(left) || !extractID(right)) return;
+
+      const url =
+        endpoint +
+        "?mode=setbattle" +
+        "&left=" + encodeURIComponent(left) +
+        "&right=" + encodeURIComponent(right);
+
+      fetch(url)
+        .then(r => r.text())
+        .then(t => console.log("Sheet updated:", t))
+        .catch(err => console.error("Error sending to sheet:", err));
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("leftVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("rightVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    window.onload = function () {
+      const defaultLeft = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+      const defaultRight = "https://www.youtube.com/watch?v=3GwjfUFyY6M";
+
+      const id1 = extractID(defaultLeft);
+      const id2 = extractID(defaultRight);
+
+      if (id1) {
+        document.getElementById("leftVideo").innerHTML = embed(id1);
+        document.getElementById("leftUrl").value = defaultLeft;
       }
 
-      function getInnerUrlIfPlayer(url) {
-        if (url.includes("w.soundcloud.com/player")) {
-          try {
-            const u = new URL(url);
-            const inner = u.searchParams.get("url");
-            if (inner) return decodeURIComponent(inner);
-          } catch (e) {}
-        }
-        return url;
+      if (id2) {
+        document.getElementById("rightVideo").innerHTML = embed(id2);
+        document.getElementById("rightUrl").value = defaultRight;
       }
-
-      async function resolveViaOEmbed(url) {
-        try {
-          const oembedUrl =
-            "https://soundcloud.com/oembed?format=json&url=" +
-            encodeURIComponent(url);
-
-          const res = await fetch(oembedUrl);
-          if (!res.ok) return url;
-
-          const data = await res.json();
-          const html = data.html || "";
-          const srcMatch = html.match(/src=\"([^\"]+)\"/i);
-          if (!srcMatch) return url;
-
-          let playerUrl = srcMatch[1];
-          playerUrl = getInnerUrlIfPlayer(playerUrl);
-          return playerUrl || url;
-        } catch (e) {
-          return url;
-        }
-      }
-
-      const form = document.getElementById("djMixForm");
-      const input = document.getElementById("djMixInput");
-      const playerContainer = document.getElementById("playerContainer");
-
-      form.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        let url = extractUrlFromInput(input.value);
-
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-          url = "https://" + url;
-        }
-
-        if (url.includes("on.soundcloud.com") || url.includes("snd.sc")) {
-          url = await resolveViaOEmbed(url);
-        }
-
-        url = getInnerUrlIfPlayer(url);
-
-        if (!url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-          alert("You have not provided a valid SoundCloud URL");
-          return;
-        }
-
-        if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-          url = url.split("?")[0];
-        }
-
-        const embedURL =
-          "https://w.soundcloud.com/player/?url=" +
-          encodeURIComponent(url) +
-          "&auto_play=true";
-
-        const endpoint =
-          `${SCRIPT_URL}?mode=setsound&url=` +
-          encodeURIComponent(url);
-
-        fetch(endpoint);
-
-        playerContainer.innerHTML = `
-          <iframe 
-            width="100%" 
-            height="166" 
-            scrolling="no" 
-            frameborder="no" 
-            allow="autoplay"
-            src="${embedURL}">
-          </iframe>
-        `;
-      });
-    });
+    };
   </script>
 
 </body>
