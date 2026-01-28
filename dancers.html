@@ -11,6 +11,25 @@
     .no-click {
       pointer-events: none;
     }
+
+    .page-title {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .video-table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    .video-table td {
+      width: 50%;
+      padding: 10px;
+      vertical-align: top;
+    }
   </style>
 </head>
 
@@ -45,25 +64,3 @@
       <td>
         <iframe id="rightVideo" class="no-click" width="100%" height="315" frameborder="0"
           allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </td>
-    </tr>
-  </table>
-
-  <script>
-    const scriptURL = "YOUR_SCRIPT_URL_HERE"; // replace with your deployed Apps Script URL
-
-    // Extract YouTube ID from any YouTube URL
-    function extractID(url) {
-      const match = url.match(/(?:v=|youtu\.be\/)([^&]+)/);
-      return match ? match[1] : "";
-    }
-
-    // Load the latest two dancer videos
-    fetch(scriptURL + "?mode=getlatest")
-      .then(r => r.json())
-      .then(data => {
-        const leftID = extractID(data.latest1);
-        const rightID = extractID(data.latest2);
-
-        // Autoplay + mute + no related videos + no YouTube clickthrough
-        const params = "?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline
