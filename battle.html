@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Battle</title>
+  <title>Dance-Offs: Dancers</title>
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -15,27 +15,28 @@
     <a href="index.html">Home</a>
 
     <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-      <div class="dropdown-menu">
-        <a href="battle.html" class="active">Battle</a>
-      </div>
+      <a href="dancers.html" class="active">Dancers</a>
     </div>
 
     <div class="dropdown">
       <a href="djs.html">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
     </div>
 
     <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
+
+    <div class="dropdown">
+      <a href="shop.html">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+        <a href="tickets.html">Tickets</a>
+      </div>
+    </div>
   </nav>
 
   <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Dancers Banner">
       <a href="battle.html" class="hero-zone hero-left"></a>
       <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
@@ -88,20 +89,25 @@
       try {
         url = url.trim();
 
+        // Strip all query parameters
+        if (url.includes("?")) {
+          url = url.split("?")[0];
+        }
+
         if (url.includes("/shorts/")) {
-          return url.split("/shorts/")[1].split(/[?&]/)[0];
+          return url.split("/shorts/")[1];
         }
 
         if (url.includes("watch?v=")) {
-          return url.split("watch?v=")[1].split(/[?&]/)[0];
+          return url.split("watch?v=")[1];
         }
 
         if (url.includes("youtu.be/")) {
-          return url.split("youtu.be/")[1].split(/[?&]/)[0];
+          return url.split("youtu.be/")[1];
         }
 
         if (url.includes("/embed/")) {
-          return url.split("/embed/")[1].split(/[?&]/)[0];
+          return url.split("/embed/")[1];
         }
 
         return null;
@@ -110,7 +116,6 @@
       }
     }
 
-    /* INLINE HEIGHT FIX — prevents collapse */
     function embed(id) {
       return `
         <iframe 
@@ -155,11 +160,10 @@
       sendToSheetIfReady();
     }
 
-    /* DEFAULT TEST VIDEOS */
     window.onload = function () {
 
-      const defaultLeft = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-      const defaultRight = "https://www.youtube.com/watch?v=3GwjfUFyY6M";
+      const defaultLeft = "https://youtu.be/T7TJH5MF74s?si=3Vifox2tOFDde3Ki";
+      const defaultRight = "https://youtu.be/T7TJH5MF74s?si=3Vifox2tOFDde3Ki";
 
       const id1 = extractID(defaultLeft);
       const id2 = extractID(defaultRight);
