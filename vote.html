@@ -56,6 +56,17 @@
       color: #bbb;
       text-align: center;
     }
+
+    /* ⭐ Transparent autoplay overlay */
+    #scOverlay {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:120px;
+      z-index:20;
+      cursor:pointer;
+    }
   </style>
 </head>
 
@@ -105,7 +116,11 @@
       </tr>
     </table>
 
-    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
+    <!-- ⭐ SoundCloud wrapper with autoplay overlay -->
+    <div style="position:relative; width:100%; height:120px; margin-top:25px; text-align:center;">
+      <div id="scOverlay"></div>
+      <div id="playerContainer"></div>
+    </div>
 
   </main>
 
@@ -155,8 +170,8 @@
         });
     }
 
-    /* ⭐ UPDATED: Load latest DJ mix from DJ tab */
-    function loadPlayer() {
+    /* ⭐ Load SoundCloud (autoplay controlled by overlay) */
+    function loadPlayer(autoPlay) {
       fetch(SCRIPT_URL + "?mode=getsound")
         .then(r => r.json())
         .then(data => {
@@ -175,23 +190,13 @@
           const embedURL =
             "https://w.soundcloud.com/player/?url=" +
             encodeURIComponent(url) +
-            "&color=%23ff5500&inverse=false&auto_play=false&show_user=true";
+            "&color=%23ff5500&inverse=false&auto_play=" +
+            (autoPlay ? "true" : "false") +
+            "&show_user=true";
 
-          document.getElementById("playerContainer").innerHTML = `
-            <iframe
-              width="100%"
-              height="120"
-              scrolling="no"
-              frameborder="no"
-              allow="autoplay"
-              src="${embedURL}">
-            </iframe>
-          `;
-        })
-        .catch(err => {
-          console.error("Error loading DJ mix:", err);
           document.getElementById("playerContainer").innerHTML =
-            "<p style='color:#aaa;'>Unable to load DJ mix.</p>";
+            '<iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay" src="' +
+            embedURL + '"></iframe>';
         });
     }
 
@@ -201,9 +206,6 @@
         .then(data => {
           document.getElementById("leftCount").innerText = `Left Votes: ${data.left}`;
           document.getElementById("rightCount").innerText = `Right Votes: ${data.right}`;
-        })
-        .catch(err => {
-          console.error("Error loading vote counts:", err);
         });
     }
 
@@ -219,18 +221,18 @@
           document.getElementById("voteMessage").innerText =
             `You voted ${side.toUpperCase()} at ${time}`;
           loadVoteCounts();
-        })
-        .catch(err => {
-          console.error("Vote error:", err);
-          document.getElementById("voteMessage").innerText =
-            "There was a problem recording your vote.";
         });
     }
 
     window.onload = function () {
       loadBattle();
-      loadPlayer();
+      loadPlayer(false);
       loadVoteCounts();
+
+      document.getElementById("scOverlay").onclick = function () {
+        loadPlayer(true);
+        this.style.display = "none";
+      };
     };
   </script>
 
