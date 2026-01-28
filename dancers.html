@@ -20,7 +20,7 @@
       border-radius: 8px;
       border: none;
     }
-    .input-box {
+    .input-field {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
@@ -30,7 +30,7 @@
       color: #fff;
       font-size: 14px;
     }
-    .load-button {
+    .vote-button {
       font-size: 18px;
       padding: 10px 20px;
       margin-top: 10px;
@@ -41,7 +41,7 @@
       cursor: pointer;
       width: 100%;
     }
-    .load-button:hover {
+    .vote-button:hover {
       background-color: #005fa3;
     }
     .blocker {
@@ -73,7 +73,7 @@
     <a href="vote.html">Vote</a>
 
     <div class="dropdown">
-      <a href="#">Shop</a>
+      <a href="shop.html">Shop</a>
       <div class="dropdown-menu">
         <a href="merch.html">Merch</a>
         <a href="tickets.html">Tickets</a>
@@ -81,32 +81,37 @@
     </div>
   </nav>
 
+  <!-- INSTRUCTION -->
+  <p class="instruction-line">Load your battle videos below.</p>
+
   <!-- PAGE CONTENT -->
   <main class="page-container">
-
-    <h2 style="text-align:center; margin-bottom:20px;">Enter Dancer Video URLs</h2>
 
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
         <td class="battle-cell">
-
-          <input id="leftInput" class="input-box" placeholder="Enter Left YouTube URL">
-
-          <div id="leftVideo" class="video-slot"></div>
-
+          <label for="leftUrl">Left YouTube URL</label>
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
         </td>
 
         <td class="battle-cell">
+          <label for="rightUrl">Right YouTube URL</label>
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
+          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+        </td>
+      </tr>
 
-          <input id="rightInput" class="input-box" placeholder="Enter Right YouTube URL">
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
 
+        <td class="battle-cell">
           <div id="rightVideo" class="video-slot"></div>
-
         </td>
       </tr>
     </table>
-
-    <button class="load-button" onclick="loadVideos()">Load Videos</button>
 
   </main>
 
@@ -114,10 +119,14 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
+  <!-- SCRIPT -->
   <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
     function extractID(url) {
       if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
+      const match = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/);
       return match ? match[1] : null;
     }
 
@@ -126,7 +135,7 @@
         <div style="position:relative;">
           <iframe 
             class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${id}"
             allow="autoplay; encrypted-media"
             allowfullscreen>
           </iframe>
@@ -135,11 +144,58 @@
       `;
     }
 
-    function loadVideos() {
-      const leftURL = document.getElementById("leftInput").value.trim();
-      const rightURL = document.getElementById("rightInput").value.trim();
+    function sendToSheetIfReady() {
+      const left = document.getElementById("leftUrl").value.trim();
+      const right = document.getElementById("rightUrl").value.trim();
 
-      const fallback = "9tE2ldPYqoQ";
+      if (!extractID(left) || !extractID(right)) return;
 
-      const leftID = extractID(leftURL) || fallback;
-      const right
+      const url =
+        endpoint +
+        "?mode=setbattle" +
+        "&left=" + encodeURIComponent(left) +
+        "&right=" + encodeURIComponent(right);
+
+      fetch(url)
+        .then(r => r.text())
+        .then(t => console.log("Sheet updated:", t))
+        .catch(err => console.error("Error sending to sheet:", err));
+    }
+
+    function loadLeft() {
+      const url = document.getElementById("leftUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("leftVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    function loadRight() {
+      const url = document.getElementById("rightUrl").value.trim();
+      const id = extractID(url);
+      if (!id) return;
+      document.getElementById("rightVideo").innerHTML = embed(id);
+      sendToSheetIfReady();
+    }
+
+    window.onload = function () {
+      const defaultLeft = "https://youtu.be/T7TJH5MF74s";
+      const defaultRight = "https://youtu.be/T7TJH5MF74s";
+
+      const id1 = extractID(defaultLeft);
+      const id2 = extractID(defaultRight);
+
+      if (id1) {
+        document.getElementById("leftVideo").innerHTML = embed(id1);
+        document.getElementById("leftUrl").value = defaultLeft;
+      }
+
+      if (id2) {
+        document.getElementById("rightVideo").innerHTML = embed(id2);
+        document.getElementById("rightUrl").value = defaultRight;
+      }
+    };
+  </script>
+
+</body>
+</html>
