@@ -83,3 +83,43 @@
         <td class="battle-cell">
           <div style="display:flex; gap:10px; align-items:center;">
             <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Left" style="flex:1;">
+            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadLeft()">Load</button>
+          </div>
+        </td>
+
+        <td class="battle-cell">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Right" style="flex:1;">
+            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadRight()">Load</button>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- SoundCloud Player -->
+    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    function extractID(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/
