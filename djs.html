@@ -13,20 +13,29 @@
   <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
+
     <div class="dropdown">
       <a href="dancers.html">Dancers</a>
-      <div class="dropdown-menu"><a href="battle.html">Battle</a></div>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
     </div>
+
     <div class="dropdown">
       <a href="djs.html" class="active">DJs</a>
-      <div class="dropdown-menu"><a href="battle.html">Battle</a></div>
+      <div class="dropdown-menu">
+        <a href="battle.html">Battle</a>
+      </div>
     </div>
+
     <a href="vote.html">Vote</a>
     <a href="merch.html">Merch</a>
   </nav>
 
   <!-- MAIN CONTENT -->
   <main>
+
+    <!-- HERO -->
     <section class="hero-wrapper hero">
       <div class="hero-img-wrap">
         <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
@@ -35,30 +44,41 @@
       </div>
     </section>
 
+    <!-- FORM + PLAYER -->
     <section class="page-container" style="text-align:center;">
       <p class="instruction-line">Submit your DJ mix below.</p>
 
       <form id="djMixForm">
-        <input type="text" id="djMixInput" class="input-field" placeholder="SoundCloud URL">
+        <input 
+          type="text" 
+          id="djMixInput" 
+          class="input-field"
+          placeholder="SoundCloud URL"
+        >
         <button type="submit" class="vote-button">Submit</button>
       </form>
 
       <div id="playerContainer" style="margin-top:20px; min-height:180px;"></div>
     </section>
+
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
   </footer>
 
+  <!-- SCRIPT -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjLSixiGLXduYYaxwusK4hbXudEUbCi7ZyfqlKNDum/dev";
+
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxjLSixiGLXduYYaxwusK4hbXudEUbCi7ZyfqlKNDum/dev";
 
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
-          const srcMatch = text.match(/src="([^"]+)"/i);
+          const srcMatch = text.match(/src=\"([^\"]+)\"/i);
           if (srcMatch) text = srcMatch[1];
         }
         return text;
@@ -77,64 +97,14 @@
 
       async function resolveViaOEmbed(url) {
         try {
-          const oembedUrl = "https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url);
+          const oembedUrl =
+            "https://soundcloud.com/oembed?format=json&url=" +
+            encodeURIComponent(url);
+
           const res = await fetch(oembedUrl);
           if (!res.ok) return url;
+
           const data = await res.json();
           const html = data.html || "";
-          const srcMatch = html.match(/src="([^"]+)"/i);
-          if (!srcMatch) return url;
-          let playerUrl = srcMatch[1];
-          playerUrl = getInnerUrlIfPlayer(playerUrl);
-          return playerUrl || url;
-        } catch (e) {
-          return url;
-        }
-      }
-
-      const form = document.getElementById("djMixForm");
-      const input = document.getElementById("djMixInput");
-      const playerContainer = document.getElementById("playerContainer");
-
-      form.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        let url = extractUrlFromInput(input.value);
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-          url = "https://" + url;
-        }
-
-        if (url.includes("on.soundcloud.com") || url.includes("snd.sc")) {
-          url = await resolveViaOEmbed(url);
-        }
-
-        url = getInnerUrlIfPlayer(url);
-
-        if (!url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-          alert("You have not provided a valid SoundCloud URL");
-          return;
-        }
-
-        if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-          url = url.split("?")[0];
-        }
-
-        const embedURL = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(url) + "&auto_play=true";
-        const endpoint = `${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url);
-
-        fetch(endpoint);
-        playerContainer.innerHTML = `
-          <iframe 
-            width="100%" 
-            height="166" 
-            scrolling="no" 
-            frameborder="no" 
-            allow="autoplay"
-            src="${embedURL}">
-          </iframe>
-        `;
-      });
-    });
-  </script>
-</body>
-</html>
+          const srcMatch = html.match(/src=\"([^\"]+)\"/i);
+          if (!src
