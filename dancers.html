@@ -84,14 +84,14 @@
       <tr>
         <td class="battle-cell">
           <div style="display:flex; gap:10px; align-items:center;">
-            <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube url Left" style="flex:1;">
+            <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Left" style="flex:1;">
             <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadLeft()">Load</button>
           </div>
         </td>
 
         <td class="battle-cell">
           <div style="display:flex; gap:10px; align-items:center;">
-            <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube url Right" style="flex:1;">
+            <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Right" style="flex:1;">
             <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadRight()">Load</button>
           </div>
         </td>
@@ -184,12 +184,10 @@
 
           if (id1) {
             document.getElementById("leftVideo").innerHTML = embed(id1);
-            document.getElementById("leftUrl").value = left;
           }
 
           if (id2) {
             document.getElementById("rightVideo").innerHTML = embed(id2);
-            document.getElementById("rightUrl").value = right;
           }
         });
     }
