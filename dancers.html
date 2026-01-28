@@ -34,6 +34,18 @@
       cursor:default;
       z-index:10;
     }
+    .video-slot {
+      min-height: 260px;
+      background: #000;
+      border-radius: 8px;
+      position: relative;
+    }
+    .battle-frame {
+      width: 100%;
+      height: 260px;
+      border-radius: 8px;
+      border: none;
+    }
   </style>
 </head>
 
@@ -71,13 +83,17 @@
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
         <td class="battle-cell">
-          <input id="leftUrl" class="input-field" type="text" placeholder="Paste Left">
-          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Left" style="flex:1;">
+            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadLeft()">Load</button>
+          </div>
         </td>
 
         <td class="battle-cell">
-          <input id="rightUrl" class="input-field" type="text" placeholder="Paste Right">
-          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Right" style="flex:1;">
+            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadRight()">Load</button>
+          </div>
         </td>
       </tr>
 
@@ -108,4 +124,52 @@
 
     function extractID(url) {
       if (!url) return null;
-      const match = url.match
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    function embed(id) {
+      return `
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
+    }
+
+    /* ⭐ Load SoundCloud (autoPlay = true only after user loads a video) */
+    function loadSoundCloud(autoPlay = false) {
+      fetch(endpoint + "?mode=getsound")
+        .then(r => r.json())
+        .then(data => {
+          let url = data.sound || "";
+          if (!url.startsWith("http")) {
+            document.getElementById("playerContainer").innerHTML =
+              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
+            return;
+          }
+
+          if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
+            url = url.split("?")[0];
+          }
+
+          const embedURL =
+            "https://w.soundcloud.com/player/?url=" +
+            encodeURIComponent(url) +
+            "&color=%23ff5500&inverse=false" +
+            "&auto_play=" + (autoPlay ? "true" : "false") +
+            "&show_user=true";
+
+          document.getElementById("playerContainer").innerHTML = `
+            <iframe
+              width="100%"
+              height="120"
+              scrolling="no"
+              frameborder="no"
+              allow="autoplay"
+              src
