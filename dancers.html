@@ -142,94 +142,12 @@
       `;
     }
 
-    function loadLeft() {
-      const url = document.getElementById("leftUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-
-      document.getElementById("leftVideo").innerHTML = embed(id);
-      sendToSheet();
-    }
-
-    function loadRight() {
-      const url = document.getElementById("rightUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-
-      document.getElementById("rightVideo").innerHTML = embed(id);
-      sendToSheet();
-    }
-
-    function sendToSheet() {
-      const left = document.getElementById("leftUrl").value.trim();
-      const right = document.getElementById("rightUrl").value.trim();
-
-      if (!extractID(left) || !extractID(right)) return;
-
-      fetch(endpoint + "?mode=setbattle&left=" + encodeURIComponent(left) + "&right=" + encodeURIComponent(right))
-        .then(r => r.text())
-        .then(t => console.log("Saved:", t))
-        .catch(err => console.error("Save error:", err));
-    }
-
-    function loadDefaults() {
-      fetch(endpoint + "?mode=getbattle")
-        .then(r => r.json())
-        .then(data => {
-          const left = data.left;
-          const right = data.right;
-
-          const id1 = extractID(left);
-          const id2 = extractID(right);
-
-          if (id1) {
-            document.getElementById("leftVideo").innerHTML = embed(id1);
-          }
-
-          if (id2) {
-            document.getElementById("rightVideo").innerHTML = embed(id2);
-          }
-        });
-    }
-
-    function loadPlayer() {
+    /* ⭐ AUTOPLAY SOUNDCLOUD AFTER USER LOADS A VIDEO */
+    function playSoundCloud() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
         .then(data => {
           let url = data.sound || "";
           if (!url.startsWith("http")) {
             document.getElementById("playerContainer").innerHTML =
-              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
-            return;
-          }
-
-          if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-            url = url.split("?")[0];
-          }
-
-          const embedURL =
-            "https://w.soundcloud.com/player/?url=" +
-            encodeURIComponent(url) +
-            "&color=%23ff5500&inverse=false&auto_play=true&show_user=true";
-
-          document.getElementById("playerContainer").innerHTML = `
-            <iframe
-              width="100%"
-              height="120"
-              scrolling="no"
-              frameborder="no"
-              allow="autoplay"
-              src="${embedURL}">
-            </iframe>
-          `;
-        });
-    }
-
-    window.onload = function () {
-      loadDefaults();
-      loadPlayer();
-    };
-  </script>
-
-</body>
-</html>
+              "<p style='color:#aaa;'>
