@@ -2,183 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Dancers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dancers</title>
+  <link rel="stylesheet" href="styles.css?v=2">
 
-  <link rel="stylesheet" href="style2.css?v=1050">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Prevent clicking or interacting with YouTube */
+    .no-click {
+      pointer-events: none;
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- NAVIGATION (unchanged) -->
   <nav class="navbar">
-    <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html" class="active">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-    </div>
-
-    <a href="vote.html">Vote</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-      <div class="dropdown-menu">
-        <a href="merch.html">Merch</a>
-        <a href="tickets.html">Tickets</a>
-      </div>
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">Dance Offs</a>
+      <ul class="nav-menu">
+        <li><a href="dancers.html" class="active">Dancers</a></li>
+        <li><a href="dj.html">DJs</a></li>
+        <li><a href="battle.html">Battle</a></li>
+        <li><a href="vote.html">Vote</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="tickets.html">Tickets</a></li>
+      </ul>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Dancers Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
-    </div>
-  </div>
+  <!-- PAGE TITLE -->
+  <h1 class="page-title">Latest Dancer Videos</h1>
 
-  <!-- INSTRUCTION -->
-  <p class="instruction-line">Load your battle videos below.</p>
+  <!-- VIDEO TABLE -->
+  <table class="video-table">
+    <tr>
+      <td>
+        <iframe id="leftVideo" class="no-click" width="100%" height="315" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </td>
+      <td>
+        <iframe id="rightVideo" class="no-click" width="100%" height="315" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </td>
+    </tr>
+  </table>
 
-  <!-- PAGE CONTENT -->
-  <main class="page-container">
-
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
-        <td class="battle-cell">
-          <label for="leftUrl">Left YouTube URL</label>
-          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube link">
-          <button class="vote-button" onclick="loadLeft()">Load Left Video</button>
-        </td>
-
-        <td class="battle-cell">
-          <label for="rightUrl">Right YouTube URL</label>
-          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube link">
-          <button class="vote-button" onclick="loadRight()">Load Right Video</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="battle-cell">
-          <div id="leftVideo" class="video-slot"></div>
-        </td>
-
-        <td class="battle-cell">
-          <div id="rightVideo" class="video-slot"></div>
-        </td>
-      </tr>
-    </table>
-
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <!-- SCRIPT -->
   <script>
-    const endpoint =
-      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+    const scriptURL = "YOUR_SCRIPT_URL_HERE"; // replace with your deployed Apps Script URL
 
+    // Extract YouTube ID from any YouTube URL
     function extractID(url) {
-      try {
-        url = url.trim();
-
-        // Strip all query parameters
-        if (url.includes("?")) {
-          url = url.split("?")[0];
-        }
-
-        if (url.includes("/shorts/")) {
-          return url.split("/shorts/")[1];
-        }
-
-        if (url.includes("watch?v=")) {
-          return url.split("watch?v=")[1];
-        }
-
-        if (url.includes("youtu.be/")) {
-          return url.split("youtu.be/")[1];
-        }
-
-        if (url.includes("/embed/")) {
-          return url.split("/embed/")[1];
-        }
-
-        return null;
-      } catch {
-        return null;
-      }
+      const match = url.match(/(?:v=|youtu\.be\/)([^&]+)/);
+      return match ? match[1] : "";
     }
 
-    function embed(id) {
-      return `
-        <iframe 
-          class="battle-frame"
-          src="https://www.youtube.com/embed/${id}"
-          style="width:100%; height:260px; border:none;"
-          allowfullscreen>
-        </iframe>`;
-    }
+    // Load the latest two dancer videos
+    fetch(scriptURL + "?mode=getlatest")
+      .then(r => r.json())
+      .then(data => {
+        const leftID = extractID(data.latest1);
+        const rightID = extractID(data.latest2);
 
-    function sendToSheetIfReady() {
-      const left = document.getElementById("leftUrl").value.trim();
-      const right = document.getElementById("rightUrl").value.trim();
-
-      if (!extractID(left) || !extractID(right)) return;
-
-      const url =
-        endpoint +
-        "?mode=setbattle" +
-        "&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right);
-
-      fetch(url)
-        .then(r => r.text())
-        .then(t => console.log("Sheet updated:", t))
-        .catch(err => console.error("Error sending to sheet:", err));
-    }
-
-    function loadLeft() {
-      const url = document.getElementById("leftUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-      document.getElementById("leftVideo").innerHTML = embed(id);
-      sendToSheetIfReady();
-    }
-
-    function loadRight() {
-      const url = document.getElementById("rightUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-      document.getElementById("rightVideo").innerHTML = embed(id);
-      sendToSheetIfReady();
-    }
-
-    window.onload = function () {
-
-      const defaultLeft = "https://youtu.be/T7TJH5MF74s?si=3Vifox2tOFDde3Ki";
-      const defaultRight = "https://youtu.be/T7TJH5MF74s?si=3Vifox2tOFDde3Ki";
-
-      const id1 = extractID(defaultLeft);
-      const id2 = extractID(defaultRight);
-
-      if (id1) {
-        document.getElementById("leftVideo").innerHTML = embed(id1);
-        document.getElementById("leftUrl").value = defaultLeft;
-      }
-
-      if (id2) {
-        document.getElementById("rightVideo").innerHTML = embed(id2);
-        document.getElementById("rightUrl").value = defaultRight;
-      }
-    };
-  </script>
-
-</body>
-</html>
+        // Autoplay + mute + no related videos + no YouTube clickthrough
+        const params = "?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline
