@@ -2,65 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dancers</title>
-  <link rel="stylesheet" href="styles.css?v=2">
+  <title>Dance-Offs: Dancers</title>
+
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* Prevent clicking or interacting with YouTube */
-    .no-click {
-      pointer-events: none;
+    .video-slot {
+      min-height: 260px;
+      background: #000;
+      border-radius: 8px;
+      position: relative;
     }
-
-    .page-title {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .video-table {
+    .battle-frame {
       width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse;
+      height: 260px;
+      border-radius: 8px;
+      border: none;
     }
-
-    .video-table td {
-      width: 50%;
+    .input-box {
+      width: 100%;
       padding: 10px;
-      vertical-align: top;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+      font-size: 14px;
+    }
+    .load-button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 6px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .load-button:hover {
+      background-color: #005fa3;
+    }
+    .blocker {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      cursor:default;
+      z-index:10;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION (unchanged) -->
+  <!-- NAVIGATION -->
   <nav class="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="nav-logo">Dance Offs</a>
-      <ul class="nav-menu">
-        <li><a href="dancers.html" class="active">Dancers</a></li>
-        <li><a href="dj.html">DJs</a></li>
-        <li><a href="battle.html">Battle</a></li>
-        <li><a href="vote.html">Vote</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="merch.html">Merch</a></li>
-        <li><a href="tickets.html">Tickets</a></li>
-      </ul>
+    <a href="index.html">Home</a>
+
+    <div class="dropdown">
+      <a href="dancers.html" class="active">Dancers</a>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+    </div>
+
+    <a href="vote.html">Vote</a>
+
+    <div class="dropdown">
+      <a href="#">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+        <a href="tickets.html">Tickets</a>
+      </div>
     </div>
   </nav>
 
-  <!-- PAGE TITLE -->
-  <h1 class="page-title">Latest Dancer Videos</h1>
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
 
-  <!-- VIDEO TABLE -->
-  <table class="video-table">
-    <tr>
-      <td>
-        <iframe id="leftVideo" class="no-click" width="100%" height="315" frameborder="0"
-          allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </td>
-      <td>
-        <iframe id="rightVideo" class="no-click" width="100%" height="315" frameborder="0"
-          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <h2 style="text-align:center; margin-bottom:20px;">Enter Dancer Video URLs</h2>
+
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+
+          <input id="leftInput" class="input-box" placeholder="Enter Left YouTube URL">
+
+          <div id="leftVideo" class="video-slot"></div>
+
+        </td>
+
+        <td class="battle-cell">
+
+          <input id="rightInput" class="input-box" placeholder="Enter Right YouTube URL">
+
+          <div id="rightVideo" class="video-slot"></div>
+
+        </td>
+      </tr>
+    </table>
+
+    <button class="load-button" onclick="loadVideos()">Load Videos</button>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <script>
+    function extractID(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    function embed(id) {
+      return `
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
+    }
+
+    function loadVideos() {
+      const leftURL = document.getElementById("leftInput").value.trim();
+      const rightURL = document.getElementById("rightInput").value.trim();
+
+      const fallback = "9tE2ldPYqoQ";
+
+      const leftID = extractID(leftURL) || fallback;
+      const right
