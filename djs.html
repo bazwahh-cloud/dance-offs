@@ -14,18 +14,23 @@
   <nav class="navbar">
     <a href="index.html">Home</a>
 
-    <!-- CLEANED: no dropdown under Dancers -->
     <div class="dropdown">
       <a href="dancers.html">Dancers</a>
     </div>
 
-    <!-- CLEANED: no dropdown under DJs -->
     <div class="dropdown">
       <a href="djs.html" class="active">DJs</a>
     </div>
 
     <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
+
+    <div class="dropdown">
+      <a href="#">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+        <a href="tickets.html">Tickets</a>
+      </div>
+    </div>
   </nav>
 
   <!-- MAIN CONTENT -->
@@ -68,8 +73,9 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+      /* ⭐ FIXED: Correct endpoint */
       const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxjLSixiGLXduYYaxwusK4hbXudEUbCi7ZyfqlKNDum/dev";
+        "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
       function extractUrlFromInput(raw) {
         let text = raw.trim();
@@ -146,6 +152,7 @@
           encodeURIComponent(url) +
           "&auto_play=true";
 
+        /* ⭐ FIXED: Correct mode + correct parameter name */
         const endpoint =
           `${SCRIPT_URL}?mode=setsound&url=` +
           encodeURIComponent(url);
@@ -168,3 +175,4 @@
 
 </body>
 </html>
+
