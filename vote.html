@@ -57,15 +57,24 @@
       text-align: center;
     }
 
-    /* ⭐ Transparent autoplay overlay */
-    #scOverlay {
-      position:absolute;
+    /* ⭐ Full-page overlay */
+    #fullOverlay {
+      position:fixed;
       top:0;
       left:0;
       width:100%;
-      height:120px;
-      z-index:20;
+      height:100%;
+      background:rgba(0,0,0,0.65);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:42px;
+      font-family:'Bangers', cursive;
+      letter-spacing:3px;
+      z-index:9999;
       cursor:pointer;
+      text-shadow:0 0 10px #000;
     }
   </style>
 </head>
@@ -83,158 +92,3 @@
     <div class="dropdown">
       <a href="djs.html">DJs</a>
     </div>
-
-    <a href="vote.html" class="active">Vote</a>
-
-    <div class="dropdown">
-      <a href="#">Shop</a>
-      <div class="dropdown-menu">
-        <a href="merch.html">Merch</a>
-        <a href="tickets.html">Tickets</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- PAGE CONTENT -->
-  <main class="page-container">
-
-    <div id="voteMessage">Watch the battle and listen to the mix before voting.</div>
-
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
-        <td class="battle-cell">
-          <div id="leftVideo" class="video-slot"></div>
-          <button class="vote-button" onclick="vote('left')">Vote Left</button>
-          <div id="leftCount" class="vote-count">Left Votes: 0</div>
-        </td>
-
-        <td class="battle-cell">
-          <div id="rightVideo" class="video-slot"></div>
-          <button class="vote-button" onclick="vote('right')">Vote Right</button>
-          <div id="rightCount" class="vote-count">Right Votes: 0</div>
-        </td>
-      </tr>
-    </table>
-
-    <!-- ⭐ SoundCloud wrapper with autoplay overlay -->
-    <div style="position:relative; width:100%; height:120px; margin-top:25px; text-align:center;">
-      <div id="scOverlay"></div>
-      <div id="playerContainer"></div>
-    </div>
-
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
-
-    function extractID(url) {
-      if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
-      return match ? match[1] : null;
-    }
-
-    function embed(id) {
-      return `
-        <div style="position:relative;">
-          <iframe 
-            class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-          </iframe>
-          <div class="blocker"></div>
-        </div>
-      `;
-    }
-
-    function loadBattle() {
-      fetch(SCRIPT_URL + "?mode=getbattle")
-        .then(r => r.json())
-        .then(data => {
-          const fallback = "9tE2ldPYqoQ";
-          const leftID = extractID(data.left) || fallback;
-          const rightID = extractID(data.right) || fallback;
-
-          document.getElementById("leftVideo").innerHTML = embed(leftID);
-          document.getElementById("rightVideo").innerHTML = embed(rightID);
-        })
-        .catch(err => {
-          console.error("Error loading battle:", err);
-          const fallback = "9tE2ldPYqoQ";
-          document.getElementById("leftVideo").innerHTML = embed(fallback);
-          document.getElementById("rightVideo").innerHTML = embed(fallback);
-        });
-    }
-
-    /* ⭐ Load SoundCloud (autoplay controlled by overlay) */
-    function loadPlayer(autoPlay) {
-      fetch(SCRIPT_URL + "?mode=getsound")
-        .then(r => r.json())
-        .then(data => {
-          let url = data.sound || "";
-
-          if (!url || !url.startsWith("http")) {
-            document.getElementById("playerContainer").innerHTML =
-              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
-            return;
-          }
-
-          if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-            url = url.split("?")[0];
-          }
-
-          const embedURL =
-            "https://w.soundcloud.com/player/?url=" +
-            encodeURIComponent(url) +
-            "&color=%23ff5500&inverse=false&auto_play=" +
-            (autoPlay ? "true" : "false") +
-            "&show_user=true";
-
-          document.getElementById("playerContainer").innerHTML =
-            '<iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay" src="' +
-            embedURL + '"></iframe>';
-        });
-    }
-
-    function loadVoteCounts() {
-      fetch(SCRIPT_URL + "?mode=getvotes")
-        .then(r => r.json())
-        .then(data => {
-          document.getElementById("leftCount").innerText = `Left Votes: ${data.left}`;
-          document.getElementById("rightCount").innerText = `Right Votes: ${data.right}`;
-        });
-    }
-
-    function vote(side) {
-      const now = new Date();
-      const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      const uid = Math.random().toString(36).substring(2, 8).toUpperCase();
-
-      fetch(`${SCRIPT_URL}?mode=vote&side=${encodeURIComponent(side)}&uid=${uid}`)
-        .then(r => r.text())
-        .then(t => {
-          document.getElementById("voteMessage").innerText =
-            `You voted ${side.toUpperCase()} at ${time}`;
-          loadVoteCounts();
-        });
-    }
-
-    window.onload = function () {
-      loadBattle();
-      loadPlayer(false);
-      loadVoteCounts();
-
-      document.getElementById("scOverlay").onclick = function () {
-        loadPlayer(true);
-        this.style.display = "none";
-      };
-    };
-  </script>
-
-</body>
-</html>
