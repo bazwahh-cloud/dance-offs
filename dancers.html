@@ -46,108 +46,22 @@
       border-radius: 8px;
       border: none;
     }
+    .play-mix-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #ff5500;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .play-mix-btn:hover {
+      background: #e64a00;
+    }
   </style>
 </head>
 
 <body>
 
   <!-- NAVIGATION -->
-  <nav class="navbar">
-    <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html" class="active">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-    </div>
-
-    <a href="vote.html">Vote</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-      <div class="dropdown-menu">
-        <a href="merch.html">Merch</a>
-        <a href="tickets.html">Tickets</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- INSTRUCTION -->
-  <p class="instruction-line">Load your battle videos below.</p>
-
-  <!-- PAGE CONTENT -->
-  <main class="page-container">
-
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
-        <td class="battle-cell">
-          <div style="display:flex; gap:10px; align-items:center;">
-            <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Left" style="flex:1;">
-            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadLeft()">Load</button>
-          </div>
-        </td>
-
-        <td class="battle-cell">
-          <div style="display:flex; gap:10px; align-items:center;">
-            <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Right" style="flex:1;">
-            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadRight()">Load</button>
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="battle-cell">
-          <div id="leftVideo" class="video-slot"></div>
-        </td>
-
-        <td class="battle-cell">
-          <div id="rightVideo" class="video-slot"></div>
-        </td>
-      </tr>
-    </table>
-
-    <!-- SoundCloud Player -->
-    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
-
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <!-- SCRIPT -->
-  <script>
-    const endpoint =
-      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
-
-    function extractID(url) {
-      if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
-      return match ? match[1] : null;
-    }
-
-    function embed(id) {
-      return `
-        <div style="position:relative;">
-          <iframe 
-            class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-          </iframe>
-          <div class="blocker"></div>
-        </div>
-      `;
-    }
-
-    /* ⭐ AUTOPLAY SOUNDCLOUD AFTER USER LOADS A VIDEO */
-    function playSoundCloud() {
-      fetch(endpoint + "?mode=getsound")
-        .then(r => r.json())
-        .then(data => {
-          let url = data.sound || "";
-          if (!url.startsWith("http")) {
-            document.getElementById("playerContainer").innerHTML =
-              "<p style='color:#aaa;'>
