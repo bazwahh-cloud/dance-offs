@@ -20,16 +20,27 @@
       border-radius: 8px;
       border: none;
     }
+
+    /* ⭐ NEW: standout input boxes */
     .input-field {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 10px;
       border-radius: 6px;
-      border: 1px solid #444;
-      background: #111;
+      border: 2px solid #ffcc00;
+      background: #332b00;
       color: #fff;
-      font-size: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 0 0 8px #ffcc00;
     }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #ffe066;
+      box-shadow: 0 0 12px #ffe066;
+    }
+
     .vote-button {
       font-size: 18px;
       padding: 10px 20px;
@@ -44,6 +55,7 @@
     .vote-button:hover {
       background-color: #005fa3;
     }
+
     .blocker {
       position:absolute;
       top:0;
@@ -178,22 +190,28 @@
       sendToSheetIfReady();
     }
 
+    /* ⭐ NEW: Load defaults from Google Sheet */
     window.onload = function () {
-      const defaultLeft = "https://youtu.be/T7TJH5MF74s";
-      const defaultRight = "https://youtu.be/T7TJH5MF74s";
+      fetch(endpoint + "?mode=getlatest")
+        .then(r => r.json())
+        .then(data => {
+          const left = data.latest1;
+          const right = data.latest2;
 
-      const id1 = extractID(defaultLeft);
-      const id2 = extractID(defaultRight);
+          const id1 = extractID(left);
+          const id2 = extractID(right);
 
-      if (id1) {
-        document.getElementById("leftVideo").innerHTML = embed(id1);
-        document.getElementById("leftUrl").value = defaultLeft;
-      }
+          if (id1) {
+            document.getElementById("leftVideo").innerHTML = embed(id1);
+            document.getElementById("leftUrl").value = left;
+          }
 
-      if (id2) {
-        document.getElementById("rightVideo").innerHTML = embed(id2);
-        document.getElementById("rightUrl").value = defaultRight;
-      }
+          if (id2) {
+            document.getElementById("rightVideo").innerHTML = embed(id2);
+            document.getElementById("rightUrl").value = right;
+          }
+        })
+        .catch(err => console.error("Error loading defaults:", err));
     };
   </script>
 
