@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance-Offs: Battle</title>
+  <title>Dance-Offs: Dancers</title>
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
     <a href="index.html">Home</a>
 
     <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
+      <a href="dancers.html" class="active">Dancers</a>
     </div>
 
     <div class="dropdown">
@@ -23,13 +23,20 @@
     </div>
 
     <a href="vote.html">Vote</a>
-    <a href="merch.html">Merch</a>
+
+    <div class="dropdown">
+      <a href="shop.html">Shop</a>
+      <div class="dropdown-menu">
+        <a href="merch.html">Merch</a>
+        <a href="tickets.html">Tickets</a>
+      </div>
+    </div>
   </nav>
 
   <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Battle Banner">
+      <img src="dancer-hero2.jpg" alt="Dance-Offs Dancers Banner">
       <a href="battle.html" class="hero-zone hero-left"></a>
       <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
@@ -116,56 +123,4 @@
 
     function sendToSheetIfReady() {
       const left = document.getElementById("leftUrl").value.trim();
-      const right = document.getElementById("rightUrl").value.trim();
-
-      if (!extractID(left) || !extractID(right)) return;
-
-      const url =
-        endpoint +
-        "?mode=setbattle" +
-        "&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right);
-
-      fetch(url)
-        .then(r => r.text())
-        .then(t => console.log("Sheet updated:", t))
-        .catch(err => console.error("Error sending to sheet:", err));
-    }
-
-    function loadLeft() {
-      const url = document.getElementById("leftUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-      document.getElementById("leftVideo").innerHTML = embed(id);
-      sendToSheetIfReady();
-    }
-
-    function loadRight() {
-      const url = document.getElementById("rightUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-      document.getElementById("rightVideo").innerHTML = embed(id);
-      sendToSheetIfReady();
-    }
-
-    window.onload = function () {
-      const defaultLeft = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-      const defaultRight = "https://www.youtube.com/watch?v=3GwjfUFyY6M";
-
-      const id1 = extractID(defaultLeft);
-      const id2 = extractID(defaultRight);
-
-      if (id1) {
-        document.getElementById("leftVideo").innerHTML = embed(id1);
-        document.getElementById("leftUrl").value = defaultLeft;
-      }
-
-      if (id2) {
-        document.getElementById("rightVideo").innerHTML = embed(id2);
-        document.getElementById("rightUrl").value = defaultRight;
-      }
-    };
-  </script>
-
-</body>
-</html>
+      const right = document.getElement
