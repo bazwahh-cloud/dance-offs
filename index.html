@@ -6,6 +6,69 @@
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    .hero-section {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .hero-title {
+      font-family: "Bangers", cursive;
+      font-size: 42px;
+      letter-spacing: 2px;
+      color: #ffcc00;
+      text-shadow: 0 0 8px #000;
+      margin-bottom: 10px;
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      color: #eee;
+      max-width: 600px;
+      margin: 0 auto 25px auto;
+    }
+    .steps-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .step-card {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      border: 2px solid #ffcc00;
+      padding: 20px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+    }
+    .step-title {
+      font-family: "Bangers", cursive;
+      font-size: 24px;
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+    .step-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .step-text {
+      font-size: 15px;
+      color: #f5f5f5;
+      line-height: 1.5;
+    }
+    .step-text b {
+      color: #ffcc00;
+    }
+    .summary-strip {
+      margin: 30px auto 10px auto;
+      text-align: center;
+      font-size: 16px;
+      color: #fff;
+    }
+    .summary-strip b {
+      color: #ffcc00;
+    }
+  </style>
 </head>
 
 <body>
@@ -25,32 +88,7 @@
     <a href="vote.html">Vote</a>
 
     <div class="dropdown">
-      <a href="shop.html">Shop</a>
+      <a href="#">Shop</a>
       <div class="dropdown-menu">
         <a href="merch.html">Merch</a>
-        <a href="tickets.html">Tickets</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
-      <a href="battle.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
-    </div>
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <main class="page-container" style="text-align:center;">
-    <h1 class="home-title">Welcome to Dance-Offs</h1>
-    <p class="instruction-line">Choose a mode above to get started.</p>
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-</body>
-</html>
+        <a href="tickets.html">
