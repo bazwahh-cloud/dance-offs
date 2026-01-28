@@ -155,7 +155,7 @@
         });
     }
 
-    /* ⭐ UPDATED: Load latest DJ mix from DJ tab WITH AUTOPLAY */
+    /* ⭐ UPDATED: Load latest DJ mix from DJ tab */
     function loadPlayer() {
       fetch(SCRIPT_URL + "?mode=getsound")
         .then(r => r.json())
@@ -175,7 +175,7 @@
           const embedURL =
             "https://w.soundcloud.com/player/?url=" +
             encodeURIComponent(url) +
-            "&color=%23ff5500&inverse=false&auto_play=true&show_user=true";
+            "&color=%23ff5500&inverse=false&auto_play=false&show_user=true";
 
           document.getElementById("playerContainer").innerHTML = `
             <iframe
@@ -229,4 +229,10 @@
 
     window.onload = function () {
       loadBattle();
-      load
+      loadPlayer();
+      loadVoteCounts();
+    };
+  </script>
+
+</body>
+</html>
