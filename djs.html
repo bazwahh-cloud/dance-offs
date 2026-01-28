@@ -21,11 +21,9 @@
       </div>
     </div>
 
+    <!-- CLEANED: no dropdown under DJs -->
     <div class="dropdown">
       <a href="djs.html" class="active">DJs</a>
-      <div class="dropdown-menu">
-        <a href="battle.html">Battle</a>
-      </div>
     </div>
 
     <a href="vote.html">Vote</a>
@@ -107,4 +105,38 @@
           const data = await res.json();
           const html = data.html || "";
           const srcMatch = html.match(/src=\"([^\"]+)\"/i);
-          if (!src
+          if (!srcMatch) return url;
+
+          let playerUrl = srcMatch[1];
+          playerUrl = getInnerUrlIfPlayer(playerUrl);
+          return playerUrl || url;
+        } catch (e) {
+          return url;
+        }
+      }
+
+      const form = document.getElementById("djMixForm");
+      const input = document.getElementById("djMixInput");
+      const playerContainer = document.getElementById("playerContainer");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        let url = extractUrlFromInput(input.value);
+
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+          url = "https://" + url;
+        }
+
+        if (url.includes("on.soundcloud.com") || url.includes("snd.sc")) {
+          url = await resolveViaOEmbed(url);
+        }
+
+        url = getInnerUrlIfPlayer(url);
+
+        if (!url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
+          alert("You have not provided a valid SoundCloud URL");
+          return;
+        }
+
+        if (
