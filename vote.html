@@ -8,52 +8,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    .video-slot { min-height:260px; background:#000; border-radius:8px; position:relative; }
-    .battle-frame { width:100%; height:260px; border:none; border-radius:8px; }
-    .vote-button { width:100%; margin-top:10px; padding:10px; font-size:18px; }
-    .vote-count { text-align:center; margin-top:6px; color:#bbb; }
-    .blocker { position:absolute; top:0; left:0; width:100%; height:100%; z-index:10; }
-  </style>
-</head>
-
-<body>
-
-  <nav class="navbar">
-    <a href="index.html">Home</a>
-    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
-    <div class="dropdown"><a href="djs.html">DJs</a></div>
-    <a href="vote.html" class="active">Vote</a>
-    <a href="prizes.html">Prizes</a>
-    <div class="dropdown"><a href="shop.html">Shop</a></div>
-  </nav>
-
-  <p class="instruction-line">Vote for this week's battle below.</p>
-
-  <main class="page-container">
-
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
-        <td class="battle-cell">
-          <div id="leftVideo" class="video-slot"></div>
-          <button class="vote-button" onclick="vote('left')">Vote Left</button>
-          <div id="leftCount" class="vote-count">Left Votes: 0</div>
-        </td>
-
-        <td class="battle-cell">
-          <div id="rightVideo" class="video-slot"></div>
-          <button class="vote-button" onclick="vote('right')">Vote Right</button>
-          <div id="rightCount" class="vote-count">Right Votes: 0</div>
-        </td>
-      </tr>
-    </table>
-
-    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
-
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <script>
-    const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTj
+    .video-slot {
+      min-height: 260px;
+      background: #000;
+      border-radius: 8px;
+      position: relative;
+    }
+    .battle-frame {
+      width: 100%;
+      height: 260px;
+      border-radius: 8px;
+      border: none;
+    }
+    .vote-button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 6px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .vote-button:hover {
+      background-color: #005fa3;
+    }
+    .vote-count {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #bbb;
