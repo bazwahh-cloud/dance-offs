@@ -94,4 +94,16 @@
   <main class="page-container">
 
     <!-- ⭐ COUNTDOWN TIMER -->
-    <div id="voteMessage">Loading countdown
+    <div id="voteMessage">Loading countdown…</div>
+
+    <table class="battle-table" cellspacing="10" align="center">
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+          <button class="vote-button" onclick="vote('left')">Vote Left</button>
+          <div id="leftCount" class="vote-count">Left Votes: 0</div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+          <button class="vote-button" onclick="vote('right')">
