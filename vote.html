@@ -86,3 +86,101 @@
       <!-- ROW 1: VIDEOS -->
       <tr>
         <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+
+      <!-- ROW 2: BUTTONS + COUNTS -->
+      <tr>
+        <td class="battle-cell">
+          <button class="vote-button" onclick="vote('LEFT')">Vote Left</button>
+          <div id="leftCount" class="vote-count">Left Votes: 0</div>
+        </td>
+
+        <td class="battle-cell">
+          <button class="vote-button" onclick="vote('RIGHT')">Vote Right</button>
+          <div id="rightCount" class="vote-count">Right Votes: 0</div>
+        </td>
+      </tr>
+
+    </table>
+
+    <!-- SoundCloud Player -->
+    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    function extractID(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    function embed(id) {
+      return `
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
+    }
+
+    function loadBattle() {
+      fetch(endpoint + "?mode=getweeklybattle")
+        .then(r => r.json())
+        .then(data => {
+          const leftID = extractID(data.left) || "9tE2ldPYqoQ";
+          const rightID = extractID(data.right) || "9tE2ldPYqoQ";
+
+          document.getElementById("leftVideo").innerHTML = embed(leftID);
+          document.getElementById("rightVideo").innerHTML = embed(rightID);
+        });
+    }
+
+    function loadPlayer() {
+      fetch(endpoint + "?mode=getsound")
+        .then(r => r.json())
+        .then(data => {
+          if (!data.sound || !data.sound.startsWith("http")) {
+            document.getElementById("playerContainer").innerHTML =
+              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
+            return;
+          }
+
+          const clean = data.sound.split("?")[0];
+
+          document.getElementById("playerContainer").innerHTML = `
+            <iframe
+              width="100%"
+              height="120"
+              frameborder="no"
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=false">
+            </iframe>
+          `;
+        });
+    }
+
+    function loadVoteCounts() {
+      fetch(endpoint + "?mode=getvotes")
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById("leftCount").innerText = "Left Votes
