@@ -2,248 +2,203 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dance Offs - Vote</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dance-Offs: Vote</title>
+
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    .video-slot {
+      min-height: 260px;
       background: #000;
-      color: #fff;
-    }
-
-    header {
-      padding: 10px 16px;
-      background: #111;
-      border-bottom: 1px solid #333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    header .logo {
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 14px;
-    }
-
-    header nav a {
-      color: #ccc;
-      text-decoration: none;
-      margin-left: 16px;
-      font-size: 14px;
-    }
-
-    header nav a:hover {
-      color: #fff;
-    }
-
-    main {
-      padding: 16px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .battle-grid {
-      display: table;
-      width: 100%;
-      border-spacing: 16px 0;
-    }
-
-    .battle-col {
-      display: table-cell;
-      vertical-align: top;
-      width: 50%;
-    }
-
-    .video-box {
+      border-radius: 8px;
       position: relative;
+    }
+    .battle-frame {
       width: 100%;
-      padding-top: 56.25%;
-      background: #111;
+      height: 260px;
       border-radius: 8px;
-      overflow: hidden;
+      border: none;
     }
-
-    .video-box iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .vote-btn {
-      margin-top: 8px;
-      width: 100%;
-      padding: 10px 0;
-      border-radius: 999px;
-      border: 1px solid #444;
-      background: #222;
-      color: #fff;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    .vote-button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 6px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
       cursor: pointer;
+      width: 100%;
     }
-
-    .vote-btn:hover {
-      background: #333;
+    .vote-button:hover {
+      background-color: #005fa3;
     }
-
-    .sound-section {
-      margin-top: 24px;
-    }
-
-    .sound-section h2 {
+    .vote-count {
+      margin-top: 6px;
       font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 8px;
-      color: #aaa;
+      color: #bbb;
+      text-align: center;
     }
-
-    .sound-box {
-      width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #111;
-    }
-
-    .sound-box iframe {
-      width: 100%;
-      height: 166px;
-      border: 0;
-    }
-
-    .status {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #aaa;
-    }
-
-    @media (max-width: 768px) {
-      .battle-grid {
-        display: block;
-      }
-      .battle-col {
-        display: block;
-        width: 100%;
-        margin-bottom: 16px;
-      }
+    .blocker {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      cursor:default;
+      z-index:10;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="logo">Dance Offs</div>
-    <nav>
-      <a href="index.html">Home</a>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+
+    <div class="dropdown">
       <a href="dancers.html">Dancers</a>
-      <a href="vote.html">Vote</a>
-    </nav>
-  </header>
-
-  <main>
-    <div class="battle-grid">
-      <div class="battle-col">
-        <div class="video-box" id="left-video"></div>
-        <button class="vote-btn" id="vote-left">Vote Left</button>
-      </div>
-      <div class="battle-col">
-        <div class="video-box" id="right-video"></div>
-        <button class="vote-btn" id="vote-right">Vote Right</button>
-      </div>
     </div>
 
-    <div class="sound-section">
-      <h2>Now Playing</h2>
-      <div class="sound-box" id="sound-box"></div>
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
     </div>
 
-    <div class="status" id="status"></div>
+    <a href="vote.html" class="active">Vote</a>
+
+    <a href="prizes.html">Prizes</a>
+
+    <div class="dropdown">
+      <a href="shop.html">Shop</a>
+    </div>
+  </nav>
+
+  <!-- INSTRUCTION -->
+  <p class="instruction-line">Vote for this week's battle below.</p>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
+
+    <table class="battle-table" cellspacing="10" align="center">
+
+      <!-- ROW 1: VIDEOS -->
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+
+      <!-- ROW 2: BUTTONS + COUNTS -->
+      <tr>
+        <td class="battle-cell">
+          <button class="vote-button" onclick="vote('LEFT')">Vote Left</button>
+          <div id="leftCount" class="vote-count">Left Votes: 0</div>
+        </td>
+
+        <td class="battle-cell">
+          <button class="vote-button" onclick="vote('RIGHT')">Vote Right</button>
+          <div id="rightCount" class="vote-count">Right Votes: 0</div>
+        </td>
+      </tr>
+
+    </table>
+
+    <!-- SoundCloud Player -->
+    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
+
   </main>
 
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
   <script>
-    const BASE_URL = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
-    function extractYouTubeID(url) {
+    function extractID(url) {
       if (!url) return null;
-      try {
-        if (url.indexOf("youtu.be/") !== -1) {
-          return url.split("youtu.be/")[1].split(/[?&]/)[0];
-        }
-        if (url.indexOf("watch?v=") !== -1) {
-          return url.split("watch?v=")[1].split(/[?&]/)[0];
-        }
-        if (url.indexOf("/embed/") !== -1) {
-          return url.split("/embed/")[1].split(/[?&]/)[0];
-        }
-      } catch (e) {}
-      return null;
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+      return match ? match[1] : null;
     }
 
-    function setVideo(containerId, url) {
-      const id = extractYouTubeID(url);
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      if (!id) return;
-      const iframe = document.createElement("iframe");
-      iframe.src = "https://www.youtube.com/embed/" + id;
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-      iframe.allowFullscreen = true;
-      container.appendChild(iframe);
+    function embed(id) {
+      return `
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
     }
 
-    function loadWeeklyBattle() {
-      fetch(BASE_URL + "?mode=getweeklybattle")
+    function loadBattle() {
+      fetch(endpoint + "?mode=getweeklybattle")
         .then(r => r.json())
         .then(data => {
-          setVideo("left-video", data.left);
-          setVideo("right-video", data.right);
-        })
-        .catch(err => {
-          document.getElementById("status").textContent = "Error loading battle.";
-          console.log(err);
+          const leftID = extractID(data.left) || "9tE2ldPYqoQ";
+          const rightID = extractID(data.right) || "9tE2ldPYqoQ";
+
+          document.getElementById("leftVideo").innerHTML = embed(leftID);
+          document.getElementById("rightVideo").innerHTML = embed(rightID);
         });
     }
 
-    function loadSound() {
-      fetch(BASE_URL + "?mode=getsound")
+    function loadPlayer() {
+      fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
         .then(data => {
-          const box = document.getElementById("sound-box");
-          box.innerHTML = "";
-          if (!data.sound) return;
-          const iframe = document.createElement("iframe");
-          iframe.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(data.sound);
-          iframe.allow = "autoplay";
-          box.appendChild(iframe);
-        })
-        .catch(err => {
-          console.log(err);
+          if (!data.sound || !data.sound.startsWith("http")) {
+            document.getElementById("playerContainer").innerHTML =
+              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
+            return;
+          }
+
+          const clean = data.sound.split("?")[0];
+
+          document.getElementById("playerContainer").innerHTML = `
+            <iframe
+              width="100%"
+              height="120"
+              frameborder="no"
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=false">
+            </iframe>
+          `;
         });
     }
 
-    function sendVote(side) {
-      fetch(BASE_URL + "?mode=vote&side=" + encodeURIComponent(side))
-        .then(r => r.text())
-        .then(txt => {
-          document.getElementById("status").textContent = "Vote recorded for " + side.toUpperCase() + ".";
-        })
-        .catch(err => {
-          document.getElementById("status").textContent = "Error sending vote.";
-          console.log(err);
+    function loadVoteCounts() {
+      fetch(endpoint + "?mode=getvotes")
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById("leftCount").innerText = "Left Votes: " + data.left;
+          document.getElementById("rightCount").innerText = "Right Votes: " + data.right;
         });
     }
 
-    document.getElementById("vote-left").addEventListener("click", () => sendVote("LEFT"));
-    document.getElementById("vote-right").addEventListener("click", () => sendVote("RIGHT"));
+    function vote(side) {
+      fetch(endpoint + "?mode=vote&side=" + side + "&uid=" + Math.random())
+        .then(() => loadVoteCounts());
+    }
 
-    loadWeeklyBattle();
-    loadSound();
+    window.onload = function () {
+      loadBattle();
+      loadPlayer();
+      loadVoteCounts();
+    };
   </script>
+
 </body>
 </html>
