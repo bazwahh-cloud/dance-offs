@@ -75,8 +75,8 @@
     </div>
   </nav>
 
-  <!-- COUNTDOWN TIMER (replaces instruction text) -->
-  <p class="instruction-line" id="countdownTimer"></p>
+  <!-- INSTRUCTION -->
+  <p class="instruction-line">Vote for this week's battle below.</p>
 
   <!-- PAGE CONTENT -->
   <main class="page-container">
@@ -183,4 +183,22 @@
       fetch(endpoint + "?mode=getvotes")
         .then(r => r.json())
         .then(data => {
-          document.getElementById("leftCount").innerText = "Left Votes
+          document.getElementById("leftCount").innerText = "Left Votes: " + data.left;
+          document.getElementById("rightCount").innerText = "Right Votes: " + data.right;
+        });
+    }
+
+    function vote(side) {
+      fetch(endpoint + "?mode=vote&side=" + side + "&uid=" + Math.random())
+        .then(() => loadVoteCounts());
+    }
+
+    window.onload = function () {
+      loadBattle();
+      loadPlayer();
+      loadVoteCounts();
+    };
+  </script>
+
+</body>
+</html>
