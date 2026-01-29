@@ -194,13 +194,21 @@
     }
 
     /* -------------------------
-       COUNTDOWN TIMER (FIXED)
+       FIXED COUNTDOWN TIMER
     --------------------------*/
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
         .then(state => {
-          const lastUpdated = new Date(state.lastUpdated);
+          const raw = state.lastUpdated;
+          const lastUpdated = new Date(raw);
+
+          if (isNaN(lastUpdated.getTime())) {
+            document.getElementById("countdownTimer").innerText =
+              "Countdown unavailable — invalid timestamp.";
+            return;
+          }
+
           const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
 
           function updateTimer() {
