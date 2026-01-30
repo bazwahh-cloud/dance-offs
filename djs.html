@@ -10,7 +10,7 @@
 
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- NAVIGATION (CORRECTED + CONSISTENT) -->
   <nav class="navbar">
     <a href="index.html">Home</a>
 
@@ -24,12 +24,10 @@
 
     <a href="vote.html">Vote</a>
 
+    <a href="prizes.html">Prizes</a>
+
     <div class="dropdown">
-      <a href="#">Shop</a>
-      <div class="dropdown-menu">
-        <a href="merch.html">Merch</a>
-        <a href="tickets.html">Tickets</a>
-      </div>
+      <a href="shop.html">Shop</a>
     </div>
   </nav>
 
@@ -73,7 +71,6 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-      /* ⭐ FIXED: Correct endpoint */
       const SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
@@ -152,7 +149,6 @@
           encodeURIComponent(url) +
           "&auto_play=true";
 
-        /* ⭐ FIXED: Correct mode + correct parameter name */
         const endpoint =
           `${SCRIPT_URL}?mode=setsound&url=` +
           encodeURIComponent(url);
@@ -175,4 +171,3 @@
 
 </body>
 </html>
-
