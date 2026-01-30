@@ -6,50 +6,6 @@
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <style>
-    /* Rolling Banner Container */
-    .prize-banner {
-      width: 100%;
-      overflow: hidden;
-      background: #111;
-      padding: 20px 0;
-      box-shadow: inset 0 0 20px #000;
-    }
-
-    /* Track that scrolls */
-    .prize-track {
-      display: flex;
-      width: calc(320px * 8);
-      animation: scroll 28s linear infinite;
-    }
-
-    /* Each image */
-    .prize-track img {
-      width: 300px;
-      height: 200px;
-      object-fit: cover;
-      margin-right: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    /* Animation */
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* Title */
-    .prize-title {
-      text-align: center;
-      font-size: 40px;
-      font-family: 'Bangers', cursive;
-      color: #ffcc00;
-      margin-top: 20px;
-      text-shadow: 2px 2px 5px #000;
-    }
-  </style>
 </head>
 
 <body>
@@ -57,166 +13,53 @@
   <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-    </div>
-
+    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html">DJs</a></div>
     <a href="vote.html">Vote</a>
-
     <a href="prizes.html" class="active">Prizes</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-    </div>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- TITLE -->
-  <h1 class="prize-title">Weekly Prizes</h1>
+  <!-- SUPER COMPACT SECTION -->
+  <div style="position:relative; text-align:center; padding:20px; min-height:500px;">
 
-  <!-- ROLLING BANNER -->
-  <div class="prize-banner">
-    <div class="prize-track">
+    <!-- BACKGROUND IMAGES -->
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; opacity:0.25; z-index:-1;">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800" style="width:50%; float:left;">
+      <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=800" style="width:50%; float:left;">
+      <img src="https://images.unsplash.com/photo-1581349481268-1c1f908db8b2?w=800" style="width:50%; float:left;">
+      <img src="https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?w=800" style="width:50%; float:left;">
+    </div>
 
-      <!-- Ibiza Sunset -->
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800" alt="Ibiza Sunset">
+    <!-- FOREGROUND CONTENT -->
+    <div style="position:relative; z-index:2; max-width:350px; margin:0 auto;">
 
-      <!-- Berlin Techno Club -->
-      <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=800" alt="Berlin Techno Club">
+      <h1 class="prize-title" style="margin-bottom:10px;">Weekly Prizes</h1>
 
-      <!-- Liverpool Docks -->
-      <img src="https://images.unsplash.com/photo-1581349481268-1c1f908db8b2?w=800" alt="Liverpool Docks">
+      <p style="color:white; font-size:16px; margin-bottom:15px;">
+        Enter your name and email address and buy votes to win the prize.
+      </p>
 
-      <!-- Beat-Herder Festival -->
-      <img src="https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?w=800" alt="Beat-Herder Festival">
+      <!-- FORM -->
+      <input type="text" id="userName" placeholder="Your Name" 
+             style="width:100%; padding:10px; margin-bottom:8px; border-radius:6px;">
 
-      <!-- Duplicate for seamless infinite scroll -->
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800" alt="Ibiza Sunset">
-      <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=800" alt="Berlin Techno Club">
-      <img src="https://images.unsplash.com/photo-1581349481268-1c1f908db8b2?w=800" alt="Liverpool Docks">
-      <img src="https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?w=800" alt="Beat-Herder Festival">
+      <input type="email" id="userEmail" placeholder="Your Email Address" 
+             style="width:100%; padding:10px; margin-bottom:8px; border-radius:6px;">
+
+      <button onclick="submitDetails()" 
+              style="width:100%; padding:10px; font-weight:bold; border-radius:6px;">
+        Continue
+      </button>
+
+      <!-- PAYMENT SECTION -->
+      <div id="paymentSection" style="display:none; margin-top:15px;">
+        <h3 style="color:white; margin-bottom:10px;">Buy Votes (£1)</h3>
+        <div id="paypal-button-container"></div>
+      </div>
 
     </div>
   </div>
-
-  <!-- DESCRIPTION SECTION -->
-  <section style="text-align:center; margin:40px auto; max-width:800px; padding:0 20px;">
-    <h2 style="
-      font-family:'Bangers', cursive;
-      font-size:36px;
-      color:#ffcc00;
-      text-shadow:2px 2px 5px #000;
-      margin-bottom:10px;
-    ">
-      Want to Win Even Bigger?
-    </h2>
-
-    <p style="
-      font-size:18px;
-      color:#ddd;
-      line-height:1.6;
-      margin-bottom:20px;
-    ">
-      Each week we drop fresh Dance-Offs prizes — merch, tickets, VIP shoutouts, and surprise rewards.  
-      To buy votes and boost your favourite dancer, you’ll need to enter your name and email address first.  
-      Once you’re registered, you can also enter the Monthly Prize Draw for a chance to win something huge.
-    </p>
-
-    <a href="monthly.html" style="
-      display:inline-block;
-      padding:12px 24px;
-      background:#ffcc00;
-      color:#000;
-      font-weight:700;
-      border-radius:8px;
-      text-decoration:none;
-      font-size:20px;
-      box-shadow:0 0 10px #ffcc00;
-      margin-bottom:10px;
-    ">
-      View Monthly Prize
-    </a>
-  </section>
-
-  <!-- EMAIL SIGNUP BOX -->
-  <section style="
-    max-width:500px;
-    margin:40px auto;
-    padding:20px;
-    background:#1a1a1a;
-    border:2px solid #ffcc00;
-    border-radius:10px;
-    box-shadow:0 0 15px #000;
-    text-align:center;
-  ">
-    <h3 style="
-      font-family:'Bangers', cursive;
-      font-size:30px;
-      color:#ffcc00;
-      margin-bottom:15px;
-      text-shadow:2px 2px 5px #000;
-    ">
-      Enter Your Details to Buy Votes
-    </h3>
-
-    <input type="text" id="userName" placeholder="Your Name" style="
-      width:100%;
-      padding:12px;
-      margin-bottom:12px;
-      border-radius:6px;
-      border:2px solid #ffcc00;
-      background:#332b00;
-      color:#fff;
-      font-size:16px;
-      font-weight:600;
-    ">
-
-    <input type="email" id="userEmail" placeholder="Your Email Address" style="
-      width:100%;
-      padding:12px;
-      margin-bottom:15px;
-      border-radius:6px;
-      border:2px solid #ffcc00;
-      background:#332b00;
-      color:#fff;
-      font-size:16px;
-      font-weight:600;
-    ">
-
-    <button onclick="submitDetails()" style="
-      width:100%;
-      padding:12px;
-      background:#ffcc00;
-      color:#000;
-      font-weight:700;
-      border:none;
-      border-radius:6px;
-      font-size:18px;
-      cursor:pointer;
-      box-shadow:0 0 10px #ffcc00;
-    ">
-      Continue
-    </button>
-
-    <!-- PAYMENT SECTION (HIDDEN UNTIL DETAILS SAVED) -->
-    <div id="paymentSection" style="display:none; margin-top:20px;">
-      <h3 style="
-        font-family:'Bangers', cursive;
-        font-size:28px;
-        color:#ffcc00;
-        text-shadow:2px 2px 5px #000;
-        margin-bottom:10px;
-      ">
-        Buy Votes (£1)
-      </h3>
-
-      <div id="paypal-button-container"></div>
-    </div>
-  </section>
 
   <!-- FOOTER -->
   <footer class="footer">
