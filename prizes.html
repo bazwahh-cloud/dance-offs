@@ -20,10 +20,10 @@
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- SUPER COMPACT SECTION WITH 12+ TINY THUMBNAILS -->
+  <!-- COMPACT SECTION WITH THUMBNAIL BACKGROUND -->
   <div style="position:relative; text-align:center; padding:20px; min-height:500px;">
 
-    <!-- BACKGROUND THUMBNAIL GRID -->
+    <!-- BACKGROUND THUMBNAILS -->
     <div style="
       position:absolute;
       top:0;
@@ -34,61 +34,62 @@
       opacity:0.22;
       z-index:-1;
     ">
+      <!-- 24 thumbnails (2 rows of 12) -->
+      <!-- Row 1 -->
+      <img src="images/p-001.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-002.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-003.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-004.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-005.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-006.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-007.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-008.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-009.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-010.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-011.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-012.jpg" style="width:8.33%; float:left;">
 
-      <!-- 12 tiny thumbnails (p-001 to p-012) -->
-      <img src="images/p-001.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-002.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-003.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-004.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-005.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-006.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-007.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-008.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-009.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-010.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-011.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-012.jpg" style="width:12.5%; float:left;">
-
-      <!-- Duplicate row for fuller background -->
-      <img src="images/p-001.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-002.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-003.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-004.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-005.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-006.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-007.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-008.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-009.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-010.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-011.jpg" style="width:12.5%; float:left;">
-      <img src="images/p-012.jpg" style="width:12.5%; float:left;">
-
+      <!-- Row 2 -->
+      <img src="images/p-001.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-002.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-003.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-004.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-005.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-006.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-007.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-008.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-009.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-010.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-011.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-012.jpg" style="width:8.33%; float:left;">
     </div>
 
     <!-- FOREGROUND CONTENT -->
-    <div style="position:relative; z-index:2; max-width:350px; margin:0 auto;">
+    <div style="position:relative; z-index:2; max-width:350px; margin:0 auto; text-align:left;">
 
-      <h1 class="prize-title" style="margin-bottom:10px;">Monthly Prize</h1>
+      <h1 class="prize-title" style="margin-bottom:10px; text-align:center;">Monthly Prize</h1>
 
-      <p style="color:white; font-size:16px; margin-bottom:15px;">
+      <p style="color:white; font-size:16px; margin-bottom:15px; text-align:center;">
         Enter your name and email address and buy votes to win the prize.
       </p>
 
       <!-- FORM -->
-      <input type="text" id="userName" placeholder="Your Name"
-             style="width:100%; padding:10px; margin-bottom:8px; border-radius:6px;">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <input type="text" id="userName" placeholder="Your Name"
+               style="width:100%; padding:10px; border-radius:6px; font-size:16px;">
 
-      <input type="email" id="userEmail" placeholder="Your Email Address"
-             style="width:100%; padding:10px; margin-bottom:8px; border-radius:6px;">
+        <input type="email" id="userEmail" placeholder="Your Email Address"
+               style="width:100%; padding:10px; border-radius:6px; font-size:16px;">
 
-      <button onclick="submitDetails()"
-              style="width:100%; padding:10px; font-weight:bold; border-radius:6px;">
-        Continue
-      </button>
+        <button onclick="submitDetails()"
+                style="width:100%; padding:12px; font-weight:bold; border-radius:6px; font-size:18px; background:#ffcc00; color:#000;">
+          Buy 1 Vote
+        </button>
+      </div>
 
       <!-- PAYMENT SECTION -->
-      <div id="paymentSection" style="display:none; margin-top:15px;">
-        <h3 style="color:white; margin-bottom:10px;">Buy Votes (£1)</h3>
+      <div id="paymentSection" style="display:none; margin-top:20px;">
+        <h3 style="color:white; margin-bottom:10px; text-align:center;">Buy Votes (£1)</h3>
         <div id="paypal-button-container"></div>
       </div>
 
@@ -151,8 +152,6 @@
 
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
-
-          // Log payment to Google Sheet
           fetch(
             endpoint +
             "?mode=payment" +
