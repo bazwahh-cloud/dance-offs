@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Prizes</title>
 
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Rolling Banner Container */
+    .prize-banner {
+      width: 100%;
+      overflow: hidden;
+      background: #111;
+      padding: 20px 0;
+      box-shadow: inset 0 0 20px #000;
+    }
+
+    /* Track that scrolls */
+    .prize-track {
+      display: flex;
+      width: calc(320px * 10);
+      animation: scroll 25s linear infinite;
+    }
+
+    /* Each image */
+    .prize-track img {
+      width: 300px;
+      height: 200px;
+      object-fit: cover;
+      margin-right: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    /* Animation */
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Title */
+    .prize-title {
+      text-align: center;
+      font-size: 40px;
+      font-family: 'Bangers', cursive;
+      color: #ffcc00;
+      margin-top: 20px;
+      text-shadow: 2px 2px 5px #000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+    </div>
+
+    <a href="vote.html">Vote</a>
+
+    <a href="prizes.html" class="active">Prizes</a>
+
+    <div class="dropdown">
+      <a href="shop.html">Shop</a>
+    </div>
+  </nav>
+
+  <!-- TITLE -->
+  <h1 class="prize-title">Weekly Prizes</h1>
+
+  <!-- ROLLING BANNER -->
+  <div class="prize-banner">
+    <div class="prize-track">
+
+      <!-- 5 unique web images -->
+      <img src="https://images.unsplash.com/photo-1520975918318-3a6c8a4f6232?w=800" alt="Prize 1">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800" alt="Prize 2">
+      <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800" alt="Prize 3">
+      <img src="https://images.unsplash.com/photo-1503602642458-232111445657?w=800" alt="Prize 4">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800" alt="Prize 5">
+
+      <!-- Duplicate for seamless infinite scroll -->
+      <img src="https://images.unsplash.com/photo-1520975918318-3a6c8a4f6232?w=800" alt="Prize 1">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800" alt="Prize 2">
+      <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800" alt="Prize 3">
+      <img src="https://images.unsplash.com/photo-1503602642458-232111445657?w=800" alt="Prize 4">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800" alt="Prize 5">
+
+    </div>
+  </div>
+
+  <!-- DESCRIPTION SECTION -->
+  <section style="text-align:center; margin:40px auto; max-width:800px; padding:0 20px;">
+    <h2 style="
+      font-family:'Bangers', cursive;
+      font-size:36px;
+      color:#ffcc00;
+      text-shadow:2px 2px 5px #000;
+      margin-bottom:10px;
+    ">
+      Want to Win Even Bigger?
+    </h2>
+
+    <p style="
+      font-size:18px;
+      color:#ddd;
+      line-height:1.6;
+      margin-bottom:20px;
+    ">
+      Every week we give away exclusive Dance-Offs prizes — merch, tickets, VIP shoutouts, 
+      and surprise drops. But the real jackpot happens once a month.  
+      Enter the Monthly Prize Draw for your chance to win something massive.
+    </p>
+
+    <a href="monthly.html" style="
+      display:inline-block;
+      padding:12px 24px;
+      background:#ffcc00;
+      color:#000;
+      font-weight:700;
+      border-radius:8px;
+      text-decoration:none;
+      font-size:20px;
+      box-shadow:0 0 10px #ffcc00;
+    ">
+      View Monthly Prize
+    </a>
+  </section>
+
+  <!-- FOOTER (MATCHING OTHER PAGES) -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+</body>
+</html>
