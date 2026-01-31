@@ -78,7 +78,7 @@
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- ⭐ UPDATED TEXT -->
+  <!-- ✅ Updated instruction text -->
   <p class="instruction-line">Load your dancer then vote</p>
 
   <main class="page-container">
@@ -96,7 +96,7 @@
         </td>
       </tr>
 
-      <!-- SAVE BUTTON CENTERED -->
+      <!-- ✅ Button text changed to "Vote" -->
       <tr>
         <td colspan="2" style="text-align:center;">
           <button class="save-button" onclick="saveBattle()">Vote</button>
@@ -165,17 +165,17 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ⭐ FIX: swap left/right when sending to backend
+      // ✅ Correct left/right mapping
       fetch(
         endpoint +
-        "?mode=setbattle&left=" + encodeURIComponent(right) +
-        "&right=" + encodeURIComponent(left)
+        "?mode=setbattle&left=" + encodeURIComponent(left) +
+        "&right=" + encodeURIComponent(right)
       )
         .then(r => r.text())
         .then(t => {
           console.log("Saved:", t);
 
-          // ⭐ AUTO-REDIRECT TO VOTE PAGE
+          // ✅ Auto-redirect to vote page
           window.location.href = "vote.html";
         })
         .catch(err => console.error("Save error:", err));
