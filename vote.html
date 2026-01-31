@@ -157,7 +157,7 @@
       }
     }).render("#paypal-button-container");
 
-    /* EXISTING FUNCTIONS */
+    /* YOUTUBE AUTOPLAY + MOBILE AUTOPLAY */
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -169,9 +169,10 @@
         <div style="position:relative;">
           <iframe 
             class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?mute=1&modestbranding=1&rel=0"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1"
             allow="autoplay; encrypted-media"
-            allowfullscreen>
+            allowfullscreen
+            playsinline>
           </iframe>
         </div>
       `;
@@ -189,6 +190,7 @@
         });
     }
 
+    /* SOUNDCLOUD */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -213,6 +215,7 @@
         });
     }
 
+    /* VOTE COUNTS */
     function loadVoteCounts() {
       fetch(endpoint + "?mode=getvotes")
         .then(r => r.json())
@@ -227,6 +230,7 @@
         .then(() => loadVoteCounts());
     }
 
+    /* COUNTDOWN */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
