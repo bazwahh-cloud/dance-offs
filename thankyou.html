@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <title>Thank You – Dance-Offs</title>
 
-  <!-- Redirect after 2 seconds -->
-  <meta http-equiv="refresh" content="2; url=vote.html">
-
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -21,18 +18,59 @@
     }
 
     .hero {
-      padding: 100px 20px;
+      padding: 100px 20px 40px;
     }
 
     .hero-title {
       font-family: 'Bangers', cursive;
       font-size: 70px;
       margin-bottom: 20px;
+      color: #ffcc00;
     }
 
     .hero-sub {
       font-size: 24px;
       color: #ccc;
+      margin-bottom: 40px;
+    }
+
+    .email-box {
+      margin-top: 20px;
+    }
+
+    .email-input {
+      padding: 12px;
+      width: 260px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .submit-btn {
+      padding: 12px 25px;
+      background: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .submit-btn:hover {
+      background: #005fa3;
+    }
+
+    #emailMessage {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #aaa;
+    }
+
+    footer {
+      margin-top: 60px;
+      color: #666;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -41,12 +79,49 @@
 
   <div class="hero">
     <div class="hero-title">Thank You!</div>
-    <div class="hero-sub">You're being redirected to the voting page…</div>
+    <div class="hero-sub">Enter your email to continue</div>
+
+    <div class="email-box">
+      <input id="emailInput" 
+             type="email" 
+             class="email-input"
+             placeholder="you@example.com">
+
+      <br>
+
+      <button class="submit-btn" onclick="submitEmail()">Submit</button>
+
+      <div id="emailMessage"></div>
+    </div>
   </div>
 
-  <footer style="margin-top:60px;">
+  <footer>
     © 2026 Dance-Offs — Built by Baz
   </footer>
+
+  <script>
+    function submitEmail() {
+      const email = document.getElementById("emailInput").value.trim();
+      const msg = document.getElementById("emailMessage");
+
+      if (!email) {
+        msg.innerText = "Please enter an email.";
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
+        method: "POST",
+        body: JSON.stringify({ email: email })
+      })
+      .then(() => {
+        msg.innerText = "Thanks! Redirecting…";
+
+        setTimeout(() => {
+          window.location.href = "index.html";  // Redirect to homepage
+        }, 1200);
+      });
+    }
+  </script>
 
 </body>
 </html>
