@@ -40,4 +40,30 @@
   </footer>
 
   <!-- PAYPAL SDK (SANDBOX CLIENT ID) -->
-  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=AUkE-PHp6PHDebiI0m7JYmXHXnX3kGHK22PPQzAOsdi9_fNy72YaHSSsVZm67dWnkAO8rRaHK7VTNfYS">
+  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=AUkE-PHp6PHDebiI0m7JYmXHXnX3kGHK22PPQzAOsdi9_fNy72YaHSSsVZm67dWnkAO8rRaHK7VTNfYS"></script>
+
+  <script>
+    paypal.Buttons({
+
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: "1.00" }
+          }]
+        });
+      },
+
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+
+          // Redirect to vote page after successful payment
+          window.location.href = "vote.html";
+
+        });
+      }
+
+    }).render("#paypal-button-container");
+  </script>
+
+</body>
+</html>
