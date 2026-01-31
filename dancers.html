@@ -164,8 +164,12 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // Send to backend
-      fetch(endpoint + "?mode=setbattle&left=" + encodeURIComponent(left) + "&right=" + encodeURIComponent(right))
+      // ⭐ FIX APPLIED: swap left/right when sending to backend
+      fetch(
+        endpoint +
+        "?mode=setbattle&left=" + encodeURIComponent(right) +
+        "&right=" + encodeURIComponent(left)
+      )
         .then(r => r.text())
         .then(t => console.log("Saved:", t))
         .catch(err => console.error("Save error:", err));
