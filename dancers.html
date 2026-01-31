@@ -46,60 +46,69 @@
       border-radius: 8px;
       border: none;
     }
+    .save-button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      font-size: 20px;
+      font-weight: 700;
+      background: #ffcc00;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #000;
+      width: 200px;
+      box-shadow: 0 0 10px #ffcc00;
+    }
+    .save-button:hover {
+      background: #ffe066;
+      box-shadow: 0 0 14px #ffe066;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION (CORRECT + CONSISTENT) -->
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html" class="active">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-    </div>
-
+    <div class="dropdown"><a href="dancers.html" class="active">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html">DJs</a></div>
     <a href="vote.html">Vote</a>
-
     <a href="prizes.html">Prizes</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-    </div>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- INSTRUCTION -->
   <p class="instruction-line">Load your dancer videos below.</p>
 
-  <!-- PAGE CONTENT -->
   <main class="page-container">
 
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
+        <!-- LEFT URL -->
         <td class="battle-cell">
-          <div style="display:flex; gap:10px; align-items:center;">
-            <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Left" style="flex:1;">
-            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadLeft()">Load</button>
-          </div>
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
         </td>
 
+        <!-- RIGHT URL -->
         <td class="battle-cell">
-          <div style="display:flex; gap:10px; align-items:center;">
-            <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTubeURL Right" style="flex:1;">
-            <button class="vote-button" style="width:120px; padding:8px 10px;" onclick="loadRight()">Load</button>
-          </div>
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
+        </td>
+      </tr>
+
+      <!-- SAVE BUTTON CENTERED -->
+      <tr>
+        <td colspan="2" style="text-align:center;">
+          <button class="save-button" onclick="saveBattle()">Save Battle</button>
         </td>
       </tr>
 
       <tr>
+        <!-- LEFT VIDEO -->
         <td class="battle-cell">
           <div id="leftVideo" class="video-slot"></div>
         </td>
 
+        <!-- RIGHT VIDEO -->
         <td class="battle-cell">
           <div id="rightVideo" class="video-slot"></div>
         </td>
@@ -115,7 +124,6 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- SCRIPT -->
   <script>
     const endpoint =
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
@@ -140,30 +148,23 @@
       `;
     }
 
-    function loadLeft() {
-      const url = document.getElementById("leftUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-
-      document.getElementById("leftVideo").innerHTML = embed(id);
-      sendToSheet();
-    }
-
-    function loadRight() {
-      const url = document.getElementById("rightUrl").value.trim();
-      const id = extractID(url);
-      if (!id) return;
-
-      document.getElementById("rightVideo").innerHTML = embed(id);
-      sendToSheet();
-    }
-
-    function sendToSheet() {
+    function saveBattle() {
       const left = document.getElementById("leftUrl").value.trim();
       const right = document.getElementById("rightUrl").value.trim();
 
-      if (!extractID(left) || !extractID(right)) return;
+      const idL = extractID(left);
+      const idR = extractID(right);
 
+      if (!idL || !idR) {
+        alert("Both YouTube URLs must be valid.");
+        return;
+      }
+
+      // Load previews
+      document.getElementById("leftVideo").innerHTML = embed(idL);
+      document.getElementById("rightVideo").innerHTML = embed(idR);
+
+      // Send to backend
       fetch(endpoint + "?mode=setbattle&left=" + encodeURIComponent(left) + "&right=" + encodeURIComponent(right))
         .then(r => r.text())
         .then(t => console.log("Saved:", t))
@@ -174,19 +175,11 @@
       fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
         .then(data => {
-          const left = data.left;
-          const right = data.right;
+          const id1 = extractID(data.left);
+          const id2 = extractID(data.right);
 
-          const id1 = extractID(left);
-          const id2 = extractID(right);
-
-          if (id1) {
-            document.getElementById("leftVideo").innerHTML = embed(id1);
-          }
-
-          if (id2) {
-            document.getElementById("rightVideo").innerHTML = embed(id2);
-          }
+          if (id1) document.getElementById("leftVideo").innerHTML = embed(id1);
+          if (id2) document.getElementById("rightVideo").innerHTML = embed(id2);
         });
     }
 
