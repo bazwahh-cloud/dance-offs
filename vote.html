@@ -120,6 +120,7 @@
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
     let currentTransactionID = null;
+    let currentBattleID = null;   // ⭐ NEW — used to link email to vote
 
 
 
@@ -139,6 +140,12 @@
 
           // Store TX ID for backend vote logging
           currentTransactionID = details.id;
+
+          // ⭐ Generate Battle ID for linking email → vote
+          const ts = new Date();
+          const date = ts.toISOString().slice(0,10).replace(/-/g,"");
+          const uid = Math.random().toString(36).substring(2,8).toUpperCase();
+          currentBattleID = "VOTE-" + date + "-" + uid;
 
           // Enable vote buttons
           document.getElementById("voteLeft").disabled = false;
@@ -253,7 +260,9 @@
       fetch(endpoint + "?mode=vote&side=" + side + "&tx=" + currentTransactionID + "&uid=" + Math.random())
         .then(r => r.text())
         .then(() => {
-          window.location.href = "thankyou.html";
+
+          // ⭐ Redirect WITH Battle ID so thankyou.html can log it
+          window.location.href = "thankyou.html?battle=" + currentBattleID;
         });
     }
 
