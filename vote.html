@@ -47,7 +47,6 @@
     }
   </style>
 
-  <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
 </head>
@@ -67,26 +66,23 @@
   <!-- COUNTDOWN TIMER -->
   <p class="instruction-line" id="countdownTimer"></p>
 
-  <!-- PAYMENT GATE -->
-  <div id="paymentGate" style="text-align:center; margin-top:20px;">
-    <h2 style="font-family:'Bangers', cursive; font-size:40px;">Vote for £1</h2>
-    <p style="color:#ccc; margin-bottom:20px;">Pay £1 to unlock your vote.</p>
-
-    <!-- TRUE CENTRED PAYPAL BUTTONS -->
-    <div style="display:flex; justify-content:center;">
-      <div id="paypal-button-container"></div>
-    </div>
-  </div>
-
-  <!-- PAGE CONTENT (NOW ALWAYS VISIBLE) -->
-  <main id="voteSection" class="page-container">
+  <!-- PAGE CONTENT -->
+  <main class="page-container">
 
     <table class="battle-table" cellspacing="10" align="center">
 
-      <!-- ROW 1: VIDEOS -->
+      <!-- ROW 1: VIDEOS + PAYPAL -->
       <tr>
         <td class="battle-cell">
           <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell" style="text-align:center;">
+          <h2 style="font-family:'Bangers', cursive; font-size:40px;">Vote for £1</h2>
+          <p style="color:#ccc; margin-bottom:20px;">Pay £1 to unlock your vote.</p>
+          <div style="display:flex; justify-content:center;">
+            <div id="paypal-button-container"></div>
+          </div>
         </td>
 
         <td class="battle-cell">
@@ -94,12 +90,14 @@
         </td>
       </tr>
 
-      <!-- ROW 2: BUTTONS + COUNTS -->
+      <!-- ROW 2: VOTE BUTTONS -->
       <tr>
         <td class="battle-cell">
           <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
           <div id="leftCount" class="vote-count">Left Votes: 0</div>
         </td>
+
+        <td class="battle-cell"></td>
 
         <td class="battle-cell">
           <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
@@ -110,7 +108,7 @@
     </table>
 
     <!-- SoundCloud Player -->
-    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
+    <div id="playerContainer" style="margin-top:40px; text-align:center;"></div>
 
   </main>
 
@@ -123,9 +121,6 @@
     const endpoint =
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
-    /* -------------------------
-       PAYPAL UNLOCK LOGIC
-    --------------------------*/
     paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({
@@ -136,30 +131,20 @@
       },
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
-
-          // Enable vote buttons
           document.getElementById("voteLeft").disabled = false;
           document.getElementById("voteRight").disabled = false;
-
           document.getElementById("voteLeft").classList.add("enabled");
           document.getElementById("voteRight").classList.add("enabled");
-
-          // Hide payment box
-          document.getElementById("paymentGate").style.display = "none";
         });
       }
     }).render("#paypal-button-container");
 
-    /* -------------------------
-       EXISTING FUNCTIONS
-    --------------------------*/
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
       return match ? match[1] : null;
     }
 
-    /* FIXED: autoplay removed so videos load */
     function embed(id) {
       return `
         <div style="position:relative;">
@@ -179,7 +164,6 @@
         .then(data => {
           const leftID = extractID(data.left) || "9tE2ldPYqoQ";
           const rightID = extractID(data.right) || "9tE2ldPYqoQ";
-
           document.getElementById("leftVideo").innerHTML = embed(leftID);
           document.getElementById("rightVideo").innerHTML = embed(rightID);
         });
@@ -196,7 +180,6 @@
           }
 
           const clean = data.sound.split("?")[0];
-
           document.getElementById("playerContainer").innerHTML = `
             <iframe
               width="100%"
@@ -229,7 +212,6 @@
         .then(state => {
           const raw = state.lastUpdated;
           const lastUpdated = new Date(raw);
-
           if (isNaN(lastUpdated.getTime())) {
             document.getElementById("countdownTimer").innerText =
               "Countdown unavailable — invalid timestamp.";
@@ -237,11 +219,9 @@
           }
 
           const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
-
           function updateTimer() {
             const now = new Date();
             const diff = nextReset - now;
-
             if (diff <= 0) {
               document.getElementById("countdownTimer").innerText =
                 "New battle dropping soon…";
@@ -249,26 +229,4 @@
             }
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const mins = Math.floor((diff / (1000 * 60)) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
-
-            document.getElementById("countdownTimer").innerText =
-              `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
-          }
-
-          updateTimer();
-          setInterval(updateTimer, 1000);
-        });
-    }
-
-    window.onload = function () {
-      loadBattle();
-      loadPlayer();
-      loadVoteCounts();
-      loadCountdown();
-    };
-  </script>
-
-</body>
-</html>
+            const hours = Math
