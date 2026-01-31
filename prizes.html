@@ -23,10 +23,10 @@
   <!-- PAYPAL TEST AREA -->
   <div style="max-width:400px; margin:60px auto; text-align:center;">
 
-    <h1 style="color:white; margin-bottom:20px;">PayPal £1 Live Test</h1>
+    <h1 style="color:white; margin-bottom:20px;">PayPal £1 Sandbox Test</h1>
 
     <p style="color:white; margin-bottom:20px;">
-      Click below to test the live £1 payment.
+      This uses your Sandbox Client ID. The button should appear now.
     </p>
 
     <!-- PAYPAL BUTTON -->
@@ -39,8 +39,8 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- PAYPAL SDK (LIVE CLIENT ID) -->
-  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=AX4Xv6G1hrF13n76DY6HPyTlOK13Gkz7Af3OqQMaRnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8"></script>
+  <!-- PAYPAL SDK (SANDBOX CLIENT ID) -->
+  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=AUkE-PHp6PHDebiI0m7JYmXHXnX3kGHK22PPQzAOsdi9_fNy72YaHSSsVZm67dWnkAO8rRaHK7VTNfYS"></script>
 
   <script>
     paypal.Buttons({
@@ -55,7 +55,7 @@
 
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
-          alert("Payment successful — live PayPal is working.");
+          alert("Sandbox payment successful — PayPal button is working.");
         });
       }
 
