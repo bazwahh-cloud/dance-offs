@@ -10,39 +10,43 @@
   <style>
     body {
       margin: 0;
-      padding: 0;
       background: #000;
       font-family: 'Inter', sans-serif;
       color: white;
-      text-align: center;
     }
 
-    /* GREY + DISABLE NAVIGATION */
-    .nav-disabled {
+    .navbar.nav-disabled {
       opacity: 0.35;
       pointer-events: none;
       filter: grayscale(100%);
     }
 
     .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       padding: 100px 20px 40px;
+      text-align: center;
     }
 
     .hero-title {
       font-family: 'Bangers', cursive;
       font-size: 70px;
-      margin-bottom: 20px;
       color: #ffcc00;
+      margin-bottom: 20px;
     }
 
     .hero-sub {
       font-size: 24px;
       color: #ccc;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .email-box {
-      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .email-input {
@@ -50,8 +54,8 @@
       width: 260px;
       border-radius: 6px;
       border: none;
-      margin-bottom: 10px;
       font-size: 16px;
+      margin-bottom: 10px;
     }
 
     .submit-btn {
@@ -74,8 +78,10 @@
       color: #aaa;
     }
 
-    footer {
+    .footer {
+      text-align: center;
       margin-top: 60px;
+      padding: 20px;
       color: #666;
       font-size: 14px;
     }
@@ -84,45 +90,29 @@
 
 <body>
 
-  <!-- REAL NAVIGATION (from your index.html) -->
+  <!-- NAVIGATION -->
   <nav class="navbar nav-disabled" id="navBar">
     <a href="index.html" class="active">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-    </div>
-
+    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html">DJs</a></div>
     <a href="vote.html">Vote</a>
-
     <a href="prizes.html">Prizes</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-    </div>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
+  <!-- HERO SECTION -->
   <div class="hero">
     <div class="hero-title">Thank You!</div>
     <div class="hero-sub">Enter your email to continue</div>
 
     <div class="email-box">
-      <input id="emailInput" 
-             type="email" 
-             class="email-input"
-             placeholder="you@example.com">
-
-      <br>
-
+      <input id="emailInput" type="email" class="email-input" placeholder="you@example.com">
       <button class="submit-btn" onclick="submitEmail()">Submit</button>
-
       <div id="emailMessage"></div>
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
   </footer>
@@ -130,7 +120,6 @@
   <script>
     let emailSubmitted = false;
 
-    // Warn user if they try to leave
     window.addEventListener("beforeunload", function (e) {
       if (!emailSubmitted) {
         e.preventDefault();
@@ -153,13 +142,8 @@
       })
       .then(() => {
         msg.innerText = "Thanks! Redirecting…";
-
-        // Allow leaving the page
         emailSubmitted = true;
-
-        // Re-enable navigation
         document.getElementById("navBar").classList.remove("nav-disabled");
-
         setTimeout(() => {
           window.location.href = "index.html";
         }, 1200);
