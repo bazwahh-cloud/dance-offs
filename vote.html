@@ -137,10 +137,13 @@
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
 
+          // Store TX ID immediately
           currentTransactionID = details.id;
 
+          // Log payment (audit only)
           fetch(endpoint + "?mode=logpayment&tx=" + currentTransactionID);
 
+          // Enable vote buttons instantly
           document.getElementById("voteLeft").disabled = false;
           document.getElementById("voteRight").disabled = false;
 
