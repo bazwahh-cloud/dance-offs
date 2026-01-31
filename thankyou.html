@@ -120,6 +120,11 @@
   <script>
     let emailSubmitted = false;
 
+    // Read Battle ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const battleID = urlParams.get("battle");
+
+    // Warn user if they try to leave early
     window.addEventListener("beforeunload", function (e) {
       if (!emailSubmitted) {
         e.preventDefault();
@@ -138,12 +143,19 @@
 
       fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
         method: "POST",
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ 
+          email: email,
+          battle: battleID   // ⭐ Store Battle ID with email
+        })
       })
       .then(() => {
         msg.innerText = "Thanks! Redirecting…";
+
         emailSubmitted = true;
+
+        // Re-enable navigation
         document.getElementById("navBar").classList.remove("nav-disabled");
+
         setTimeout(() => {
           window.location.href = "index.html";
         }, 1200);
