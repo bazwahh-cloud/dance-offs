@@ -137,7 +137,7 @@
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
 
-          // Store TX ID (not used for validation anymore)
+          // Store TX ID for backend vote logging
           currentTransactionID = details.id;
 
           // Enable vote buttons
@@ -179,7 +179,7 @@
 
 
     /* ----------------------------------------------------
-       LOAD BATTLE (correct left/right)
+       LOAD BATTLE
     ---------------------------------------------------- */
     function loadBattle() {
       fetch(endpoint + "?mode=getbattle")
@@ -242,7 +242,7 @@
 
 
     /* ----------------------------------------------------
-       FRONTEND-ONLY VOTE → BACKEND COUNTS → REDIRECT
+       VOTE (frontend auth → backend logs TX → redirect)
     ---------------------------------------------------- */
     function vote(side) {
       if (!currentTransactionID) {
@@ -250,8 +250,7 @@
         return;
       }
 
-      // No TX validation — backend just increments
-      fetch(endpoint + "?mode=vote&side=" + side + "&uid=" + Math.random())
+      fetch(endpoint + "?mode=vote&side=" + side + "&tx=" + currentTransactionID + "&uid=" + Math.random())
         .then(r => r.text())
         .then(() => {
           window.location.href = "thankyou.html";
