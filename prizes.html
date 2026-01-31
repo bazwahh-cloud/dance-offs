@@ -63,6 +63,9 @@
       <img src="images/p-012.jpg" style="width:8.33%; float:left;">
     </div>
 
+    <!-- FIX: CLEAR FLOATS BEFORE FOREGROUND CONTENT -->
+    <div style="clear:both;"></div>
+
     <!-- FOREGROUND CONTENT -->
     <div style="position:relative; z-index:2; max-width:350px; margin:0 auto; text-align:left;">
 
@@ -80,9 +83,6 @@
         <input type="email" id="userEmail" placeholder="Your Email Address"
                style="width:100%; box-sizing:border-box; padding:10px; border-radius:6px; font-size:16px; margin-bottom:8px;">
       </div>
-
-      <!-- FIX: CLEAR FLOATS BEFORE PAYPAL -->
-      <div style="clear:both;"></div>
 
       <!-- PAYPAL BUTTON -->
       <div id="paypal-button-container" style="margin-top:15px;"></div>
