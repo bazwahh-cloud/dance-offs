@@ -135,10 +135,10 @@
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
 
-          // ⭐ Save transaction ID for vote logging
+          // ⭐ Save transaction ID for secure vote logging
           currentTransactionID = details.id;
 
-          // ⭐ Log payment in Google Sheet
+          // ⭐ Log payment (optional but useful)
           fetch(endpoint + "?mode=logpayment&tx=" + currentTransactionID);
 
           // Unlock vote buttons
@@ -223,7 +223,7 @@
         });
     }
 
-    /* VOTE WITH TRANSACTION ID */
+    /* SECURE VOTE */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -231,7 +231,14 @@
       }
 
       fetch(endpoint + "?mode=vote&side=" + side + "&tx=" + currentTransactionID + "&uid=" + Math.random())
-        .then(() => loadVoteCounts());
+        .then(r => r.text())
+        .then(response => {
+          if (response.includes("Invalid") || response.includes("unverified")) {
+            alert("Payment could not be verified. Vote not counted.");
+            return;
+          }
+          loadVoteCounts();
+        });
     }
 
     /* COUNTDOWN */
