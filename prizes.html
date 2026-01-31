@@ -1,73 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dance-Off Prizes</title>
+  <meta charset="UTF-8">
+  <title>Dance-Offs: Monthly Prize</title>
 
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID_HERE&currency=GBP"></script>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            margin-top: 0;
-        }
-        .prize-box {
-            background: #eee;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        #paypal-button-container {
-            margin-top: 20px;
-        }
-    </style>
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="container">
-    <h1>Dance-Off Prizes</h1>
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html">DJs</a></div>
+    <a href="vote.html">Vote</a>
+    <a href="prizes.html" class="active">Prizes</a>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
+  </nav>
 
-    <div class="prize-box">
-        <h2>Vote for £1</h2>
-        <p>Support your favourite dancer by casting a £1 vote.</p>
+  <!-- COMPACT SECTION WITH THUMBNAIL BACKGROUND -->
+  <div style="position:relative; text-align:center; padding:20px; min-height:500px;">
+
+    <!-- BACKGROUND THUMBNAILS -->
+    <div style="
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      opacity:0.22;
+      z-index:-1;
+    ">
+      <!-- 24 thumbnails (2 rows of 12) -->
+      <!-- Row 1 -->
+      <img src="images/p-001.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-002.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-003.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-004.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-005.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-006.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-007.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-008.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-009.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-010.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-011.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-012.jpg" style="width:8.33%; float:left;">
+
+      <!-- Row 2 -->
+      <img src="images/p-001.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-002.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-003.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-004.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-005.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-006.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-007.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-008.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-009.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-010.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-011.jpg" style="width:8.33%; float:left;">
+      <img src="images/p-012.jpg" style="width:8.33%; float:left;">
     </div>
 
-    <!-- PayPal Button Container -->
-    <div id="paypal-button-container"></div>
-</div>
+    <!-- FOREGROUND CONTENT -->
+    <div style="position:relative; z-index:2; max-width:350px; margin:0 auto; text-align:left;">
 
-<!-- PayPal Button Script -->
-<script>
-paypal.Buttons({
-    createOrder: function(data, actions) {
+      <h1 class="prize-title" style="margin-bottom:10px; text-align:center;">Monthly Prize</h1>
+
+      <p style="color:white; font-size:16px; margin-bottom:15px; text-align:center;">
+        Enter your name and email address and buy votes to win the prize.
+      </p>
+
+      <!-- FORM -->
+      <div>
+        <input type="text" id="userName" placeholder="Your Name"
+               style="width:100%; box-sizing:border-box; padding:10px; border-radius:6px; font-size:16px; margin-bottom:8px;">
+
+        <input type="email" id="userEmail" placeholder="Your Email Address"
+               style="width:100%; box-sizing:border-box; padding:10px; border-radius:6px; font-size:16px; margin-bottom:8px;">
+
+        <button onclick="submitDetails()"
+                style="width:100%; box-sizing:border-box; padding:12px; font-weight:bold; border-radius:6px; font-size:18px; background:#ffcc00; color:#000;">
+          Buy Vote £1
+        </button>
+      </div>
+
+      <!-- HIDDEN PAYPAL BUTTON -->
+      <div id="paypal-button-container" style="visibility:hidden; height:1px; overflow:hidden;"></div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- PAYPAL SDK -->
+  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=YOUR_CLIENT_ID"></script>
+
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    let savedName = "";
+    let savedEmail = "";
+
+    let paypalButton = null;
+
+    // Render PayPal button invisibly
+    paypal.Buttons({
+      createOrder: function(data, actions) {
         return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: "1.00",
-                    currency_code: "GBP"
-                },
-                description: "Dance-Off Vote"
-            }]
+          purchase_units: [{
+            amount: { value: "1.00" }
+          }]
         });
-    },
+      },
 
-    onApprove: function(data, actions) {
+      onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
-            alert("Payment complete! Thanks " + details.payer.name.given_name);
-            // Add vote-recording logic here if
+
+          // Log payment to Google Sheet
+          fetch(
+            endpoint +
+            "?mode=payment" +
+            "&name=" + encodeURIComponent(savedName) +
+            "&email=" + encodeURIComponent(savedEmail) +
+            "&amount=1.00"
+          );
+
+          alert("Payment received — your vote is now active.");
+        });
+      }
+
+    }).render("#paypal-button-container");
+
+    // Wait for PayPal iframe to load
+    setTimeout(() => {
+      paypalButton = document.querySelector("#paypal-button-container iframe");
+    }, 1500);
+
+    function submitDetails() {
+      const name = document.getElementById("userName").value.trim();
+      const email = document.getElementById("userEmail").value.trim();
+
+      if (!name || !email) {
+        alert("Please enter both your name and email.");
+        return;
+      }
+
+      savedName = name;
+      savedEmail = email;
+
+      // Save user details
+      fetch(
+        endpoint +
+        "?mode=saveuser" +
+        "&name=" + encodeURIComponent(name) +
+        "&email=" + encodeURIComponent(email)
+      )
+      .then(() => {
+        // Trigger PayPal immediately
+        if (paypalButton) {
+          paypalButton.click();
+        } else {
+          alert("PayPal is still loading. Please try again.");
+        }
+      })
+      .catch(err => {
+        console.error("Save error:", err);
+        alert("There was a problem saving your details.");
+      });
+    }
+  </script>
+
+</body>
+</html>
