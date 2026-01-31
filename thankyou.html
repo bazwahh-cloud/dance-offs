@@ -8,10 +8,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Inter', sans-serif;
+    }
+
     .hero-box {
-      text-align: center;
-      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
       padding: 40px 20px;
+      text-align: center;
     }
 
     .hero-title {
@@ -24,13 +35,12 @@
     .hero-sub {
       font-size: 22px;
       color: #ccc;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .email-box {
+      width: 100%;
       max-width: 400px;
-      margin: 0 auto;
-      text-align: center;
     }
 
     .email-input {
@@ -40,6 +50,7 @@
       border: none;
       margin-bottom: 15px;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     .email-button {
@@ -81,7 +92,7 @@
   <!-- HERO SECTION -->
   <div class="hero-box">
     <div class="hero-title">Payment Successful</div>
-    <div class="hero-sub">You're now entered into the monthly prize draw!</div>
+    <div class="hero-sub">Now cast a winning vote to be in the prize draw</div>
 
     <p style="color:white; font-size:18px; margin-bottom:25px;">
       Enter your email so we can contact you if you win.
