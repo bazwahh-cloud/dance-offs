@@ -42,7 +42,7 @@
     }
   </style>
 
-  <!-- PayPal SDK (corrected) -->
+  <!-- PayPal SDK (corrected + components=buttons) -->
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
 </head>
@@ -66,7 +66,9 @@
   <div id="paymentGate" style="text-align:center; margin-top:20px;">
     <h2 style="font-family:'Bangers', cursive; font-size:40px;">Vote for £1</h2>
     <p style="color:#ccc; margin-bottom:20px;">Pay £1 to unlock your vote.</p>
-    <div id="paypal-button-container"></div>
+
+    <!-- CENTRED PAYPAL BUTTONS -->
+    <div id="paypal-button-container" style="display:flex; justify-content:center;"></div>
   </div>
 
   <!-- PAGE CONTENT (LOCKED UNTIL PAYMENT) -->
