@@ -98,10 +98,8 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- PAYPAL SDK -->
-  <!-- ⭐⭐⭐ PASTE YOUR REAL CLIENT ID BELOW ⭐⭐⭐ -->
-  <script src="AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8"></script>
-  <!-- ⭐⭐⭐ END OF CLIENT ID AREA ⭐⭐⭐ -->
+  <!-- PAYPAL SDK WITH YOUR REAL CLIENT ID -->
+  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=X4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8"></script>
 
   <script>
     const endpoint =
@@ -110,7 +108,16 @@
     let savedName = "";
     let savedEmail = "";
 
-    let paypalButton = null;
+    // Wait until PayPal iframe is actually loaded
+    function waitForPayPalButton(callback) {
+      const check = setInterval(() => {
+        const btn = document.querySelector("#paypal-button-container iframe");
+        if (btn) {
+          clearInterval(check);
+          callback(btn);
+        }
+      }, 200);
+    }
 
     // Render PayPal button invisibly
     paypal.Buttons({
@@ -140,11 +147,6 @@
 
     }).render("#paypal-button-container");
 
-    // Wait for PayPal iframe to load
-    setTimeout(() => {
-      paypalButton = document.querySelector("#paypal-button-container iframe");
-    }, 1500);
-
     function submitDetails() {
       const name = document.getElementById("userName").value.trim();
       const email = document.getElementById("userEmail").value.trim();
@@ -165,12 +167,8 @@
         "&email=" + encodeURIComponent(email)
       )
       .then(() => {
-        // Trigger PayPal immediately
-        if (paypalButton) {
-          paypalButton.click();
-        } else {
-          alert("PayPal is still loading. Please try again.");
-        }
+        // Wait for PayPal to load, then click
+        waitForPayPalButton((btn) => btn.click());
       })
       .catch(err => {
         console.error("Save error:", err);
