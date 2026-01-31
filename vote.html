@@ -137,13 +137,10 @@
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
 
-          // Store TX ID immediately
           currentTransactionID = details.id;
 
-          // Log payment (audit only)
           fetch(endpoint + "?mode=logpayment&tx=" + currentTransactionID);
 
-          // Enable vote buttons instantly
           document.getElementById("voteLeft").disabled = false;
           document.getElementById("voteRight").disabled = false;
 
@@ -182,10 +179,10 @@
 
 
     /* ----------------------------------------------------
-       LOAD WEEKLY BATTLE
+       LOAD BATTLE (FIXED)
     ---------------------------------------------------- */
     function loadBattle() {
-      fetch(endpoint + "?mode=getweeklybattle")
+      fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
         .then(data => {
           const leftID = extractID(data.left);
@@ -306,7 +303,7 @@
        INIT
     ---------------------------------------------------- */
     window.onload = function () {
-      loadBattle();
+      loadBattle();      // ⭐ Now loads correct left/right
       loadPlayer();
       loadVoteCounts();
       loadCountdown();
