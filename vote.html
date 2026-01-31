@@ -45,4 +45,226 @@
       top:0;
       left:0;
       width:100%;
-      height
+      height:100%;
+      cursor:default;
+      z-index:10;
+    }
+  </style>
+
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_LIVE_CLIENT_ID&currency=GBP"></script>
+
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html">DJs</a></div>
+    <a href="vote.html" class="active">Vote</a>
+    <a href="prizes.html">Prizes</a>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
+  </nav>
+
+  <!-- COUNTDOWN TIMER -->
+  <p class="instruction-line" id="countdownTimer"></p>
+
+  <!-- PAYMENT GATE -->
+  <div id="paymentGate" style="text-align:center; margin-top:20px;">
+    <h2 style="font-family:'Bangers', cursive; font-size:40px;">Vote for £1</h2>
+    <p style="color:#ccc; margin-bottom:20px;">Pay £1 to unlock your vote.</p>
+    <div id="paypal-button-container"></div>
+  </div>
+
+  <!-- PAGE CONTENT (LOCKED UNTIL PAYMENT) -->
+  <main id="voteSection" class="page-container" style="display:none;">
+
+    <table class="battle-table" cellspacing="10" align="center">
+
+      <!-- ROW 1: VIDEOS -->
+      <tr>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
+
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+
+      <!-- ROW 2: BUTTONS + COUNTS -->
+      <tr>
+        <td class="battle-cell">
+          <button class="vote-button" onclick="vote('LEFT')">Vote Left</button>
+          <div id="leftCount" class="vote-count">Left Votes: 0</div>
+        </td>
+
+        <td class="battle-cell">
+          <button class="vote-button" onclick="vote('RIGHT')">Vote Right</button>
+          <div id="rightCount" class="vote-count">Right Votes: 0</div>
+        </td>
+      </tr>
+
+    </table>
+
+    <!-- SoundCloud Player -->
+    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    /* -------------------------
+       PAYPAL UNLOCK LOGIC
+    --------------------------*/
+    paypal.Buttons({
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: "1.00" }
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+
+          // Hide payment box
+          document.getElementById("paymentGate").style.display = "none";
+
+          // Show voting UI
+          document.getElementById("voteSection").style.display = "block";
+        });
+      }
+    }).render("#paypal-button-container");
+
+    /* -------------------------
+       EXISTING FUNCTIONS
+    --------------------------*/
+    function extractID(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    function embed(id) {
+      return `
+        <div style="position:relative;">
+          <iframe 
+            class="battle-frame"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+          <div class="blocker"></div>
+        </div>
+      `;
+    }
+
+    function loadBattle() {
+      fetch(endpoint + "?mode=getweeklybattle")
+        .then(r => r.json())
+        .then(data => {
+          const leftID = extractID(data.left) || "9tE2ldPYqoQ";
+          const rightID = extractID(data.right) || "9tE2ldPYqoQ";
+
+          document.getElementById("leftVideo").innerHTML = embed(leftID);
+          document.getElementById("rightVideo").innerHTML = embed(rightID);
+        });
+    }
+
+    function loadPlayer() {
+      fetch(endpoint + "?mode=getsound")
+        .then(r => r.json())
+        .then(data => {
+          if (!data.sound || !data.sound.startsWith("http")) {
+            document.getElementById("playerContainer").innerHTML =
+              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
+            return;
+          }
+
+          const clean = data.sound.split("?")[0];
+
+          document.getElementById("playerContainer").innerHTML = `
+            <iframe
+              width="100%"
+              height="120"
+              frameborder="no"
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
+            </iframe>
+          `;
+        });
+    }
+
+    function loadVoteCounts() {
+      fetch(endpoint + "?mode=getvotes")
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById("leftCount").innerText = "Left Votes: " + data.left;
+          document.getElementById("rightCount").innerText = "Right Votes: " + data.right;
+        });
+    }
+
+    function vote(side) {
+      fetch(endpoint + "?mode=vote&side=" + side + "&uid=" + Math.random())
+        .then(() => loadVoteCounts());
+    }
+
+    function loadCountdown() {
+      fetch(endpoint + "?mode=getstate")
+        .then(r => r.json())
+        .then(state => {
+          const raw = state.lastUpdated;
+          const lastUpdated = new Date(raw);
+
+          if (isNaN(lastUpdated.getTime())) {
+            document.getElementById("countdownTimer").innerText =
+              "Countdown unavailable — invalid timestamp.";
+            return;
+          }
+
+          const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+          function updateTimer() {
+            const now = new Date();
+            const diff = nextReset - now;
+
+            if (diff <= 0) {
+              document.getElementById("countdownTimer").innerText =
+                "New battle dropping soon…";
+              return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            document.getElementById("countdownTimer").innerText =
+              `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
+          }
+
+          updateTimer();
+          setInterval(updateTimer, 1000);
+        });
+    }
+
+    window.onload = function () {
+      loadBattle();
+      loadPlayer();
+      loadVoteCounts();
+      loadCountdown();
+    };
+  </script>
+
+</body>
+</html>
