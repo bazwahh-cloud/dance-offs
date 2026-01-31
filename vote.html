@@ -42,7 +42,7 @@
     }
   </style>
 
-  <!-- PayPal SDK (corrected + components=buttons) -->
+  <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
 </head>
@@ -67,8 +67,10 @@
     <h2 style="font-family:'Bangers', cursive; font-size:40px;">Vote for £1</h2>
     <p style="color:#ccc; margin-bottom:20px;">Pay £1 to unlock your vote.</p>
 
-    <!-- CENTRED PAYPAL BUTTONS -->
-    <div id="paypal-button-container" style="display:flex; justify-content:center;"></div>
+    <!-- TRUE CENTRED PAYPAL BUTTONS -->
+    <div style="display:flex; justify-content:center;">
+      <div id="paypal-button-container"></div>
+    </div>
   </div>
 
   <!-- PAGE CONTENT (LOCKED UNTIL PAYMENT) -->
@@ -148,12 +150,13 @@
       return match ? match[1] : null;
     }
 
+    /* FIXED: autoplay removed so videos load */
     function embed(id) {
       return `
         <div style="position:relative;">
           <iframe 
             class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0"
+            src="https://www.youtube.com/embed/${id}?mute=1&modestbranding=1&rel=0"
             allow="autoplay; encrypted-media"
             allowfullscreen>
           </iframe>
