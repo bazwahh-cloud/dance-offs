@@ -78,7 +78,8 @@
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <p class="instruction-line">Load your dancer videos below.</p>
+  <!-- ⭐ UPDATED TEXT -->
+  <p class="instruction-line">Load your dancer then vote</p>
 
   <main class="page-container">
 
@@ -164,14 +165,19 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ⭐ FIX APPLIED: swap left/right when sending to backend
+      // ⭐ FIX: swap left/right when sending to backend
       fetch(
         endpoint +
         "?mode=setbattle&left=" + encodeURIComponent(right) +
         "&right=" + encodeURIComponent(left)
       )
         .then(r => r.text())
-        .then(t => console.log("Saved:", t))
+        .then(t => {
+          console.log("Saved:", t);
+
+          // ⭐ AUTO-REDIRECT TO VOTE PAGE
+          window.location.href = "vote.html";
+        })
         .catch(err => console.error("Save error:", err));
     }
 
