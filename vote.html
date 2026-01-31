@@ -79,7 +79,6 @@
           <div style="width:260px; margin:auto;">
             <div id="leftVideo" class="video-slot"></div>
 
-            <!-- LEFT BUTTON WRAPPED WITH VIDEO -->
             <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
             <div id="leftCount" class="vote-count">Left Votes: 0</div>
           </div>
@@ -100,7 +99,6 @@
           <div style="width:260px; margin:auto;">
             <div id="rightVideo" class="video-slot"></div>
 
-            <!-- RIGHT BUTTON WRAPPED WITH VIDEO -->
             <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
             <div id="rightCount" class="vote-count">Right Votes: 0</div>
           </div>
@@ -145,7 +143,7 @@
       }
     }).render("#paypal-button-container");
 
-    /* YOUTUBE AUTOPLAY + MOBILE AUTOPLAY */
+    /* YOUTUBE AUTOPLAY + MOBILE AUTOPLAY + CLICK BLOCKER */
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -155,6 +153,7 @@
     function embed(id) {
       return `
         <div style="position:relative;">
+          <div style="position:absolute; inset:0; z-index:5;"></div>
           <iframe 
             class="battle-frame"
             src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1"
@@ -178,7 +177,7 @@
         });
     }
 
-    /* SOUNDCLOUD */
+    /* SOUNDCLOUD WITH CLICK BLOCKER */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -192,13 +191,16 @@
           const clean = data.sound.split("?")[0];
 
           document.getElementById("playerContainer").innerHTML = `
-            <iframe
-              width="100%"
-              height="120"
-              frameborder="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
-            </iframe>
+            <div style="position:relative; width:100%; max-width:600px; margin:auto;">
+              <div style="position:absolute; inset:0; z-index:5;"></div>
+              <iframe
+                width="100%"
+                height="120"
+                frameborder="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
+              </iframe>
+            </div>
           `;
         });
     }
