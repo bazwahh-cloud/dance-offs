@@ -47,8 +47,8 @@
     }
   </style>
 
+  <!-- LIVE PAYPAL SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
-
 </head>
 
 <body>
@@ -70,7 +70,6 @@
   <main class="page-container">
 
     <table class="battle-table" cellspacing="10" align="center">
-
       <tr>
 
         <!-- LEFT VIDEO -->
@@ -104,7 +103,6 @@
         </td>
 
       </tr>
-
     </table>
 
     <!-- SOUNDCLOUD PLAYER -->
@@ -123,25 +121,26 @@
 
     let currentTransactionID = null;
 
-    /* PAYPAL LOGIC */
+
+
+    /* ----------------------------------------------------
+       PAYPAL BUTTON
+    ---------------------------------------------------- */
     paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({
           purchase_units: [{
-            amount: { value: "1.50" }   // ⭐ UPDATED PRICE
+            amount: { value: "1.50" }
           }]
         });
       },
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
 
-          // ⭐ Save transaction ID for secure vote logging
           currentTransactionID = details.id;
 
-          // ⭐ Log payment (optional but useful)
           fetch(endpoint + "?mode=logpayment&tx=" + currentTransactionID);
 
-          // Unlock vote buttons
           document.getElementById("voteLeft").disabled = false;
           document.getElementById("voteRight").disabled = false;
 
@@ -151,7 +150,11 @@
       }
     }).render("#paypal-button-container");
 
-    /* YOUTUBE AUTOPLAY */
+
+
+    /* ----------------------------------------------------
+       YOUTUBE HELPERS
+    ---------------------------------------------------- */
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -173,19 +176,28 @@
       `;
     }
 
+
+
+    /* ----------------------------------------------------
+       LOAD WEEKLY BATTLE
+    ---------------------------------------------------- */
     function loadBattle() {
       fetch(endpoint + "?mode=getweeklybattle")
         .then(r => r.json())
         .then(data => {
-          const leftID = extractID(data.left) || "9tE2ldPYqoQ";
-          const rightID = extractID(data.right) || "9tE2ldPYqoQ";
+          const leftID = extractID(data.left);
+          const rightID = extractID(data.right);
 
           document.getElementById("leftVideo").innerHTML = embed(leftID);
           document.getElementById("rightVideo").innerHTML = embed(rightID);
         });
     }
 
-    /* SOUNDCLOUD */
+
+
+    /* ----------------------------------------------------
+       LOAD DJ MIX
+    ---------------------------------------------------- */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -213,7 +225,11 @@
         });
     }
 
-    /* VOTE COUNTS */
+
+
+    /* ----------------------------------------------------
+       LOAD VOTE COUNTS
+    ---------------------------------------------------- */
     function loadVoteCounts() {
       fetch(endpoint + "?mode=getvotes")
         .then(r => r.json())
@@ -223,7 +239,11 @@
         });
     }
 
-    /* SECURE VOTE */
+
+
+    /* ----------------------------------------------------
+       SECURE VOTE
+    ---------------------------------------------------- */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -234,27 +254,23 @@
         .then(r => r.text())
         .then(response => {
           if (response.includes("Invalid") || response.includes("unverified")) {
-            alert("Payment could not be verified. Vote not counted.");
+            alert("Verifying with merchant…");
             return;
           }
           loadVoteCounts();
         });
     }
 
-    /* COUNTDOWN */
+
+
+    /* ----------------------------------------------------
+       COUNTDOWN TIMER
+    ---------------------------------------------------- */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
         .then(state => {
-          const raw = state.lastUpdated;
-          const lastUpdated = new Date(raw);
-
-          if (isNaN(lastUpdated.getTime())) {
-            document.getElementById("countdownTimer").innerText =
-              "Countdown unavailable — invalid timestamp.";
-            return;
-          }
-
+          const lastUpdated = new Date(state.lastUpdated);
           const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
 
           function updateTimer() {
@@ -281,6 +297,11 @@
         });
     }
 
+
+
+    /* ----------------------------------------------------
+       INIT
+    ---------------------------------------------------- */
     window.onload = function () {
       loadBattle();
       loadPlayer();
