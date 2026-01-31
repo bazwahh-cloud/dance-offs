@@ -73,12 +73,14 @@
     <a href="index.html">Home</a>
     <div class="dropdown"><a href="dancers.html" class="active">Dancers</a></div>
     <div class="dropdown"><a href="djs.html">DJs</a></div>
-    <a href="vote.html">Vote</a>
+
+    <!-- ⭐ Vote link permanently disabled -->
+    <a id="voteNav" href="javascript:void(0)" style="opacity:0.4; pointer-events:none;">Vote</a>
+
     <a href="prizes.html">Prizes</a>
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- ✅ Updated instruction text -->
   <p class="instruction-line">Load your dancer then vote</p>
 
   <main class="page-container">
@@ -96,7 +98,7 @@
         </td>
       </tr>
 
-      <!-- ✅ Button text changed to "Vote" -->
+      <!-- Vote button -->
       <tr>
         <td colspan="2" style="text-align:center;">
           <button class="save-button" onclick="saveBattle()">Vote</button>
@@ -165,7 +167,7 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ✅ Correct left/right mapping
+      // Correct left/right mapping
       fetch(
         endpoint +
         "?mode=setbattle&left=" + encodeURIComponent(left) +
@@ -175,7 +177,7 @@
         .then(t => {
           console.log("Saved:", t);
 
-          // ✅ Auto-redirect to vote page
+          // Auto-redirect to vote page
           window.location.href = "vote.html";
         })
         .catch(err => console.error("Save error:", err));
