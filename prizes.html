@@ -20,13 +20,13 @@
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- SIMPLE PAYPAL TEST AREA -->
+  <!-- PAYPAL TEST AREA -->
   <div style="max-width:400px; margin:60px auto; text-align:center;">
 
-    <h1 style="color:white; margin-bottom:20px;">PayPal Test</h1>
+    <h1 style="color:white; margin-bottom:20px;">PayPal £1 Live Test</h1>
 
     <p style="color:white; margin-bottom:20px;">
-      Click below to test the £1 payment.
+      Click below to test the live £1 payment.
     </p>
 
     <!-- PAYPAL BUTTON -->
@@ -39,8 +39,8 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- PAYPAL SDK -->
-  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=X4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8"></script>
+  <!-- PAYPAL SDK (LIVE CLIENT ID) -->
+  <script src="https://www.paypal.com/sdk/js?currency=GBP&client-id=AX4Xv6G1hrF13n76DY6HPyTlOK13Gkz7Af3OqQMaRnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8"></script>
 
   <script>
     paypal.Buttons({
@@ -55,7 +55,7 @@
 
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
-          alert("Payment received — PayPal test successful.");
+          alert("Payment successful — live PayPal is working.");
         });
       }
 
