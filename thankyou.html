@@ -17,7 +17,7 @@
       text-align: center;
     }
 
-    /* GREYED + DISABLED NAV */
+    /* GREY + DISABLE NAVIGATION */
     .nav-disabled {
       opacity: 0.35;
       pointer-events: none;
@@ -84,16 +84,24 @@
 
 <body>
 
-  <!-- NAVIGATION (greyed + disabled initially) -->
+  <!-- REAL NAVIGATION (from your index.html) -->
   <nav class="navbar nav-disabled" id="navBar">
-    <div class="nav-left">
-      <a href="index.html" class="logo">Dance-Offs</a>
-    </div>
-    <div class="nav-right">
-      <a href="index.html">Home</a>
-      <a href="vote.html">Vote</a>
+    <a href="index.html" class="active">Home</a>
+
+    <div class="dropdown">
       <a href="dancers.html">Dancers</a>
-      <a href="prize-details.html">Prizes</a>
+    </div>
+
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+    </div>
+
+    <a href="vote.html">Vote</a>
+
+    <a href="prizes.html">Prizes</a>
+
+    <div class="dropdown">
+      <a href="shop.html">Shop</a>
     </div>
   </nav>
 
@@ -115,7 +123,7 @@
     </div>
   </div>
 
-  <footer>
+  <footer class="footer">
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
