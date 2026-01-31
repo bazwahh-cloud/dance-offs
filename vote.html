@@ -71,18 +71,18 @@
 
     <table class="battle-table" cellspacing="10" align="center">
 
-      <!-- ROW 1: LEFT VIDEO — PAYPAL — RIGHT VIDEO -->
+      <!-- ROW 1 -->
       <tr>
 
         <!-- LEFT VIDEO -->
-        <td class="battle-cell" style="vertical-align:top; text-align:center;">
+        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
           <div style="width:260px; margin:auto;">
             <div id="leftVideo" class="video-slot"></div>
           </div>
         </td>
 
-        <!-- PAYPAL CENTER -->
-        <td class="battle-cell" style="vertical-align:top; text-align:center;">
+        <!-- PAYPAL -->
+        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
           <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1</h2>
           <p style="color:#ccc; margin-bottom:10px;">Pay £1 to unlock your vote.</p>
 
@@ -92,7 +92,7 @@
         </td>
 
         <!-- RIGHT VIDEO -->
-        <td class="battle-cell" style="vertical-align:top; text-align:center;">
+        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
           <div style="width:260px; margin:auto;">
             <div id="rightVideo" class="video-slot"></div>
           </div>
@@ -100,20 +100,20 @@
 
       </tr>
 
-      <!-- ROW 2: VOTE BUTTONS -->
+      <!-- ROW 2 -->
       <tr>
 
         <!-- LEFT BUTTON -->
-        <td class="battle-cell" style="text-align:center;">
+        <td class="battle-cell" style="width:33%; text-align:center;">
           <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
           <div id="leftCount" class="vote-count">Left Votes: 0</div>
         </td>
 
-        <!-- EMPTY MIDDLE -->
-        <td class="battle-cell"></td>
+        <!-- EMPTY -->
+        <td class="battle-cell" style="width:33%;"></td>
 
         <!-- RIGHT BUTTON -->
-        <td class="battle-cell" style="text-align:center;">
+        <td class="battle-cell" style="width:33%; text-align:center;">
           <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
           <div id="rightCount" class="vote-count">Right Votes: 0</div>
         </td>
