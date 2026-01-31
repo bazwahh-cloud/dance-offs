@@ -78,6 +78,10 @@
         <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
           <div style="width:260px; margin:auto;">
             <div id="leftVideo" class="video-slot"></div>
+
+            <!-- LEFT BUTTON WRAPPED WITH VIDEO -->
+            <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
+            <div id="leftCount" class="vote-count">Left Votes: 0</div>
           </div>
         </td>
 
@@ -95,27 +99,11 @@
         <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
           <div style="width:260px; margin:auto;">
             <div id="rightVideo" class="video-slot"></div>
+
+            <!-- RIGHT BUTTON WRAPPED WITH VIDEO -->
+            <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
+            <div id="rightCount" class="vote-count">Right Votes: 0</div>
           </div>
-        </td>
-
-      </tr>
-
-      <!-- ROW 2 -->
-      <tr>
-
-        <!-- LEFT BUTTON -->
-        <td class="battle-cell" style="width:33%; text-align:center;">
-          <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
-          <div id="leftCount" class="vote-count">Left Votes: 0</div>
-        </td>
-
-        <!-- EMPTY -->
-        <td class="battle-cell" style="width:33%;"></td>
-
-        <!-- RIGHT BUTTON -->
-        <td class="battle-cell" style="width:33%; text-align:center;">
-          <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
-          <div id="rightCount" class="vote-count">Right Votes: 0</div>
         </td>
 
       </tr>
