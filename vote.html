@@ -85,8 +85,8 @@
 
         <!-- PAYPAL -->
         <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1</h2>
-          <p style="color:#ccc; margin-bottom:10px;">Pay £1 to unlock your vote.</p>
+          <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
+          <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
 
           <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
             <div id="paypal-button-container"></div>
@@ -128,7 +128,7 @@
       createOrder: function(data, actions) {
         return actions.order.create({
           purchase_units: [{
-            amount: { value: "1.00" }
+            amount: { value: "1.50" }   // ⭐ UPDATED PRICE
           }]
         });
       },
