@@ -137,10 +137,10 @@
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
 
+          // Store TX ID (not used for validation anymore)
           currentTransactionID = details.id;
 
-          fetch(endpoint + "?mode=logpayment&tx=" + currentTransactionID);
-
+          // Enable vote buttons
           document.getElementById("voteLeft").disabled = false;
           document.getElementById("voteRight").disabled = false;
 
@@ -179,7 +179,7 @@
 
 
     /* ----------------------------------------------------
-       LOAD BATTLE (FIXED)
+       LOAD BATTLE (correct left/right)
     ---------------------------------------------------- */
     function loadBattle() {
       fetch(endpoint + "?mode=getbattle")
@@ -242,7 +242,7 @@
 
 
     /* ----------------------------------------------------
-       SECURE VOTE
+       FRONTEND-ONLY VOTE → BACKEND COUNTS → REDIRECT
     ---------------------------------------------------- */
     function vote(side) {
       if (!currentTransactionID) {
@@ -250,14 +250,11 @@
         return;
       }
 
-      fetch(endpoint + "?mode=vote&side=" + side + "&tx=" + currentTransactionID + "&uid=" + Math.random())
+      // No TX validation — backend just increments
+      fetch(endpoint + "?mode=vote&side=" + side + "&uid=" + Math.random())
         .then(r => r.text())
-        .then(response => {
-          if (response.includes("Invalid") || response.includes("unverified")) {
-            alert("Verifying with merchant…");
-            return;
-          }
-          loadVoteCounts();
+        .then(() => {
+          window.location.href = "thankyou.html";
         });
     }
 
@@ -303,7 +300,7 @@
        INIT
     ---------------------------------------------------- */
     window.onload = function () {
-      loadBattle();      // ⭐ Now loads correct left/right
+      loadBattle();
       loadPlayer();
       loadVoteCounts();
       loadCountdown();
