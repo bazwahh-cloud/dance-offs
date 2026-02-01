@@ -2,112 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Thank You – Dance-Offs</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dance-Offs: Thank You</title>
+
+  <link rel="stylesheet" href="style2.css?v=1050">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    emailjs.init("Uklfy56RjdnXIDbVV"); 
+    emailjs.init("YOUR_PUBLIC_KEY_HERE");
   </script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      padding: 40px;
+    .hero {
+      padding: 120px 20px 40px;
       text-align: center;
-      color: #222;
     }
-    #box {
-      background: #fff;
-      padding: 30px;
-      max-width: 420px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+
+    .hero-title {
+      font-family: 'Bangers', cursive;
+      font-size: 70px;
+      color: #ffcc00;
+      margin-bottom: 20px;
     }
-    input {
-      width: 90%;
+
+    .hero-sub {
+      font-size: 24px;
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+
+    .email-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-input {
       padding: 12px;
-      margin-top: 15px;
-      border: 1px solid #ccc;
+      width: 260px;
       border-radius: 6px;
+      border: none;
       font-size: 16px;
+      margin-bottom: 10px;
     }
-    button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      background: #ff0066;
-      color: #fff;
+
+    .submit-btn {
+      padding: 12px 25px;
+      background: #0077cc;
+      color: white;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
       cursor: pointer;
+      font-size: 18px;
     }
-    button:hover {
-      background: #e0005c;
+
+    .submit-btn:hover {
+      background: #005fa3;
     }
-    #success {
-      margin-top: 20px;
-      color: green;
-      font-weight: bold;
-      display: none;
+
+    #emailMessage {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #aaa;
+    }
+
+    /* Disable nav until email submitted */
+    .navbar.nav-disabled {
+      opacity: 0.35;
+      pointer-events: none;
+      filter: grayscale(100%);
     }
   </style>
 </head>
 
 <body>
 
-  <div id="box">
-    <h2>Thanks for Voting!</h2>
-    <p>Your vote has been recorded.</p>
+  <!-- NAVIGATION (matches your site exactly) -->
+  <nav class="navbar nav-disabled" id="navBar">
+    <a href="index.html" class="active">Home</a>
 
-    <p id="battleText"></p>
+    <div class="dropdown">
+      <a href="dancers.html">Dancers</a>
+    </div>
 
-    <p>Enter your email so we can notify you if you win:</p>
+    <div class="dropdown">
+      <a href="djs.html">DJs</a>
+    </div>
 
-    <input type="email" id="emailInput" placeholder="your@email.com">
-    <button onclick="submitEmail()">Submit</button>
+    <a href="vote.html">Vote</a>
 
-    <div id="success">Email received — check your inbox!</div>
+    <a href="prizes.html">Prizes</a>
+
+    <div class="dropdown">
+      <a href="shop.html">Shop</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-title">Thank You!</div>
+    <div class="hero-sub">Enter your email to continue</div>
+
+    <div class="email-box">
+      <input id="emailInput" type="email" class="email-input" placeholder="you@example.com">
+      <button class="submit-btn" onclick="submitEmail()">Submit</button>
+      <div id="emailMessage"></div>
+    </div>
   </div>
 
-  <script>
-    // Extract BattleID from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const battleID = urlParams.get("battle") || "UNKNOWN";
+  <footer class="footer">
+    © 2026 Dance-Offs — Built by Baz
+  </footer>
 
-    document.getElementById("battleText").innerHTML =
-      "Your Battle ID: <strong>" + battleID + "</strong>";
+  <script>
+    let emailSubmitted = false;
+
+    // Read Battle ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const battleID = urlParams.get("battle");
+
+    // Disable nav on load
+    document.getElementById("navBar").classList.add("nav-disabled");
+
+    // Warn user if they try to leave early
+    window.addEventListener("beforeunload", function (e) {
+      if (!emailSubmitted) {
+        e.preventDefault();
+        e.returnValue = "We need your email so we can notify you if you win!";
+      }
+    });
 
     function submitEmail() {
       const email = document.getElementById("emailInput").value.trim();
+      const msg = document.getElementById("emailMessage");
+
       if (!email) {
-        alert("Please enter a valid email");
+        msg.innerText = "Please enter an email.";
         return;
       }
 
-      // 1) Send to your Google Sheets backend
-      fetch("YOUR_APPS_SCRIPT_URL_HERE", {
+      // Store in Google Sheets
+      fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
         method: "POST",
-        body: JSON.stringify({
+        body: JSON.stringify({ 
           email: email,
           battle: battleID
         })
       });
 
-      // 2) Send confirmation email via EmailJS
+      // Send confirmation email via EmailJS
       emailjs.send("service_sjny28j", "template_jv61djw", {
         email: email,
         battle: battleID
       })
       .then(() => {
-        document.getElementById("success").style.display = "block";
+        msg.innerText = "Thanks! Redirecting…";
+
+        emailSubmitted = true;
+
+        // Re-enable navigation
+        document.getElementById("navBar").classList.remove("nav-disabled");
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
       })
       .catch((err) => {
-        console.error("EmailJS error:", err);
-        alert("There was an issue sending your confirmation email.");
+        msg.innerText = "Error sending email. Please try again.";
+        console.error(err);
       });
     }
   </script>
