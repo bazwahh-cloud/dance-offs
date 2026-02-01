@@ -116,8 +116,8 @@
 
   <script>
     /* ⭐ IMPORTANT ⭐  
-       Replace this with your CURRENT deployed Apps Script URL */
-    const endpoint = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
+       Replace this with your CURRENT deployed Apps Script URL (must end in /exec) */
+    const endpoint = "https://script.google.com/macros/s/AKfycbxjLSixiGLXduYYaxwusK4hbXudEUbCi7ZyfqlKNDum/exec";
 
     function extractID(url) {
       if (!url) return null;
@@ -151,9 +151,11 @@
         return;
       }
 
+      // Preview videos
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
+      // Save to backend
       fetch(
         endpoint +
         "?mode=setbattle&left=" + encodeURIComponent(left) +
