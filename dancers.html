@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=1051">
+  <link rel="stylesheet" href="style2.css?v=1053">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -117,10 +117,22 @@
   <script>
     const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
+    // ⭐ Bulletproof YouTube + Shorts extractor
     function extractID(url) {
       if (!url) return null;
+
+      // Match Shorts, watch, embed, youtu.be
       const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
-      return match ? match[1] : null;
+
+      if (match) return match[1];
+
+      // Fallback: manually check v= param
+      try {
+        const v = new URL(url).searchParams.get("v");
+        if (v && v.length === 11) return v;
+      } catch (e) {}
+
+      return null;
     }
 
     function embed(id) {
@@ -145,7 +157,7 @@
       const idR = extractID(right);
 
       if (!idL || !idR) {
-        alert("Both YouTube URLs must be valid.");
+        alert("Both YouTube URLs must be valid.\nLeft: " + idL + "\nRight: " + idR);
         return;
       }
 
