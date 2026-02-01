@@ -68,15 +68,12 @@
 
 <body>
 
-  <!-- Hidden iframe for backend trigger -->
-  <iframe id="battleTrigger" style="display:none;"></iframe>
-
   <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <div class="dropdown"><a href="dancers.html" class="active">Dancers</a></div>
     <div class="dropdown"><a href="djs.html">DJs</a></div>
-    <a id="voteNav" href="vote.html">Vote</a>
+    <a id="voteNav" href="javascript:void(0)" style="opacity:0.4; pointer-events:none;">Vote</a>
     <a href="prizes.html">Prizes</a>
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
@@ -87,39 +84,29 @@
 
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
-        <!-- LEFT URL -->
         <td class="battle-cell">
           <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
         </td>
-
-        <!-- RIGHT URL -->
         <td class="battle-cell">
           <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
         </td>
       </tr>
 
-      <!-- Vote button -->
       <tr>
         <td colspan="2" style="text-align:center;">
-          <button class="save-button" onclick="saveBattle()">Vote</button>
+          <button class="save-button" onclick="saveBattle()">Save Battle</button>
         </td>
       </tr>
 
       <tr>
-        <!-- LEFT VIDEO -->
         <td class="battle-cell">
           <div id="leftVideo" class="video-slot"></div>
         </td>
-
-        <!-- RIGHT VIDEO -->
         <td class="battle-cell">
           <div id="rightVideo" class="video-slot"></div>
         </td>
       </tr>
     </table>
-
-    <!-- SoundCloud Player -->
-    <div id="playerContainer" style="margin-top:25px; text-align:center;"></div>
 
   </main>
 
@@ -128,8 +115,9 @@
   </footer>
 
   <script>
-    const endpoint =
-      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+    /* ⭐ IMPORTANT ⭐  
+       Replace this with your CURRENT deployed Apps Script URL */
+    const endpoint = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
 
     function extractID(url) {
       if (!url) return null;
@@ -163,74 +151,20 @@
         return;
       }
 
-      // Load previews
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // Build backend URL
-      const url =
+      fetch(
         endpoint +
         "?mode=setbattle&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right);
-
-      // Trigger backend silently via iframe
-      document.getElementById("battleTrigger").src = url;
-
-      // Redirect after backend writes to sheet
-      setTimeout(() => {
-        window.location.href = "vote.html";
-      }, 600);
+        "&right=" + encodeURIComponent(right)
+      )
+        .then(r => r.text())
+        .then(() => {
+          window.location.href = "vote.html";
+        })
+        .catch(err => console.error("Save error:", err));
     }
-
-    function loadDefaults() {
-      fetch(endpoint + "?mode=getbattle")
-        .then(r => r.json())
-        .then(data => {
-          const id1 = extractID(data.left);
-          const id2 = extractID(data.right);
-
-          if (id1) document.getElementById("leftVideo").innerHTML = embed(id1);
-          if (id2) document.getElementById("rightVideo").innerHTML = embed(id2);
-        });
-    }
-
-    function loadPlayer() {
-      fetch(endpoint + "?mode=getsound")
-        .then(r => r.json())
-        .then(data => {
-          let url = data.sound || "";
-          if (!url.startsWith("http")) {
-            document.getElementById("playerContainer").innerHTML =
-              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
-            return;
-          }
-
-          if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-            url = url.split("?")[0];
-          }
-
-          const embedURL =
-            "https://w.soundcloud.com/player/?url=" +
-            encodeURIComponent(url) +
-            "&color=%23ff5500&inverse=false&auto_play=true&show_user=true";
-
-          document.getElementById("playerContainer").innerHTML = `
-            <iframe
-              width="100%"
-              height="120"
-              scrolling="no"
-              frameborder="no"
-              allow="autoplay"
-              src="${embedURL}">
-            </iframe>
-          `;
-        });
-    }
-
-    window.onload = function () {
-      loadDefaults();
-      loadPlayer();
-    };
   </script>
 
 </body>
