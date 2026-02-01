@@ -68,15 +68,15 @@
 
 <body>
 
+  <!-- Hidden iframe for backend trigger -->
+  <iframe id="battleTrigger" style="display:none;"></iframe>
+
   <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <div class="dropdown"><a href="dancers.html" class="active">Dancers</a></div>
     <div class="dropdown"><a href="djs.html">DJs</a></div>
-
-    <!-- ⭐ Vote link ENABLED so redirect works -->
     <a id="voteNav" href="vote.html">Vote</a>
-
     <a href="prizes.html">Prizes</a>
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
@@ -167,20 +167,19 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // Correct left/right mapping
-      fetch(
+      // Build backend URL
+      const url =
         endpoint +
         "?mode=setbattle&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right)
-      )
-        .then(r => r.text())
-        .then(t => {
-          console.log("Saved:", t);
+        "&right=" + encodeURIComponent(right);
 
-          // Auto-redirect to vote page
-          window.location.href = "vote.html";
-        })
-        .catch(err => console.error("Save error:", err));
+      // Trigger backend silently via iframe
+      document.getElementById("battleTrigger").src = url;
+
+      // Redirect after backend writes to sheet
+      setTimeout(() => {
+        window.location.href = "vote.html";
+      }, 600);
     }
 
     function loadDefaults() {
