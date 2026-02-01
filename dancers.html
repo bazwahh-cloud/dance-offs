@@ -153,27 +153,21 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ⭐ Correct: backend expects GET with full URLs
+      // ⭐ Fire-and-forget request (no CORS issues)
       const url =
         endpoint +
         "?mode=setbattle" +
         "&left=" + encodeURIComponent(left) +
         "&right=" + encodeURIComponent(right);
 
-      fetch(url, { method: "GET" })
-        .then(r => r.text())
-        .then(text => {
-          console.log("setbattle response:", text);
-          if (text.trim().toLowerCase().includes("saved")) {
-            window.location.href = "vote.html";
-          } else {
-            alert("Problem saving battle: " + text);
-          }
-        })
-        .catch(err => {
-          console.error("Save error:", err);
-          alert("Error saving battle. Please try again.");
-        });
+      fetch(url, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-store"
+      });
+
+      // Immediately redirect
+      window.location.href = "vote.html";
     }
   </script>
 
