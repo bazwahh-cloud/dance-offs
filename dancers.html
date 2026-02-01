@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=1050">
+  <link rel="stylesheet" href="style2.css?v=1051">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -149,11 +149,9 @@
         return;
       }
 
-      // Preview videos
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ⭐ Fire-and-forget GET with debug flag
       const url =
         endpoint +
         "?mode=setbattle" +
@@ -161,10 +159,8 @@
         "&right=" + encodeURIComponent(right) +
         "&debug=1";
 
-      // Send request but don't wait for response
       fetch(url, { method: "GET", cache: "no-store" });
 
-      // Immediate redirect
       window.location.href = "vote.html";
     }
   </script>
