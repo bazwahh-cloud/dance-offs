@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style2.css?v=1048">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Local-only overlay styles (does NOT touch your main CSS) -->
   <style>
     .sc-wrapper {
       position: relative;
@@ -28,40 +27,25 @@
 
 <body>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html" class="active">DJs</a>
-    </div>
-
+    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html" class="active">DJs</a></div>
     <a href="vote.html">Vote</a>
     <a href="prizes.html">Prizes</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-    </div>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main>
 
-    <!-- HERO -->
     <section class="hero-wrapper hero">
       <div class="hero-img-wrap">
         <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
-
         <a href="dancers.html" class="hero-zone hero-left"></a>
         <a href="vote.html" class="hero-zone hero-right"></a>
       </div>
     </section>
 
-    <!-- FORM + PLAYER -->
     <section class="page-container" style="text-align:center;">
       <p class="instruction-line">Submit your DJ mix below.</p>
 
@@ -80,15 +64,13 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
   </footer>
 
-  <!-- SCRIPT -->
   <script>
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+      "https://script.google.com/macros/s/EPlXuG0M4LJvrlPrdIzHFgMp6qDuitC6yBFVoRGO13frofOeeipxYBPkEoUxPOg-anm6-UqyPJSJn_pn/exec";
 
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -168,7 +150,7 @@
           encodeURIComponent(url) +
           "&auto_play=true";
 
-        // ⭐ Backend call
+        // ⭐ Backend call (now supported)
         fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
         playerContainer.innerHTML = `
