@@ -20,35 +20,33 @@
       border-radius: 8px;
       border: none;
     }
-    .vote-button {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin-top: 10px;
-      border-radius: 6px;
-      background-color: #0077cc;
-      color: white;
+    .blocker {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      cursor:default;
+      z-index:10;
+    }
+    .vote-btn {
+      margin-top: 20px;
+      padding: 14px 30px;
+      font-size: 22px;
+      font-weight: 700;
+      background: #ffcc00;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
-      width: 100%;
-      opacity: 0.5;
+      color: #000;
+      width: 200px;
+      box-shadow: 0 0 10px #ffcc00;
     }
-    .vote-button.enabled {
-      opacity: 1;
-      cursor: pointer;
-    }
-    .vote-button:disabled {
-      cursor: not-allowed;
-    }
-    .vote-count {
-      margin-top: 6px;
-      font-size: 14px;
-      color: #bbb;
-      text-align: center;
+    .vote-btn:hover {
+      background: #ffe066;
+      box-shadow: 0 0 14px #ffe066;
     }
   </style>
-
-  <!-- LIVE PAYPAL SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 </head>
 
 <body>
@@ -63,50 +61,23 @@
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- COUNTDOWN TIMER -->
-  <p class="instruction-line" id="countdownTimer"></p>
+  <main class="page-container" style="text-align:center;">
 
-  <!-- PAGE CONTENT -->
-  <main class="page-container">
+    <h1 class="instruction-line">Vote for the Winner</h1>
 
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
-
-        <!-- LEFT VIDEO -->
-        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <div style="width:260px; margin:auto;">
-            <div id="leftVideo" class="video-slot"></div>
-
-            <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
-            <div id="leftCount" class="vote-count">Left Votes: 0</div>
-          </div>
+        <td class="battle-cell">
+          <div id="leftVideo" class="video-slot"></div>
+          <button class="vote-btn" onclick="payAndVote('LEFT')">Vote Left</button>
         </td>
 
-        <!-- PAYPAL -->
-        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
-          <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
-
-          <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
-            <div id="paypal-button-container"></div>
-          </div>
+        <td class="battle-cell">
+          <div id="rightVideo" class="video-slot"></div>
+          <button class="vote-btn" onclick="payAndVote('RIGHT')">Vote Right</button>
         </td>
-
-        <!-- RIGHT VIDEO -->
-        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <div style="width:260px; margin:auto;">
-            <div id="rightVideo" class="video-slot"></div>
-
-            <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
-            <div id="rightCount" class="vote-count">Right Votes: 0</div>
-          </div>
-        </td>
-
       </tr>
     </table>
-
-    <!-- SOUNDCLOUD PLAYER -->
-    <div id="playerContainer" style="margin-top:40px; text-align:center;"></div>
 
   </main>
 
@@ -114,213 +85,93 @@
     © 2026 Dance-Offs — Built by Baz
   </footer>
 
-  <!-- SCRIPT -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=GBP"></script>
+
   <script>
     const endpoint =
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
-    let currentTransactionID = null;
-    let currentBattleID = null;   // ⭐ NEW — used to link email to vote
+    let currentLeft = "";
+    let currentRight = "";
+    let battleID = "";
 
-
-
-    /* ----------------------------------------------------
-       PAYPAL BUTTON
-    ---------------------------------------------------- */
-    paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: { value: "1.50" }
-          }]
-        });
-      },
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-
-          // Store TX ID for backend vote logging
-          currentTransactionID = details.id;
-
-          // ⭐ Generate Battle ID for linking email → vote
-          const ts = new Date();
-          const date = ts.toISOString().slice(0,10).replace(/-/g,"");
-          const uid = Math.random().toString(36).substring(2,8).toUpperCase();
-          currentBattleID = "VOTE-" + date + "-" + uid;
-
-          // Enable vote buttons
-          document.getElementById("voteLeft").disabled = false;
-          document.getElementById("voteRight").disabled = false;
-
-          document.getElementById("voteLeft").classList.add("enabled");
-          document.getElementById("voteRight").classList.add("enabled");
-        });
-      }
-    }).render("#paypal-button-container");
-
-
-
-    /* ----------------------------------------------------
-       YOUTUBE HELPERS
-    ---------------------------------------------------- */
     function extractID(url) {
       if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
       return match ? match[1] : null;
     }
 
     function embed(id) {
       return `
         <div style="position:relative;">
-          <div style="position:absolute; inset:0; z-index:5;"></div>
           <iframe 
             class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1"
+            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
             allow="autoplay; encrypted-media"
-            allowfullscreen
-            playsinline>
+            allowfullscreen>
           </iframe>
+          <div class="blocker"></div>
         </div>
       `;
     }
 
-
-
-    /* ----------------------------------------------------
-       LOAD BATTLE
-    ---------------------------------------------------- */
+    // ⭐ Load current battle
     function loadBattle() {
       fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
         .then(data => {
-          const leftID = extractID(data.left);
-          const rightID = extractID(data.right);
+          currentLeft = data.left;
+          currentRight = data.right;
 
-          document.getElementById("leftVideo").innerHTML = embed(leftID);
-          document.getElementById("rightVideo").innerHTML = embed(rightID);
+          const idL = extractID(currentLeft);
+          const idR = extractID(currentRight);
+
+          if (idL) document.getElementById("leftVideo").innerHTML = embed(idL);
+          if (idR) document.getElementById("rightVideo").innerHTML = embed(idR);
+
+          // battleID = row index is not needed — frontend sends the URL
+          battleID = Date.now().toString(); // unique per vote session
         });
     }
 
+    loadBattle();
 
+    // ⭐ PayPal → POST to backend
+    function payAndVote(side) {
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { value: "1.50" }
+            }]
+          });
+        },
 
-    /* ----------------------------------------------------
-       LOAD DJ MIX
-    ---------------------------------------------------- */
-    function loadPlayer() {
-      fetch(endpoint + "?mode=getsound")
-        .then(r => r.json())
-        .then(data => {
-          if (!data.sound || !data.sound.startsWith("http")) {
-            document.getElementById("playerContainer").innerHTML =
-              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
-            return;
-          }
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
 
-          const clean = data.sound.split("?")[0];
+            const tx = details.id;
 
-          document.getElementById("playerContainer").innerHTML = `
-            <div style="position:relative; width:100%; max-width:600px; margin:auto;">
-              <div style="position:absolute; inset:0; z-index:5;"></div>
-              <iframe
-                width="100%"
-                height="120"
-                frameborder="no"
-                allow="autoplay"
-                src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
-              </iframe>
-            </div>
-          `;
-        });
+            const payload = {
+              side: side,
+              tx: tx,
+              battle: battleID
+            };
+
+            fetch(endpoint, {
+              method: "POST",
+              body: JSON.stringify(payload)
+            })
+            .then(r => r.text())
+            .then(t => {
+              alert("Vote recorded! Thank you.");
+              window.location.href = "results.html";
+            });
+          });
+        }
+
+      }).render("body"); // PayPal injects buttons dynamically
     }
-
-
-
-    /* ----------------------------------------------------
-       LOAD VOTE COUNTS
-    ---------------------------------------------------- */
-    function loadVoteCounts() {
-      fetch(endpoint + "?mode=getvotes")
-        .then(r => r.json())
-        .then(data => {
-          document.getElementById("leftCount").innerText = "Left Votes: " + data.left;
-          document.getElementById("rightCount").innerText = "Right Votes: " + data.right;
-        });
-    }
-
-
-
-    /* ----------------------------------------------------
-       VOTE (frontend auth → backend logs TX → redirect)
-    ---------------------------------------------------- */
-    function vote(side) {
-      if (!currentTransactionID) {
-        alert("Payment required before voting.");
-        return;
-      }
-
-      fetch(
-  endpoint +
-  "?mode=vote" +
-  "&side=" + side +
-  "&tx=" + currentTransactionID +
-  "&battle=" + currentBattleID +        // ⭐ ADD THIS
-  "&uid=" + Math.random()
-)
-
-        .then(r => r.text())
-        .then(() => {
-
-          // ⭐ Redirect WITH Battle ID so thankyou.html can log it
-          window.location.href = "thankyou.html?battle=" + currentBattleID;
-        });
-    }
-
-
-
-    /* ----------------------------------------------------
-       COUNTDOWN TIMER
-    ---------------------------------------------------- */
-    function loadCountdown() {
-      fetch(endpoint + "?mode=getstate")
-        .then(r => r.json())
-        .then(state => {
-          const lastUpdated = new Date(state.lastUpdated);
-          const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-          function updateTimer() {
-            const now = new Date();
-            const diff = nextReset - now;
-
-            if (diff <= 0) {
-              document.getElementById("countdownTimer").innerText =
-                "New battle dropping soon…";
-              return;
-            }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const mins = Math.floor((diff / (1000 * 60)) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
-
-            document.getElementById("countdownTimer").innerText =
-              `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
-          }
-
-          updateTimer();
-          setInterval(updateTimer, 1000);
-        });
-    }
-
-
-
-    /* ----------------------------------------------------
-       INIT
-    ---------------------------------------------------- */
-    window.onload = function () {
-      loadBattle();
-      loadPlayer();
-      loadVoteCounts();
-      loadCountdown();
-    };
   </script>
 
 </body>
