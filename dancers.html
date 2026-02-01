@@ -115,7 +115,6 @@
   </footer>
 
   <script>
-    /* ⭐ Correct backend endpoint ⭐ */
     const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
     function extractID(url) {
@@ -154,17 +153,27 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // Save to backend
-      fetch(
+      // ⭐ Correct: backend expects GET with full URLs
+      const url =
         endpoint +
-        "?mode=setbattle&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right)
-      )
+        "?mode=setbattle" +
+        "&left=" + encodeURIComponent(left) +
+        "&right=" + encodeURIComponent(right);
+
+      fetch(url, { method: "GET" })
         .then(r => r.text())
-        .then(() => {
-          window.location.href = "vote.html";
+        .then(text => {
+          console.log("setbattle response:", text);
+          if (text.trim().toLowerCase().includes("saved")) {
+            window.location.href = "vote.html";
+          } else {
+            alert("Problem saving battle: " + text);
+          }
         })
-        .catch(err => console.error("Save error:", err));
+        .catch(err => {
+          console.error("Save error:", err);
+          alert("Error saving battle. Please try again.");
+        });
     }
   </script>
 
