@@ -106,6 +106,14 @@
           <div id="rightVideo" class="video-slot"></div>
         </td>
       </tr>
+
+      <!-- ⭐ DJ PLAYER UNDERNEATH -->
+      <tr>
+        <td colspan="2">
+          <div id="djPlayer" style="margin-top:20px; min-height:180px;"></div>
+        </td>
+      </tr>
+
     </table>
 
   </main>
@@ -165,10 +173,47 @@
         "&debug=1";
 
       fetch(url, { method: "GET", cache: "no-store" });
-
-      // Redirect removed as requested
-      // window.location.href = "vote.html";
     }
+
+    /* ⭐ LOAD DJ MIX UNDERNEATH */
+    function loadDJMix() {
+      fetch(endpoint + "?mode=getsound")
+        .then(r => r.json())
+        .then(data => {
+          let url = data.sound || "";
+
+          if (!url.startsWith("http")) {
+            document.getElementById("djPlayer").innerHTML =
+              "<p style='color:#aaa; text-align:center;'>No DJ mix submitted yet.</p>";
+            return;
+          }
+
+          if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
+            url = url.split("?")[0];
+          }
+
+          const embedURL =
+            "https://w.soundcloud.com/player/?url=" +
+            encodeURIComponent(url) +
+            "&auto_play=true";
+
+          document.getElementById("djPlayer").innerHTML = `
+            <div style="position:relative; height:166px;">
+              <iframe 
+                width="100%" 
+                height="166" 
+                scrolling="no" 
+                frameborder="no" 
+                allow="autoplay"
+                src="${embedURL}">
+              </iframe>
+              <div class="blocker"></div>
+            </div>
+          `;
+        });
+    }
+
+    loadDJMix();
   </script>
 
 </body>
