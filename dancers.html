@@ -157,7 +157,7 @@
     }
 
     /* -----------------------------
-       SAVE BATTLE
+       SAVE BATTLE (instant save, delayed redirect)
     ------------------------------*/
     function saveBattle() {
       const left = document.getElementById("leftUrl").value.trim();
@@ -171,9 +171,11 @@
         return;
       }
 
+      // Show previews immediately
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
+      // ⭐ Save to sheet immediately
       const url =
         endpoint +
         "?mode=setbattle" +
@@ -181,6 +183,11 @@
         "&right=" + encodeURIComponent(right);
 
       fetch(url, { method: "GET", cache: "no-store" });
+
+      // ⭐ Delay ONLY the redirect
+      setTimeout(() => {
+        window.location.href = "vote.html";
+      }, 5000);
     }
 
     /* -----------------------------
