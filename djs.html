@@ -6,6 +6,24 @@
 
   <link rel="stylesheet" href="style2.css?v=1048">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Local-only overlay styles (does NOT touch your main CSS) -->
+  <style>
+    .sc-wrapper {
+      position: relative;
+      width: 100%;
+      height: 166px;
+    }
+    .sc-blocker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      cursor: default;
+    }
+  </style>
 </head>
 
 <body>
@@ -150,18 +168,21 @@
           encodeURIComponent(url) +
           "&auto_play=true";
 
-        // ⭐ Backend call (no CORS needed)
+        // ⭐ Backend call
         fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
         playerContainer.innerHTML = `
-          <iframe 
-            width="100%" 
-            height="166" 
-            scrolling="no" 
-            frameborder="no" 
-            allow="autoplay"
-            src="${embedURL}">
-          </iframe>
+          <div class="sc-wrapper">
+            <iframe 
+              width="100%" 
+              height="166" 
+              scrolling="no" 
+              frameborder="no" 
+              allow="autoplay"
+              src="${embedURL}">
+            </iframe>
+            <div class="sc-blocker"></div>
+          </div>
         `;
       });
 
@@ -188,14 +209,17 @@
               "&auto_play=true";
 
             playerContainer.innerHTML = `
-              <iframe
-                width="100%"
-                height="166"
-                scrolling="no"
-                frameborder="no"
-                allow="autoplay"
-                src="${embedURL}">
-              </iframe>
+              <div class="sc-wrapper">
+                <iframe
+                  width="100%"
+                  height="166"
+                  scrolling="no"
+                  frameborder="no"
+                  allow="autoplay"
+                  src="${embedURL}">
+                </iframe>
+                <div class="sc-blocker"></div>
+              </div>
             `;
           });
       }
