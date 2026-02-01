@@ -10,7 +10,7 @@
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    emailjs.init("Uklfy56RjdnXIDbVV");
+    emailjs.init("YOUR_PUBLIC_KEY_HERE");
   </script>
 
   <style>
@@ -130,11 +130,14 @@
   <script>
     let emailSubmitted = false;
 
+    // Read Battle ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const battleID = urlParams.get("battle");
 
+    // Disable nav on load
     document.getElementById("navBar").classList.add("nav-disabled");
 
+    // Warn user if they try to leave early
     window.addEventListener("beforeunload", function (e) {
       if (!emailSubmitted) {
         e.preventDefault();
@@ -151,19 +154,28 @@
         return;
       }
 
+      // Store in Google Sheets
       fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
         method: "POST",
-        body: JSON.stringify({ email, battle: battleID })
+        body: JSON.stringify({ 
+          email: email,
+          battle: battleID   // ⭐ MUST MATCH BACKEND
+        })
       });
 
+      // Send confirmation email via EmailJS
       emailjs.send("service_sjny28j", "template_jv61djw", {
-        email,
+        email: email,
         battle: battleID
       })
       .then(() => {
         msg.innerText = "Thanks! Redirecting…";
+
         emailSubmitted = true;
+
+        // Re-enable navigation
         document.getElementById("navBar").classList.remove("nav-disabled");
+
         setTimeout(() => {
           window.location.href = "index.html";
         }, 1200);
