@@ -10,7 +10,7 @@
 
 <body>
 
-  <!-- NAVIGATION (CORRECTED + CONSISTENT) -->
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
 
@@ -23,7 +23,6 @@
     </div>
 
     <a href="vote.html">Vote</a>
-
     <a href="prizes.html">Prizes</a>
 
     <div class="dropdown">
@@ -39,9 +38,7 @@
       <div class="hero-img-wrap">
         <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
 
-        <!-- UPDATED: battle.html → dancers.html -->
         <a href="dancers.html" class="hero-zone hero-left"></a>
-
         <a href="vote.html" class="hero-zone hero-right"></a>
       </div>
     </section>
@@ -72,10 +69,10 @@
 
   <!-- SCRIPT -->
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
-      const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+    document.addEventListener("DOMContentLoaded", function() {
 
       function extractUrlFromInput(raw) {
         let text = raw.trim();
@@ -123,6 +120,7 @@
       const input = document.getElementById("djMixInput");
       const playerContainer = document.getElementById("playerContainer");
 
+      // ⭐ SUBMIT DJ MIX
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
@@ -152,11 +150,8 @@
           encodeURIComponent(url) +
           "&auto_play=true";
 
-        const endpoint =
-          `${SCRIPT_URL}?mode=setsound&url=` +
-          encodeURIComponent(url);
-
-        fetch(endpoint);
+        // ⭐ Backend call (no CORS needed)
+        fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
         playerContainer.innerHTML = `
           <iframe 
@@ -169,6 +164,43 @@
           </iframe>
         `;
       });
+
+      // ⭐ LOAD CURRENT DJ MIX
+      function loadCurrentMix() {
+        fetch(`${SCRIPT_URL}?mode=getsound`)
+          .then(r => r.json())
+          .then(data => {
+            let url = data.sound || "";
+
+            if (!url.startsWith("http")) {
+              playerContainer.innerHTML =
+                "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
+              return;
+            }
+
+            if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
+              url = url.split("?")[0];
+            }
+
+            const embedURL =
+              "https://w.soundcloud.com/player/?url=" +
+              encodeURIComponent(url) +
+              "&auto_play=true";
+
+            playerContainer.innerHTML = `
+              <iframe
+                width="100%"
+                height="166"
+                scrolling="no"
+                frameborder="no"
+                allow="autoplay"
+                src="${embedURL}">
+              </iframe>
+            `;
+          });
+      }
+
+      loadCurrentMix();
     });
   </script>
 
