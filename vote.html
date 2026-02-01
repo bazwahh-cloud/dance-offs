@@ -257,7 +257,15 @@
         return;
       }
 
-      fetch(endpoint + "?mode=vote&side=" + side + "&tx=" + currentTransactionID + "&uid=" + Math.random())
+      fetch(
+  endpoint +
+  "?mode=vote" +
+  "&side=" + side +
+  "&tx=" + currentTransactionID +
+  "&battle=" + currentBattleID +        // ⭐ ADD THIS
+  "&uid=" + Math.random()
+)
+
         .then(r => r.text())
         .then(() => {
 
