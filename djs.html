@@ -37,7 +37,6 @@
   </nav>
 
   <main>
-
     <section class="hero-wrapper hero">
       <div class="hero-img-wrap">
         <img src="dancer-hero2.jpg" alt="Dance-Offs DJs Banner">
@@ -61,7 +60,6 @@
 
       <div id="playerContainer" style="margin-top:20px; min-height:180px;"></div>
     </section>
-
   </main>
 
   <footer class="footer">
@@ -70,10 +68,9 @@
 
   <script>
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/EPlXuG0M4LJvrlPrdIzHFgMp6qDuitC6yBFVoRGO13frofOeeipxYBPkEoUxPOg-anm6-UqyPJSJn_pn/exec";
+      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
     document.addEventListener("DOMContentLoaded", function() {
-
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
@@ -120,7 +117,6 @@
       const input = document.getElementById("djMixInput");
       const playerContainer = document.getElementById("playerContainer");
 
-      // ⭐ SUBMIT DJ MIX
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
@@ -150,7 +146,6 @@
           encodeURIComponent(url) +
           "&auto_play=true";
 
-        // ⭐ Backend call (now supported)
         fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
         playerContainer.innerHTML = `
@@ -168,7 +163,6 @@
         `;
       });
 
-      // ⭐ LOAD CURRENT DJ MIX
       function loadCurrentMix() {
         fetch(`${SCRIPT_URL}?mode=getsound`)
           .then(r => r.json())
