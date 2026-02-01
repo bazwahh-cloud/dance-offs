@@ -153,20 +153,18 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ⭐ Fire-and-forget request (no CORS issues)
+      // ⭐ Fire-and-forget GET with debug flag
       const url =
         endpoint +
         "?mode=setbattle" +
         "&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right);
+        "&right=" + encodeURIComponent(right) +
+        "&debug=1";
 
-      fetch(url, {
-        method: "GET",
-        mode: "no-cors",
-        cache: "no-store"
-      });
+      // Send request but don't wait for response
+      fetch(url, { method: "GET", cache: "no-store" });
 
-      // Immediately redirect
+      // Immediate redirect
       window.location.href = "vote.html";
     }
   </script>
