@@ -14,7 +14,6 @@
       height: 166px;
     }
 
-    /* Allow controls but block click-through */
     .sc-blocker {
       position: absolute;
       top: 0;
@@ -26,7 +25,6 @@
       pointer-events: none;
     }
 
-    /* Match dancers.html video styling */
     .video-slot {
       min-height: 260px;
       background: #000;
@@ -41,13 +39,29 @@
       border: none;
     }
 
-    /* Block YouTube click-through but allow playback */
     .yt-blocker {
       position: absolute;
       inset: 0;
       z-index: 5;
       background: transparent;
-      pointer-events: auto; /* blocks clicks */
+      pointer-events: auto;
+    }
+
+    /* ⭐ NEW: Put URL box + submit button on same line */
+    .dj-form-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .dj-form-row input {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .dj-form-row button {
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -68,14 +82,17 @@
     <section class="page-container" style="text-align:center; margin-top:40px;">
       <p class="instruction-line">Submit your DJ mix below.</p>
 
+      <!-- ⭐ UPDATED FORM ROW -->
       <form id="djMixForm">
-        <input 
-          type="text" 
-          id="djMixInput" 
-          class="input-field"
-          placeholder="SoundCloud URL"
-        >
-        <button type="submit" class="vote-button">Submit</button>
+        <div class="dj-form-row">
+          <input 
+            type="text" 
+            id="djMixInput" 
+            class="input-field"
+            placeholder="SoundCloud URL"
+          >
+          <button type="submit" class="vote-button">Submit</button>
+        </div>
       </form>
 
       <div id="playerContainer" style="margin-top:20px; min-height:180px;"></div>
@@ -107,7 +124,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
       /* ----------------------------------------------------
-         SOUNDCLOUD LOGIC (unchanged)
+         SOUNDCLOUD LOGIC
       ---------------------------------------------------- */
       function extractUrlFromInput(raw) {
         let text = raw.trim();
@@ -261,7 +278,7 @@
                 <div class="yt-blocker"></div>
                 <iframe 
                   class="battle-frame"
-                  src="https://www.youtube.com/embed/${leftID}?autoplay=0&mute=0&loop=0&modestbranding=1&rel=0&controls=1"
+                  src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&loop=1&playlist=${leftID}&modestbranding=1&rel=0&controls=1"
                   allow="autoplay; encrypted-media"
                   allowfullscreen>
                 </iframe>
@@ -275,7 +292,7 @@
                 <div class="yt-blocker"></div>
                 <iframe 
                   class="battle-frame"
-                  src="https://www.youtube.com/embed/${rightID}?autoplay=0&mute=0&loop=0&modestbranding=1&rel=0&controls=1"
+                  src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
                   allow="autoplay; encrypted-media"
                   allowfullscreen>
                 </iframe>
