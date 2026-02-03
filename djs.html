@@ -47,7 +47,6 @@
       pointer-events: auto;
     }
 
-    /* ⭐ NEW: Put URL box + submit button on same line */
     .dj-form-row {
       display: flex;
       justify-content: center;
@@ -78,11 +77,9 @@
   </nav>
 
   <main>
+    <section class="page-container" style="text-align:center;">
+      <p class="instruction-line" style="margin-top:10px;">Submit your DJ mix below.</p>
 
-    <section class="page-container" style="text-align:center; margin-top:40px;">
-      <p class="instruction-line">Submit your DJ mix below.</p>
-
-      <!-- ⭐ UPDATED FORM ROW -->
       <form id="djMixForm">
         <div class="dj-form-row">
           <input 
@@ -95,21 +92,18 @@
         </div>
       </form>
 
-      <div id="playerContainer" style="margin-top:20px; min-height:180px;"></div>
+      <div id="playerContainer" style="margin-top:10px; min-height:180px;"></div>
 
-      <!-- ⭐ YOUTUBE VIDEOS FROM GETBATTLE -->
-      <table class="battle-table" cellspacing="10" align="center" style="margin-top:40px;">
+      <table class="battle-table" cellspacing="10" align="center" style="margin-top:20px;">
         <tr>
           <td style="width:50%; text-align:center;">
             <div class="video-slot" id="djLeftVideo"></div>
           </td>
-
           <td style="width:50%; text-align:center;">
             <div class="video-slot" id="djRightVideo"></div>
           </td>
         </tr>
       </table>
-
     </section>
   </main>
 
@@ -122,10 +116,6 @@
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
     document.addEventListener("DOMContentLoaded", function() {
-
-      /* ----------------------------------------------------
-         SOUNDCLOUD LOGIC
-      ---------------------------------------------------- */
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
@@ -257,9 +247,6 @@
 
       loadCurrentMix();
 
-      /* ----------------------------------------------------
-         LOAD YOUTUBE VIDEOS FROM GETBATTLE
-      ---------------------------------------------------- */
       function extractID(url) {
         if (!url) return null;
         const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -287,22 +274,4 @@
           }
 
           if (rightID) {
-            document.getElementById("djRightVideo").innerHTML = `
-              <div style="position:relative;">
-                <div class="yt-blocker"></div>
-                <iframe 
-                  class="battle-frame"
-                  src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
-                  allow="autoplay; encrypted-media"
-                  allowfullscreen>
-                </iframe>
-              </div>
-            `;
-          }
-        });
-
-    });
-  </script>
-
-</body>
-</html>
+            document.getElementById("
