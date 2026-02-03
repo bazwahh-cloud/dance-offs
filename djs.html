@@ -25,16 +25,18 @@
       pointer-events: none;
     }
 
+    /* Prevent YouTube collapse */
     .video-slot {
-      min-height: 260px;
+      height: 260px;          /* locked height */
       background: #000;
       border-radius: 8px;
       position: relative;
+      overflow: hidden;
     }
 
     .battle-frame {
       width: 100%;
-      height: 260px;
+      height: 100%;           /* fill container */
       border-radius: 8px;
       border: none;
     }
@@ -47,11 +49,12 @@
       pointer-events: auto;
     }
 
+    /* URL + Submit on same line */
     .dj-form-row {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     .dj-form-row input {
@@ -61,6 +64,23 @@
 
     .dj-form-row button {
       white-space: nowrap;
+    }
+
+    /* ⭐ Pull content tight under nav bar */
+    .page-container {
+      padding-top: 5px !important;
+      margin-top: 0 !important;
+    }
+
+    .instruction-line {
+      margin-top: 5px !important;
+      margin-bottom: 5px !important;
+    }
+
+    /* Keep table from collapsing */
+    .battle-table {
+      width: 100%;
+      table-layout: fixed;
     }
   </style>
 </head>
@@ -78,7 +98,7 @@
 
   <main>
     <section class="page-container" style="text-align:center;">
-      <p class="instruction-line" style="margin-top:10px;">Submit your DJ mix below.</p>
+      <p class="instruction-line">Submit your DJ mix below.</p>
 
       <form id="djMixForm">
         <div class="dj-form-row">
@@ -94,12 +114,12 @@
 
       <div id="playerContainer" style="margin-top:10px; min-height:180px;"></div>
 
-      <table class="battle-table" cellspacing="10" align="center" style="margin-top:20px;">
+      <table class="battle-table" cellspacing="10" align="center" style="margin-top:10px;">
         <tr>
-          <td style="width:50%; text-align:center;">
+          <td>
             <div class="video-slot" id="djLeftVideo"></div>
           </td>
-          <td style="width:50%; text-align:center;">
+          <td>
             <div class="video-slot" id="djRightVideo"></div>
           </td>
         </tr>
@@ -116,6 +136,7 @@
       "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
     document.addEventListener("DOMContentLoaded", function() {
+
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
@@ -261,7 +282,7 @@
 
           if (leftID) {
             document.getElementById("djLeftVideo").innerHTML = `
-              <div style="position:relative;">
+              <div style="position:relative; height:100%;">
                 <div class="yt-blocker"></div>
                 <iframe 
                   class="battle-frame"
@@ -274,4 +295,22 @@
           }
 
           if (rightID) {
-            document.getElementById("
+            document.getElementById("djRightVideo").innerHTML = `
+              <div style="position:relative; height:100%;">
+                <div class="yt-blocker"></div>
+                <iframe 
+                  class="battle-frame"
+                  src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen>
+                </iframe>
+              </div>
+            `;
+          }
+        });
+
+    });
+  </script>
+
+</body>
+</html>
