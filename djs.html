@@ -8,53 +8,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    .sc-wrapper {
-      position: relative;
-      width: 100%;
-      height: 166px;
+    /* Remove all top spacing */
+    .page-container {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
     }
 
-    .sc-blocker {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      background: transparent;
-      pointer-events: none;
+    .instruction-line {
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
-    /* Prevent YouTube collapse */
-    .video-slot {
-      height: 260px;          /* locked height */
-      background: #000;
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .battle-frame {
-      width: 100%;
-      height: 100%;           /* fill container */
-      border-radius: 8px;
-      border: none;
-    }
-
-    .yt-blocker {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      background: transparent;
-      pointer-events: auto;
-    }
-
-    /* URL + Submit on same line */
     .dj-form-row {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-top: 5px;
+      margin: 5px 0 0 0 !important;
+      padding: 0 !important;
     }
 
     .dj-form-row input {
@@ -66,21 +36,61 @@
       white-space: nowrap;
     }
 
-    /* ⭐ Pull content tight under nav bar */
-    .page-container {
-      padding-top: 5px !important;
-      margin-top: 0 !important;
-    }
-
-    .instruction-line {
+    #playerContainer {
       margin-top: 5px !important;
-      margin-bottom: 5px !important;
+      padding: 0 !important;
     }
 
-    /* Keep table from collapsing */
+    /* SoundCloud wrapper */
+    .sc-wrapper {
+      position: relative;
+      width: 100%;
+      height: 150px; /* slightly shorter to match dancers page spacing */
+    }
+
+    .sc-blocker {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    /* YouTube video slots */
+    .video-slot {
+      height: 240px; /* matches dancers page height */
+      background: #000;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .battle-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .yt-blocker {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background: transparent;
+      pointer-events: auto;
+    }
+
+    /* Prevent table collapse */
     .battle-table {
       width: 100%;
       table-layout: fixed;
+      margin-top: 10px !important;
+      padding: 0 !important;
+    }
+
+    td {
+      padding: 0 !important;
+      margin: 0 !important;
     }
   </style>
 </head>
@@ -112,9 +122,9 @@
         </div>
       </form>
 
-      <div id="playerContainer" style="margin-top:10px; min-height:180px;"></div>
+      <div id="playerContainer" style="min-height:150px;"></div>
 
-      <table class="battle-table" cellspacing="10" align="center" style="margin-top:10px;">
+      <table class="battle-table" cellspacing="10" align="center">
         <tr>
           <td>
             <div class="video-slot" id="djLeftVideo"></div>
@@ -218,7 +228,7 @@
           <div class="sc-wrapper">
             <iframe 
               width="100%" 
-              height="166" 
+              height="150" 
               scrolling="no" 
               frameborder="no" 
               allow="autoplay"
@@ -254,7 +264,7 @@
               <div class="sc-wrapper">
                 <iframe
                   width="100%"
-                  height="166"
+                  height="150"
                   scrolling="no"
                   frameborder="no"
                   allow="autoplay"
