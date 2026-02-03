@@ -92,9 +92,13 @@
         </td>
       </tr>
 
+      <!-- ⭐ NEW BUTTON ROW -->
       <tr>
         <td colspan="2" style="text-align:center;">
-          <button class="save-button" onclick="saveBattle()">Go to Vote</button>
+          <div style="display:flex; justify-content:center; gap:20px;">
+            <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
+            <button class="save-button" style="width:140px;" onclick="goVote()">Vote</button>
+          </div>
         </td>
       </tr>
 
@@ -157,9 +161,9 @@
     }
 
     /* -----------------------------
-       SAVE BATTLE (instant save, delayed redirect)
+       LOAD ONLY (preview + save)
     ------------------------------*/
-    function saveBattle() {
+    function loadBattleOnly() {
       const left = document.getElementById("leftUrl").value.trim();
       const right = document.getElementById("rightUrl").value.trim();
 
@@ -171,11 +175,11 @@
         return;
       }
 
-      // Show previews immediately
+      // Show previews
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // ⭐ Save to sheet immediately
+      // Save to sheet
       const url =
         endpoint +
         "?mode=setbattle" +
@@ -183,11 +187,13 @@
         "&right=" + encodeURIComponent(right);
 
       fetch(url, { method: "GET", cache: "no-store" });
+    }
 
-      // ⭐ Delay ONLY the redirect
-      setTimeout(() => {
-        window.location.href = "vote.html";
-      }, 5000);
+    /* -----------------------------
+       VOTE BUTTON (simple redirect)
+    ------------------------------*/
+    function goVote() {
+      window.location.href = "vote.html";
     }
 
     /* -----------------------------
