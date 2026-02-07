@@ -64,7 +64,6 @@
       box-shadow: 0 0 14px #ffe066;
     }
 
-    /* Disabled vote button */
     .disabled-btn {
       opacity: 0.4;
       pointer-events: none;
@@ -101,31 +100,31 @@
         </td>
       </tr>
 
-      <!-- BUTTON ROW -->
       <tr>
         <td colspan="2" style="text-align:center;">
           <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
-
-            <!-- Load Button -->
             <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
-
-            <!-- Vote Button (disabled initially) -->
             <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
-
           </div>
         </td>
       </tr>
 
       <tr>
         <td class="battle-cell">
-          <div id="leftVideo" class="video-slot"></div>
+          <div class="video-wrapper">
+            <div id="leftVideo" class="video-slot"></div>
+            <div id="leftUrlDisplay" style="color:#ffcc00; font-size:14px; margin-top:6px; word-break:break-all;"></div>
+          </div>
         </td>
+
         <td class="battle-cell">
-          <div id="rightVideo" class="video-slot"></div>
+          <div class="video-wrapper">
+            <div id="rightVideo" class="video-slot"></div>
+            <div id="rightUrlDisplay" style="color:#ffcc00; font-size:14px; margin-top:6px; word-break:break-all;"></div>
+          </div>
         </td>
       </tr>
 
-      <!-- DJ PLAYER UNDERNEATH -->
       <tr>
         <td colspan="2">
           <div id="djPlayer" style="margin-top:20px; min-height:180px;"></div>
@@ -143,9 +142,6 @@
   <script>
     const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
-    /* -----------------------------
-       YOUTUBE ID EXTRACTION
-    ------------------------------*/
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
@@ -157,9 +153,6 @@
       return null;
     }
 
-    /* -----------------------------
-       EMBED YOUTUBE
-    ------------------------------*/
     function embed(id) {
       return `
         <div style="position:relative;">
@@ -174,9 +167,6 @@
       `;
     }
 
-    /* -----------------------------
-       ENABLE VOTE BUTTON
-    ------------------------------*/
     function enableVoteButton() {
       const btn = document.getElementById("voteBtn");
       btn.classList.remove("disabled-btn");
@@ -184,9 +174,6 @@
       btn.style.pointerEvents = "auto";
     }
 
-    /* -----------------------------
-       LOAD ONLY (preview + save)
-    ------------------------------*/
     function loadBattleOnly() {
       const left = document.getElementById("leftUrl").value.trim();
       const right = document.getElementById("rightUrl").value.trim();
@@ -199,14 +186,14 @@
         return;
       }
 
-      // Show previews
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // Enable Vote button only after successful Load
+      document.getElementById("leftUrlDisplay").innerText = left;
+      document.getElementById("rightUrlDisplay").innerText = right;
+
       enableVoteButton();
 
-      // Save to sheet
       const url =
         endpoint +
         "?mode=setbattle" +
@@ -216,16 +203,10 @@
       fetch(url, { method: "GET", cache: "no-store" });
     }
 
-    /* -----------------------------
-       VOTE BUTTON (simple redirect)
-    ------------------------------*/
     function goVote() {
       window.location.href = "vote.html";
     }
 
-    /* -----------------------------
-       LOAD CURRENT BATTLE
-    ------------------------------*/
     function loadCurrentBattle() {
       fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
@@ -244,14 +225,11 @@
           if (idL) document.getElementById("leftVideo").innerHTML = embed(idL);
           if (idR) document.getElementById("rightVideo").innerHTML = embed(idR);
 
-          // IMPORTANT: do NOT enable the vote button here
-          // User must still click Load this session
+          document.getElementById("leftUrlDisplay").innerText = left;
+          document.getElementById("rightUrlDisplay").innerText = right;
         });
     }
 
-    /* -----------------------------
-       LOAD DJ MIX
-    ------------------------------*/
     function loadDJMix() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -289,9 +267,6 @@
         });
     }
 
-    /* -----------------------------
-       INITIAL LOAD
-    ------------------------------*/
     loadCurrentBattle();
     loadDJMix();
   </script>
