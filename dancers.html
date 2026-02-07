@@ -64,7 +64,7 @@
       box-shadow: 0 0 14px #ffe066;
     }
 
-    /* Disabled vote button (HTML-only styling) */
+    /* Disabled vote button */
     .disabled-btn {
       opacity: 0.4;
       pointer-events: none;
@@ -101,7 +101,7 @@
         </td>
       </tr>
 
-      <!-- ⭐ BUTTON ROW -->
+      <!-- BUTTON ROW -->
       <tr>
         <td colspan="2" style="text-align:center;">
           <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
@@ -110,10 +110,7 @@
             <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
 
             <!-- Vote Button (disabled initially) -->
-            <div style="display:flex; flex-direction:column; align-items:center;">
-              <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
-              <span id="arrowHint" style="color:#ffcc00; font-size:14px; margin-top:4px;">⬅ Load first</span>
-            </div>
+            <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
 
           </div>
         </td>
@@ -128,7 +125,7 @@
         </td>
       </tr>
 
-      <!-- ⭐ DJ PLAYER UNDERNEATH -->
+      <!-- DJ PLAYER UNDERNEATH -->
       <tr>
         <td colspan="2">
           <div id="djPlayer" style="margin-top:20px; min-height:180px;"></div>
@@ -182,13 +179,9 @@
     ------------------------------*/
     function enableVoteButton() {
       const btn = document.getElementById("voteBtn");
-      const hint = document.getElementById("arrowHint");
-
       btn.classList.remove("disabled-btn");
       btn.style.opacity = "1";
       btn.style.pointerEvents = "auto";
-
-      hint.style.display = "none";
     }
 
     /* -----------------------------
@@ -210,7 +203,7 @@
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
 
-      // Enable Vote button
+      // Enable Vote button only after successful Load
       enableVoteButton();
 
       // Save to sheet
@@ -251,8 +244,8 @@
           if (idL) document.getElementById("leftVideo").innerHTML = embed(idL);
           if (idR) document.getElementById("rightVideo").innerHTML = embed(idR);
 
-          // Auto-enable vote button if a battle already exists
-          enableVoteButton();
+          // IMPORTANT: do NOT enable the vote button here
+          // User must still click Load this session
         });
     }
 
