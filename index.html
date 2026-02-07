@@ -129,9 +129,9 @@
       e.preventDefault();
 
       emailjs.send("service_sjny28j", "template_w5wm7tl", {
-        from_name: document.getElementById("name").value,
-        reply_to: document.getElementById("email").value,
-        message: document.getElementById("message").value
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        title: document.getElementById("message").value
       })
       .then(function() {
         document.getElementById("formStatus").style.display = "block";
