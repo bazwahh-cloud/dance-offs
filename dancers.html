@@ -63,6 +63,15 @@
       background: #ffe066;
       box-shadow: 0 0 14px #ffe066;
     }
+
+    /* Disabled vote button (HTML-only styling) */
+    .disabled-btn {
+      opacity: 0.4;
+      pointer-events: none;
+      background: #777 !important;
+      box-shadow: none !important;
+      cursor: default !important;
+    }
   </style>
 </head>
 
@@ -92,12 +101,20 @@
         </td>
       </tr>
 
-      <!-- ⭐ NEW BUTTON ROW -->
+      <!-- ⭐ BUTTON ROW -->
       <tr>
         <td colspan="2" style="text-align:center;">
-          <div style="display:flex; justify-content:center; gap:20px;">
+          <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
+
+            <!-- Load Button -->
             <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
-            <button class="save-button" style="width:140px;" onclick="goVote()">Vote</button>
+
+            <!-- Vote Button (disabled initially) -->
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
+              <span id="arrowHint" style="color:#ffcc00; font-size:14px; margin-top:4px;">⬅ Load first</span>
+            </div>
+
           </div>
         </td>
       </tr>
@@ -123,7 +140,7 @@
   </main>
 
   <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
+    © 2026 Dance-Offs. All rights reserved.
   </footer>
 
   <script>
@@ -161,6 +178,20 @@
     }
 
     /* -----------------------------
+       ENABLE VOTE BUTTON
+    ------------------------------*/
+    function enableVoteButton() {
+      const btn = document.getElementById("voteBtn");
+      const hint = document.getElementById("arrowHint");
+
+      btn.classList.remove("disabled-btn");
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+
+      hint.style.display = "none";
+    }
+
+    /* -----------------------------
        LOAD ONLY (preview + save)
     ------------------------------*/
     function loadBattleOnly() {
@@ -178,6 +209,9 @@
       // Show previews
       document.getElementById("leftVideo").innerHTML = embed(idL);
       document.getElementById("rightVideo").innerHTML = embed(idR);
+
+      // Enable Vote button
+      enableVoteButton();
 
       // Save to sheet
       const url =
@@ -216,6 +250,9 @@
 
           if (idL) document.getElementById("leftVideo").innerHTML = embed(idL);
           if (idR) document.getElementById("rightVideo").innerHTML = embed(idR);
+
+          // Auto-enable vote button if a battle already exists
+          enableVoteButton();
         });
     }
 
