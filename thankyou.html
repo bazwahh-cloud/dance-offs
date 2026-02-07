@@ -1,191 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dance-Offs: Thank You</title>
+<script>
+  let emailSubmitted = false;
 
-  <link rel="stylesheet" href="style2.css?v=1050">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  const urlParams = new URLSearchParams(window.location.search);
+  const battleID = urlParams.get("battle");
 
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    emailjs.init("YOUR_PUBLIC_KEY_HERE");
-  </script>
+  document.getElementById("navBar").classList.add("nav-disabled");
 
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      font-family: 'Inter', sans-serif;
-      color: white;
+  window.addEventListener("beforeunload", function (e) {
+    if (!emailSubmitted) {
+      e.preventDefault();
+      e.returnValue = "We need your email so we can notify you if you win!";
+    }
+  });
+
+  function submitEmail() {
+    const email = document.getElementById("emailInput").value.trim();
+    const msg = document.getElementById("emailMessage");
+
+    if (!email) {
+      msg.innerText = "Please enter an email.";
+      return;
     }
 
-    .navbar.nav-disabled {
-      opacity: 0.35;
-      pointer-events: none;
-      filter: grayscale(100%);
-    }
-
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 80vh;
-      padding: 60px 20px 40px;
-      text-align: center;
-    }
-
-    .hero-title {
-      font-family: 'Bangers', cursive;
-      font-size: 64px;
-      color: #ffcc00;
-      margin-bottom: 20px;
-    }
-
-    .hero-sub {
-      font-size: 22px;
-      color: #ccc;
-      margin-bottom: 30px;
-    }
-
-    .email-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .email-input {
-      padding: 12px;
-      width: 100%;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-    }
-
-    .submit-btn {
-      padding: 12px 25px;
-      background: #0077cc;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 18px;
-      width: 100%;
-    }
-
-    .submit-btn:hover {
-      background: #005fa3;
-    }
-
-    #emailMessage {
-      font-size: 16px;
-      color: #aaa;
-      margin-top: 10px;
-      min-height: 24px;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      color: #666;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- NAVIGATION -->
-  <nav class="navbar nav-disabled" id="navBar">
-    <a href="index.html" class="active">Home</a>
-    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
-    <div class="dropdown"><a href="djs.html">DJs</a></div>
-    <a href="vote.html">Vote</a>
-    <a href="prizes.html">Prizes</a>
-    <div class="dropdown"><a href="shop.html">Shop</a></div>
-  </nav>
-
-  <!-- HERO SECTION -->
-  <div class="hero">
-    <div class="hero-title">Thank You!</div>
-    <div class="hero-sub">Enter your email to continue</div>
-
-    <div class="email-box">
-      <input id="emailInput" type="email" class="email-input" placeholder="you@example.com">
-      <button class="submit-btn" onclick="submitEmail()">Submit</button>
-      <div id="emailMessage"></div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    © 2026 Dance-Offs — Built by Baz
-  </footer>
-
-  <script>
-    let emailSubmitted = false;
-
-    // Read Battle ID from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const battleID = urlParams.get("battle");
-
-    // Disable nav on load
-    document.getElementById("navBar").classList.add("nav-disabled");
-
-    // Warn user if they try to leave early
-    window.addEventListener("beforeunload", function (e) {
-      if (!emailSubmitted) {
-        e.preventDefault();
-        e.returnValue = "We need your email so we can notify you if you win!";
-      }
-    });
-
-    function submitEmail() {
-      const email = document.getElementById("emailInput").value.trim();
-      const msg = document.getElementById("emailMessage");
-
-      if (!email) {
-        msg.innerText = "Please enter an email.";
-        return;
-      }
-
-      // Store in Google Sheets
-      fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
-        method: "POST",
-        body: JSON.stringify({ 
-          email: email,
-          battle: battleID   // ⭐ MUST MATCH BACKEND
-        })
-      });
-
-      // Send confirmation email via EmailJS
-      emailjs.send("service_sjny28j", "template_jv61djw", {
+    // Store in Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
+      method: "POST",
+      body: JSON.stringify({ 
         email: email,
         battle: battleID
       })
-      .then(() => {
-        msg.innerText = "Thanks! Redirecting…";
+    });
 
-        emailSubmitted = true;
+    // Send confirmation email via EmailJS
+    emailjs.send("service_sjny28j", "template_jv61djw", {
+      name: email,          // REQUIRED
+      email: email,         // REQUIRED
+      title: battleID,      // REQUIRED
+      battle: battleID      // REQUIRED
+    })
+    .then(() => {
+      msg.innerText = "Thanks! Redirecting…";
 
-        // Re-enable navigation
-        document.getElementById("navBar").classList.remove("nav-disabled");
+      emailSubmitted = true;
 
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 1200);
-      })
-      .catch((err) => {
-        msg.innerText = "Error sending email. Please try again.";
-        console.error(err);
-      });
-    }
-  </script>
+      document.getElementById("navBar").classList.remove("nav-disabled");
 
-</body>
-</html>
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1200);
+    })
+    .catch((err) => {
+      msg.innerText = "Error sending email. Please try again.";
+      console.error(err);
+    });
+  }
+</script>
