@@ -13,13 +13,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Upload to Fasthosts via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v3.1.1
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./   # your repo root
-          server-dir: /public_html/   # Fasthosts web root
+          local-dir: ./          # your repo root
+          server-dir: /public_html/   # change to /htdocs/ if Fasthosts requires it
           exclude: |
             **/.git*
             **/.github*
