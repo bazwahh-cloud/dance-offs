@@ -15,8 +15,8 @@ jobs:
       - name: Upload to Fasthosts via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
+          server: ${{ secrets.FTP_HOST }}      # ftp.fasthosts.co.uk
+          username: ${{ secrets.FTP_USERNAME }} # bazwahh
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /htdocs/
+          server-dir: /bazwahh/HTDOCS/
