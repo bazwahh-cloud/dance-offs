@@ -15,12 +15,8 @@ jobs:
       - name: Upload to Fasthosts via FTP
         uses: SamKirkland/FTP-Deploy-Action@v3.1.1
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./          # your repo root
-          server-dir: /public_html/   # change to /htdocs/ if Fasthosts requires it
-          exclude: |
-            **/.git*
-            **/.github*
-            README.md
+          ftp-server: ${{ secrets.FTP_HOST }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./               # your repo root
+          git-ftp-args: --remote-root /public_html/
