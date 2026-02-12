@@ -146,7 +146,7 @@ p {
   min-height: 200px;
 }
 
-/* FAQ ITEMS — FIXED WIDTH ON DESKTOP, FLUID ON MOBILE */
+/* FAQ ITEMS */
 .faq-item {
   width: 600px;
   margin-bottom: 10px;
@@ -253,21 +253,24 @@ p {
 }
 
 /* -----------------------------------------
-   MOBILE PORTRAIT OPTIMISATION (Baz Edition)
+   MOBILE PORTRAIT OPTIMISATION (Option 2)
    ----------------------------------------- */
 @media (max-width: 600px) {
 
-  /* NAVBAR — bigger, clearer, more tappable */
+  /* ⭐ TWO-ROW MOBILE NAVIGATION (Option 2) */
   .navbar {
     flex-wrap: wrap;
-    gap: 20px;
+    justify-content: center;
+    row-gap: 14px;
+    column-gap: 14px;
     padding: 16px 10px;
-    font-size: 20px;
   }
 
   .navbar a {
-    padding: 10px 8px;
+    flex: 1 1 40%;      /* two items per row */
+    text-align: center;
     font-size: 20px;
+    padding: 12px 0;
   }
 
   /* HERO */
