@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <!-- ⭐ CRITICAL FOR MOBILE RESPONSIVENESS -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Dance-Offs: Home</title>
@@ -11,7 +9,6 @@
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- EMAILJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function() {
@@ -22,90 +19,67 @@
 
 <body>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html" class="active">Home</a>
-
-    <div class="dropdown">
-      <a href="dancers.html">Dancers</a>
-    </div>
-
-    <div class="dropdown">
-      <a href="djs.html">DJs</a>
-    </div>
-
+    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
+    <div class="dropdown"><a href="djs.html">DJs</a></div>
     <a href="vote.html">Vote</a>
-
     <a href="prizes.html">Prizes</a>
-
-    <div class="dropdown">
-      <a href="shop.html">Shop</a>
-    </div>
+    <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
-
       <a href="dancers.html" class="hero-zone hero-left"></a>
       <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <main class="page-container" style="text-align:center;">
 
     <p class="instruction-line" style="max-width:800px; margin:20px auto; line-height:1.6;">
       Vote for your favourite dancer — left or right — and you could win the Prize Draw!
     </p>
 
-    <!-- ⭐ CENTERED COLLAPSIBLE FAQ -->
     <section style="max-width:900px; margin:40px auto;">
-
       <h2 style="text-align:center;">Frequently Asked Questions</h2>
 
       <div align="center">
 
-        <details style="width:600px; margin-bottom:10px;">
+        <details class="faq-item">
           <summary style="text-align:center; font-style:italic; list-style:none;">&lt; How do I enter to win? &gt;</summary>
           <p style="color:#0066ff;">Every paid vote counts as one entry into that months Prize Draw. The more votes you cast, the more chances you have to win!</p>
         </details>
 
-        <details style="width:600px; margin-bottom:10px;">
+        <details class="faq-item">
           <summary style="text-align:center; font-style:italic; list-style:none;">&lt; How is the winning ticket drawn? &gt;</summary>
           <p style="color:#0066ff;">At the end of each month, all valid paid votes are placed into a randomised draw. One lucky entry is selected at random using a secure, automated system.</p>
         </details>
 
-        <details style="width:600px; margin-bottom:10px;">
+        <details class="faq-item">
           <summary style="text-align:center; font-style:italic; list-style:none;">&lt; What is this month's prize? &gt;</summary>
-          <p style="color:#0066ff;">This month’s prize is shown on the Prize page. </p>
+          <p style="color:#0066ff;">This month’s prize is shown on the Prize page.</p>
         </details>
 
-        <details style="width:600px; margin-bottom:10px;">
+        <details class="faq-item">
           <summary style="text-align:center; font-style:italic; list-style:none;">&lt; What happens if I can’t attend the event? &gt;</summary>
           <p style="color:#0066ff;">You can nominate someone else to attend in your place, or choose a cash alternative.</p>
         </details>
 
-        <details style="width:600px; margin-bottom:10px;">
+        <details class="faq-item">
           <summary style="text-align:center; font-style:italic; list-style:none;">&lt; How will I know if I win? &gt;</summary>
           <p style="color:#0066ff;">Winners are contacted directly via the email address used during voting. Make sure your email is correct when you cast your vote!</p>
         </details>
 
-        <!-- ⭐ NEW FAQ: HOW TO CONTACT -->
-        <details style="width:600px; margin-bottom:10px;">
+        <details class="faq-item">
           <summary style="text-align:center; font-style:italic; list-style:none;">&lt; How do I contact Dance-Offs? &gt;</summary>
-          <p style="color:#0066ff;">
-            You can reach us anytime using the contact form at the bottom of this page.
-            Enter your name, email, and message — we’ll get back to you as soon as possible!
-          </p>
+          <p style="color:#0066ff;">Use the contact form at the bottom of this page.</p>
         </details>
 
       </div>
-
     </section>
 
-    <!-- ⭐ CONTACT FORM (NOW RESPONSIVE — NO INLINE WIDTHS) -->
     <section id="contact" class="contact-section">
       <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px;">Contact Us</h2>
 
@@ -132,14 +106,12 @@
 
   </main>
 
-  <!-- ⭐ FOOTER WITH AUTO LAST UPDATED -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
     <span id="lastUpdated"></span>
   </footer>
 
-  <!-- EMAILJS FORM HANDLER -->
   <script>
     document.getElementById("contactForm").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -158,7 +130,6 @@
     });
   </script>
 
-  <!-- ⭐ LAST UPDATED SCRIPT -->
   <script>
     const updated = new Date(document.lastModified);
     document.getElementById("lastUpdated").textContent =
