@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <!-- ⭐ CRITICAL FOR MOBILE RESPONSIVENESS -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Dance-Offs: Home</title>
@@ -11,7 +9,6 @@
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- EMAILJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function() {
@@ -22,7 +19,7 @@
 
 <body>
 
-  <!-- ⭐ NAVIGATION (CLEAN, GRID-FRIENDLY) -->
+  <!-- ⭐ CLEAN, GRID-FRIENDLY NAVIGATION -->
   <nav class="navbar">
     <a href="index.html" class="active">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -49,7 +46,7 @@
       Vote for your favourite dancer — left or right — and you could win the Prize Draw!
     </p>
 
-    <!-- ⭐ FAQ SECTION -->
+    <!-- FAQ -->
     <section style="max-width:900px; margin:40px auto;">
       <h2 style="text-align:center;">Frequently Asked Questions</h2>
 
@@ -88,7 +85,7 @@
       </div>
     </section>
 
-    <!-- ⭐ CONTACT FORM -->
+    <!-- CONTACT -->
     <section id="contact" class="contact-section">
       <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px;">Contact Us</h2>
 
@@ -115,14 +112,14 @@
 
   </main>
 
-  <!-- ⭐ FOOTER -->
+  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
     <span id="lastUpdated"></span>
   </footer>
 
-  <!-- EMAILJS FORM HANDLER -->
+  <!-- EMAILJS -->
   <script>
     document.getElementById("contactForm").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -141,7 +138,7 @@
     });
   </script>
 
-  <!-- LAST UPDATED SCRIPT -->
+  <!-- LAST UPDATED -->
   <script>
     const updated = new Date(document.lastModified);
     document.getElementById("lastUpdated").textContent =
