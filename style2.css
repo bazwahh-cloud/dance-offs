@@ -241,16 +241,21 @@ p {
    ----------------------------------------- */
 @media (max-width: 600px) {
 
-  /* NAVBAR */
+  /* NAVBAR — improved mobile sizing */
   .navbar {
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 6px;
-    font-size: 16px;
+    gap: 14px;
+    padding: 12px 8px;
+    font-size: 18px;
   }
 
   .navbar a {
-    padding: 6px 4px;
+    padding: 8px 6px;
+    font-size: 18px;
+  }
+
+  .navbar .active {
+    border-bottom-width: 3px;
   }
 
   /* HERO */
