@@ -146,7 +146,13 @@ p {
   min-height: 200px;
 }
 
-/* CONTACT SECTION (NEW, RESPONSIVE) */
+/* FAQ ITEMS — FIXED WIDTH ON DESKTOP, FLUID ON MOBILE */
+.faq-item {
+  width: 600px;
+  margin-bottom: 10px;
+}
+
+/* CONTACT SECTION */
 .contact-section {
   max-width: 600px;
   margin: 60px auto;
@@ -290,6 +296,14 @@ p {
   .page-container {
     padding: 0 12px;
     margin-top: 10px;
+  }
+
+  /* FAQ — FULLY RESPONSIVE */
+  .faq-item {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   /* CONTACT SECTION — fully responsive */
