@@ -109,7 +109,7 @@ p {
   margin: 0 auto;
   min-height: 216px;
   overflow: visible;
-  margin-bottom: 0; /* tightened */
+  margin-bottom: 0;
 }
 
 .hero-img-wrap img {
@@ -118,11 +118,11 @@ p {
   display: block;
 }
 
-/* OVERLAY CLICK ZONES — trimmed by 5% */
+/* OVERLAY CLICK ZONES */
 .hero-zone {
   position: absolute;
   top: 0;
-  height: 95%;   /* ← the ONLY change */
+  height: 95%;
   width: 50%;
   z-index: 5;
 }
@@ -130,7 +130,7 @@ p {
 .hero-left { left: 0; }
 .hero-right { right: 0; }
 
-/* INSTRUCTION LINE — flush under banner */
+/* INSTRUCTION LINE */
 .instruction-line {
   text-align: center;
   margin: 0 0 6px;
@@ -138,7 +138,7 @@ p {
   color: #ccc;
 }
 
-/* PAGE LAYOUT — pulled up */
+/* PAGE LAYOUT */
 .page-container {
   max-width: 900px;
   margin: 4px auto;
@@ -170,7 +170,7 @@ p {
   margin-top: 8px;
 }
 
-/* FOOTER — reduced spacing */
+/* FOOTER */
 .footer {
   text-align: center;
   margin: 30px auto 0;
@@ -180,7 +180,7 @@ p {
   width: 100%;
 }
 
-/* BATTLE TABLE LAYOUT */
+/* BATTLE TABLE */
 .battle-table {
   margin: 4px auto;
   border-spacing: 10px;
@@ -227,6 +227,89 @@ p {
     display: block;
     width: 100% !important;
     margin-bottom: 30px;
+  }
+
+  .battle-frame {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* -----------------------------------------
+   MOBILE PORTRAIT OPTIMISATION (Baz Edition)
+   ----------------------------------------- */
+@media (max-width: 600px) {
+
+  /* NAVBAR */
+  .navbar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 6px;
+    font-size: 16px;
+  }
+
+  .navbar a {
+    padding: 6px 4px;
+  }
+
+  /* HERO */
+  .hero-img-wrap {
+    max-width: 100%;
+    min-height: auto;
+  }
+
+  .hero-img-wrap img {
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-zone {
+    height: 100%;
+    width: 50%;
+  }
+
+  /* INSTRUCTION TEXT */
+  .instruction-line {
+    font-size: 16px;
+    padding: 0 10px;
+  }
+
+  /* PAGE CONTAINER */
+  .page-container {
+    padding: 0 12px;
+    margin-top: 10px;
+  }
+
+  /* FAQ + CONTACT SECTIONS */
+  details,
+  #contact,
+  section[style*="max-width"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* TEXT SIZES */
+  h1, h2 {
+    font-size: 28px !important;
+  }
+
+  p {
+    font-size: 15px !important;
+  }
+
+  /* FOOTER */
+  .footer {
+    font-size: 12px;
+    padding: 15px 0;
+  }
+
+  /* BATTLE TABLE FIXES */
+  .battle-cell {
+    width: 100% !important;
+    min-width: 100% !important;
   }
 
   .battle-frame {
