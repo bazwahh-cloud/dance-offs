@@ -2,10 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Dance-Offs: Prizes</title>
 
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Responsive prize grid */
+    .prize-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 600px;
+      margin: 40px auto;
+      justify-content: center;
+    }
+
+    .prize-item {
+      width: calc(50% - 10px);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .prize-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .prize-item {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -39,44 +73,27 @@
 
   </div>
 
-  <!-- PRIZE IMAGE GRID -->
-  <div style="max-width:600px; margin:40px auto; text-align:center;">
+  <!-- ⭐ RESPONSIVE PRIZE GRID -->
+  <div class="prize-grid">
 
-    <table style="width:100%; border-collapse:collapse;">
-      <tbody>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-001.jpg"></a></div>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-002.jpg"></a></div>
 
-        <tr>
-          <td><a href="prize-details.html"><img src="P-001.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-          <td><a href="prize-details.html"><img src="P-002.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-        </tr>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-003.jpg"></a></div>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-004.jpg"></a></div>
 
-        <tr>
-          <td><a href="prize-details.html"><img src="P-003.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-          <td><a href="prize-details.html"><img src="P-004.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-        </tr>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-005.jpg"></a></div>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-006.jpg"></a></div>
 
-        <tr>
-          <td><a href="prize-details.html"><img src="P-005.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-          <td><a href="prize-details.html"><img src="P-006.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-        </tr>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-007.jpg"></a></div>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-008.jpg"></a></div>
 
-        <tr>
-          <td><a href="prize-details.html"><img src="P-007.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-          <td><a href="prize-details.html"><img src="P-008.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-        </tr>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-009.jpg"></a></div>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-010.jpg"></a></div>
 
-        <tr>
-          <td><a href="prize-details.html"><img src="P-009.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-          <td><a href="prize-details.html"><img src="P-010.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-        </tr>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-011.jpg"></a></div>
+    <div class="prize-item"><a href="prize-details.html"><img src="P-012.jpg"></a></div>
 
-        <tr>
-          <td><a href="prize-details.html"><img src="P-011.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-          <td><a href="prize-details.html"><img src="P-012.jpg" style="width:100%; height:200px !important; object-fit:cover !important;"></a></td>
-        </tr>
-
-      </tbody>
-    </table>
   </div>
 
   <!-- FOOTER -->
