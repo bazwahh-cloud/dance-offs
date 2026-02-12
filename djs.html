@@ -2,29 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1048">
+  <link rel="stylesheet" href="style2.css?v=1056">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* Remove all top spacing */
-    .page-container {
-      padding-top: 0 !important;
-      margin-top: 0 !important;
-    }
-
-    .instruction-line {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
     .dj-form-row {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin: 5px 0 0 0 !important;
-      padding: 0 !important;
+      margin-top: 10px;
     }
 
     .dj-form-row input {
@@ -32,16 +22,6 @@
       max-width: 400px;
     }
 
-    .dj-form-row button {
-      white-space: nowrap;
-    }
-
-    #playerContainer {
-      margin-top: 5px !important;
-      padding: 0 !important;
-    }
-
-    /* SoundCloud wrapper */
     .sc-wrapper {
       position: relative;
       width: 100%;
@@ -52,13 +32,11 @@
       position: absolute;
       inset: 0;
       z-index: 10;
-      background: transparent;
       pointer-events: none;
     }
 
-    /* YouTube video slots */
     .video-slot {
-      height: 240px;
+      min-height: 240px;
       background: #000;
       border-radius: 8px;
       position: relative;
@@ -70,27 +48,6 @@
       height: 100%;
       border: none;
       border-radius: 8px;
-    }
-
-    .yt-blocker {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      background: transparent;
-      pointer-events: auto;
-    }
-
-    /* Prevent table collapse */
-    .battle-table {
-      width: 100%;
-      table-layout: fixed;
-      margin-top: 10px !important;
-      padding: 0 !important;
-    }
-
-    td {
-      padding: 0 !important;
-      margin: 0 !important;
     }
   </style>
 </head>
@@ -107,39 +64,42 @@
     <a href="shop.html">Shop</a>
   </nav>
 
-  <main>
-    <section class="page-container" style="text-align:center;">
-      <p class="instruction-line">Submit your DJ mix below.</p>
+  <main class="page-container" style="text-align:center;">
 
-      <form id="djMixForm">
-        <div class="dj-form-row">
-          <input 
-            type="text" 
-            id="djMixInput" 
-            class="input-field"
-            placeholder="SoundCloud URL"
-          >
-          <button type="submit" class="vote-button">Submit</button>
-        </div>
-      </form>
+    <p class="instruction-line">Submit your DJ mix below.</p>
 
-      <div id="playerContainer" style="min-height:150px;"></div>
+    <!-- DJ MIX SUBMISSION -->
+    <form id="djMixForm">
+      <div class="dj-form-row">
+        <input 
+          type="text" 
+          id="djMixInput" 
+          class="input-field"
+          placeholder="SoundCloud URL"
+        >
+        <button type="submit" class="vote-button">Submit</button>
+      </div>
+    </form>
 
-      <table class="battle-table" cellspacing="10" align="center">
-        <tr>
-          <td>
-            <div class="video-slot" id="djLeftVideo"></div>
-          </td>
-          <td>
-            <div class="video-slot" id="djRightVideo"></div>
-          </td>
-        </tr>
-      </table>
-    </section>
+    <div id="playerContainer" style="min-height:150px; margin-top:20px;"></div>
+
+    <!-- ⭐ MATCH INDEX PAGE RESPONSIVE STRUCTURE -->
+    <div class="battle-table" style="margin-top:30px;">
+
+      <div class="battle-cell">
+        <div class="video-slot" id="djLeftVideo"></div>
+      </div>
+
+      <div class="battle-cell">
+        <div class="video-slot" id="djRightVideo"></div>
+      </div>
+
+    </div>
+
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 Dance-Offs. All rights reserved.</p>
+    © 2026 Dance-Offs. All rights reserved.
   </footer>
 
   <script>
