@@ -241,17 +241,17 @@ p {
    ----------------------------------------- */
 @media (max-width: 600px) {
 
-  /* NAVBAR — improved mobile sizing */
+  /* NAVBAR — bigger, clearer, more tappable */
   .navbar {
     flex-wrap: wrap;
-    gap: 14px;
-    padding: 12px 8px;
-    font-size: 18px;
+    gap: 20px;
+    padding: 16px 10px;
+    font-size: 20px;       /* same as desktop */
   }
 
   .navbar a {
-    padding: 8px 6px;
-    font-size: 18px;
+    padding: 10px 8px;     /* bigger tap targets */
+    font-size: 20px;       /* readable on all phones */
   }
 
   .navbar .active {
