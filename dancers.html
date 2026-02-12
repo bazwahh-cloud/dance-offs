@@ -76,14 +76,14 @@
 
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- ⭐ CLEAN, GRID-FRIENDLY NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-    <div class="dropdown"><a href="dancers.html" class="active">Dancers</a></div>
-    <div class="dropdown"><a href="djs.html">DJs</a></div>
+    <a href="dancers.html" class="active">Dancers</a>
+    <a href="djs.html">DJs</a>
     <a id="voteNav" href="javascript:void(0)" style="opacity:0.4; pointer-events:none;">Vote</a>
     <a href="prizes.html">Prizes</a>
-    <div class="dropdown"><a href="shop.html">Shop</a></div>
+    <a href="shop.html">Shop</a>
   </nav>
 
   <p class="instruction-line">Load your dancer, then vote</p>
@@ -93,19 +93,16 @@
     <table class="battle-table" cellspacing="10" align="center">
       <tr>
         <td class="battle-cell">
-          <!-- LEFT INPUT + VIDEO TOGETHER -->
           <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
           <div id="leftVideo" class="video-slot" style="margin-top:10px;"></div>
         </td>
 
         <td class="battle-cell">
-          <!-- RIGHT INPUT + VIDEO TOGETHER -->
           <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
           <div id="rightVideo" class="video-slot" style="margin-top:10px;"></div>
         </td>
       </tr>
 
-      <!-- BUTTON ROW -->
       <tr>
         <td colspan="2" style="text-align:center;">
           <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
@@ -117,7 +114,6 @@
         </td>
       </tr>
 
-      <!-- DJ PLAYER UNDERNEATH -->
       <tr>
         <td colspan="2">
           <div id="djPlayer" style="margin-top:20px; min-height:180px;"></div>
@@ -214,8 +210,6 @@
 
           if (idL) document.getElementById("leftVideo").innerHTML = embed(idL);
           if (idR) document.getElementById("rightVideo").innerHTML = embed(idR);
-
-          // Still require user to click Load this session to enable Vote
         });
     }
 
