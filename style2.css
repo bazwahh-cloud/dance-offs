@@ -146,6 +146,16 @@ p {
   min-height: 200px;
 }
 
+/* CONTACT SECTION (NEW, RESPONSIVE) */
+.contact-section {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 30px;
+  border: 2px solid #444;
+  border-radius: 10px;
+  text-align: center;
+}
+
 /* BUTTONS */
 .vote-button {
   background: #00ccff;
@@ -246,16 +256,12 @@ p {
     flex-wrap: wrap;
     gap: 20px;
     padding: 16px 10px;
-    font-size: 20px;       /* same as desktop */
+    font-size: 20px;
   }
 
   .navbar a {
-    padding: 10px 8px;     /* bigger tap targets */
-    font-size: 20px;       /* readable on all phones */
-  }
-
-  .navbar .active {
-    border-bottom-width: 3px;
+    padding: 10px 8px;
+    font-size: 20px;
   }
 
   /* HERO */
@@ -286,14 +292,12 @@ p {
     margin-top: 10px;
   }
 
-  /* FAQ + CONTACT SECTIONS */
-  details,
-  #contact,
-  section[style*="max-width"] {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+  /* CONTACT SECTION — fully responsive */
+  .contact-section {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-width: 1px;
   }
 
   /* TEXT SIZES */
