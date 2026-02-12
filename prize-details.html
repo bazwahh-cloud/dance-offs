@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Beat-Herder Festival Prize – Dance-Offs</title>
 
   <link rel="stylesheet" href="style2.css?v=1050">
@@ -18,12 +20,12 @@
 
     .hero {
       text-align: center;
-      padding: 80px 20px 40px;
+      padding: 60px 20px 20px;
     }
 
     .hero-title {
       font-family: 'Bangers', cursive;
-      font-size: 70px;
+      font-size: 64px;
       margin-bottom: 10px;
       color: white;
     }
@@ -74,19 +76,28 @@
     .back-btn:hover {
       background: #005fa3;
     }
+
+    @media (max-width: 600px) {
+      .hero-title {
+        font-size: 48px;
+      }
+      .content-box {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- ⭐ CLEAN, GRID-FRIENDLY NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
-    <div class="dropdown"><a href="djs.html">DJs</a></div>
+    <a href="dancers.html">Dancers</a>
+    <a href="djs.html">DJs</a>
     <a href="vote.html">Vote</a>
-    <a href="prizes.html">Prizes</a>
-    <div class="dropdown"><a href="shop.html">Shop</a></div>
+    <a href="prizes.html" class="active">Prizes</a>
+    <a href="shop.html">Shop</a>
   </nav>
 
   <!-- HERO -->
@@ -94,15 +105,12 @@
     <div class="hero-title">Win Two Tickets</div>
   </div>
 
-  <!-- SPACER -->
-  <div style="height:40px;"></div>
-
   <!-- CONTENT -->
   <div class="content-box">
 
     <!-- LOGO IMAGE -->
     <div style="background:white; padding:20px; border-radius:10px; display:inline-block; margin-bottom:30px;">
-      <img src="bh-logo-black-2026.png" alt="Dance-Offs Logo" class="logo-img">
+      <img src="bh-logo-black-2026.png" alt="Beat-Herder Logo" class="logo-img">
     </div>
 
     <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:10px;">
@@ -143,7 +151,7 @@
       The more votes you cast, the more chances you have to win.
     </p>
 
-    <!-- NEW PRIZE DRAW DATE TEXT -->
+    <!-- PRIZE DRAW DATE -->
     <p style="font-size:18px; line-height:1.6; color:#ddd;">
       The winning entry will be drawn at random midday Sunday 29 March 2026.  
       All valid votes cast throughout the month will be included in the draw.
