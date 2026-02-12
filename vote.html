@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Dance-Offs: Vote</title>
 
   <link rel="stylesheet" href="style2.css?v=1050">
@@ -45,6 +47,30 @@
       color: #bbb;
       text-align: center;
     }
+
+    /* ⭐ Responsive layout for vote page */
+    .vote-layout {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .vote-column {
+      width: 300px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .vote-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      .vote-column {
+        width: 100%;
+        max-width: 360px;
+      }
+    }
   </style>
 
   <!-- LIVE PAYPAL SDK -->
@@ -53,14 +79,14 @@
 
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- ⭐ CLEAN, GRID-FRIENDLY NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-    <div class="dropdown"><a href="dancers.html">Dancers</a></div>
-    <div class="dropdown"><a href="djs.html">DJs</a></div>
+    <a href="dancers.html">Dancers</a>
+    <a href="djs.html">DJs</a>
     <a href="vote.html" class="active">Vote</a>
     <a href="prizes.html">Prizes</a>
-    <div class="dropdown"><a href="shop.html">Shop</a></div>
+    <a href="shop.html">Shop</a>
   </nav>
 
   <!-- COUNTDOWN TIMER -->
@@ -69,41 +95,34 @@
   <!-- PAGE CONTENT -->
   <main class="page-container">
 
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
+    <!-- ⭐ RESPONSIVE BATTLE LAYOUT -->
+    <div class="vote-layout">
 
-        <!-- LEFT VIDEO -->
-        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <div style="width:260px; margin:auto;">
-            <div id="leftVideo" class="video-slot"></div>
+      <!-- LEFT VIDEO -->
+      <div class="vote-column">
+        <div id="leftVideo" class="video-slot"></div>
+        <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
+        <div id="leftCount" class="vote-count">Left Votes: 0</div>
+      </div>
 
-            <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
-            <div id="leftCount" class="vote-count">Left Votes: 0</div>
-          </div>
-        </td>
+      <!-- PAYPAL COLUMN -->
+      <div class="vote-column">
+        <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
+        <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
 
-        <!-- PAYPAL -->
-        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
-          <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
+        <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
 
-          <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
-            <div id="paypal-button-container"></div>
-          </div>
-        </td>
+      <!-- RIGHT VIDEO -->
+      <div class="vote-column">
+        <div id="rightVideo" class="video-slot"></div>
+        <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
+        <div id="rightCount" class="vote-count">Right Votes: 0</div>
+      </div>
 
-        <!-- RIGHT VIDEO -->
-        <td class="battle-cell" style="width:33%; vertical-align:top; text-align:center;">
-          <div style="width:260px; margin:auto;">
-            <div id="rightVideo" class="video-slot"></div>
-
-            <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
-            <div id="rightCount" class="vote-count">Right Votes: 0</div>
-          </div>
-        </td>
-
-      </tr>
-    </table>
+    </div>
 
     <!-- SOUNDCLOUD PLAYER -->
     <div id="playerContainer" style="margin-top:40px; text-align:center;"></div>
@@ -122,17 +141,13 @@
     let currentTransactionID = null;
     let currentBattleID = null;
 
-
-
     /* ----------------------------------------------------
        PAYPAL BUTTON
     ---------------------------------------------------- */
     paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({
-          purchase_units: [{
-            amount: { value: "1.50" }
-          }]
+          purchase_units: [{ amount: { value: "1.50" } }]
         });
       },
       onApprove: function(data, actions) {
@@ -140,13 +155,11 @@
 
           currentTransactionID = details.id;
 
-          // Unique battle vote ID
           const ts = new Date();
           const date = ts.toISOString().slice(0,10).replace(/-/g,"");
           const uid = Math.random().toString(36).substring(2,8).toUpperCase();
           currentBattleID = "VOTE-" + date + "-" + uid;
 
-          // Enable vote buttons
           document.getElementById("voteLeft").disabled = false;
           document.getElementById("voteRight").disabled = false;
 
@@ -155,8 +168,6 @@
         });
       }
     }).render("#paypal-button-container");
-
-
 
     /* ----------------------------------------------------
        YOUTUBE HELPERS
@@ -182,8 +193,6 @@
       `;
     }
 
-
-
     /* ----------------------------------------------------
        LOAD BATTLE
     ---------------------------------------------------- */
@@ -191,15 +200,10 @@
       fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
         .then(data => {
-          const leftID = extractID(data.left);
-          const rightID = extractID(data.right);
-
-          document.getElementById("leftVideo").innerHTML = embed(leftID);
-          document.getElementById("rightVideo").innerHTML = embed(rightID);
+          document.getElementById("leftVideo").innerHTML = embed(extractID(data.left));
+          document.getElementById("rightVideo").innerHTML = embed(extractID(data.right));
         });
     }
-
-
 
     /* ----------------------------------------------------
        LOAD DJ MIX
@@ -231,8 +235,6 @@
         });
     }
 
-
-
     /* ---------------------------------------------------
        LOAD VOTE COUNTS
     ---------------------------------------------------- */
@@ -245,10 +247,8 @@
         });
     }
 
-
-
     /* ----------------------------------------------------
-       VOTE (POST to backend)
+       VOTE
     ---------------------------------------------------- */
     function vote(side) {
       if (!currentTransactionID) {
@@ -271,8 +271,6 @@
         window.location.href = "thankyou.html?battle=" + currentBattleID;
       });
     }
-
-
 
     /* ----------------------------------------------------
        COUNTDOWN TIMER
@@ -307,8 +305,6 @@
           setInterval(updateTimer, 1000);
         });
     }
-
-
 
     /* ----------------------------------------------------
        INIT
