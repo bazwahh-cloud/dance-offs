@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Dance-Offs: Dancers</title>
 
   <link rel="stylesheet" href="style2.css?v=1056">
@@ -25,15 +27,6 @@
       border-color: #ffe066;
       box-shadow: 0 0 12px #ffe066;
     }
-    .blocker {
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      cursor:default;
-      z-index:10;
-    }
     .video-slot {
       min-height: 260px;
       background: #000;
@@ -45,6 +38,11 @@
       height: 260px;
       border-radius: 8px;
       border: none;
+    }
+    .blocker {
+      position:absolute;
+      inset:0;
+      z-index:10;
     }
     .save-button {
       margin-top: 15px;
@@ -59,17 +57,11 @@
       width: 200px;
       box-shadow: 0 0 10px #ffcc00;
     }
-    .save-button:hover {
-      background: #ffe066;
-      box-shadow: 0 0 14px #ffe066;
-    }
-
     .disabled-btn {
       opacity: 0.4;
       pointer-events: none;
       background: #777 !important;
       box-shadow: none !important;
-      cursor: default !important;
     }
   </style>
 </head>
@@ -90,37 +82,27 @@
 
   <main class="page-container">
 
-    <table class="battle-table" cellspacing="10" align="center">
-      <tr>
-        <td class="battle-cell">
-          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
-          <div id="leftVideo" class="video-slot" style="margin-top:10px;"></div>
-        </td>
+    <!-- ⭐ MATCHES INDEX PAGE STRUCTURE -->
+    <div class="battle-table">
 
-        <td class="battle-cell">
-          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
-          <div id="rightVideo" class="video-slot" style="margin-top:10px;"></div>
-        </td>
-      </tr>
+      <div class="battle-cell">
+        <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
+        <div id="leftVideo" class="video-slot" style="margin-top:10px;"></div>
+      </div>
 
-      <tr>
-        <td colspan="2" style="text-align:center;">
-          <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
+      <div class="battle-cell">
+        <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
+        <div id="rightVideo" class="video-slot" style="margin-top:10px;"></div>
+      </div>
 
-            <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
-            <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
+    </div>
 
-          </div>
-        </td>
-      </tr>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
+      <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
+    </div>
 
-      <tr>
-        <td colspan="2">
-          <div id="djPlayer" style="margin-top:20px; min-height:180px;"></div>
-        </td>
-      </tr>
-
-    </table>
+    <div id="djPlayer" style="margin-top:30px; min-height:180px;"></div>
 
   </main>
 
@@ -128,6 +110,7 @@
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
+  <!-- ⭐ JS LOGIC UNCHANGED -->
   <script>
     const endpoint = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
 
@@ -171,7 +154,7 @@
       const idR = extractID(right);
 
       if (!idL || !idR) {
-        alert("Both YouTube URLs must be valid.\nLeft: " + idL + "\nRight: " + idR);
+        alert("Both YouTube URLs must be valid.");
         return;
       }
 
@@ -180,13 +163,13 @@
 
       enableVoteButton();
 
-      const url =
+      fetch(
         endpoint +
         "?mode=setbattle" +
         "&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right);
-
-      fetch(url, { method: "GET", cache: "no-store" });
+        "&right=" + encodeURIComponent(right),
+        { method: "GET", cache: "no-store" }
+      );
     }
 
     function goVote() {
