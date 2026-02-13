@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ⭐ FIX: Prevent hero zones from extending below the image */
     .hero-img-wrap {
       position: relative;
       overflow: hidden;
@@ -20,7 +19,6 @@
 
 <body>
 
-  <!-- ⭐ CLEAN, GRID-FRIENDLY NAVIGATION -->
   <nav class="navbar">
     <a href="index.html" class="active">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -30,7 +28,6 @@
     <a href="shop.html">Shop</a>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
@@ -40,14 +37,12 @@
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <main class="page-container" style="text-align:center;">
 
     <p class="instruction-line" style="max-width:800px; margin:10px auto 20px; line-height:1.6;">
       Vote for your favourite dancer — left or right — and you could win the Prize Draw!
     </p>
 
-    <!-- FAQ -->
     <section style="max-width:900px; margin:40px auto;">
       <h2 style="text-align:center;">Frequently Asked Questions</h2>
 
@@ -86,7 +81,6 @@
       </div>
     </section>
 
-    <!-- CONTACT -->
     <section id="contact" class="contact-section">
       <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px;">Contact Us</h2>
 
@@ -113,32 +107,30 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
     <span id="lastUpdated"></span>
   </footer>
 
-  <!-- ⭐ CONTACT FORM → GOOGLE APPS SCRIPT BACKEND -->
+  <!-- ⭐ CONTACT FORM USING CLOUDFLARE WORKER PROXY -->
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+    const PROXY_URL = "https://danceoffs-contact-proxy.bazwahh.workers.dev/";
 
     document.getElementById("contactForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      const payload = {
-        mode: "contact",
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        message: document.getElementById("message").value
-      };
+      const params = new URLSearchParams();
+      params.append("mode", "contact");
+      params.append("name", document.getElementById("name").value);
+      params.append("email", document.getElementById("email").value);
+      params.append("message", document.getElementById("message").value);
 
       try {
-        const response = await fetch(WEB_APP_URL, {
+        const response = await fetch(PROXY_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params
         });
 
         const text = await response.text();
@@ -159,7 +151,6 @@
     });
   </script>
 
-  <!-- LAST UPDATED -->
   <script>
     const updated = new Date(document.lastModified);
     document.getElementById("lastUpdated").textContent =
