@@ -132,16 +132,25 @@
     document.getElementById("contactForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      emailjs.send("service_sjny28j", "template_w5wm7tl", {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        title: document.getElementById("message").value
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const message = document.getElementById("message").value;
+
+      emailjs.send("service_esjm51i", "template_es8yr99", {
+        name: name,
+        email: email,
+        title: "New Contact Form Message",
+        message: message
       })
       .then(function() {
-        document.getElementById("formStatus").style.display = "block";
-        document.getElementById("formStatus").innerText = "Message sent!";
-      }, function(error) {
+        const status = document.getElementById("formStatus");
+        status.style.display = "block";
+        status.innerText = "Message sent!";
+        document.getElementById("contactForm").reset();
+      })
+      .catch(function(error) {
         alert("Failed to send message. Please try again.");
+        console.error("EmailJS Error:", error);
       });
     });
   </script>
