@@ -9,13 +9,6 @@
   <link rel="stylesheet" href="style2.css?v=1050">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
-    (function() {
-      emailjs.init("Uklfy56RjdnXIDbVV");
-    })();
-  </script>
-
   <style>
     /* ⭐ FIX: Prevent hero zones from extending below the image */
     .hero-img-wrap {
@@ -127,31 +120,42 @@
     <span id="lastUpdated"></span>
   </footer>
 
-  <!-- EMAILJS -->
+  <!-- ⭐ CONTACT FORM → GOOGLE APPS SCRIPT BACKEND -->
   <script>
-    document.getElementById("contactForm").addEventListener("submit", function(e) {
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+
+    document.getElementById("contactForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const message = document.getElementById("message").value;
+      const payload = {
+        mode: "contact",
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+      };
 
-      emailjs.send("service_esjm51i", "template_es8yr99", {
-        name: name,
-        email: email,
-        title: "New Contact Form Message",
-        message: message
-      })
-      .then(function() {
-        const status = document.getElementById("formStatus");
-        status.style.display = "block";
-        status.innerText = "Message sent!";
-        document.getElementById("contactForm").reset();
-      })
-      .catch(function(error) {
-        alert("Failed to send message. Please try again.");
-        console.error("EmailJS Error:", error);
-      });
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await response.text();
+
+        if (text.includes("Email sent")) {
+          const status = document.getElementById("formStatus");
+          status.style.display = "block";
+          status.innerText = "Message sent!";
+          document.getElementById("contactForm").reset();
+        } else {
+          alert("Failed to send message. Please try again.");
+        }
+
+      } catch (err) {
+        alert("Network error. Please try again.");
+        console.error(err);
+      }
     });
   </script>
 
