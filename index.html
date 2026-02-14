@@ -15,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* Dynamic battle images */
     .hero-zone {
       position: absolute;
       top: 0;
@@ -47,7 +46,6 @@
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
 
-      <!-- These will be filled dynamically -->
       <a href="dancers.html" class="hero-zone hero-left"></a>
       <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
@@ -131,7 +129,7 @@
 
   <!-- ⭐ CONTACT FORM VIA CLOUDFLARE WORKER -->
   <script>
-    const PROXY_URL = "https://danceoffs-contact-proxy.bazwahh.workers.dev/";
+    const PROXY_URL = "https://danceoffs-contact-proxy.bazwahh.workers.dev/contact";
 
     document.getElementById("contactForm").addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -141,6 +139,9 @@
       params.append("name", document.getElementById("name").value);
       params.append("email", document.getElementById("email").value);
       params.append("message", document.getElementById("message").value);
+
+      const status = document.getElementById("formStatus");
+      status.style.display = "none";
 
       try {
         const response = await fetch(PROXY_URL, {
@@ -152,16 +153,20 @@
         const text = await response.text();
 
         if (text.includes("Email sent")) {
-          const status = document.getElementById("formStatus");
           status.style.display = "block";
+          status.style.color = "#00c853";
           status.innerText = "Message sent!";
           document.getElementById("contactForm").reset();
         } else {
-          alert("Failed to send message. Please try again.");
+          status.style.display = "block";
+          status.style.color = "#ff4444";
+          status.innerText = "Failed to send message.";
         }
 
       } catch (err) {
-        alert("Network error. Please try again.");
+        status.style.display = "block";
+        status.style.color = "#ff4444";
+        status.innerText = "Network error. Please try again.";
         console.error(err);
       }
     });
