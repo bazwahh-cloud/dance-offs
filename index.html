@@ -14,6 +14,21 @@
       position: relative;
       overflow: hidden;
     }
+
+    /* Dynamic battle images */
+    .hero-zone {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 0.4s ease;
+    }
+
+    .hero-left { left: 0; }
+    .hero-right { right: 0; }
   </style>
 </head>
 
@@ -32,6 +47,7 @@
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
 
+      <!-- These will be filled dynamically -->
       <a href="dancers.html" class="hero-zone hero-left"></a>
       <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
@@ -84,7 +100,6 @@
     <section id="contact" class="contact-section">
       <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px;">Contact Us</h2>
 
-      <!-- ⭐ FIXED: method="POST" + onsubmit="return false;" -->
       <form id="contactForm" method="POST" onsubmit="return false;" style="display:flex; flex-direction:column; gap:15px;">
 
         <input type="text" id="name" name="name" placeholder="Your Name" required
@@ -114,7 +129,7 @@
     <span id="lastUpdated"></span>
   </footer>
 
-  <!-- ⭐ CONTACT FORM USING CLOUDFLARE WORKER PROXY -->
+  <!-- ⭐ CONTACT FORM VIA CLOUDFLARE WORKER -->
   <script>
     const PROXY_URL = "https://danceoffs-contact-proxy.bazwahh.workers.dev/";
 
@@ -152,14 +167,47 @@
     });
   </script>
 
+  <!-- ⭐ BACKEND INTEGRATION -->
   <script>
-    const updated = new Date(document.lastModified);
-    document.getElementById("lastUpdated").textContent =
-      "Last updated: " + updated.toLocaleDateString("en-UK", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
+    const BACKEND_URL =
+      "https://script.google.com/macros/s/AKfycbwLe24uRsHzuJsGP_kw_8ccVY7CdAOK0ULJV8c0oHRRnoYOl5cjYQzWHFP6ngQiYiUw/exec";
+
+    async function loadBattle() {
+      try {
+        const res = await fetch(BACKEND_URL + "?mode=getbattle");
+        const battle = await res.json();
+
+        if (battle.left) {
+          document.querySelector(".hero-left").style.backgroundImage =
+            `url('${battle.left}')`;
+        }
+        if (battle.right) {
+          document.querySelector(".hero-right").style.backgroundImage =
+            `url('${battle.right}')`;
+        }
+      } catch (err) {
+        console.error("Battle load failed:", err);
+      }
+    }
+
+    async function loadState() {
+      try {
+        const res = await fetch(BACKEND_URL + "?mode=getstate");
+        const data = await res.json();
+
+        if (data.lastUpdated) {
+          document.getElementById("lastUpdated").textContent =
+            "Last updated: " + new Date(data.lastUpdated).toLocaleString();
+        }
+      } catch (err) {
+        console.error("State load failed:", err);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadBattle();
+      loadState();
+    });
   </script>
 
 </body>
