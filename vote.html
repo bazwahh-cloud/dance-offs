@@ -6,22 +6,26 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=1050">
+  <link rel="stylesheet" href="style2.css?v=2007">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     .video-slot {
-      min-height: 260px;
+      width: 100%;
+      aspect-ratio: 16 / 9;
       background: #000;
       border-radius: 8px;
       position: relative;
+      overflow: hidden;
     }
+
     .battle-frame {
       width: 100%;
-      height: 260px;
+      height: 100%;
       border-radius: 8px;
       border: none;
     }
+
     .vote-button {
       font-size: 18px;
       padding: 10px 20px;
@@ -34,13 +38,16 @@
       width: 100%;
       opacity: 0.5;
     }
+
     .vote-button.enabled {
       opacity: 1;
       cursor: pointer;
     }
+
     .vote-button:disabled {
       cursor: not-allowed;
     }
+
     .vote-count {
       margin-top: 6px;
       font-size: 14px;
@@ -77,6 +84,7 @@
 
 <body>
 
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -86,18 +94,22 @@
     <a href="shop.html">Shop</a>
   </nav>
 
-  <p class="instruction-line" id="countdownTimer"></p>
+  <!-- COUNTDOWN TIMER -->
+  <p id="countdownTimer"></p>
 
   <main class="page-container">
 
+    <!-- ⭐ RESPONSIVE VOTE LAYOUT -->
     <div class="vote-layout">
 
+      <!-- LEFT VIDEO -->
       <div class="vote-column">
         <div id="leftVideo" class="video-slot"></div>
         <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
         <div id="leftCount" class="vote-count">Left Votes: 0</div>
       </div>
 
+      <!-- PAYPAL COLUMN -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -107,6 +119,7 @@
         </div>
       </div>
 
+      <!-- RIGHT VIDEO -->
       <div class="vote-column">
         <div id="rightVideo" class="video-slot"></div>
         <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
@@ -115,6 +128,7 @@
 
     </div>
 
+    <!-- DJ MIX PLAYER -->
     <div id="playerContainer" style="margin-top:40px; text-align:center;"></div>
 
   </main>
@@ -131,6 +145,9 @@
     let currentTransactionID = null;
     let currentBattleID = null;
 
+    /* ----------------------------------------------------
+       PAYPAL BUTTON
+    ---------------------------------------------------- */
     paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({
@@ -156,6 +173,9 @@
       }
     }).render("#paypal-button-container");
 
+    /* ----------------------------------------------------
+       YOUTUBE HELPERS
+    ---------------------------------------------------- */
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -164,19 +184,19 @@
 
     function embed(id) {
       return `
-        <div style="position:relative;">
-          <div style="position:absolute; inset:0; z-index:5;"></div>
-          <iframe 
-            class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1"
-            allow="autoplay; encrypted-media"
-            allowfullscreen
-            playsinline>
-          </iframe>
-        </div>
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1"
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+          playsinline>
+        </iframe>
       `;
     }
 
+    /* ----------------------------------------------------
+       LOAD BATTLE
+    ---------------------------------------------------- */
     function loadBattle() {
       fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
@@ -186,6 +206,9 @@
         });
     }
 
+    /* ----------------------------------------------------
+       LOAD DJ MIX
+    ---------------------------------------------------- */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -199,20 +222,20 @@
           const clean = data.sound.split("?")[0];
 
           document.getElementById("playerContainer").innerHTML = `
-            <div style="position:relative; width:100%; max-width:600px; margin:auto;">
-              <div style="position:absolute; inset:0; z-index:5;"></div>
-              <iframe
-                width="100%"
-                height="120"
-                frameborder="no"
-                allow="autoplay"
-                src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
-              </iframe>
-            </div>
+            <iframe
+              width="100%"
+              height="120"
+              frameborder="no"
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
+            </iframe>
           `;
         });
     }
 
+    /* ---------------------------------------------------
+       LOAD VOTE COUNTS
+    ---------------------------------------------------- */
     function loadVoteCounts() {
       fetch(endpoint + "?mode=getvotes")
         .then(r => r.json())
@@ -222,6 +245,9 @@
         });
     }
 
+    /* ----------------------------------------------------
+       VOTE
+    ---------------------------------------------------- */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -244,6 +270,9 @@
       });
     }
 
+    /* ----------------------------------------------------
+       COUNTDOWN TIMER
+    ---------------------------------------------------- */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
@@ -275,6 +304,9 @@
         });
     }
 
+    /* ----------------------------------------------------
+       INIT
+    ---------------------------------------------------- */
     window.onload = function () {
       loadBattle();
       loadPlayer();
