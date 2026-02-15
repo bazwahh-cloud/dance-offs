@@ -24,14 +24,14 @@
       height: 100%;
       border-radius: 8px;
       border: none;
-      pointer-events: none; /* ⭐ BLOCK CLICK-THROUGH INTO YOUTUBE */
+      pointer-events: none;
     }
 
     .blocker {
       position: absolute;
       inset: 0;
       z-index: 10;
-      pointer-events: auto; /* ⭐ BLOCKS ALL INTERACTION */
+      pointer-events: auto;
     }
 
     .vote-button {
@@ -49,11 +49,6 @@
 
     .vote-button.enabled {
       opacity: 1;
-      cursor: pointer;
-    }
-
-    .vote-button:disabled {
-      cursor: not-allowed;
     }
 
     .vote-count {
@@ -86,7 +81,7 @@
       }
     }
 
-    /* ⭐ SoundCloud wrapper + overlay */
+    /* ⭐ SoundCloud wrapper (same as dancers page) */
     .sc-wrapper {
       position: relative;
       width: 100%;
@@ -95,13 +90,14 @@
     }
 
     #scPlayer {
-      pointer-events: none; /* ⭐ BLOCK CLICK-THROUGH */
+      pointer-events: none;
     }
 
     .sc-tap-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0);
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
       z-index: 20;
       display: flex;
       align-items: center;
@@ -110,12 +106,46 @@
       pointer-events: auto;
     }
 
+    .sc-tap-overlay-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sc-tap-button {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.6);
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+
+    .sc-tap-button::before {
+      content: "";
+      border-style: solid;
+      border-width: 18px 0 18px 28px;
+      border-color: transparent transparent transparent #000;
+      margin-left: 6px;
+    }
+
     .sc-tap-text {
-      color: white;
-      font-size: 26px;
+      margin-top: 12px;
+      color: #ffcc00;
+      font-size: 22px;
       font-weight: 700;
       text-shadow: 0 0 10px black;
+      text-align: center;
       pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+      50% { transform: scale(1.15); box-shadow: 0 0 35px #ffcc00; }
+      100% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
     }
   </style>
 
@@ -134,7 +164,6 @@
     <a href="shop.html">Shop</a>
   </nav>
 
-  <!-- COUNTDOWN -->
   <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
   <main class="page-container">
@@ -167,7 +196,7 @@
 
     </div>
 
-    <!-- ⭐ SoundCloud Player with Tap Overlay -->
+    <!-- ⭐ Enhanced SoundCloud Player (MATCHES dancers page) -->
     <div class="sc-wrapper">
       <iframe
         id="scPlayer"
@@ -180,7 +209,10 @@
       </iframe>
 
       <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
-        <div class="sc-tap-text">Tap to Play</div>
+        <div class="sc-tap-overlay-inner">
+          <div class="sc-tap-button"></div>
+          <div class="sc-tap-text">Tap to Play</div>
+        </div>
       </div>
     </div>
 
@@ -248,7 +280,6 @@
         });
     }
 
-    /* ⭐ Load SoundCloud (no autoplay yet) */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -266,7 +297,6 @@
         });
     }
 
-    /* ⭐ Mobile autoplay trigger */
     function startSC() {
       document.getElementById("scOverlay").style.display = "none";
 
