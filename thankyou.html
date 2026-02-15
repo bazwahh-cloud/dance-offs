@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <title>Dance-Offs: Thank You</title>
 
-  <link rel="stylesheet" href="style2.css?v=1050">
+  <link rel="stylesheet" href="style2.css?v=1052">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("Uklfy56RjdnXIDbVV"); /* Your EmailJS Public Key */
+      emailjs.init("Uklfy56RjdnXIDbVV");
     })();
   </script>
 
@@ -80,10 +80,6 @@
       width: 100%;
     }
 
-    .submit-btn:hover {
-      background: #005fa3;
-    }
-
     #emailMessage {
       font-size: 16px;
       color: #aaa;
@@ -112,19 +108,18 @@
     <div class="dropdown"><a href="shop.html">Shop</a></div>
   </nav>
 
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <div class="hero">
     <div class="hero-title">Thank You!</div>
     <div class="hero-sub">Enter your email to continue</div>
 
     <div class="email-box">
       <input id="emailInput" type="email" class="email-input" placeholder="you@example.com">
-      <button class="submit-btn" onclick="submitEmail()">Submit</button>
+      <button class="submit-btn" id="submitBtn" onclick="submitEmail()">Submit</button>
       <div id="emailMessage"></div>
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
   </footer>
@@ -132,14 +127,18 @@
   <script>
     let emailSubmitted = false;
 
-    // Read Battle ID from URL
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
     const urlParams = new URLSearchParams(window.location.search);
     const battleID = urlParams.get("battle");
 
-    // Disable nav on load
-    document.getElementById("navBar").classList.add("nav-disabled");
+    const navBar = document.getElementById("navBar");
+    const msg = document.getElementById("emailMessage");
+    const submitBtn = document.getElementById("submitBtn");
 
-    // Warn user if they try to leave early
+    navBar.classList.add("nav-disabled");
+
     window.addEventListener("beforeunload", function (e) {
       if (!emailSubmitted) {
         e.preventDefault();
@@ -147,47 +146,53 @@
       }
     });
 
-    function submitEmail() {
+    async function submitEmail() {
       const email = document.getElementById("emailInput").value.trim();
-      const msg = document.getElementById("emailMessage");
 
       if (!email) {
         msg.innerText = "Please enter email.";
         return;
       }
 
-      // Store in Google Sheets
-      fetch("https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec", {
-        method: "POST",
-        body: JSON.stringify({ 
-          email: email,
-          battle: battleID
-        })
-      });
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      msg.innerText = "Submitting…";
 
-      // Send confirmation email via EmailJS
-      emailjs.send("service_sjny28j", "template_jv61djw", {
-        name: email,          // REQUIRED by your template
-        email: email,         // REQUIRED by your template
-        title: battleID,      // REQUIRED by your template
-        battle: battleID      // REQUIRED by your template
-      })
-      .then(() => {
+      try {
+        /* ⭐ 1. Save email to main endpoint */
+        await fetch(endpoint, {
+          method: "POST",
+          body: JSON.stringify({
+            mode: "saveemail",
+            email: email,
+            battle: battleID
+          })
+        });
+
+        /* ⭐ 2. Send confirmation email */
+        await emailjs.send("service_sjny28j", "template_jv61djw", {
+          name: email,
+          email: email,
+          title: battleID,
+          battle: battleID
+        });
+
+        /* ⭐ SUCCESS */
+        emailSubmitted = true;
         msg.innerText = "Thanks! Redirecting…";
 
-        emailSubmitted = true;
-
-        // Re-enable navigation
-        document.getElementById("navBar").classList.remove("nav-disabled");
+        navBar.classList.remove("nav-disabled");
 
         setTimeout(() => {
           window.location.href = "index.html";
         }, 1200);
-      })
-      .catch((err) => {
-        msg.innerText = "Error sending email. Please try again.";
+
+      } catch (err) {
         console.error(err);
-      });
+        msg.innerText = "Error sending email. Please try again.";
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+      }
     }
   </script>
 
