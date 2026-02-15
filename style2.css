@@ -8,9 +8,9 @@
 }
 
 body {
-  background: #000 !important;
-  color: white !important;
-  font-family: 'Inter', sans-serif !important;
+  background: #000;
+  color: white;
+  font-family: 'Inter', sans-serif;
 }
 
 /* ----------------------------------------------------
@@ -42,70 +42,54 @@ body {
 }
 
 /* ----------------------------------------------------
-   HERO SECTION
+   HERO SECTION — FULL IMAGE, NO CROPPING
 ---------------------------------------------------- */
 .hero {
   width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
-/* Wrapper */
 .hero-img-wrap {
   position: relative;
   width: 100%;
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
-/* ⭐ MOBILE: Show full image, no cropping */
-@media (max-width: 899px) {
-  .hero-img-wrap {
-    height: auto !important;
-  }
-
-  .hero-img-wrap img {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
-    object-position: top !important;
-    display: block !important;
-  }
-
-  /* Click zones must follow natural height */
-  .hero-zone {
-    height: 100% !important;
-  }
+/* ⭐ The image ALWAYS defines the height */
+.hero-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;   /* never crop */
+  object-position: top;  /* align top */
 }
 
-/* ⭐ DESKTOP: Shrink hero by ~40% */
+/* ⭐ Desktop: still show full image (no cropping) */
 @media (min-width: 900px) {
   .hero-img-wrap {
-    height: 300px !important;
+    height: auto;        /* allow natural height */
   }
 
   .hero-img-wrap img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: center top !important;
-  }
-
-  .hero-zone {
-    height: 100% !important;
+    height: auto;
+    object-fit: contain; /* full image */
+    object-position: top;
   }
 }
 
-/* Clickable zones */
+/* ⭐ Clickable zones always match image height */
 .hero-zone {
   position: absolute;
   top: 0;
+  left: 0;
   width: 50%;
+  height: 100%;          /* matches image height */
   cursor: pointer;
   z-index: 2;
 }
 
-.hero-left { left: 0; }
-.hero-right { right: 0; }
+.hero-right {
+  left: 50%;
+}
 
 /* ----------------------------------------------------
    PAGE CONTAINER
