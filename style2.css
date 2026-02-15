@@ -56,31 +56,33 @@ body {
   overflow: hidden;
 }
 
-/* Desktop: shrink hero height by ~40% */
+/* ⭐ Desktop: shrink hero height by ~40% */
 @media (min-width: 900px) {
   .hero-img-wrap {
-    height: 300px; /* adjust if needed */
+    height: 300px;
   }
 
   .hero-img-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* dramatic full-bleed look */
+    object-fit: cover;
+    object-position: center top;
   }
 }
 
-/* Mobile: prevent top cropping */
+/* ⭐ Mobile: DO NOT crop — let image define height */
 @media (max-width: 899px) {
-  .hero-img-wrap {
-    height: 200px;
-    background: #000; /* blends with site */
-  }
-
   .hero-img-wrap img {
     width: 100%;
-    height: 100%;
-    object-fit: contain;   /* ⭐ shows full image */
-    object-position: top;  /* ⭐ ensures top is visible */
+    height: auto;        /* ⭐ natural height */
+    object-fit: contain; /* ⭐ no cropping */
+    object-position: top;
+    display: block;
+  }
+
+  /* The wrapper must auto-size to the image */
+  .hero-img-wrap {
+    height: auto;
   }
 }
 
@@ -88,8 +90,8 @@ body {
 .hero-zone {
   position: absolute;
   top: 0;
-  bottom: 0;
   width: 50%;
+  height: 100%; /* ⭐ always matches wrapper height */
   cursor: pointer;
 }
 
