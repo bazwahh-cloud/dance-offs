@@ -56,47 +56,41 @@ body {
   overflow: hidden;
 }
 
-/* ⭐ Desktop: shrink hero height by ~40% */
+/* ⭐ The image ALWAYS defines the height */
+.hero-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: top;
+}
+
+/* ⭐ Desktop: shrink hero by ~40% */
 @media (min-width: 900px) {
   .hero-img-wrap {
-    height: 300px;
+    max-height: 300px; /* hero shrinks but never crops */
   }
 
   .hero-img-wrap img {
-    width: 100%;
-    height: 100%;
     object-fit: cover;
-    object-position: center top;
+    height: 100%;
   }
 }
 
-/* ⭐ Mobile: DO NOT crop — let image define height */
-@media (max-width: 899px) {
-  .hero-img-wrap img {
-    width: 100%;
-    height: auto;        /* ⭐ natural height */
-    object-fit: contain; /* ⭐ no cropping */
-    object-position: top;
-    display: block;
-  }
-
-  /* The wrapper must auto-size to the image */
-  .hero-img-wrap {
-    height: auto;
-  }
-}
-
-/* Transparent clickable zones */
+/* ⭐ Clickable zones always match the image height */
 .hero-zone {
   position: absolute;
   top: 0;
+  left: 0;
+  height: 100%;     /* matches image height */
   width: 50%;
-  height: 100%; /* ⭐ always matches wrapper height */
   cursor: pointer;
+  z-index: 2;
 }
 
-.hero-left { left: 0; }
-.hero-right { right: 0; }
+.hero-right {
+  left: 50%;
+}
 
 /* ----------------------------------------------------
    PAGE CONTAINER
