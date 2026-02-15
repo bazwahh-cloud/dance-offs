@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=2007">
+  <link rel="stylesheet" href="style2.css?v=2012">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -22,16 +22,30 @@
       max-width: 400px;
     }
 
+    /* ⭐ Mobile-safe SoundCloud autoplay wrapper */
     .sc-wrapper {
       position: relative;
       width: 100%;
       height: 150px;
+      margin-top: 20px;
     }
 
-    .sc-blocker {
+    .sc-tap-overlay {
       position: absolute;
       inset: 0;
-      z-index: 10;
+      background: rgba(0,0,0,0.0);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .sc-tap-text {
+      color: white;
+      font-size: 26px;
+      font-weight: 700;
+      text-shadow: 0 0 10px black;
       pointer-events: none;
     }
 
@@ -82,9 +96,26 @@
       </div>
     </form>
 
-    <div id="playerContainer" style="min-height:150px; margin-top:20px;"></div>
+    <!-- ⭐ SoundCloud Player with Tap Overlay -->
+    <div id="playerContainer">
+      <div class="sc-wrapper">
+        <iframe 
+          id="scPlayer"
+          width="100%" 
+          height="150"
+          scrolling="no"
+          frameborder="no"
+          allow="autoplay"
+          src="">
+        </iframe>
 
-    <!-- ⭐ TABLE LAYOUT FOR LEFT/RIGHT DJ VIDEOS -->
+        <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
+          <div class="sc-tap-text">Tap to Play</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⭐ DJ Battle Videos -->
     <table class="battle-table" style="margin-top:30px;">
       <tr>
         <td class="battle-cell">
@@ -104,9 +135,10 @@
   </footer>
 
   <script>
-    /* ⭐ CORRECT BACKEND URL */
     const SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
+    let scURL = ""; // clean SoundCloud URL
 
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -180,26 +212,16 @@
           url = url.split("?")[0];
         }
 
-        const embedURL =
-          "https://w.soundcloud.com/player/?url=" +
-          encodeURIComponent(url) +
-          "&auto_play=true";
+        scURL = url; // store for autoplay
 
         fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
-        playerContainer.innerHTML = `
-          <div class="sc-wrapper">
-            <iframe 
-              width="100%" 
-              height="150" 
-              scrolling="no" 
-              frameborder="no" 
-              allow="autoplay"
-              src="${embedURL}">
-            </iframe>
-            <div class="sc-blocker"></div>
-          </div>
-        `;
+        document.getElementById("scPlayer").src =
+          "https://w.soundcloud.com/player/?url=" +
+          encodeURIComponent(scURL) +
+          "&auto_play=false";
+
+        document.getElementById("scOverlay").style.display = "flex";
       });
 
       function loadCurrentMix() {
@@ -218,24 +240,14 @@
               url = url.split("?")[0];
             }
 
-            const embedURL =
-              "https://w.soundcloud.com/player/?url=" +
-              encodeURIComponent(url) +
-              "&auto_play=true";
+            scURL = url;
 
-            playerContainer.innerHTML = `
-              <div class="sc-wrapper">
-                <iframe
-                  width="100%"
-                  height="150"
-                  scrolling="no"
-                  frameborder="no"
-                  allow="autoplay"
-                  src="${embedURL}">
-                </iframe>
-                <div class="sc-blocker"></div>
-              </div>
-            `;
+            document.getElementById("scPlayer").src =
+              "https://w.soundcloud.com/player/?url=" +
+              encodeURIComponent(scURL) +
+              "&auto_play=false";
+
+            document.getElementById("scOverlay").style.display = "flex";
           });
       }
 
@@ -277,6 +289,18 @@
         });
 
     });
+
+    /* ⭐ Mobile-safe autoplay: send play command via postMessage */
+    function startSC() {
+      document.getElementById("scOverlay").style.display = "none";
+
+      const widget = document.getElementById("scPlayer").contentWindow;
+
+      widget.postMessage(
+        JSON.stringify({ method: "play" }),
+        "https://w.soundcloud.com"
+      );
+    }
   </script>
 
 </body>
