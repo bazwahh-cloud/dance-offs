@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2010">
+  <link rel="stylesheet" href="style2.css?v=2011">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -50,34 +50,36 @@
       box-shadow: none !important;
     }
 
-    /* ⭐ FULL PAGE TAP OVERLAY */
-    .sc-fullscreen-overlay {
-      position: fixed;
+    /* ⭐ Overlay directly over the SoundCloud iframe */
+    .sc-wrapper {
+      position: relative;
+      width: 100%;
+      height: 166px;
+      margin-top: 30px;
+    }
+
+    .sc-tap-overlay {
+      position: absolute;
       inset: 0;
       background: rgba(0,0,0,0.0);
-      z-index: 9999;
-      cursor: pointer;
+      z-index: 20;
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
     }
 
     .sc-tap-text {
       color: white;
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
-      text-shadow: 0 0 12px black;
+      text-shadow: 0 0 10px black;
       pointer-events: none;
     }
   </style>
 </head>
 
 <body>
-
-  <!-- ⭐ FULL PAGE TAP OVERLAY -->
-  <div class="sc-fullscreen-overlay" id="tapOverlay" onclick="startSC()">
-    <div class="sc-tap-text">Tap to Play</div>
-  </div>
 
   <!-- NAVIGATION -->
   <nav class="navbar">
@@ -114,8 +116,22 @@
       <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
     </div>
 
-    <!-- ⭐ SOUNDCLOUD PLAYER (created after tap) -->
-    <div id="djPlayer" style="margin-top:30px; min-height:180px;"></div>
+    <!-- ⭐ SOUNDCLOUD PLAYER WITH TAP OVERLAY -->
+    <div class="sc-wrapper">
+      <iframe 
+        id="scPlayer"
+        width="100%" 
+        height="166"
+        scrolling="no"
+        frameborder="no"
+        allow="autoplay"
+        src="">
+      </iframe>
+
+      <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
+        <div class="sc-tap-text">Tap to Play</div>
+      </div>
+    </div>
 
   </main>
 
@@ -127,7 +143,7 @@
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    let scURL = ""; // store SoundCloud URL for autoplay
+    let scURL = ""; // clean SoundCloud URL
 
     function extractID(url) {
       if (!url) return null;
@@ -217,36 +233,27 @@
         .then(data => {
           let url = data.sound || "";
 
-          if (!url.startsWith("http")) {
-            document.getElementById("djPlayer").innerHTML =
-              "<p style='color:#aaa; text-align:center;'>No DJ mix submitted yet.</p>";
-            return;
-          }
+          if (!url.startsWith("http")) return;
 
-          scURL = url.split("?")[0]; // store clean URL only
+          scURL = url.split("?")[0];
+
+          document.getElementById("scPlayer").src =
+            "https://w.soundcloud.com/player/?url=" +
+            encodeURIComponent(scURL) +
+            "&auto_play=false";
         });
     }
 
-    /* ⭐ FULL PAGE TAP → CREATE IFRAME → AUTOPLAY */
+    /* ⭐ Mobile-safe autoplay: send play command via postMessage */
     function startSC() {
-      document.getElementById("tapOverlay").style.display = "none";
+      document.getElementById("scOverlay").style.display = "none";
 
-      const container = document.getElementById("djPlayer");
-      container.innerHTML = ""; // clear any placeholder
+      const widget = document.getElementById("scPlayer").contentWindow;
 
-      const iframe = document.createElement("iframe");
-      iframe.width = "100%";
-      iframe.height = "166";
-      iframe.frameBorder = "no";
-      iframe.allow = "autoplay";
-      iframe.scrolling = "no";
-
-      iframe.src =
-        "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(scURL) +
-        "&auto_play=true";
-
-      container.appendChild(iframe);
+      widget.postMessage(
+        JSON.stringify({ method: "play" }),
+        "https://w.soundcloud.com"
+      );
     }
 
     document.addEventListener("DOMContentLoaded", () => {
