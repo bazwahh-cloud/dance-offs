@@ -317,15 +317,14 @@
         return;
       }
 
-      const payload = {
-        side,
-        tx: currentTransactionID,
-        battle: currentBattleID
-      };
+      const formData = new URLSearchParams();
+      formData.append("side", side);
+      formData.append("tx", currentTransactionID);
+      formData.append("battle", currentBattleID);
 
       fetch(endpoint, {
         method: "POST",
-        body: JSON.stringify(payload)
+        body: formData
       })
       .then(() => {
         window.location.href =
