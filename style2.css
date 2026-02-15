@@ -199,11 +199,11 @@ body {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  table-layout: fixed; /* ⭐ forces equal columns */
+  table-layout: fixed;
 }
 
 .battle-table td {
-  width: 50%;          /* ⭐ perfect left/right alignment */
+  width: 50%;
   vertical-align: top;
   padding: 10px;
 }
@@ -214,7 +214,7 @@ body {
 
 .video-slot {
   width: 100%;
-  aspect-ratio: 16 / 9; /* ⭐ equal height videos */
+  aspect-ratio: 16 / 9;
   background: #000;
   border-radius: 8px;
   position: relative;
@@ -240,6 +240,45 @@ body {
     display: block;
     width: 100%;
   }
+}
+
+/* ----------------------------------------------------
+   SOUNDCLOUD — MOBILE AUTOPLAY + CLICK BLOCKING
+---------------------------------------------------- */
+
+/* Wrapper for SoundCloud player */
+.sc-wrapper {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  margin-top: 20px;
+}
+
+/* Prevent ALL click-throughs into SoundCloud */
+#scPlayer {
+  pointer-events: none;
+}
+
+/* Tap overlay that captures the gesture */
+.sc-blocker,
+.sc-tap-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0,0,0,0);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sc-tap-text {
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+  text-shadow: 0 0 10px black;
+  pointer-events: none;
 }
 
 /* ----------------------------------------------------
