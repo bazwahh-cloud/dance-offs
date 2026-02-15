@@ -103,8 +103,12 @@
         <input type="text" id="name" name="name" placeholder="Your Name" required
                style="padding:12px; border-radius:6px; border:2px solid #555; background:#111; color:white; font-size:16px;">
 
-        <input type="email" id="email" name="email" placeholder="Your Email" required
+        <!-- user email → contact_email -->
+        <input type="email" id="contact_email" name="contact_email" placeholder="Your Email" required
                style="padding:12px; border-radius:6px; border:2px solid:#555; background:#111; color:white; font-size:16px;">
+
+        <!-- hidden office email for Apps Script -->
+        <input type="hidden" id="office_email" name="office_email" value="office@dance-offs.com">
 
         <textarea id="message" name="message" placeholder="Your Message" rows="5" required
                   style="padding:12px; border-radius:6px; border:2px solid:#555; background:#111; color:white; font-size:16px;"></textarea>
@@ -137,7 +141,8 @@
       const params = new URLSearchParams();
       params.append("mode", "contact");
       params.append("name", document.getElementById("name").value);
-      params.append("email", document.getElementById("email").value);
+      params.append("contact_email", document.getElementById("contact_email").value);
+      params.append("office_email", document.getElementById("office_email").value);
       params.append("message", document.getElementById("message").value);
 
       const status = document.getElementById("formStatus");
