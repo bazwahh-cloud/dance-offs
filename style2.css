@@ -54,16 +54,14 @@ body {
   overflow: hidden;
 }
 
-/* ⭐ The hero image ALWAYS defines the height */
 .hero-img-wrap img {
   width: 100%;
   height: auto;
   display: block;
-  object-fit: contain;   /* never crop */
-  object-position: top;  /* align top */
+  object-fit: contain;
+  object-position: top;
 }
 
-/* ⭐ Desktop: still show full image (no cropping) */
 @media (min-width: 900px) {
   .hero-img-wrap {
     height: auto;
@@ -77,19 +75,18 @@ body {
 }
 
 /* ----------------------------------------------------
-   HERO CLICKABLE ZONES — MATCH HERO IMAGE EXACTLY
+   HERO CLICKABLE ZONES
 ---------------------------------------------------- */
 .hero-zone {
   position: absolute;
   top: 0;
   width: 50%;
-  height: 100%;              /* matches hero image height */
+  height: 100%;
   cursor: pointer;
   z-index: 2;
 
-  /* ⭐ MATCH THE HERO IMAGE BEHAVIOUR */
-  background-size: contain;  /* keep dancers fully visible */
-  background-position: top;  /* align with hero image */
+  background-size: contain;
+  background-position: top;
   background-repeat: no-repeat;
 }
 
@@ -181,6 +178,52 @@ body {
 
   .faq-item summary {
     padding: 6px 0 !important;
+  }
+}
+
+/* ----------------------------------------------------
+   DANCERS PAGE — PERFECT LEFT/RIGHT LAYOUT
+---------------------------------------------------- */
+.battle-table {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.battle-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-slot {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* ⭐ ensures equal height */
+  background: #000;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.battle-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: none;
+}
+
+.blocker {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* ⭐ Mobile: stack vertically */
+@media (max-width: 700px) {
+  .battle-table {
+    flex-direction: column;
   }
 }
 
