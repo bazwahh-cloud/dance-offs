@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=1056">
+  <link rel="stylesheet" href="style2.css?v=2007">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -36,7 +36,8 @@
     }
 
     .video-slot {
-      min-height: 240px;
+      width: 100%;
+      aspect-ratio: 16 / 9;
       background: #000;
       border-radius: 8px;
       position: relative;
@@ -54,7 +55,7 @@
 
 <body>
 
-  <!-- ⭐ CLEAN, GRID-FRIENDLY NAVIGATION -->
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -83,18 +84,18 @@
 
     <div id="playerContainer" style="min-height:150px; margin-top:20px;"></div>
 
-    <!-- ⭐ MATCH INDEX PAGE RESPONSIVE STRUCTURE -->
-    <div class="battle-table" style="margin-top:30px;">
+    <!-- ⭐ TABLE LAYOUT FOR LEFT/RIGHT DJ VIDEOS -->
+    <table class="battle-table" style="margin-top:30px;">
+      <tr>
+        <td class="battle-cell">
+          <div class="video-slot" id="djLeftVideo"></div>
+        </td>
 
-      <div class="battle-cell">
-        <div class="video-slot" id="djLeftVideo"></div>
-      </div>
-
-      <div class="battle-cell">
-        <div class="video-slot" id="djRightVideo"></div>
-      </div>
-
-    </div>
+        <td class="battle-cell">
+          <div class="video-slot" id="djRightVideo"></div>
+        </td>
+      </tr>
+    </table>
 
   </main>
 
@@ -103,8 +104,9 @@
   </footer>
 
   <script>
+    /* ⭐ CORRECT BACKEND URL */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbwuOUEAuAE4CfauFw9Xxv3BJenwCUaUNakrb7DTeTjJLZMK8S1hCXbcLRBHCY3FoFZD_g/exec";
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -253,29 +255,23 @@
 
           if (leftID) {
             document.getElementById("djLeftVideo").innerHTML = `
-              <div style="position:relative; height:100%;">
-                <div class="yt-blocker"></div>
-                <iframe 
-                  class="battle-frame"
-                  src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&loop=1&playlist=${leftID}&modestbranding=1&rel=0&controls=1"
-                  allow="autoplay; encrypted-media"
-                  allowfullscreen>
-                </iframe>
-              </div>
+              <iframe 
+                class="battle-frame"
+                src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&loop=1&playlist=${leftID}&modestbranding=1&rel=0&controls=1"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+              </iframe>
             `;
           }
 
           if (rightID) {
             document.getElementById("djRightVideo").innerHTML = `
-              <div style="position:relative; height:100%;">
-                <div class="yt-blocker"></div>
-                <iframe 
-                  class="battle-frame"
-                  src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
-                  allow="autoplay; encrypted-media"
-                  allowfullscreen>
-                </iframe>
-              </div>
+              <iframe 
+                class="battle-frame"
+                src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+              </iframe>
             `;
           }
         });
