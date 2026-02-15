@@ -124,4 +124,81 @@
   <script>
     let emailSubmitted = false;
 
-    const
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
+    // Read Battle ID + TX from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const battleID = urlParams.get("battle") || "";
+    const txID = urlParams.get("tx") || ""; // optional
+
+    const navBar = document.getElementById("navBar");
+    const msg = document.getElementById("emailMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Disable nav initially
+    navBar.classList.add("nav-disabled");
+
+    // Prevent leaving early
+    window.addEventListener("beforeunload", function (e) {
+      if (!emailSubmitted) {
+        e.preventDefault();
+        e.returnValue = "We need your email so we can notify you if you win!";
+      }
+    });
+
+    async function submitEmail() {
+      const email = document.getElementById("emailInput").value.trim();
+
+      if (!email) {
+        msg.innerText = "Please enter email.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      msg.innerText = "Submitting…";
+
+      try {
+        // Send to Apps Script
+        const formData = new URLSearchParams();
+        formData.append("mode", "saveemail");
+        formData.append("email", email);
+        formData.append("battle", battleID);
+        formData.append("tx", txID);
+
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: formData
+        });
+
+        const text = await response.text();
+
+        if (text !== "OK") {
+          msg.innerText = "Error sending email. Please try again.";
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "1";
+          return;
+        }
+
+        // SUCCESS
+        emailSubmitted = true;
+        msg.innerText = "Thanks! Redirecting…";
+
+        navBar.classList.remove("nav-disabled");
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+
+      } catch (err) {
+        console.error(err);
+        msg.innerText = "Error sending email. Please try again.";
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+      }
+    }
+  </script>
+
+</body>
+</html>
