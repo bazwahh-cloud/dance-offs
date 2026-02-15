@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2011">
+  <link rel="stylesheet" href="style2.css?v=2014">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -50,7 +50,7 @@
       box-shadow: none !important;
     }
 
-    /* ⭐ Overlay directly over the SoundCloud iframe */
+    /* ⭐ SoundCloud wrapper + overlay (matches DJs page) */
     .sc-wrapper {
       position: relative;
       width: 100%;
@@ -58,15 +58,20 @@
       margin-top: 30px;
     }
 
+    #scPlayer {
+      pointer-events: none; /* block click-through */
+    }
+
     .sc-tap-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.0);
+      background: rgba(0,0,0,0);
       z-index: 20;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      pointer-events: auto;
     }
 
     .sc-tap-text {
@@ -116,7 +121,7 @@
       <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
     </div>
 
-    <!-- ⭐ SOUNDCLOUD PLAYER WITH TAP OVERLAY -->
+    <!-- ⭐ SoundCloud Player with Tap Overlay -->
     <div class="sc-wrapper">
       <iframe 
         id="scPlayer"
@@ -241,6 +246,8 @@
             "https://w.soundcloud.com/player/?url=" +
             encodeURIComponent(scURL) +
             "&auto_play=false";
+
+          document.getElementById("scOverlay").style.display = "flex";
         });
     }
 
