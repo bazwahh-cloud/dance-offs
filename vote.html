@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2007">
+  <link rel="stylesheet" href="style2.css?v=2008">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -94,8 +94,8 @@
     <a href="shop.html">Shop</a>
   </nav>
 
-  <!-- COUNTDOWN TIMER -->
-  <p id="countdownTimer"></p>
+  <!-- ⭐ COUNTDOWN TIMER (FORCED CENTER ALIGNMENT) -->
+  <p id="countdownTimer" style="text-align:center; width:100%; margin-top:15px; font-size:20px; color:white;"></p>
 
   <main class="page-container">
 
@@ -145,9 +145,6 @@
     let currentTransactionID = null;
     let currentBattleID = null;
 
-    /* ----------------------------------------------------
-       PAYPAL BUTTON
-    ---------------------------------------------------- */
     paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({
@@ -173,9 +170,6 @@
       }
     }).render("#paypal-button-container");
 
-    /* ----------------------------------------------------
-       YOUTUBE HELPERS
-    ---------------------------------------------------- */
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -194,9 +188,6 @@
       `;
     }
 
-    /* ----------------------------------------------------
-       LOAD BATTLE
-    ---------------------------------------------------- */
     function loadBattle() {
       fetch(endpoint + "?mode=getbattle")
         .then(r => r.json())
@@ -206,9 +197,6 @@
         });
     }
 
-    /* ----------------------------------------------------
-       LOAD DJ MIX
-    ---------------------------------------------------- */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -233,9 +221,6 @@
         });
     }
 
-    /* ---------------------------------------------------
-       LOAD VOTE COUNTS
-    ---------------------------------------------------- */
     function loadVoteCounts() {
       fetch(endpoint + "?mode=getvotes")
         .then(r => r.json())
@@ -245,9 +230,6 @@
         });
     }
 
-    /* ----------------------------------------------------
-       VOTE
-    ---------------------------------------------------- */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -270,9 +252,6 @@
       });
     }
 
-    /* ----------------------------------------------------
-       COUNTDOWN TIMER
-    ---------------------------------------------------- */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
@@ -304,9 +283,6 @@
         });
     }
 
-    /* ----------------------------------------------------
-       INIT
-    ---------------------------------------------------- */
     window.onload = function () {
       loadBattle();
       loadPlayer();
