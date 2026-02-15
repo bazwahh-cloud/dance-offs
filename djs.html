@@ -172,6 +172,7 @@
           encodeURIComponent(scURL) +
           "&auto_play=false";
 
+        // ⭐ Reset overlay when new mix loads
         document.getElementById("scOverlay").style.display = "flex";
       });
 
@@ -201,6 +202,7 @@
               encodeURIComponent(scURL) +
               "&auto_play=false";
 
+            // ⭐ Ensure overlay is visible on load
             document.getElementById("scOverlay").style.display = "flex";
           });
       }
