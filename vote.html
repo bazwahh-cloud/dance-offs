@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2008">
+  <link rel="stylesheet" href="style2.css?v=2015">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -24,6 +24,14 @@
       height: 100%;
       border-radius: 8px;
       border: none;
+      pointer-events: none; /* ⭐ BLOCK CLICK-THROUGH INTO YOUTUBE */
+    }
+
+    .blocker {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: auto; /* ⭐ BLOCKS ALL INTERACTION */
     }
 
     .vote-button {
@@ -77,6 +85,38 @@
         max-width: 360px;
       }
     }
+
+    /* ⭐ SoundCloud wrapper + overlay */
+    .sc-wrapper {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      margin-top: 40px;
+    }
+
+    #scPlayer {
+      pointer-events: none; /* ⭐ BLOCK CLICK-THROUGH */
+    }
+
+    .sc-tap-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .sc-tap-text {
+      color: white;
+      font-size: 26px;
+      font-weight: 700;
+      text-shadow: 0 0 10px black;
+      pointer-events: none;
+    }
   </style>
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
@@ -94,12 +134,11 @@
     <a href="shop.html">Shop</a>
   </nav>
 
-  <!-- ⭐ COUNTDOWN TIMER (FORCED CENTER ALIGNMENT) -->
-  <p id="countdownTimer" style="text-align:center; width:100%; margin-top:15px; font-size:20px; color:white;"></p>
+  <!-- COUNTDOWN -->
+  <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
   <main class="page-container">
 
-    <!-- ⭐ RESPONSIVE VOTE LAYOUT -->
     <div class="vote-layout">
 
       <!-- LEFT VIDEO -->
@@ -109,7 +148,7 @@
         <div id="leftCount" class="vote-count">Left Votes: 0</div>
       </div>
 
-      <!-- PAYPAL COLUMN -->
+      <!-- PAYPAL -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -128,8 +167,22 @@
 
     </div>
 
-    <!-- DJ MIX PLAYER -->
-    <div id="playerContainer" style="margin-top:40px; text-align:center;"></div>
+    <!-- ⭐ SoundCloud Player with Tap Overlay -->
+    <div class="sc-wrapper">
+      <iframe
+        id="scPlayer"
+        width="100%"
+        height="150"
+        scrolling="no"
+        frameborder="no"
+        allow="autoplay"
+        src="">
+      </iframe>
+
+      <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
+        <div class="sc-tap-text">Tap to Play</div>
+      </div>
+    </div>
 
   </main>
 
@@ -138,22 +191,21 @@
   </footer>
 
   <script>
-    /* ⭐ CORRECT BACKEND URL */
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
     let currentTransactionID = null;
     let currentBattleID = null;
+    let scURL = "";
 
     paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({
+      createOrder: (data, actions) =>
+        actions.order.create({
           purchase_units: [{ amount: { value: "1.50" } }]
-        });
-      },
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
+        }),
 
+      onApprove: (data, actions) =>
+        actions.order.capture().then(details => {
           currentTransactionID = details.id;
 
           const ts = new Date();
@@ -166,14 +218,13 @@
 
           document.getElementById("voteLeft").classList.add("enabled");
           document.getElementById("voteRight").classList.add("enabled");
-        });
-      }
+        })
     }).render("#paypal-button-container");
 
     function extractID(url) {
       if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
-      return match ? match[1] : null;
+      const m = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+      return m ? m[1] : null;
     }
 
     function embed(id) {
@@ -182,9 +233,9 @@
           class="battle-frame"
           src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1"
           allow="autoplay; encrypted-media"
-          allowfullscreen
           playsinline>
         </iframe>
+        <div class="blocker"></div>
       `;
     }
 
@@ -197,28 +248,34 @@
         });
     }
 
+    /* ⭐ Load SoundCloud (no autoplay yet) */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
         .then(data => {
-          if (!data.sound || !data.sound.startsWith("http")) {
-            document.getElementById("playerContainer").innerHTML =
-              "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
-            return;
-          }
+          if (!data.sound || !data.sound.startsWith("http")) return;
 
-          const clean = data.sound.split("?")[0];
+          scURL = data.sound.split("?")[0];
 
-          document.getElementById("playerContainer").innerHTML = `
-            <iframe
-              width="100%"
-              height="120"
-              frameborder="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=${encodeURIComponent(clean)}&auto_play=true">
-            </iframe>
-          `;
+          document.getElementById("scPlayer").src =
+            "https://w.soundcloud.com/player/?url=" +
+            encodeURIComponent(scURL) +
+            "&auto_play=false";
+
+          document.getElementById("scOverlay").style.display = "flex";
         });
+    }
+
+    /* ⭐ Mobile autoplay trigger */
+    function startSC() {
+      document.getElementById("scOverlay").style.display = "none";
+
+      const widget = document.getElementById("scPlayer").contentWindow;
+
+      widget.postMessage(
+        JSON.stringify({ method: "play" }),
+        "https://w.soundcloud.com"
+      );
     }
 
     function loadVoteCounts() {
@@ -237,7 +294,7 @@
       }
 
       const payload = {
-        side: side,
+        side,
         tx: currentTransactionID,
         battle: currentBattleID
       };
@@ -246,7 +303,6 @@
         method: "POST",
         body: JSON.stringify(payload)
       })
-      .then(r => r.text())
       .then(() => {
         window.location.href = "thankyou.html?battle=" + currentBattleID;
       });
@@ -269,9 +325,9 @@
               return;
             }
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const days = Math.floor(diff / 86400000);
+            const hours = Math.floor((diff / 3600000) % 24);
+            const mins = Math.floor((diff / 60000) % 60);
             const secs = Math.floor((diff / 1000) % 60);
 
             document.getElementById("countdownTimer").innerText =
