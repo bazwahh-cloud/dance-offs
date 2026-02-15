@@ -81,7 +81,6 @@
       }
     }
 
-    /* ⭐ SoundCloud wrapper (same as dancers page) */
     .sc-wrapper {
       position: relative;
       width: 100%;
@@ -154,7 +153,6 @@
 
 <body>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -170,14 +168,12 @@
 
     <div class="vote-layout">
 
-      <!-- LEFT VIDEO -->
       <div class="vote-column">
         <div id="leftVideo" class="video-slot"></div>
         <button class="vote-button" id="voteLeft" onclick="vote('LEFT')" disabled>Vote Left</button>
         <div id="leftCount" class="vote-count">Left Votes: 0</div>
       </div>
 
-      <!-- PAYPAL -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -187,7 +183,6 @@
         </div>
       </div>
 
-      <!-- RIGHT VIDEO -->
       <div class="vote-column">
         <div id="rightVideo" class="video-slot"></div>
         <button class="vote-button" id="voteRight" onclick="vote('RIGHT')" disabled>Vote Right</button>
@@ -196,7 +191,6 @@
 
     </div>
 
-    <!-- ⭐ Enhanced SoundCloud Player (MATCHES dancers page) -->
     <div class="sc-wrapper">
       <iframe
         id="scPlayer"
@@ -334,7 +328,8 @@
         body: JSON.stringify(payload)
       })
       .then(() => {
-        window.location.href = "thankyou.html?battle=" + currentBattleID;
+        window.location.href =
+          "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
       });
     }
 
