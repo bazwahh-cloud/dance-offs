@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=2013">
+  <link rel="stylesheet" href="style2.css?v=2015">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -39,7 +39,7 @@
       </div>
     </form>
 
-    <!-- ⭐ SoundCloud Player with Tap Overlay -->
+    <!-- ⭐ Enhanced SoundCloud Player -->
     <div id="playerContainer">
       <div class="sc-wrapper">
         <iframe 
@@ -52,9 +52,11 @@
           src="">
         </iframe>
 
-        <!-- Overlay blocks ALL clicks + triggers autoplay -->
-        <div class="sc-blocker" id="scOverlay" onclick="startSC()">
-          <div class="sc-tap-text">Tap to Play</div>
+        <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
+          <div class="sc-tap-overlay-inner">
+            <div class="sc-tap-button"></div>
+            <div class="sc-tap-text">Tap to Play</div>
+          </div>
         </div>
       </div>
     </div>
@@ -228,6 +230,7 @@
                 allow="autoplay; encrypted-media"
                 allowfullscreen>
               </iframe>
+              <div class="blocker"></div>
             `;
           }
 
@@ -239,6 +242,7 @@
                 allow="autoplay; encrypted-media"
                 allowfullscreen>
               </iframe>
+              <div class="blocker"></div>
             `;
           }
         });
