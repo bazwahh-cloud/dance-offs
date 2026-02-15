@@ -103,7 +103,7 @@ body {
 }
 
 /* ----------------------------------------------------
-   COUNTDOWN TIMER (CENTERED)
+   COUNTDOWN TIMER
 ---------------------------------------------------- */
 #countdownTimer {
   text-align: center;
@@ -226,12 +226,14 @@ body {
   height: 100%;
   border-radius: 8px;
   border: none;
+  pointer-events: none; /* ⭐ BLOCK YOUTUBE CLICK-THROUGH */
 }
 
 .blocker {
   position: absolute;
   inset: 0;
   z-index: 10;
+  pointer-events: auto; /* ⭐ BLOCKS ALL INTERACTION */
 }
 
 /* ⭐ Mobile: stack vertically */
@@ -243,10 +245,9 @@ body {
 }
 
 /* ----------------------------------------------------
-   SOUNDCLOUD — MOBILE AUTOPLAY + CLICK BLOCKING
+   SOUNDCLOUD — ENHANCED TAP-TO-PLAY OVERLAY
 ---------------------------------------------------- */
 
-/* Wrapper for SoundCloud player */
 .sc-wrapper {
   position: relative;
   width: 100%;
@@ -254,31 +255,68 @@ body {
   margin-top: 20px;
 }
 
-/* Prevent ALL click-throughs into SoundCloud */
 #scPlayer {
-  pointer-events: none;
+  pointer-events: none; /* ⭐ BLOCK CLICK-THROUGH */
 }
 
-/* Tap overlay that captures the gesture */
-.sc-blocker,
+/* Darkened backdrop + blur */
 .sc-tap-overlay {
   position: absolute;
   inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(2px);
   z-index: 20;
-  background: rgba(0,0,0,0);
-  pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  pointer-events: auto;
 }
 
+/* Container for button + text */
+.sc-tap-overlay-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Big glowing play button */
+.sc-tap-button {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #ffcc00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.6);
+  animation: pulse 1.6s infinite ease-in-out;
+}
+
+/* Play triangle */
+.sc-tap-button::before {
+  content: "";
+  border-style: solid;
+  border-width: 18px 0 18px 28px;
+  border-color: transparent transparent transparent #000;
+  margin-left: 6px;
+}
+
+/* Text under button */
 .sc-tap-text {
-  color: white;
-  font-size: 26px;
+  margin-top: 12px;
+  color: #ffcc00;
+  font-size: 22px;
   font-weight: 700;
   text-shadow: 0 0 10px black;
-  pointer-events: none;
+  text-align: center;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+  50% { transform: scale(1.15); box-shadow: 0 0 35px #ffcc00; }
+  100% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
 }
 
 /* ----------------------------------------------------
