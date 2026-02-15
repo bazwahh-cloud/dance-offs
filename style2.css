@@ -42,7 +42,7 @@ body {
 }
 
 /* ----------------------------------------------------
-   HERO SECTION — FULL IMAGE, NO CROPPING
+   HERO — FULL IMAGE, NO CROPPING
 ---------------------------------------------------- */
 .hero {
   width: 100%;
@@ -54,7 +54,7 @@ body {
   overflow: hidden;
 }
 
-/* ⭐ The image ALWAYS defines the height */
+/* ⭐ The hero image ALWAYS defines the height */
 .hero-img-wrap img {
   width: 100%;
   height: auto;
@@ -66,30 +66,35 @@ body {
 /* ⭐ Desktop: still show full image (no cropping) */
 @media (min-width: 900px) {
   .hero-img-wrap {
-    height: auto;        /* allow natural height */
+    height: auto;
   }
 
   .hero-img-wrap img {
     height: auto;
-    object-fit: contain; /* full image */
+    object-fit: contain;
     object-position: top;
   }
 }
 
-/* ⭐ Clickable zones always match image height */
+/* ----------------------------------------------------
+   HERO CLICKABLE ZONES — MATCH HERO IMAGE EXACTLY
+---------------------------------------------------- */
 .hero-zone {
   position: absolute;
   top: 0;
-  left: 0;
   width: 50%;
-  height: 100%;          /* matches image height */
+  height: 100%;              /* matches hero image height */
   cursor: pointer;
   z-index: 2;
+
+  /* ⭐ MATCH THE HERO IMAGE BEHAVIOUR */
+  background-size: contain;  /* keep dancers fully visible */
+  background-position: top;  /* align with hero image */
+  background-repeat: no-repeat;
 }
 
-.hero-right {
-  left: 50%;
-}
+.hero-left { left: 0; }
+.hero-right { left: 50%; }
 
 /* ----------------------------------------------------
    PAGE CONTAINER
