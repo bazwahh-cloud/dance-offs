@@ -7,7 +7,7 @@
   <title>Dance-Offs: Dancers</title>
 
   <!-- IMPORTANT: bump version number -->
-  <link rel="stylesheet" href="style2.css?v=2004">
+  <link rel="stylesheet" href="style2.css?v=2005">
 
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -72,20 +72,20 @@
 
   <main class="page-container">
 
-    <!-- ⭐ LEFT / RIGHT DANCERS (MATCHES CSS) -->
-    <div class="battle-table">
+    <!-- ⭐ TABLE LAYOUT FOR PERFECT LEFT/RIGHT ALIGNMENT -->
+    <table class="battle-table">
+      <tr>
+        <td class="battle-cell">
+          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
+          <div id="leftVideo" class="video-slot"></div>
+        </td>
 
-      <div class="battle-cell">
-        <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
-        <div id="leftVideo" class="video-slot" style="margin-top:10px;"></div>
-      </div>
-
-      <div class="battle-cell">
-        <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
-        <div id="rightVideo" class="video-slot" style="margin-top:10px;"></div>
-      </div>
-
-    </div>
+        <td class="battle-cell">
+          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
+          <div id="rightVideo" class="video-slot"></div>
+        </td>
+      </tr>
+    </table>
 
     <div style="text-align:center; margin-top:20px;">
       <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
@@ -118,7 +118,7 @@
 
     function embed(id) {
       return `
-        <div style="position:relative;">
+        <div style="position:relative; width:100%; height:100%;">
           <iframe 
             class="battle-frame"
             src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
@@ -224,8 +224,10 @@
         });
     }
 
-    loadCurrentBattle();
-    loadDJMix();
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCurrentBattle();
+      loadDJMix();
+    });
   </script>
 
 </body>
