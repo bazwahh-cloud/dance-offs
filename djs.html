@@ -6,65 +6,8 @@
 
   <title>Dance-Offs: DJs</title>
 
-  <link rel="stylesheet" href="style2.css?v=2012">
+  <link rel="stylesheet" href="style2.css?v=2013">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    .dj-form-row {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .dj-form-row input {
-      flex: 1;
-      max-width: 400px;
-    }
-
-    /* ⭐ Mobile-safe SoundCloud autoplay wrapper */
-    .sc-wrapper {
-      position: relative;
-      width: 100%;
-      height: 150px;
-      margin-top: 20px;
-    }
-
-    .sc-tap-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.0);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .sc-tap-text {
-      color: white;
-      font-size: 26px;
-      font-weight: 700;
-      text-shadow: 0 0 10px black;
-      pointer-events: none;
-    }
-
-    .video-slot {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .battle-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 8px;
-    }
-  </style>
 </head>
 
 <body>
@@ -109,7 +52,8 @@
           src="">
         </iframe>
 
-        <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
+        <!-- Overlay blocks ALL clicks + triggers autoplay -->
+        <div class="sc-blocker" id="scOverlay" onclick="startSC()">
           <div class="sc-tap-text">Tap to Play</div>
         </div>
       </div>
@@ -142,6 +86,9 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 
+      /* ----------------------------------------------------
+         URL CLEANING HELPERS
+      ---------------------------------------------------- */
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
@@ -184,9 +131,11 @@
         }
       }
 
+      /* ----------------------------------------------------
+         DJ MIX SUBMISSION
+      ---------------------------------------------------- */
       const form = document.getElementById("djMixForm");
       const input = document.getElementById("djMixInput");
-      const playerContainer = document.getElementById("playerContainer");
 
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -212,7 +161,7 @@
           url = url.split("?")[0];
         }
 
-        scURL = url; // store for autoplay
+        scURL = url;
 
         fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
@@ -224,6 +173,9 @@
         document.getElementById("scOverlay").style.display = "flex";
       });
 
+      /* ----------------------------------------------------
+         LOAD EXISTING MIX
+      ---------------------------------------------------- */
       function loadCurrentMix() {
         fetch(`${SCRIPT_URL}?mode=getsound`)
           .then(r => r.json())
@@ -231,7 +183,7 @@
             let url = data.sound || "";
 
             if (!url.startsWith("http")) {
-              playerContainer.innerHTML =
+              document.getElementById("playerContainer").innerHTML =
                 "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
               return;
             }
@@ -253,6 +205,9 @@
 
       loadCurrentMix();
 
+      /* ----------------------------------------------------
+         LOAD DJ BATTLE VIDEOS
+      ---------------------------------------------------- */
       function extractID(url) {
         if (!url) return null;
         const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -290,7 +245,9 @@
 
     });
 
-    /* ⭐ Mobile-safe autoplay: send play command via postMessage */
+    /* ----------------------------------------------------
+       ⭐ MOBILE AUTOPLAY: SEND PLAY COMMAND
+    ---------------------------------------------------- */
     function startSC() {
       document.getElementById("scOverlay").style.display = "none";
 
