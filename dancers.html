@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2009">
+  <link rel="stylesheet" href="style2.css?v=2010">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -22,6 +22,7 @@
       font-weight: 600;
       box-shadow: 0 0 8px #ffcc00;
     }
+
     .input-field:focus {
       outline: none;
       border-color: #ffe066;
@@ -73,7 +74,7 @@
 
 <body>
 
-  <!-- FULL PAGE TAP OVERLAY -->
+  <!-- ⭐ FULL PAGE TAP OVERLAY -->
   <div class="sc-fullscreen-overlay" id="tapOverlay" onclick="startSC()">
     <div class="sc-tap-text">Tap to Play</div>
   </div>
@@ -113,18 +114,8 @@
       <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
     </div>
 
-    <!-- SOUNDCLOUD PLAYER -->
-    <div id="djPlayer" style="margin-top:30px; min-height:180px;">
-      <iframe 
-        id="scPlayer"
-        width="100%" 
-        height="166" 
-        scrolling="no" 
-        frameborder="no" 
-        allow="autoplay"
-        src="">
-      </iframe>
-    </div>
+    <!-- ⭐ SOUNDCLOUD PLAYER (created after tap) -->
+    <div id="djPlayer" style="margin-top:30px; min-height:180px;"></div>
 
   </main>
 
@@ -232,28 +223,30 @@
             return;
           }
 
-          if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-            url = url.split("?")[0];
-          }
-
-          scURL = url; // store for autoplay
-
-          document.getElementById("scPlayer").src =
-            "https://w.soundcloud.com/player/?url=" +
-            encodeURIComponent(url) +
-            "&auto_play=false";
+          scURL = url.split("?")[0]; // store clean URL only
         });
     }
 
-    /* ⭐ FULL PAGE TAP → AUTOPLAY */
+    /* ⭐ FULL PAGE TAP → CREATE IFRAME → AUTOPLAY */
     function startSC() {
       document.getElementById("tapOverlay").style.display = "none";
 
-      const player = document.getElementById("scPlayer");
-      player.src =
+      const container = document.getElementById("djPlayer");
+      container.innerHTML = ""; // clear any placeholder
+
+      const iframe = document.createElement("iframe");
+      iframe.width = "100%";
+      iframe.height = "166";
+      iframe.frameBorder = "no";
+      iframe.allow = "autoplay";
+      iframe.scrolling = "no";
+
+      iframe.src =
         "https://w.soundcloud.com/player/?url=" +
         encodeURIComponent(scURL) +
         "&auto_play=true";
+
+      container.appendChild(iframe);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
