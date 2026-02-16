@@ -39,11 +39,12 @@
       </div>
     </form>
 
-    <!-- ⭐ Enhanced SoundCloud Player (IDENTICAL to dancers page) -->
+    <!-- ⭐ Enhanced SoundCloud Player -->
     <div id="playerContainer">
       <div class="sc-wrapper">
         <iframe 
           id="scPlayer"
+          style="pointer-events:auto;"
           width="100%" 
           height="150"
           scrolling="no"
@@ -88,9 +89,6 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 
-      /* ----------------------------------------------------
-         URL CLEANING HELPERS
-      ---------------------------------------------------- */
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
@@ -133,9 +131,6 @@
         }
       }
 
-      /* ----------------------------------------------------
-         DJ MIX SUBMISSION
-      ---------------------------------------------------- */
       const form = document.getElementById("djMixForm");
       const input = document.getElementById("djMixInput");
 
@@ -172,13 +167,9 @@
           encodeURIComponent(scURL) +
           "&auto_play=false";
 
-        // ⭐ Reset overlay when new mix loads
         document.getElementById("scOverlay").style.display = "flex";
       });
 
-      /* ----------------------------------------------------
-         LOAD EXISTING MIX
-      ---------------------------------------------------- */
       function loadCurrentMix() {
         fetch(`${SCRIPT_URL}?mode=getsound`)
           .then(r => r.json())
@@ -202,16 +193,12 @@
               encodeURIComponent(scURL) +
               "&auto_play=false";
 
-            // ⭐ Ensure overlay is visible on load
             document.getElementById("scOverlay").style.display = "flex";
           });
       }
 
       loadCurrentMix();
 
-      /* ----------------------------------------------------
-         LOAD DJ BATTLE VIDEOS
-      ---------------------------------------------------- */
       function extractID(url) {
         if (!url) return null;
         const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -251,9 +238,6 @@
 
     });
 
-    /* ----------------------------------------------------
-       ⭐ MOBILE AUTOPLAY: SEND PLAY COMMAND
-    ---------------------------------------------------- */
     function startSC() {
       document.getElementById("scOverlay").style.display = "none";
 
@@ -268,3 +252,4 @@
 
 </body>
 </html>
+
