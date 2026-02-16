@@ -256,7 +256,7 @@ body {
 }
 
 #scPlayer {
-  pointer-events: none; /* ⭐ BLOCK CLICK-THROUGH */
+  pointer-events: auto; /* ⭐ FIXED: ALLOW TAP TO REACH IFRAME */
 }
 
 /* Darkened backdrop + blur */
