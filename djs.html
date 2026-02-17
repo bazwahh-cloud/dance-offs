@@ -49,7 +49,7 @@
           height="150"
           scrolling="no"
           frameborder="no"
-          allow="autoplay"
+          allow="autoplay; encrypted-media"
           src="">
         </iframe>
 
@@ -86,6 +86,19 @@
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
     let scURL = "";
+    let scReady = false;
+
+    /* ⭐ Listen for SoundCloud widget READY event */
+    window.addEventListener("message", (event) => {
+      if (event.origin !== "https://w.soundcloud.com") return;
+
+      try {
+        const data = JSON.parse(event.data);
+        if (data.method === "ready") {
+          scReady = true;
+        }
+      } catch (e) {}
+    });
 
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -238,18 +251,24 @@
 
     });
 
+    /* ⭐ Updated startSC with READY wait */
     function startSC() {
       document.getElementById("scOverlay").style.display = "none";
 
       const widget = document.getElementById("scPlayer").contentWindow;
 
-      widget.postMessage(
-        JSON.stringify({ method: "play" }),
-        "https://w.soundcloud.com"
-      );
+      if (scReady) {
+        widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
+      } else {
+        const wait = setInterval(() => {
+          if (scReady) {
+            clearInterval(wait);
+            widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
+          }
+        }, 50);
+      }
     }
   </script>
 
 </body>
 </html>
-
