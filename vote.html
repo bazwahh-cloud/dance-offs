@@ -46,7 +46,6 @@
       width: 100%;
       opacity: 0.5;
     }
-
     .vote-button.enabled {
       opacity: 1;
     }
@@ -81,6 +80,7 @@
       }
     }
 
+    /* ⭐ SoundCloud */
     .sc-wrapper {
       position: relative;
       width: 100%;
@@ -89,7 +89,7 @@
     }
 
     #scPlayer {
-      pointer-events: none;
+      pointer-events: auto;
     }
 
     .sc-tap-overlay {
@@ -191,16 +191,15 @@
 
     </div>
 
+    <!-- ⭐ SoundCloud Player -->
     <div class="sc-wrapper">
       <iframe
         id="scPlayer"
-        style="pointer-events:auto;"
         width="100%"
         height="150"
         scrolling="no"
         frameborder="no"
-        allow="autoplay; encrypted-media"
-        src="">
+        allow="autoplay; encrypted-media">
       </iframe>
 
       <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
@@ -226,18 +225,16 @@
     let scURL = "";
     let scReady = false;
 
-    /* ⭐ Listen for SoundCloud widget READY event */
+    /* ⭐ SoundCloud READY listener */
     window.addEventListener("message", (event) => {
       if (event.origin !== "https://w.soundcloud.com") return;
-
       try {
         const data = JSON.parse(event.data);
-        if (data.method === "ready") {
-          scReady = true;
-        }
+        if (data.method === "ready") scReady = true;
       } catch (e) {}
     });
 
+    /* ⭐ PayPal */
     paypal.Buttons({
       createOrder: (data, actions) =>
         actions.order.create({
@@ -261,6 +258,7 @@
         })
     }).render("#paypal-button-container");
 
+    /* ⭐ YouTube helpers */
     function extractID(url) {
       if (!url) return null;
       const m = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -288,6 +286,7 @@
         });
     }
 
+    /* ⭐ Load SoundCloud URL but DO NOT load iframe */
     function loadPlayer() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -296,33 +295,35 @@
 
           scURL = data.sound.split("?")[0];
 
-          document.getElementById("scPlayer").src =
-            "https://w.soundcloud.com/player/?url=" +
-            encodeURIComponent(scURL) +
-            "&auto_play=false";
-
+          /* ❗ Do NOT load iframe here — iPhone fix */
           document.getElementById("scOverlay").style.display = "flex";
         });
     }
 
-    /* ⭐ Updated startSC with READY wait */
+    /* ⭐ iPhone-safe autoplay */
     function startSC() {
-      document.getElementById("scOverlay").style.display = "none";
+      const overlay = document.getElementById("scOverlay");
+      overlay.style.display = "none";
 
-      const widget = document.getElementById("scPlayer").contentWindow;
+      const iframe = document.getElementById("scPlayer");
 
-      if (scReady) {
-        widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-      } else {
-        const wait = setInterval(() => {
-          if (scReady) {
-            clearInterval(wait);
-            widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-          }
-        }, 50);
-      }
+      /* Load iframe ONLY after user gesture */
+      iframe.src =
+        "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(scURL) +
+        "&auto_play=true";
+
+      const widget = iframe.contentWindow;
+
+      const wait = setInterval(() => {
+        if (scReady) {
+          clearInterval(wait);
+          widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
+        }
+      }, 50);
     }
 
+    /* ⭐ Vote counts */
     function loadVoteCounts() {
       fetch(endpoint + "?mode=getvotes")
         .then(r => r.json())
@@ -332,6 +333,7 @@
         });
     }
 
+    /* ⭐ Voting */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -353,6 +355,7 @@
       });
     }
 
+    /* ⭐ Countdown */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
