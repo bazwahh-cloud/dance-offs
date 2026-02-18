@@ -162,8 +162,7 @@
         height="166"
         scrolling="no"
         frameborder="no"
-        allow="autoplay; encrypted-media"
-        src="">
+        allow="autoplay; encrypted-media">
       </iframe>
 
       <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
@@ -281,6 +280,7 @@
         });
     }
 
+    /* ⭐ DO NOT load iframe here — iPhone fix */
     function loadDJMix() {
       fetch(endpoint + "?mode=getsound")
         .then(r => r.json())
@@ -290,31 +290,31 @@
 
           scURL = url.split("?")[0];
 
-          document.getElementById("scPlayer").src =
-            "https://w.soundcloud.com/player/?url=" +
-            encodeURIComponent(scURL) +
-            "&auto_play=false";
-
           document.getElementById("scOverlay").style.display = "flex";
         });
     }
 
-    /* ⭐ Updated startSC with READY wait */
+    /* ⭐ iPhone-safe autoplay */
     function startSC() {
-      document.getElementById("scOverlay").style.display = "none";
+      const overlay = document.getElementById("scOverlay");
+      overlay.style.display = "none";
 
-      const widget = document.getElementById("scPlayer").contentWindow;
+      const iframe = document.getElementById("scPlayer");
 
-      if (scReady) {
-        widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-      } else {
-        const wait = setInterval(() => {
-          if (scReady) {
-            clearInterval(wait);
-            widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-          }
-        }, 50);
-      }
+      // Load iframe ONLY after user gesture
+      iframe.src =
+        "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(scURL) +
+        "&auto_play=true";
+
+      const widget = iframe.contentWindow;
+
+      const wait = setInterval(() => {
+        if (scReady) {
+          clearInterval(wait);
+          widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
+        }
+      }, 50);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
