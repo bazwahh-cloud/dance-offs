@@ -8,6 +8,70 @@
 
   <link rel="stylesheet" href="style2.css?v=2015">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    .sc-wrapper {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      margin-top: 25px;
+    }
+
+    .sc-tap-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .sc-tap-overlay-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sc-tap-button {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.6);
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+
+    .sc-tap-button::before {
+      content: "";
+      border-style: solid;
+      border-width: 18px 0 18px 28px;
+      border-color: transparent transparent transparent #000;
+      margin-left: 6px;
+    }
+
+    .sc-tap-text {
+      margin-top: 12px;
+      color: #ffcc00;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 0 0 10px black;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+      50% { transform: scale(1.15); box-shadow: 0 0 35px #ffcc00; }
+      100% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+    }
+  </style>
 </head>
 
 <body>
@@ -44,13 +108,11 @@
       <div class="sc-wrapper">
         <iframe 
           id="scPlayer"
-          style="pointer-events:auto;"
           width="100%" 
           height="150"
           scrolling="no"
           frameborder="no"
-          allow="autoplay; encrypted-media"
-          src="">
+          allow="autoplay; encrypted-media">
         </iframe>
 
         <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
@@ -94,14 +156,15 @@
 
       try {
         const data = JSON.parse(event.data);
-        if (data.method === "ready") {
-          scReady = true;
-        }
+        if (data.method === "ready") scReady = true;
       } catch (e) {}
     });
 
     document.addEventListener("DOMContentLoaded", function() {
 
+      /* -----------------------------
+         URL CLEANING + OEMBED RESOLVE
+      ------------------------------*/
       function extractUrlFromInput(raw) {
         let text = raw.trim();
         if (text.includes("<iframe")) {
@@ -144,6 +207,9 @@
         }
       }
 
+      /* -----------------------------
+         DJ MIX SUBMISSION
+      ------------------------------*/
       const form = document.getElementById("djMixForm");
       const input = document.getElementById("djMixInput");
 
@@ -175,14 +241,13 @@
 
         fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
 
-        document.getElementById("scPlayer").src =
-          "https://w.soundcloud.com/player/?url=" +
-          encodeURIComponent(scURL) +
-          "&auto_play=false";
-
+        /* ❗ DO NOT load iframe here — iPhone fix */
         document.getElementById("scOverlay").style.display = "flex";
       });
 
+      /* -----------------------------
+         LOAD EXISTING MIX
+      ------------------------------*/
       function loadCurrentMix() {
         fetch(`${SCRIPT_URL}?mode=getsound`)
           .then(r => r.json())
@@ -201,17 +266,16 @@
 
             scURL = url;
 
-            document.getElementById("scPlayer").src =
-              "https://w.soundcloud.com/player/?url=" +
-              encodeURIComponent(scURL) +
-              "&auto_play=false";
-
+            /* ❗ DO NOT load iframe here — iPhone fix */
             document.getElementById("scOverlay").style.display = "flex";
           });
       }
 
       loadCurrentMix();
 
+      /* -----------------------------
+         LOAD DJ BATTLE VIDEOS
+      ------------------------------*/
       function extractID(url) {
         if (!url) return null;
         const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -251,22 +315,29 @@
 
     });
 
-    /* ⭐ Updated startSC with READY wait */
+    /* -----------------------------
+       ⭐ iPhone-safe autoplay
+    ------------------------------*/
     function startSC() {
-      document.getElementById("scOverlay").style.display = "none";
+      const overlay = document.getElementById("scOverlay");
+      overlay.style.display = "none";
 
-      const widget = document.getElementById("scPlayer").contentWindow;
+      const iframe = document.getElementById("scPlayer");
 
-      if (scReady) {
-        widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-      } else {
-        const wait = setInterval(() => {
-          if (scReady) {
-            clearInterval(wait);
-            widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-          }
-        }, 50);
-      }
+      /* Load iframe ONLY after user gesture */
+      iframe.src =
+        "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(scURL) +
+        "&auto_play=true";
+
+      const widget = iframe.contentWindow;
+
+      const wait = setInterval(() => {
+        if (scReady) {
+          clearInterval(wait);
+          widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
+        }
+      }, 50);
     }
   </script>
 
