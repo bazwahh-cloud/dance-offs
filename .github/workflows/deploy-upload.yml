@@ -7,7 +7,6 @@ on:
     paths:
       - "uploads/**"
       - "style2.css"
-      - "uploads/djs.html"
       - ".github/workflows/deploy-upload.yml"
 
 jobs:
@@ -26,13 +25,12 @@ jobs:
           password: ${{ secrets.FTP_UPLOAD_PASSWORD }}
 
           protocol: ftp
-          passive: true
+          port: 21
 
           local-dir: ./uploads
           server-dir: /htdocs/uploads
 
-          timeout: 60000
-          retries: 5
-          retry-delay: 5000
-
-          dangerous-clean-slate: false
+          # Stability settings for Fasthosts
+          timeout: 60000          # 60 seconds
+          security: loose         # REQUIRED for Fasthosts
+          log-level: verbose      # Better debugging
