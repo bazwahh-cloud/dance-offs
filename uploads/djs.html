@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta-name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
   <!-- Load shared stylesheet from subdomain root -->
@@ -11,25 +11,29 @@
 
 <body>
 
-  <!-- ⭐ COMPACT DJ LAYOUT -->
+  <!-- ⭐ DJ BOOTH -->
   <div class="dj-booth">
 
-    <!-- Two decks side-by-side -->
+    <!-- ⭐ Decks side-by-side (matches new CSS) -->
     <div class="deck-row">
+
+      <!-- Deck 1 -->
       <div class="deck">
         <div class="deck-title">Deck 1</div>
         <input type="text" id="deck1Artist" placeholder="Artist" required>
         <input type="text" id="deck1Title" placeholder="Track Title" required>
       </div>
 
+      <!-- Deck 2 -->
       <div class="deck">
         <div class="deck-title">Deck 2</div>
         <input type="text" id="deck2Artist" placeholder="Artist" required>
         <input type="text" id="deck2Title" placeholder="Track Title" required>
       </div>
+
     </div>
 
-    <!-- Mixer underneath -->
+    <!-- ⭐ Mixer underneath (shorter + wider) -->
     <div class="mixer">
       <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
       <input type="text" id="djName" placeholder="DJ Name" required>
@@ -37,6 +41,7 @@
       <label class="upload-label">
         Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
       </label>
+
       <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
 
       <button id="uploadBtn" class="upload-button">Upload Mix</button>
@@ -46,7 +51,7 @@
 
   </div>
 
-  <!-- Optional: JS to handle upload button -->
+  <!-- ⭐ Upload Script -->
   <script>
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
