@@ -41,6 +41,8 @@
       border: none;
       font-size: 14px;
       text-align: center;
+      background: rgba(255,255,255,0.1);
+      color: white;
     }
 
     .deck-title {
@@ -104,6 +106,30 @@
       font-weight: 600;
       min-height: 20px;
       color: #ffcc00;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .dj-booth {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .deck {
+        width: 180px;
+        height: 180px;
+        padding: 15px;
+      }
+
+      .deck input {
+        font-size: 13px;
+      }
+
+      .mixer {
+        width: 90%;
+        max-width: 320px;
+      }
     }
   </style>
 </head>
@@ -178,7 +204,7 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
     document.addEventListener("DOMContentLoaded", () => {
       const uploadBtn = document.getElementById("uploadBtn");
