@@ -27,8 +27,8 @@ jobs:
           protocol: ftp
           port: 21
 
-          local-dir: ./uploads
-          server-dir: /htdocs/uploads
+          local-dir: ./uploads/        # ⭐ MUST end with /
+          server-dir: /htdocs/uploads/ # optional but recommended
 
           timeout: 60000
           security: loose
