@@ -1,4 +1,4 @@
-name: Deploy DJ Upload System to upload.dance-offs.com
+name: Deploy to upload.dance-offs.com (Uploads Subdomain)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   ftp-deploy:
-    name: FTP Deploy (Subdomain)
+    name: FTP Deploy (Uploads Subdomain)
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       # Reset subdomain state
-      - name: Reset subdomain state
+      - name: Reset uploads subdomain
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.fasthosts.co.uk
@@ -25,8 +25,8 @@ jobs:
           server-dir: /htdocs/
           dangerous-clean-slate: true
 
-      # Deploy ONLY uploads folder + style2.css
-      - name: Deploy uploads + shared CSS
+      # Deploy uploads folder + style2.css + backend
+      - name: Deploy uploads system
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.fasthosts.co.uk
@@ -38,18 +38,6 @@ jobs:
             .git/**
             .github/**
             empty-dir/**
-            public_html/**
-            index.html
-            vote.html
-            images/**
-            scripts/**
-            **/*.js
-            **/*.png
-            **/*.jpg
-            **/*.jpeg
-            **/*.gif
-            **/*.html
-            !uploads/**
-            !style2.css
+            README.md
           protocol: ftp
           log-level: verbose
