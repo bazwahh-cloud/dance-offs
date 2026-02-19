@@ -10,41 +10,73 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    .dj-upload-box {
-      max-width: 450px;
-      margin: 0 auto;
-      padding: 25px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    /* DJ Booth Layout */
+    .dj-booth {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 25px;
+      margin: 30px auto;
+      flex-wrap: wrap;
     }
 
-    .input-field {
-      width: 100%;
-      padding: 12px 14px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: rgba(0,0,0,0.35);
+    /* Decks (look like records) */
+    .deck {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #222 40%, #000 80%);
+      border: 4px solid #444;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      padding: 20px;
       color: #fff;
-      font-size: 16px;
-      outline: none;
-      transition: 0.2s;
+      text-align: center;
     }
 
-    .input-field:focus {
-      border-color: #ffcc00;
-      box-shadow: 0 0 8px rgba(255,204,0,0.6);
+    .deck input {
+      width: 90%;
+      margin: 6px auto;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .deck-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #ffcc00;
+    }
+
+    /* Mixer (center column) */
+    .mixer {
+      width: 260px;
+      padding: 20px;
+      background: linear-gradient(180deg, #111, #222);
+      border-radius: 12px;
+      border: 2px solid #444;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .mixer input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #666;
+      background: #000;
+      color: #fff;
+      font-size: 15px;
     }
 
     .upload-label {
-      display: block;
       margin-top: 15px;
-      margin-bottom: 5px;
       font-weight: 600;
       color: #ffcc00;
-      text-align: left;
+      text-align: center;
     }
 
     .upload-button {
@@ -71,6 +103,7 @@
       font-size: 16px;
       font-weight: 600;
       min-height: 20px;
+      color: #ffcc00;
     }
   </style>
 </head>
@@ -91,27 +124,37 @@
 
     <p class="instruction-line">Upload your DJ mix below.</p>
 
-    <!-- ⭐ DJ MIX UPLOAD -->
-    <div class="dj-upload-box">
+    <!-- ⭐ DJ BOOTH LAYOUT -->
+    <div class="dj-booth">
 
-      <input type="email" id="djEmail" class="input-field" placeholder="Your Email (DJ ID)" required>
+      <!-- LEFT DECK -->
+      <div class="deck">
+        <div class="deck-title">Deck 1</div>
+        <input type="text" id="deck1Artist" placeholder="Artist" required>
+        <input type="text" id="deck1Title" placeholder="Track Title" required>
+      </div>
 
-      <input type="text" id="djName" class="input-field" placeholder="DJ Name" required>
+      <!-- MIXER (DJ INFO + FILE UPLOAD) -->
+      <div class="mixer">
+        <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
+        <input type="text" id="djName" placeholder="DJ Name" required>
 
-      <input type="text" id="deck1Artist" class="input-field" placeholder="Deck 1 Artist" required>
-      <input type="text" id="deck1Title" class="input-field" placeholder="Deck 1 Track Title" required>
+        <label class="upload-label">
+          Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
+        </label>
+        <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
 
-      <input type="text" id="deck2Artist" class="input-field" placeholder="Deck 2 Artist" required>
-      <input type="text" id="deck2Title" class="input-field" placeholder="Deck 2 Track Title" required>
+        <button id="uploadBtn" class="upload-button">Upload Mix</button>
 
-      <label class="upload-label">
-        Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
-      </label>
-      <input type="file" id="djFile" accept=".mp3,audio/mpeg" class="input-field" required>
+        <div id="uploadStatus"></div>
+      </div>
 
-      <button id="uploadBtn" class="upload-button">Upload Mix</button>
-
-      <div id="uploadStatus"></div>
+      <!-- RIGHT DECK -->
+      <div class="deck">
+        <div class="deck-title">Deck 2</div>
+        <input type="text" id="deck2Artist" placeholder="Artist" required>
+        <input type="text" id="deck2Title" placeholder="Track Title" required>
+      </div>
 
     </div>
 
@@ -135,11 +178,8 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE"; // Replace with your Apps Script URL
+    const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
 
-    /* -----------------------------
-       DJ UPLOAD HANDLER
-    ------------------------------*/
     document.addEventListener("DOMContentLoaded", () => {
       const uploadBtn = document.getElementById("uploadBtn");
 
@@ -147,31 +187,25 @@
         const status = document.getElementById("uploadStatus");
         status.innerHTML = "Uploading…";
 
-        // Collect fields
-        const email = document.getElementById("djEmail").value.trim();
-        const name = document.getElementById("djName").value.trim();
-        const d1a = document.getElementById("deck1Artist").value.trim();
-        const d1t = document.getElementById("deck1Title").value.trim();
-        const d2a = document.getElementById("deck2Artist").value.trim();
-        const d2t = document.getElementById("deck2Title").value.trim();
-        const fileInput = document.getElementById("djFile");
-        const file = fileInput.files[0];
+        const email = djEmail.value.trim();
+        const name = djName.value.trim();
+        const d1a = deck1Artist.value.trim();
+        const d1t = deck1Title.value.trim();
+        const d2a = deck2Artist.value.trim();
+        const d2t = deck2Title.value.trim();
+        const file = djFile.files[0];
 
-        // Validate required fields
         if (!email || !name || !d1a || !d1t || !d2a || !d2t || !file) {
           status.innerHTML = "❌ Please complete all fields before uploading.";
           return;
         }
 
-        // Restrict to MP3 only
         if (file.type !== "audio/mpeg") {
           status.innerHTML = "❌ Only MP3 files are allowed.";
           return;
         }
 
-        // Approx 10‑minute MP3 limit (~20–25 MB)
-        const maxBytes = 30 * 1024 * 1024;
-        if (file.size > maxBytes) {
+        if (file.size > 30 * 1024 * 1024) {
           status.innerHTML = "❌ Your mix is too large. Please upload an MP3 of about 10 minutes.";
           return;
         }
@@ -214,10 +248,7 @@
       });
     });
 
-
-    /* -----------------------------
-       DJ BATTLE VIDEOS (unchanged)
-    ------------------------------*/
+    /* Battle videos unchanged */
     function extractID(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
@@ -231,27 +262,19 @@
         const rightID = extractID(data.right);
 
         if (leftID) {
-          document.getElementById("djLeftVideo").innerHTML = `
-            <iframe 
-              class="battle-frame"
+          djLeftVideo.innerHTML = `
+            <iframe class="battle-frame"
               src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&loop=1&playlist=${leftID}&modestbranding=1&rel=0&controls=1"
-              allow="autoplay; encrypted-media"
-              allowfullscreen>
-            </iframe>
-            <div class="blocker"></div>
-          `;
+              allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="blocker"></div>`;
         }
 
         if (rightID) {
-          document.getElementById("djRightVideo").innerHTML = `
-            <iframe 
-              class="battle-frame"
+          djRightVideo.innerHTML = `
+            <iframe class="battle-frame"
               src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
-              allow="autoplay; encrypted-media"
-              allowfullscreen>
-            </iframe>
-            <div class="blocker"></div>
-          `;
+              allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="blocker"></div>`;
         }
       });
   </script>
