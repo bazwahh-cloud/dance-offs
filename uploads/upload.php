@@ -3,33 +3,8 @@
 // -----------------------------
 // CONFIGURATION
 // -----------------------------
-$SECRET = "DjUpload-81!LnA1#-9b4e";  // Your secret token
-
-// Save files inside: uploads/tracks/
-$UPLOAD_DIR = __DIR__ . "/tracks/";
-
-// Public URL for files on the SUBDOMAIN
+$UPLOAD_DIR = __DIR__ . "/tracks/";  
 $PUBLIC_BASE_URL = "https://upload.dance-offs.com/uploads/tracks/";
-
-
-// -----------------------------
-// SECURITY CHECK
-// -----------------------------
-if (!isset($_POST['token']) || $_POST['token'] !== $SECRET) {
-    http_response_code(403);
-    die("Forbidden");
-}
-
-
-// -----------------------------
-// VALIDATE INPUT
-// -----------------------------
-if (!isset($_POST['filename']) || !isset($_POST['data'])) {
-    http_response_code(400);
-    die("Missing fields");
-}
-
-$filename = basename($_POST['filename']); // Prevent directory traversal
 
 
 // -----------------------------
@@ -41,30 +16,58 @@ if (!file_exists($UPLOAD_DIR)) {
 
 
 // -----------------------------
-// DECODE BASE64 FILE DATA
+// VALIDATE FILE INPUT
 // -----------------------------
-$data = base64_decode($_POST['data']);
-
-if ($data === false) {
+if (!isset($_FILES['file'])) {
     http_response_code(400);
-    die("Invalid Base64 data");
+    die("No file uploaded");
+}
+
+$file = $_FILES['file'];
+
+if ($file['error'] !== UPLOAD_ERR_OK) {
+    http_response_code(400);
+    die("Upload error: " . $file['error']);
 }
 
 
 // -----------------------------
-// WRITE FILE TO SERVER
+// VALIDATE FILE TYPE (MP3 ONLY)
 // -----------------------------
-$filepath = $UPLOAD_DIR . $filename;
+$allowedTypes = ['audio/mpeg', 'audio/mp3', 'application/octet-stream'];
 
-if (file_put_contents($filepath, $data) === false) {
+if (!in_array($file['type'], $allowedTypes)) {
+    http_response_code(400);
+    die("Invalid file type. MP3 only.");
+}
+
+
+// -----------------------------
+// SANITIZE FILENAME
+// -----------------------------
+$originalName = basename($file['name']);
+$extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+if ($extension !== "mp3") {
+    http_response_code(400);
+    die("Only MP3 files allowed.");
+}
+
+// Create a unique filename
+$finalName = time() . "-" . preg_replace("/[^A-Za-z0-9_\-\.]/", "_", $originalName);
+$targetPath = $UPLOAD_DIR . $finalName;
+
+
+// -----------------------------
+// MOVE FILE TO TRACKS FOLDER
+// -----------------------------
+if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
     http_response_code(500);
-    die("Failed to write file");
+    die("Failed to save file");
 }
 
 
 // -----------------------------
 // RETURN PUBLIC URL
 // -----------------------------
-$publicUrl = $PUBLIC_BASE_URL . $filename;
-
-echo $publicUrl;
+echo $PUBLIC_BASE_URL . $finalName;
