@@ -17,7 +17,7 @@ jobs:
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: 77.68.64.42
+          server: ftp.fasthosts.co.uk
           username: upload.dance-offs.com
           password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
           local-dir: ./
