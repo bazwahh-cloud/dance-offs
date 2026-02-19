@@ -4,40 +4,35 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "uploads/**"
+      - "style2.css"
+      - "uploads/djs.html"
+      - ".github/workflows/deploy-upload.yml"
 
 jobs:
   ftp-deploy:
-    name: FTP Deploy (Uploads Subdomain)
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Reset subdomain state
-      - name: Reset uploads subdomain
+      - name: FTP Deploy (Uploads Subdomain)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp.fasthosts.co.uk
-          username: upload.dance-offs.com
-          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
-          local-dir: ./empty-dir/
-          server-dir: /htdocs/
-          dangerous-clean-slate: true
+          server: ${{ secrets.FTP_UPLOAD_HOST }}
+          username: ${{ secrets.FTP_UPLOAD_USERNAME }}
+          password: ${{ secrets.FTP_UPLOAD_PASSWORD }}
 
-      # Deploy uploads folder + style2.css + backend
-      - name: Deploy uploads system
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ftp.fasthosts.co.uk
-          username: upload.dance-offs.com
-          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
-          local-dir: ./
-          server-dir: /htdocs/
-          exclude: |
-            .git/**
-            .github/**
-            empty-dir/**
-            README.md
           protocol: ftp
-          log-level: verbose
+          passive: true
+
+          local-dir: ./uploads
+          server-dir: /htdocs/uploads
+
+          timeout: 60000
+          retries: 5
+          retry-delay: 5000
+
+          dangerous-clean-slate: false
