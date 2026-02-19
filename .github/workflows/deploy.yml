@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # MAIN SITE (unchanged)
+      # MAIN SITE
       - name: Deploy main site to HTDOCS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -24,8 +24,8 @@ jobs:
           local-dir: ./
           server-dir: /HTDOCS/
 
-      # SUBDOMAIN FILES
-      - name: Deploy subdomain files to htdocs/upload
+      # SUBDOMAIN TEST A — deploy to /web/htdocs/upload/
+      - name: Deploy subdomain files (TEST A)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -33,4 +33,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./upload/
-          server-dir: /htdocs/upload/
+          server-dir: /web/htdocs/upload/
