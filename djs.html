@@ -11,20 +11,66 @@
 
   <style>
     .dj-upload-box {
-      max-width: 420px;
+      max-width: 450px;
       margin: 0 auto;
-      padding: 20px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
+      padding: 25px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
     }
+
     .input-field {
       width: 100%;
-      padding: 10px;
-      margin: 6px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      padding: 12px 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(0,0,0,0.35);
+      color: #fff;
       font-size: 16px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: #ffcc00;
+      box-shadow: 0 0 8px rgba(255,204,0,0.6);
+    }
+
+    .upload-label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #ffcc00;
+      text-align: left;
+    }
+
+    .upload-button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 18px;
+      background: linear-gradient(90deg, #ffcc00, #ff9900);
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #000;
+      transition: 0.2s;
+    }
+
+    .upload-button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 12px rgba(255,204,0,0.8);
+    }
+
+    #uploadStatus {
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      min-height: 20px;
     }
   </style>
 </head>
@@ -52,20 +98,20 @@
 
       <input type="text" id="djName" class="input-field" placeholder="DJ Name" required>
 
-      <input type="text" id="deck1Artist" class="input-field" placeholder="Deck 1 Artist">
-      <input type="text" id="deck1Title" class="input-field" placeholder="Deck 1 Track Title">
+      <input type="text" id="deck1Artist" class="input-field" placeholder="Deck 1 Artist" required>
+      <input type="text" id="deck1Title" class="input-field" placeholder="Deck 1 Track Title" required>
 
-      <input type="text" id="deck2Artist" class="input-field" placeholder="Deck 2 Artist">
-      <input type="text" id="deck2Title" class="input-field" placeholder="Deck 2 Track Title">
+      <input type="text" id="deck2Artist" class="input-field" placeholder="Deck 2 Artist" required>
+      <input type="text" id="deck2Title" class="input-field" placeholder="Deck 2 Track Title" required>
 
-      <label style="display:block; margin-top:10px;">
-        Upload MP3 only <span style="color:#ffcc00; font-weight:600;">(~10 minutes max)</span>
+      <label class="upload-label">
+        Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
       </label>
-      <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
+      <input type="file" id="djFile" accept=".mp3,audio/mpeg" class="input-field" required>
 
-      <button id="uploadBtn" class="vote-button" style="margin-top:15px;">Upload Mix</button>
+      <button id="uploadBtn" class="upload-button">Upload Mix</button>
 
-      <div id="uploadStatus" style="margin-top:10px; color:#ffcc00;"></div>
+      <div id="uploadStatus"></div>
 
     </div>
 
@@ -101,11 +147,19 @@
         const status = document.getElementById("uploadStatus");
         status.innerHTML = "Uploading…";
 
+        // Collect fields
+        const email = document.getElementById("djEmail").value.trim();
+        const name = document.getElementById("djName").value.trim();
+        const d1a = document.getElementById("deck1Artist").value.trim();
+        const d1t = document.getElementById("deck1Title").value.trim();
+        const d2a = document.getElementById("deck2Artist").value.trim();
+        const d2t = document.getElementById("deck2Title").value.trim();
         const fileInput = document.getElementById("djFile");
         const file = fileInput.files[0];
 
-        if (!file) {
-          status.innerHTML = "Please select a file.";
+        // Validate required fields
+        if (!email || !name || !d1a || !d1t || !d2a || !d2t || !file) {
+          status.innerHTML = "❌ Please complete all fields before uploading.";
           return;
         }
 
@@ -128,15 +182,15 @@
 
           const payload = {
             mode: "dj_upload",
-            djEmail: document.getElementById("djEmail").value.trim(),
-            djName: document.getElementById("djName").value.trim(),
+            djEmail: email,
+            djName: name,
             filename: file.name,
             mimeType: file.type,
             data: base64Data,
-            deck1Artist: document.getElementById("deck1Artist").value.trim(),
-            deck1Title: document.getElementById("deck1Title").value.trim(),
-            deck2Artist: document.getElementById("deck2Artist").value.trim(),
-            deck2Title: document.getElementById("deck2Title").value.trim()
+            deck1Artist: d1a,
+            deck1Title: d1t,
+            deck2Artist: d2a,
+            deck2Title: d2t
           };
 
           try {
