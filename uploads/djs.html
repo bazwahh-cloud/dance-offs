@@ -73,7 +73,7 @@
       formData.append("deck2Title", document.getElementById("deck2Title").value);
 
       try {
-        const response = await fetch("upload.php", {
+        const response = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
         });
