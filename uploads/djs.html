@@ -5,26 +5,23 @@
   <meta-name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Load shared stylesheet from subdomain root -->
+  <!-- Shared stylesheet -->
   <link rel="stylesheet" href="/style2.css">
 </head>
 
 <body>
 
-  <!-- ⭐ DJ BOOTH -->
   <div class="dj-booth">
 
-    <!-- ⭐ Decks side-by-side (matches new CSS) -->
+    <!-- DECKS -->
     <div class="deck-row">
 
-      <!-- Deck 1 -->
       <div class="deck">
         <div class="deck-title">Deck 1</div>
         <input type="text" id="deck1Artist" placeholder="Artist" required>
         <input type="text" id="deck1Title" placeholder="Track Title" required>
       </div>
 
-      <!-- Deck 2 -->
       <div class="deck">
         <div class="deck-title">Deck 2</div>
         <input type="text" id="deck2Artist" placeholder="Artist" required>
@@ -33,7 +30,7 @@
 
     </div>
 
-    <!-- ⭐ Mixer underneath  -->
+    <!-- MIXER (half width) -->
     <div class="mixer">
       <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
       <input type="text" id="djName" placeholder="DJ Name" required>
@@ -51,8 +48,11 @@
 
   </div>
 
-  <!-- ⭐ Upload Script -->
+
+  <!-- UPLOAD + GOOGLE SHEET SCRIPT -->
   <script>
+    const GOOGLE_SCRIPT_URL = "YOUR_WEB_APP_URL_HERE"; // <-- Replace with your Apps Script URL
+
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
@@ -63,24 +63,52 @@
         return;
       }
 
+      const file = fileInput.files[0];
+
+      // Build form data for PHP upload
       const formData = new FormData();
-      formData.append("file", fileInput.files[0]);
-      formData.append("djEmail", document.getElementById("djEmail").value);
-      formData.append("djName", document.getElementById("djName").value);
-      formData.append("deck1Artist", document.getElementById("deck1Artist").value);
-      formData.append("deck1Title", document.getElementById("deck1Title").value);
-      formData.append("deck2Artist", document.getElementById("deck2Artist").value);
-      formData.append("deck2Title", document.getElementById("deck2Title").value);
+      formData.append("file", file);
 
       try {
-        const response = await fetch("/uploads/upload.php", {
+        // 1️⃣ Upload MP3 to PHP
+        const uploadResponse = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
         });
 
-        const text = await response.text();
-        status.innerHTML = text;
+        const fileUrl = await uploadResponse.text(); // PHP returns the public URL
+        status.innerHTML = "Upload complete! Logging metadata...";
+
+        // Extract stored filename from URL
+        const storedName = fileUrl.split("/").pop();
+
+        // 2️⃣ Send metadata to Google Sheets
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            mode: "djupload",
+
+            djEmail: document.getElementById("djEmail").value,
+            djName: document.getElementById("djName").value,
+
+            deck1Artist: document.getElementById("deck1Artist").value,
+            deck1Title: document.getElementById("deck1Title").value,
+            deck2Artist: document.getElementById("deck2Artist").value,
+            deck2Title: document.getElementById("deck2Title").value,
+
+            fileUrl: fileUrl,
+            originalName: file.name,
+            storedName: storedName,
+            sizeBytes: file.size,
+            mimeType: file.type,
+            status: "active"
+          })
+        });
+
+        status.innerHTML = "Mix uploaded and logged successfully!";
       } catch (err) {
+        console.error(err);
         status.innerHTML = "Upload failed.";
       }
     });
