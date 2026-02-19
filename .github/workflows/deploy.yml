@@ -20,7 +20,7 @@ jobs:
           server: 77.68.64.42
           username: upload.dance-offs.com
           password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
-          local-dir: .
+          local-dir: ./
           server-dir: /
           protocol: ftp
           log-level: verbose
