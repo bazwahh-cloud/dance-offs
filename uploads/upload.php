@@ -1,0 +1,34 @@
+<!-- ⭐ COMPACT DJ LAYOUT -->
+<div class="dj-booth">
+
+  <!-- Two decks side-by-side -->
+  <div class="deck-row">
+    <div class="deck">
+      <div class="deck-title">Deck 1</div>
+      <input type="text" id="deck1Artist" placeholder="Artist" required>
+      <input type="text" id="deck1Title" placeholder="Track Title" required>
+    </div>
+
+    <div class="deck">
+      <div class="deck-title">Deck 2</div>
+      <input type="text" id="deck2Artist" placeholder="Artist" required>
+      <input type="text" id="deck2Title" placeholder="Track Title" required>
+    </div>
+  </div>
+
+  <!-- Mixer underneath -->
+  <div class="mixer">
+    <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
+    <input type="text" id="djName" placeholder="DJ Name" required>
+
+    <label class="upload-label">
+      Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
+    </label>
+    <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
+
+    <button id="uploadBtn" class="upload-button">Upload Mix</button>
+
+    <div id="uploadStatus"></div>
+  </div>
+
+</div>
