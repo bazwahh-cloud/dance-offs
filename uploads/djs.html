@@ -1,34 +1,85 @@
-<!-- ⭐ COMPACT DJ LAYOUT -->
-<div class="dj-booth">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ Upload</title>
 
-  <!-- Two decks side-by-side -->
-  <div class="deck-row">
-    <div class="deck">
-      <div class="deck-title">Deck 1</div>
-      <input type="text" id="deck1Artist" placeholder="Artist" required>
-      <input type="text" id="deck1Title" placeholder="Track Title" required>
+  <!-- Load shared stylesheet from subdomain root -->
+  <link rel="stylesheet" href="/style2.css">
+</head>
+
+<body>
+
+  <!-- ⭐ COMPACT DJ LAYOUT -->
+  <div class="dj-booth">
+
+    <!-- Two decks side-by-side -->
+    <div class="deck-row">
+      <div class="deck">
+        <div class="deck-title">Deck 1</div>
+        <input type="text" id="deck1Artist" placeholder="Artist" required>
+        <input type="text" id="deck1Title" placeholder="Track Title" required>
+      </div>
+
+      <div class="deck">
+        <div class="deck-title">Deck 2</div>
+        <input type="text" id="deck2Artist" placeholder="Artist" required>
+        <input type="text" id="deck2Title" placeholder="Track Title" required>
+      </div>
     </div>
 
-    <div class="deck">
-      <div class="deck-title">Deck 2</div>
-      <input type="text" id="deck2Artist" placeholder="Artist" required>
-      <input type="text" id="deck2Title" placeholder="Track Title" required>
+    <!-- Mixer underneath -->
+    <div class="mixer">
+      <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
+      <input type="text" id="djName" placeholder="DJ Name" required>
+
+      <label class="upload-label">
+        Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
+      </label>
+      <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
+
+      <button id="uploadBtn" class="upload-button">Upload Mix</button>
+
+      <div id="uploadStatus"></div>
     </div>
+
   </div>
 
-  <!-- Mixer underneath -->
-  <div class="mixer">
-    <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
-    <input type="text" id="djName" placeholder="DJ Name" required>
+  <!-- Optional: JS to handle upload button -->
+  <script>
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+      const status = document.getElementById("uploadStatus");
+      status.innerHTML = "Uploading...";
 
-    <label class="upload-label">
-      Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
-    </label>
-    <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
+      const fileInput = document.getElementById("djFile");
+      if (!fileInput.files.length) {
+        status.innerHTML = "Please select an MP3 file.";
+        return;
+      }
 
-    <button id="uploadBtn" class="upload-button">Upload Mix</button>
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+      formData.append("djEmail", document.getElementById("djEmail").value);
+      formData.append("djName", document.getElementById("djName").value);
+      formData.append("deck1Artist", document.getElementById("deck1Artist").value);
+      formData.append("deck1Title", document.getElementById("deck1Title").value);
+      formData.append("deck2Artist", document.getElementById("deck2Artist").value);
+      formData.append("deck2Title", document.getElementById("deck2Title").value);
 
-    <div id="uploadStatus"></div>
-  </div>
+      try {
+        const response = await fetch("upload.php", {
+          method: "POST",
+          body: formData
+        });
 
-</div>
+        const text = await response.text();
+        status.innerHTML = text;
+      } catch (err) {
+        status.innerHTML = "Upload failed.";
+      }
+    });
+  </script>
+
+</body>
+</html>
