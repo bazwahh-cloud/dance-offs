@@ -14,7 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # STEP 1 — Reset the server state (delete sync file)
       - name: Delete sync state on server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -22,10 +21,9 @@ jobs:
           username: upload.dance-offs.com
           password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
           local-dir: ./empty-dir/
-          server-dir: /public_html/
+          server-dir: /htdocs/
           dangerous-clean-slate: true
 
-      # STEP 2 — Upload your entire repo into /public_html/
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -33,6 +31,6 @@ jobs:
           username: upload.dance-offs.com
           password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
           local-dir: ./
-          server-dir: /public_html/
+          server-dir: /htdocs/
           protocol: ftp
           log-level: verbose
