@@ -10,66 +10,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    .sc-wrapper {
-      position: relative;
+    .dj-upload-box {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .input-field {
       width: 100%;
-      height: 150px;
-      margin-top: 25px;
-    }
-
-    .sc-tap-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      backdrop-filter: blur(2px);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-
-    .sc-tap-overlay-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sc-tap-button {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #ffcc00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.6);
-      animation: pulse 1.6s infinite ease-in-out;
-    }
-
-    .sc-tap-button::before {
-      content: "";
-      border-style: solid;
-      border-width: 18px 0 18px 28px;
-      border-color: transparent transparent transparent #000;
-      margin-left: 6px;
-    }
-
-    .sc-tap-text {
-      margin-top: 12px;
-      color: #ffcc00;
-      font-size: 22px;
-      font-weight: 700;
-      text-shadow: 0 0 10px black;
-      text-align: center;
-      pointer-events: none;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
-      50% { transform: scale(1.15); box-shadow: 0 0 35px #ffcc00; }
-      100% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -88,40 +43,30 @@
 
   <main class="page-container" style="text-align:center;">
 
-    <p class="instruction-line">Submit your DJ mix below.</p>
+    <p class="instruction-line">Upload your DJ mix below.</p>
 
-    <!-- DJ MIX SUBMISSION -->
-    <form id="djMixForm">
-      <div class="dj-form-row">
-        <input 
-          type="text" 
-          id="djMixInput" 
-          class="input-field"
-          placeholder="SoundCloud URL"
-        >
-        <button type="submit" class="vote-button">Submit</button>
-      </div>
-    </form>
+    <!-- ⭐ DJ MIX UPLOAD -->
+    <h2 style="margin-top:20px;">Upload Your DJ Mix</h2>
 
-    <!-- ⭐ Enhanced SoundCloud Player -->
-    <div id="playerContainer">
-      <div class="sc-wrapper">
-        <iframe 
-          id="scPlayer"
-          width="100%" 
-          height="150"
-          scrolling="no"
-          frameborder="no"
-          allow="autoplay; encrypted-media">
-        </iframe>
+    <div class="dj-upload-box">
 
-        <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
-          <div class="sc-tap-overlay-inner">
-            <div class="sc-tap-button"></div>
-            <div class="sc-tap-text">Tap to Play</div>
-          </div>
-        </div>
-      </div>
+      <input type="email" id="djEmail" class="input-field" placeholder="Your Email (DJ ID)" required>
+
+      <input type="text" id="djName" class="input-field" placeholder="DJ Name" required>
+
+      <input type="text" id="deck1Artist" class="input-field" placeholder="Deck 1 Artist">
+      <input type="text" id="deck1Title" class="input-field" placeholder="Deck 1 Track Title">
+
+      <input type="text" id="deck2Artist" class="input-field" placeholder="Deck 2 Artist">
+      <input type="text" id="deck2Title" class="input-field" placeholder="Deck 2 Track Title">
+
+      <label style="display:block; margin-top:10px;">Upload MP3/WAV</label>
+      <input type="file" id="djFile" accept=".mp3,.wav,audio/*" required>
+
+      <button id="uploadBtn" class="vote-button" style="margin-top:15px;">Upload Mix</button>
+
+      <div id="uploadStatus" style="margin-top:10px; color:#ffcc00;"></div>
+
     </div>
 
     <!-- ⭐ DJ Battle Videos -->
@@ -145,200 +90,104 @@
 
   <script>
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+      "YOUR_WEB_APP_URL_HERE"; // Replace with your Apps Script URL
 
-    let scURL = "";
-    let scReady = false;
+    /* -----------------------------
+       DJ UPLOAD HANDLER
+    ------------------------------*/
+    document.addEventListener("DOMContentLoaded", () => {
+      const uploadBtn = document.getElementById("uploadBtn");
 
-    /* ⭐ Listen for SoundCloud widget READY event */
-    window.addEventListener("message", (event) => {
-      if (event.origin !== "https://w.soundcloud.com") return;
+      uploadBtn.addEventListener("click", async () => {
+        const status = document.getElementById("uploadStatus");
+        status.innerHTML = "Uploading…";
 
-      try {
-        const data = JSON.parse(event.data);
-        if (data.method === "ready") scReady = true;
-      } catch (e) {}
-    });
+        const fileInput = document.getElementById("djFile");
+        const file = fileInput.files[0];
 
-    document.addEventListener("DOMContentLoaded", function() {
-
-      /* -----------------------------
-         URL CLEANING + OEMBED RESOLVE
-      ------------------------------*/
-      function extractUrlFromInput(raw) {
-        let text = raw.trim();
-        if (text.includes("<iframe")) {
-          const srcMatch = text.match(/src=\"([^\"]+)\"/i);
-          if (srcMatch) text = srcMatch[1];
-        }
-        return text;
-      }
-
-      function getInnerUrlIfPlayer(url) {
-        if (url.includes("w.soundcloud.com/player")) {
-          try {
-            const u = new URL(url);
-            const inner = u.searchParams.get("url");
-            if (inner) return decodeURIComponent(inner);
-          } catch (e) {}
-        }
-        return url;
-      }
-
-      async function resolveViaOEmbed(url) {
-        try {
-          const oembedUrl =
-            "https://soundcloud.com/oembed?format=json&url=" +
-            encodeURIComponent(url);
-
-          const res = await fetch(oembedUrl);
-          if (!res.ok) return url;
-
-          const data = await res.json();
-          const html = data.html || "";
-          const srcMatch = html.match(/src=\"([^\"]+)\"/i);
-          if (!srcMatch) return url;
-
-          let playerUrl = srcMatch[1];
-          playerUrl = getInnerUrlIfPlayer(playerUrl);
-          return playerUrl || url;
-        } catch (e) {
-          return url;
-        }
-      }
-
-      /* -----------------------------
-         DJ MIX SUBMISSION
-      ------------------------------*/
-      const form = document.getElementById("djMixForm");
-      const input = document.getElementById("djMixInput");
-
-      form.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        let url = extractUrlFromInput(input.value);
-
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-          url = "https://" + url;
-        }
-
-        if (url.includes("on.soundcloud.com") || url.includes("snd.sc")) {
-          url = await resolveViaOEmbed(url);
-        }
-
-        url = getInnerUrlIfPlayer(url);
-
-        if (!url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-          alert("You have not provided a valid SoundCloud URL");
+        if (!file) {
+          status.innerHTML = "Please select a file.";
           return;
         }
 
-        if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-          url = url.split("?")[0];
-        }
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const base64Data = e.target.result.split(",")[1];
 
-        scURL = url;
+          const payload = {
+            mode: "dj_upload",
+            djEmail: document.getElementById("djEmail").value.trim(),
+            djName: document.getElementById("djName").value.trim(),
+            filename: file.name,
+            mimeType: file.type,
+            data: base64Data,
+            deck1Artist: document.getElementById("deck1Artist").value.trim(),
+            deck1Title: document.getElementById("deck1Title").value.trim(),
+            deck2Artist: document.getElementById("deck2Artist").value.trim(),
+            deck2Title: document.getElementById("deck2Title").value.trim()
+          };
 
-        fetch(`${SCRIPT_URL}?mode=setsound&url=` + encodeURIComponent(url));
+          try {
+            const res = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify(payload),
+              headers: { "Content-Type": "application/json" }
+            });
 
-        /* ❗ DO NOT load iframe here — iPhone fix */
-        document.getElementById("scOverlay").style.display = "flex";
+            const text = await res.text();
+            status.innerHTML = text.includes("Upload successful")
+              ? "✅ Upload complete!"
+              : "❌ Upload failed: " + text;
+
+          } catch (err) {
+            status.innerHTML = "❌ Error: " + err;
+          }
+        };
+
+        reader.readAsDataURL(file);
       });
-
-      /* -----------------------------
-         LOAD EXISTING MIX
-      ------------------------------*/
-      function loadCurrentMix() {
-        fetch(`${SCRIPT_URL}?mode=getsound`)
-          .then(r => r.json())
-          .then(data => {
-            let url = data.sound || "";
-
-            if (!url.startsWith("http")) {
-              document.getElementById("playerContainer").innerHTML =
-                "<p style='color:#aaa;'>No DJ mix submitted yet.</p>";
-              return;
-            }
-
-            if (url.includes("soundcloud.com") && !url.includes("api.soundcloud.com")) {
-              url = url.split("?")[0];
-            }
-
-            scURL = url;
-
-            /* ❗ DO NOT load iframe here — iPhone fix */
-            document.getElementById("scOverlay").style.display = "flex";
-          });
-      }
-
-      loadCurrentMix();
-
-      /* -----------------------------
-         LOAD DJ BATTLE VIDEOS
-      ------------------------------*/
-      function extractID(url) {
-        if (!url) return null;
-        const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
-        return match ? match[1] : null;
-      }
-
-      fetch(`${SCRIPT_URL}?mode=getbattle`)
-        .then(r => r.json())
-        .then(data => {
-          const leftID = extractID(data.left);
-          const rightID = extractID(data.right);
-
-          if (leftID) {
-            document.getElementById("djLeftVideo").innerHTML = `
-              <iframe 
-                class="battle-frame"
-                src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&loop=1&playlist=${leftID}&modestbranding=1&rel=0&controls=1"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-              </iframe>
-              <div class="blocker"></div>
-            `;
-          }
-
-          if (rightID) {
-            document.getElementById("djRightVideo").innerHTML = `
-              <iframe 
-                class="battle-frame"
-                src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-              </iframe>
-              <div class="blocker"></div>
-            `;
-          }
-        });
-
     });
 
+
     /* -----------------------------
-       ⭐ iPhone-safe autoplay
+       DJ BATTLE VIDEOS (unchanged)
     ------------------------------*/
-    function startSC() {
-      const overlay = document.getElementById("scOverlay");
-      overlay.style.display = "none";
-
-      const iframe = document.getElementById("scPlayer");
-
-      /* Load iframe ONLY after user gesture */
-      iframe.src =
-        "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(scURL) +
-        "&auto_play=true";
-
-      const widget = iframe.contentWindow;
-
-      const wait = setInterval(() => {
-        if (scReady) {
-          clearInterval(wait);
-          widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-        }
-      }, 50);
+    function extractID(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+      return match ? match[1] : null;
     }
+
+    fetch(`${SCRIPT_URL}?mode=getbattle`)
+      .then(r => r.json())
+      .then(data => {
+        const leftID = extractID(data.left);
+        const rightID = extractID(data.right);
+
+        if (leftID) {
+          document.getElementById("djLeftVideo").innerHTML = `
+            <iframe 
+              class="battle-frame"
+              src="https://www.youtube.com/embed/${leftID}?autoplay=1&mute=1&loop=1&playlist=${leftID}&modestbranding=1&rel=0&controls=1"
+              allow="autoplay; encrypted-media"
+              allowfullscreen>
+            </iframe>
+            <div class="blocker"></div>
+          `;
+        }
+
+        if (rightID) {
+          document.getElementById("djRightVideo").innerHTML = `
+            <iframe 
+              class="battle-frame"
+              src="https://www.youtube.com/embed/${rightID}?autoplay=1&mute=1&loop=1&playlist=${rightID}&modestbranding=1&rel=0&controls=1"
+              allow="autoplay; encrypted-media"
+              allowfullscreen>
+            </iframe>
+            <div class="blocker"></div>
+          `;
+        }
+      });
   </script>
 
 </body>
