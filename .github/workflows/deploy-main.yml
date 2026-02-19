@@ -25,7 +25,7 @@ jobs:
           server-dir: /htdocs/
           dangerous-clean-slate: true
 
-      # Deploy EVERYTHING in the repo root to the main site
+      # Deploy EVERYTHING in the repo root (except .git and workflow files)
       - name: Deploy full root to main site
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -35,6 +35,7 @@ jobs:
           local-dir: ./
           server-dir: /htdocs/
           exclude: |
+            .git/**
             .github/**
             empty-dir/**
           protocol: ftp
