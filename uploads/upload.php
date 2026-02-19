@@ -1,34 +1,66 @@
-<!-- ⭐ COMPACT DJ LAYOUT -->
-<div class="dj-booth">
+<?php
 
-  <!-- Two decks side-by-side -->
-  <div class="deck-row">
-    <div class="deck">
-      <div class="deck-title">Deck 1</div>
-      <input type="text" id="deck1Artist" placeholder="Artist" required>
-      <input type="text" id="deck1Title" placeholder="Track Title" required>
-    </div>
+// -----------------------------
+// CONFIGURATION
+// -----------------------------
+$SECRET = "DjUpload-81!LnA1#-9b4e";  // Replace with your real secret token
+$UPLOAD_DIR = __DIR__ . "/tracks/";  // Folder where files will be stored
+$PUBLIC_BASE_URL = "https://dance-offs.com/uploads/tracks/"; // Public URL prefix
 
-    <div class="deck">
-      <div class="deck-title">Deck 2</div>
-      <input type="text" id="deck2Artist" placeholder="Artist" required>
-      <input type="text" id="deck2Title" placeholder="Track Title" required>
-    </div>
-  </div>
 
-  <!-- Mixer underneath -->
-  <div class="mixer">
-    <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
-    <input type="text" id="djName" placeholder="DJ Name" required>
+// -----------------------------
+// SECURITY CHECK
+// -----------------------------
+if (!isset($_POST['token']) || $_POST['token'] !== $SECRET) {
+    http_response_code(403);
+    die("Forbidden");
+}
 
-    <label class="upload-label">
-      Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
-    </label>
-    <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
 
-    <button id="uploadBtn" class="upload-button">Upload Mix</button>
+// -----------------------------
+// VALIDATE INPUT
+// -----------------------------
+if (!isset($_POST['filename']) || !isset($_POST['data'])) {
+    http_response_code(400);
+    die("Missing fields");
+}
 
-    <div id="uploadStatus"></div>
-  </div>
+$filename = basename($_POST['filename']); // Prevent directory traversal
 
-</div>
+
+// -----------------------------
+// ENSURE UPLOAD DIRECTORY EXISTS
+// -----------------------------
+if (!file_exists($UPLOAD_DIR)) {
+    mkdir($UPLOAD_DIR, 0775, true);
+}
+
+
+// -----------------------------
+// DECODE BASE64 FILE DATA
+// -----------------------------
+$data = base64_decode($_POST['data']);
+
+if ($data === false) {
+    http_response_code(400);
+    die("Invalid Base64 data");
+}
+
+
+// -----------------------------
+// WRITE FILE TO SERVER
+// -----------------------------
+$filepath = $UPLOAD_DIR . $filename;
+
+if (file_put_contents($filepath, $data) === false) {
+    http_response_code(500);
+    die("Failed to write file");
+}
+
+
+// -----------------------------
+// RETURN PUBLIC URL
+// -----------------------------
+$publicUrl = $PUBLIC_BASE_URL . $filename;
+
+echo $publicUrl;
