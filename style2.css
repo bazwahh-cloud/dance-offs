@@ -226,14 +226,14 @@ body {
   height: 100%;
   border-radius: 8px;
   border: none;
-  pointer-events: none; /* ⭐ BLOCK YOUTUBE CLICK-THROUGH */
+  pointer-events: none;
 }
 
 .blocker {
   position: absolute;
   inset: 0;
   z-index: 10;
-  pointer-events: auto; /* ⭐ BLOCKS ALL INTERACTION */
+  pointer-events: auto;
 }
 
 /* ⭐ Mobile: stack vertically */
@@ -245,78 +245,131 @@ body {
 }
 
 /* ----------------------------------------------------
-   SOUNDCLOUD — ENHANCED TAP-TO-PLAY OVERLAY
+   DJ BOOTH LAYOUT (DECKS + MIXER)
 ---------------------------------------------------- */
 
-.sc-wrapper {
-  position: relative;
-  width: 100%;
-  height: 150px;
-  margin-top: 20px;
-}
-
-#scPlayer {
-  pointer-events: auto; /* ⭐ FIXED: ALLOW TAP TO REACH IFRAME */
-}
-
-/* Darkened backdrop + blur */
-.sc-tap-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(2px);
-  z-index: 20;
+.dj-booth {
   display: flex;
-  align-items: center;
   justify-content: center;
-  cursor: pointer;
-  pointer-events: auto;
+  align-items: flex-start;
+  gap: 25px;
+  margin: 30px auto;
+  flex-wrap: wrap;
 }
 
-/* Container for button + text */
-.sc-tap-overlay-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Big glowing play button */
-.sc-tap-button {
-  width: 90px;
-  height: 90px;
+/* Decks (vinyl record look) */
+.deck {
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
-  background: #ffcc00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.6);
-  animation: pulse 1.6s infinite ease-in-out;
-}
-
-/* Play triangle */
-.sc-tap-button::before {
-  content: "";
-  border-style: solid;
-  border-width: 18px 0 18px 28px;
-  border-color: transparent transparent transparent #000;
-  margin-left: 6px;
-}
-
-/* Text under button */
-.sc-tap-text {
-  margin-top: 12px;
-  color: #ffcc00;
-  font-size: 22px;
-  font-weight: 700;
-  text-shadow: 0 0 10px black;
+  background: radial-gradient(circle, #222 40%, #000 80%);
+  border: 4px solid #444;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  padding: 20px;
+  color: #fff;
   text-align: center;
 }
 
-/* Pulse animation */
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
-  50% { transform: scale(1.15); box-shadow: 0 0 35px #ffcc00; }
-  100% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+.deck-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #ffcc00;
+}
+
+.deck input {
+  width: 90%;
+  margin: 6px auto;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* Mixer (center column) */
+.mixer {
+  width: 260px;
+  padding: 20px;
+  background: linear-gradient(180deg, #111, #222);
+  border-radius: 12px;
+  border: 2px solid #444;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+.mixer input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #666;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+}
+
+.upload-label {
+  margin-top: 15px;
+  font-weight: 600;
+  color: #ffcc00;
+  text-align: center;
+}
+
+.upload-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 18px;
+  background: linear-gradient(90deg, #ffcc00, #ff9900);
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #000;
+  transition: 0.2s;
+}
+
+.upload-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(255,204,0,0.8);
+}
+
+#uploadStatus {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  min-height: 20px;
+  color: #ffcc00;
+}
+
+/* ----------------------------------------------------
+   RESPONSIVE DJ BOOTH (MOBILE)
+---------------------------------------------------- */
+@media (max-width: 600px) {
+
+  .dj-booth {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .deck {
+    width: 180px;
+    height: 180px;
+    padding: 15px;
+  }
+
+  .deck input {
+    font-size: 13px;
+  }
+
+  .mixer {
+    width: 90%;
+    max-width: 320px;
+  }
 }
 
 /* ----------------------------------------------------
