@@ -14,6 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Reset server state (clean slate)
       - name: Delete sync state on server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -24,13 +25,14 @@ jobs:
           server-dir: /htdocs/
           dangerous-clean-slate: true
 
-      - name: Deploy via FTP
+      # Deploy ONLY the uploads/ folder
+      - name: Deploy uploads folder
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.fasthosts.co.uk
           username: upload.dance-offs.com
           password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
-          local-dir: ./
-          server-dir: /htdocs/
+          local-dir: ./uploads/
+          server-dir: /htdocs/uploads/
           protocol: ftp
           log-level: verbose
