@@ -24,8 +24,8 @@ jobs:
           local-dir: ./
           server-dir: /HTDOCS/
 
-      # SUBDOMAIN TEST A — deploy to /web/htdocs/upload/
-      - name: Deploy subdomain files (TEST A)
+      # SUBDOMAIN TEST B — deploy to /domains/dance-offs.com/htdocs/upload/
+      - name: Deploy subdomain files (TEST B)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -33,4 +33,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./upload/
-          server-dir: /web/htdocs/upload/
+          server-dir: /domains/dance-offs.com/htdocs/upload/
