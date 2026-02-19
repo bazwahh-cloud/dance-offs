@@ -3,7 +3,7 @@
 // -----------------------------
 // CONFIGURATION
 // -----------------------------
-$SECRET = "YOUR_SECRET_TOKEN";  // Replace with your real secret token
+$SECRET = "DjUpload-81!LnA1#-9b4e";  // Replace with your real secret token
 $UPLOAD_DIR = __DIR__ . "/tracks/";  // Folder where files will be stored
 $PUBLIC_BASE_URL = "https://dance-offs.com/uploads/tracks/"; // Public URL prefix
 
