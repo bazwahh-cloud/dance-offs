@@ -1,4 +1,4 @@
-name: Deploy to Fasthosts via FTP
+name: Deploy to upload.dance-offs.com
 
 on:
   push:
@@ -7,30 +7,31 @@ on:
 
 jobs:
   ftp-deploy:
+    name: FTP Deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      # MAIN SITE
-      - name: Deploy main site to HTDOCS
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./
-          server-dir: /HTDOCS/
-
-      # SUBDOMAIN TEST C — deploy to /public_html/htdocs/upload/
-      - name: Deploy subdomain files (TEST C)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./upload/
-          server-dir: /public_html/htdocs/upload/
+          server: 77.68.64.42
+          username: upload.dance-offs.com
+          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
+          local-dir: dist
+          server-dir: /
+          protocol: ftp
+          log-level: verbose
