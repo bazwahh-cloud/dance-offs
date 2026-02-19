@@ -38,7 +38,14 @@ jobs:
             .github/**
             empty-dir/**
             public_html/**
-            !uploads/**
-            !style.css
+            index.html
+            vote.html
+            images/**
+            scripts/**
+            **/*.js
+            **/*.png
+            **/*.jpg
+            **/*.jpeg
+            **/*.gif
           protocol: ftp
           log-level: verbose
