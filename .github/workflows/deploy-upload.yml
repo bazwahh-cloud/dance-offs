@@ -1,0 +1,38 @@
+name: Deploy DJ Upload System to upload.dance-offs.com
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    name: FTP Deploy (Subdomain)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Reset subdomain state (clean slate)
+      - name: Reset subdomain state
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ftp.fasthosts.co.uk
+          username: upload.dance-offs.com
+          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
+          local-dir: ./empty-dir/
+          server-dir: /htdocs/
+          dangerous-clean-slate: true
+
+      # Deploy ONLY the DJ upload system
+      - name: Deploy uploads folder to subdomain
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ftp.fasthosts.co.uk
+          username: upload.dance-offs.com
+          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
+          local-dir: ./uploads/
+          server-dir: /htdocs/uploads/
+          protocol: ftp
+          log-level: verbose
