@@ -1,4 +1,4 @@
-name: Deploy to upload.dance-offs.com
+name: Deploy to dance-offs.com (Main Site)
 
 on:
   push:
@@ -7,32 +7,35 @@ on:
 
 jobs:
   ftp-deploy:
-    name: FTP Deploy
+    name: FTP Deploy (Main Site)
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Reset server state (clean slate)
-      - name: Delete sync state on server
+      # Reset main site state
+      - name: Reset main site state
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.fasthosts.co.uk
-          username: upload.dance-offs.com
-          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
+          username: dance-offs.com
+          password: ${{ secrets.FTP_PASSWORD_MAIN }}
           local-dir: ./empty-dir/
           server-dir: /htdocs/
           dangerous-clean-slate: true
 
-      # Deploy ONLY the uploads/ folder
-      - name: Deploy uploads folder
+      # Deploy EVERYTHING in the repo root to the main site
+      - name: Deploy full root to main site
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.fasthosts.co.uk
-          username: upload.dance-offs.com
-          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
-          local-dir: ./uploads/
-          server-dir: /htdocs/uploads/
+          username: dance-offs.com
+          password: ${{ secrets.FTP_PASSWORD_MAIN }}
+          local-dir: ./
+          server-dir: /htdocs/
+          exclude: |
+            .github/**
+            empty-dir/**
           protocol: ftp
           log-level: verbose
