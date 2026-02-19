@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Reset subdomain state (clean slate)
+      # Reset subdomain state
       - name: Reset subdomain state
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -25,14 +25,20 @@ jobs:
           server-dir: /htdocs/
           dangerous-clean-slate: true
 
-      # Deploy ONLY the DJ upload system
-      - name: Deploy uploads folder to subdomain
+      # Deploy uploads folder + shared CSS
+      - name: Deploy uploads + shared CSS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.fasthosts.co.uk
           username: upload.dance-offs.com
           password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
-          local-dir: ./uploads/
-          server-dir: /htdocs/uploads/
+          local-dir: ./
+          server-dir: /htdocs/
+          exclude: |
+            .github/**
+            empty-dir/**
+            public_html/**
+            !uploads/**
+            !style.css
           protocol: ftp
           log-level: verbose
