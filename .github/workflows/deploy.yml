@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Deploy MAIN SITE → /HTDOCS/
+      # MAIN SITE (unchanged)
       - name: Deploy main site to HTDOCS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -24,7 +24,7 @@ jobs:
           local-dir: ./
           server-dir: /HTDOCS/
 
-      # Deploy SUBDOMAIN FILES → /htdocs/upload/
+      # SUBDOMAIN FILES
       - name: Deploy subdomain files to htdocs/upload
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
