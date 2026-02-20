@@ -145,10 +145,32 @@
       line-height: 1.4;
       text-align: center;
     }
+
+    /* ----------------------------------------------------
+       DANCERS PAGE — LOADING OVERLAY
+    ---------------------------------------------------- */
+    #loadingDancersOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
+      z-index: 9999;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingDancersOverlay">
+    Loading dancers…
+  </div>
 
   <!-- NAVIGATION -->
   <nav class="navbar">
@@ -413,10 +435,6 @@
           d.votes = voteCount[d.dancer] || 0;
         });
 
-        /* ⭐ OPTION C SORTING:
-           1. Votes DESC
-           2. If votes equal → newest timestamp first
-        */
         dancers.sort((a, b) => {
           if (b.votes !== a.votes) {
             return b.votes - a.votes;
@@ -424,7 +442,6 @@
           return new Date(b.timestamp) - new Date(a.timestamp);
         });
 
-        /* ⭐ SHARED RANKS */
         let lastVotes = null;
         let lastRank = 0;
 
@@ -459,6 +476,10 @@
           `;
           tbody.appendChild(tr);
         });
+
+        /* ⭐ HIDE LOADING OVERLAY HERE */
+        hideDancersLoading();
+
       } catch (err) {
         console.error("Could not load dancers:", err);
       }
@@ -478,9 +499,15 @@
       document.addEventListener("touchstart", tryPlay);
     }
 
+    /* ⭐ HIDE OVERLAY FUNCTION */
+    function hideDancersLoading() {
+      const overlay = document.getElementById("loadingDancersOverlay");
+      if (overlay) overlay.style.display = "none";
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       loadLatestDJMix();
-      loadDancerTable();
+      loadDancerTable();        // overlay hides when this finishes
       loadLastDancerVideo();
       enableAutoplayAfterGesture();
     });
