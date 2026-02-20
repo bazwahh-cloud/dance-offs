@@ -14,29 +14,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Reset main site state
+      # ----------------------------------------------------
+      # 1. RESET MAIN SITE (CLEAN SLATE)
+      # ----------------------------------------------------
       - name: Reset main site state
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MAIN_FTP_HOST }}
           username: ${{ secrets.MAIN_FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
+
+          # ⭐ REQUIRED FIX: SWITCH TO SFTP
+          protocol: sftp
+          port: 22
+
           local-dir: ./empty-dir/
           server-dir: /htdocs/
           dangerous-clean-slate: true
+          log-level: verbose
 
-      # Deploy EVERYTHING in the repo root (except .git and workflow files)
+      # ----------------------------------------------------
+      # 2. DEPLOY FULL SITE
+      # ----------------------------------------------------
       - name: Deploy full root to main site
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MAIN_FTP_HOST }}
           username: ${{ secrets.MAIN_FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
+
+          # ⭐ REQUIRED FIX: SWITCH TO SFTP
+          protocol: sftp
+          port: 22
+
           local-dir: ./
           server-dir: /htdocs/
+
           exclude: |
             .git/**
             .github/**
             empty-dir/**
-          protocol: ftp
+
           log-level: verbose
