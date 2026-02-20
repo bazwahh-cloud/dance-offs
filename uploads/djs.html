@@ -86,7 +86,6 @@
       formData.append("file", file);
 
       try {
-        // Upload MP3 to PHP
         const uploadResponse = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
@@ -97,7 +96,6 @@
 
         const storedName = fileUrl.split("/").pop();
 
-        // Log metadata to Google Sheets
         await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
