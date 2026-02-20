@@ -62,33 +62,6 @@ body {
   object-position: top;
 }
 
-@media (min-width: 900px) {
-  .hero-img-wrap img {
-    height: auto;
-    object-fit: contain;
-    object-position: top;
-  }
-}
-
-/* ----------------------------------------------------
-   HERO CLICKABLE ZONES
----------------------------------------------------- */
-.hero-zone {
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 100%;
-  cursor: pointer;
-  z-index: 2;
-
-  background-size: contain;
-  background-position: top;
-  background-repeat: no-repeat;
-}
-
-.hero-left { left: 0; }
-.hero-right { left: 50%; }
-
 /* ----------------------------------------------------
    PAGE CONTAINER
 ---------------------------------------------------- */
@@ -178,194 +151,133 @@ body {
 }
 
 /* ----------------------------------------------------
-   DANCERS & DJs PAGE — TABLE LAYOUT
+   DANCERS PAGE — 2×2 GRID UPLOAD LAYOUT
 ---------------------------------------------------- */
-.battle-table {
-  width: 100%;
-  border-collapse: collapse;
+
+.dancer-upload-grid {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dancer-upload-grid .grid-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px; /* equal spacing */
   margin-top: 20px;
-  table-layout: fixed;
+  justify-items: center;
 }
 
-.battle-table td {
-  width: 50%;
-  vertical-align: top;
-  padding: 10px;
-}
-
-.battle-cell {
+/* Force all four cells to be identical size */
+.dancer-upload-grid .input-field,
+.dancer-upload-grid .save-button {
   width: 100%;
+  max-width: 260px;
+  height: 48px;
+  box-sizing: border-box;
 }
 
+/* Input styling */
+.input-field {
+  padding: 12px;
+  border-radius: 6px;
+  border: 2px solid #ffcc00;
+  background: #332b00;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 0 8px #ffcc00;
+}
+
+/* Save button styling */
+.save-button {
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  background: #ffcc00;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000;
+  box-shadow: 0 0 10px #ffcc00;
+}
+
+.save-button.disabled-btn {
+  opacity: 0.4;
+  pointer-events: none;
+  background: #777 !important;
+  box-shadow: none !important;
+}
+
+/* Mobile: stack into single column */
+@media (max-width: 600px) {
+  .dancer-upload-grid .grid-box {
+    grid-template-columns: 1fr;
+  }
+
+  .dancer-upload-grid .input-field,
+  .dancer-upload-grid .save-button {
+    max-width: 100%;
+  }
+}
+
+/* Video preview */
 .video-slot {
+  margin-top: 20px;
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
-  border-radius: 8px;
-  position: relative;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 0 12px #000;
 }
 
 .battle-frame {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
-  border: none;
-  pointer-events: none;
-}
-
-.blocker {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: auto;
-}
-
-@media (max-width: 700px) {
-  .battle-table td {
-    display: block;
-    width: 100%;
-  }
+  border: 0;
 }
 
 /* ----------------------------------------------------
-   DJ UPLOAD PAGE (ISOLATED)
+   DANCER TABLE
 ---------------------------------------------------- */
-
-/* Decks side-by-side */
-.dj-upload .deck-row {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+.dancer-table {
   width: 100%;
-}
-
-/* Center mixer underneath */
-.dj-upload .mixer-wrap {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.dj-upload .mixer {
-  max-width: 350px;
-  width: 100%;
-}
-
-/* DJ Booth container */
-.dj-upload .dj-booth {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-  margin: 30px auto;
-}
-
-/* Deck styling */
-.dj-upload .deck {
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #222 40%, #000 80%);
-  border: 4px solid #444;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  padding: 20px;
+  max-width: 1000px;
+  margin: 30px auto 40px;
+  border-collapse: collapse;
   color: #fff;
+}
+
+.dancer-table th,
+.dancer-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #333;
   text-align: center;
-}
-
-.dj-upload .deck-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  color: #ffcc00;
-}
-
-.dj-upload .deck input {
-  width: 90%;
-  margin: 6px auto;
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
   font-size: 14px;
-  text-align: center;
-  background: rgba(255,255,255,0.1);
-  color: white;
 }
 
-/* Mixer styling */
-.dj-upload .mixer {
-  padding: 20px;
-  background: linear-gradient(180deg, #111, #222);
-  border-radius: 12px;
-  border: 2px solid #444;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  text-align: center;
-}
-
-.dj-upload .mixer input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-  border: 1px solid #666;
-  background: #000;
-  color: #fff;
-  font-size: 15px;
-}
-
-.dj-upload .upload-label {
-  margin-top: 15px;
-  font-weight: 600;
-  color: #ffcc00;
-  text-align: center;
-}
-
-.dj-upload .upload-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 18px;
-  background: linear-gradient(90deg, #ffcc00, #ff9900);
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
+.dancer-table th {
+  background: rgba(0, 0, 0, 0.5);
   font-weight: 700;
-  cursor: pointer;
-  color: #000;
-  transition: 0.2s;
 }
 
-.dj-upload .upload-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 12px rgba(255,204,0,0.8);
-}
-
-.dj-upload #uploadStatus {
-  margin-top: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  min-height: 20px;
+.dancer-table a {
   color: #ffcc00;
+  text-decoration: underline;
 }
 
-/* Mobile layout */
-@media (max-width: 600px) {
-  .dj-upload .deck {
-    width: 180px;
-    height: 180px;
-    padding: 15px;
-  }
+/* ----------------------------------------------------
+   DJ AUDIO PLAYER
+---------------------------------------------------- */
+.dj-audio-wrap {
+  margin-top: 30px;
+  text-align: center;
+}
 
-  .dj-upload .deck input {
-    font-size: 13px;
-  }
-
-  .dj-upload .mixer {
-    width: 90%;
-    max-width: 320px;
-  }
+.dj-audio-wrap audio {
+  width: 100%;
+  max-width: 500px;
 }
 
 /* ----------------------------------------------------
@@ -376,36 +288,4 @@ body {
   padding: 20px;
   color: #aaa;
   margin-top: 40px;
-}
-
-/* ----------------------------------------------------
-   ⭐ DANCERS PAGE — INPUTS + SAVE BUTTON ALIGNMENT
----------------------------------------------------- */
-
-.dancer-left .input-field {
-  width: 100%;
-  max-width: 350px;
-}
-
-.dancer-left .save-button {
-  width: 100%;
-  max-width: 350px;
-  padding: 12px;
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: 700;
-  background: #ffcc00;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #000;
-  box-shadow: 0 0 10px #ffcc00;
-  display: block;
-}
-
-.dancer-left .save-button.disabled-btn {
-  opacity: 0.4;
-  pointer-events: none;
-  background: #777 !important;
-  box-shadow: none !important;
 }
