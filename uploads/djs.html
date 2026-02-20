@@ -124,7 +124,7 @@
         <th>DJ Name</th>
         <th>Track</th>
         <th>Preview</th>
-        <th>Download</th>
+        <th>Booking</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -170,9 +170,22 @@
 
           tr.innerHTML = `
             <td>${row.djName}</td>
-            <td>${row.deck1Artist} - ${row.deck1Title}</td>
-            <td><audio controls src="${row.fileUrl}" style="width:160px;"></audio></td>
-            <td><a href="${row.fileUrl}" download>Download</a></td>
+
+            <td>
+              ${row.deck1Title} (${row.deck1Artist})
+              vs.
+              ${row.deck2Title} (${row.deck2Artist})
+            </td>
+
+            <td>
+              <audio controls src="${row.fileUrl}" style="width:160px;"></audio>
+            </td>
+
+            <td>
+              <a href="mailto:office@dance-offs.com?subject=Book%20DJ%20${encodeURIComponent(row.djName)}">
+                Book DJ
+              </a>
+            </td>
           `;
 
           tbody.appendChild(tr);
@@ -189,64 +202,4 @@
     });
 
     document.getElementById("uploadBtn").addEventListener("click", async () => {
-      const status = document.getElementById("uploadStatus");
-      status.innerHTML = "Uploading...";
-
-      const fileInput = document.getElementById("djFile");
-      if (!fileInput.files.length) {
-        status.innerHTML = "Please select an MP3 file.";
-        return;
-      }
-
-      const file = fileInput.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const uploadResponse = await fetch("/uploads/upload.php", {
-          method: "POST",
-          body: formData
-        });
-
-        const fileUrl = await uploadResponse.text();
-        status.innerHTML = "Upload complete! Logging metadata...";
-
-        const storedName = fileUrl.split("/").pop();
-
-        await fetch(BACKEND_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            mode: "djupload",
-
-            djEmail: document.getElementById("djEmail").value,
-            djName: document.getElementById("djName").value,
-
-            deck1Artist: document.getElementById("deck1Artist").value,
-            deck1Title: document.getElementById("deck1Title").value,
-            deck2Artist: document.getElementById("deck2Artist").value,
-            deck2Title: document.getElementById("deck2Title").value,
-
-            fileUrl: fileUrl,
-            originalName: file.name,
-            storedName: storedName,
-            sizeBytes: file.size,
-            mimeType: file.type,
-            status: "active"
-          })
-        });
-
-        status.innerHTML = "Mix uploaded and logged successfully!";
-
-        loadLatestMix();
-        loadLibrary();
-
-      } catch (err) {
-        console.error(err);
-        status.innerHTML = "Upload failed.";
-      }
-    });
-  </script>
-
-</body>
-</html>
+      const status = document.getElementById("
