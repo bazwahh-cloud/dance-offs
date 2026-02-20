@@ -5,8 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Load CSS from MAIN SITE -->
+  <!-- Main site CSS -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
+
+  <!-- Hard overrides to GUARANTEE layout -->
+  <style>
+    body.dj-upload {
+      padding-bottom: 80px;
+    }
+
+    .dj-booth {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      margin: 30px auto;
+    }
+
+    .deck-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .mixer-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .mixer {
+      max-width: 350px;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body class="dj-upload">
@@ -21,7 +56,6 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
-  <!-- DJ BOOTH -->
   <div class="dj-booth">
 
     <!-- DECKS SIDE BY SIDE -->
