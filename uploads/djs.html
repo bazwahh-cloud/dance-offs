@@ -5,19 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Main site CSS -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="dj-upload">
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="https://dance-offs.com/index.html">Home</a>
     <a href="https://dance-offs.com/dancers.html">Dancers</a>
@@ -27,54 +21,43 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
-  <!-- ⭐ UPDATED STEP-BY-STEP INSTRUCTION LINE -->
-  <p style="
-    text-align:center;
-    margin:25px 0 15px;
-    font-size:22px;
-    font-weight:600;
-    color:#ffcc00;
-    font-family:'Bangers', cursive;
-  ">
-    1) Enter the artist and track title for each deck.  
-    2) Enter your DJ name and email.  
-    3) Upload a snippet of your mix in MP3 format (under 10 minutes).  
-    4) Press <strong>Upload Mix</strong> to submit your entry.
+  <p>
+    Enter your track details into the decks, add your DJ name and email, upload a short MP3 snippet of your mix (under 10 minutes), and finish by pressing <strong>Upload Mix</strong> to submit your entry.
   </p>
 
-  <!-- ⭐ DJ BOOTH -->
   <div class="dj-booth">
 
     <div class="deck-row">
 
       <!-- LEFT DECK -->
       <div class="deck">
+        <h3 class="deck-label">Deck 1</h3>
         <div class="record">
           <div class="record-inner">
-            <input type="text" id="deck1Artist" placeholder="Artist">
-            <input type="text" id="deck1Title" placeholder="Track Title">
+            <input type="text" id="deck1Artist" placeholder="Input Artist">
+            <input type="text" id="deck1Title" placeholder="Input Track">
           </div>
         </div>
       </div>
 
       <!-- RIGHT DECK -->
       <div class="deck">
+        <h3 class="deck-label">Deck 2</h3>
         <div class="record">
           <div class="record-inner">
-            <input type="text" id="deck2Artist" placeholder="Artist">
-            <input type="text" id="deck2Title" placeholder="Track Title">
+            <input type="text" id="deck2Artist" placeholder="Input Artist">
+            <input type="text" id="deck2Title" placeholder="Input Track">
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- MIXER -->
     <div class="mixer-wrap">
       <div class="mixer">
 
-        <input type="email" id="djEmail" placeholder="Your Email (DJ ID)">
-        <input type="text" id="djName" placeholder="DJ Name">
+        <input type="email" id="djEmail" placeholder="Your Email">
+        <input type="text" id="djName" placeholder="Your DJ Name">
 
         <label>MP3 only (&lt;10mins)</label>
 
@@ -89,17 +72,12 @@
 
   </div>
 
-  <!-- ⭐ NOW PLAYING SECTION -->
   <div class="dj-player-section">
-
     <div class="now-playing">Now Playing</div>
     <div id="nowPlayingTrack" class="now-playing-track">Loading latest mix…</div>
-
     <audio id="djPlayer" controls autoplay muted playsinline></audio>
-
   </div>
 
-  <!-- LINK TO PAST UPLOADS -->
   <div style="text-align:center; margin:50px 0;">
     <a href="djs-past.html"
        style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -112,12 +90,10 @@
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
-  <!-- DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* ⭐ Load latest mix + update Now Playing text */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -155,7 +131,6 @@
       }
     }
 
-    /* ⭐ Upload handler */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
