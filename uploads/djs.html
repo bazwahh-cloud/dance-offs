@@ -7,26 +7,6 @@
 
   <!-- Load CSS from MAIN SITE -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
-
-  <style>
-    /* Ensure decks sit side-by-side */
-    .deck-row {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-
-    .deck {
-      width: 260px;
-    }
-
-    /* Ensure footer spacing matches main site */
-    body.dj-upload {
-      padding-bottom: 80px;
-    }
-  </style>
 </head>
 
 <body class="dj-upload">
@@ -43,7 +23,7 @@
 
   <div class="dj-booth">
 
-    <!-- DECKS (now side-by-side) -->
+    <!-- DECKS (side-by-side) -->
     <div class="deck-row">
 
       <div class="deck">
@@ -60,20 +40,22 @@
 
     </div>
 
-    <!-- MIXER -->
-    <div class="mixer">
-      <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
-      <input type="text" id="djName" placeholder="DJ Name" required>
+    <!-- MIXER CENTERED UNDERNEATH -->
+    <div class="mixer-wrap">
+      <div class="mixer">
+        <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
+        <input type="text" id="djName" placeholder="DJ Name" required>
 
-      <label class="upload-label">
-        Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
-      </label>
+        <label class="upload-label">
+          Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
+        </label>
 
-      <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
+        <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
 
-      <button id="uploadBtn" class="upload-button">Upload Mix</button>
+        <button id="uploadBtn" class="upload-button">Upload Mix</button>
 
-      <div id="uploadStatus"></div>
+        <div id="uploadStatus"></div>
+      </div>
     </div>
 
   </div>
@@ -100,24 +82,22 @@
 
       const file = fileInput.files[0];
 
-      // Build form data for PHP upload
       const formData = new FormData();
       formData.append("file", file);
 
       try {
-        // 1️⃣ Upload MP3 to PHP
+        // Upload MP3 to PHP
         const uploadResponse = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
         });
 
-        const fileUrl = await uploadResponse.text(); // PHP returns the public URL
+        const fileUrl = await uploadResponse.text();
         status.innerHTML = "Upload complete! Logging metadata...";
 
-        // Extract stored filename from URL
         const storedName = fileUrl.split("/").pop();
 
-        // 2️⃣ Send metadata to Google Sheets via backend
+        // Log metadata to Google Sheets
         await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
