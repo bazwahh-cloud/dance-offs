@@ -8,8 +8,27 @@
   <!-- Correct CSS -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
 
+  <!-- Google Fonts (ensures Bangers loads) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
   <!-- Envelope icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* ⭐ Make the entire DJ booth 20% bigger */
+    .dj-booth {
+      transform: scale(1.2);
+      transform-origin: top center;
+      margin-top: 40px; /* keeps spacing natural after scaling */
+    }
+
+    /* Optional: ensure booth doesn't overflow on mobile */
+    @media (max-width: 600px) {
+      .dj-booth {
+        transform: scale(1.1);
+      }
+    }
+  </style>
 </head>
 
 <body class="dj-upload">
@@ -31,11 +50,12 @@
     font-size:22px;
     font-weight:600;
     color:#ffcc00;
+    font-family:'Bangers', cursive;
   ">
     Enter the details of your mix into the decks below.
   </p>
 
-  <!-- DJ BOOTH -->
+  <!-- ⭐ DJ BOOTH (NOW 20% BIGGER) -->
   <div class="dj-booth">
 
     <div class="deck-row">
@@ -77,7 +97,8 @@
 
         <div id="uploadStatus" style="font-size:15px;"></div>
 
-        <audio id="djPlayer" controls style="width:100%; display:none; margin-top:8px;"></audio>
+        <!-- Audio preview -->
+        <audio id="djPlayer" controls autoplay muted playsinline style="width:100%; display:none; margin-top:8px;"></audio>
 
       </div>
     </div>
@@ -102,6 +123,7 @@
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
+    /* Autoplay-safe audio loader */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -110,8 +132,23 @@
 
         const latest = list[list.length - 1];
         const player = document.getElementById("djPlayer");
+
         player.src = latest.fileUrl;
         player.style.display = "block";
+
+        player.play().then(() => {
+          player.muted = false;
+        }).catch(() => {
+          const unmute = () => {
+            player.muted = false;
+            player.play().catch(() => {});
+            window.removeEventListener("touchstart", unmute);
+            window.removeEventListener("click", unmute);
+          };
+          window.addEventListener("touchstart", unmute);
+          window.addEventListener("click", unmute);
+        });
+
       } catch (err) {
         console.error("Could not load latest mix:", err);
       }
@@ -166,7 +203,6 @@
         });
 
         status.innerHTML = "Mix uploaded and logged successfully!";
-
         loadLatestMix();
 
       } catch (err) {
