@@ -180,11 +180,10 @@
         })
     }).render("#paypal-button-container");
 
-    /* ⭐ FIXED YouTube ID extractor */
+    /* ⭐ BULLETPROOF YOUTUBE ID EXTRACTOR */
     function extractID(url) {
       if (!url) return null;
 
-      // Remove parameters
       url = url.split("?")[0];
 
       const patterns = [
