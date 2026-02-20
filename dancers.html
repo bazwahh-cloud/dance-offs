@@ -196,10 +196,11 @@
       <table id="dancerTable" class="dancer-table">
         <thead>
           <tr>
+            <th>Rank</th>
+            <th>Votes</th>
             <th>Timestamp</th>
             <th>Dancer</th>
             <th>Video</th>
-            <th>Booking</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -326,31 +327,56 @@
       }
     }
 
+    async function loadVotes() {
+      try {
+        const res = await fetch(endpoint + "?mode=getvotes");
+        return await res.json();
+      } catch (err) {
+        console.error("Could not load votes:", err);
+        return [];
+      }
+    }
+
     async function loadDancerTable() {
       try {
-        const res = await fetch(endpoint + "?mode=getdancers");
-        const list = await res.json();
+        const dancerRes = await fetch(endpoint + "?mode=getdancers");
+        const dancers = await dancerRes.json();
+
+        const voteRes = await fetch(endpoint + "?mode=getvotes");
+        const votes = await voteRes.json();
+
+        // Count votes per dancer
+        const voteCount = {};
+        votes.forEach(v => {
+          const name = v.dancer;
+          voteCount[name] = (voteCount[name] || 0) + 1;
+        });
+
+        // Attach vote count
+        dancers.forEach(d => {
+          d.votes = voteCount[d.dancer] || 0;
+        });
+
+        // Sort by votes DESC
+        dancers.sort((a, b) => b.votes - a.votes);
 
         const tbody = document.querySelector("#dancerTable tbody");
         tbody.innerHTML = "";
 
-        list.reverse().forEach(row => {
+        dancers.forEach((row, index) => {
           if (!row.url) return;
 
           const id = extractID(row.url);
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${row.votes}</td>
             <td>${row.timestamp}</td>
             <td>${row.dancer}</td>
             <td>
               <a href="${row.url}" target="_blank">
                 <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
-              </a>
-            </td>
-            <td>
-              <a href="https://dance-offs.com/index.html?dancer=${encodeURIComponent(row.dancer)}">
-                Book Dancer
               </a>
             </td>
           `;
