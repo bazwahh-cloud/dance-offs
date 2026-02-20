@@ -121,9 +121,9 @@
       font-weight: 700;
     }
 
-    .dancer-table a {
-      color: #ffcc00;
-      text-decoration: underline;
+    .dancer-table img {
+      width: 120px;
+      border-radius: 6px;
     }
 
     /* DJ audio */
@@ -186,7 +186,7 @@
     <!-- LATEST DJ MIX -->
     <section class="dj-audio-wrap">
       <h3>Latest DJ Mix</h3>
-      <audio id="djPlayer" controls autoplay></audio>
+      <audio id="djPlayer" controls autoplay muted></audio>
     </section>
 
     <!-- PAST UPLOADS -->
@@ -196,6 +196,7 @@
       <table id="dancerTable" class="dancer-table">
         <thead>
           <tr>
+            <th>Timestamp</th>
             <th>Dancer</th>
             <th>Video</th>
             <th>Booking</th>
@@ -336,10 +337,17 @@
         list.reverse().forEach(row => {
           if (!row.url) return;
 
+          const id = extractID(row.url);
+
           const tr = document.createElement("tr");
           tr.innerHTML = `
+            <td>${row.timestamp}</td>
             <td>${row.dancer}</td>
-            <td><a href="${row.url}" target="_blank">Watch</a></td>
+            <td>
+              <a href="${row.url}" target="_blank">
+                <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+              </a>
+            </td>
             <td>
               <a href="https://dance-offs.com/index.html?dancer=${encodeURIComponent(row.dancer)}">
                 Book Dancer
@@ -357,6 +365,7 @@
       const audio = document.getElementById("djPlayer");
 
       function tryPlay() {
+        audio.muted = false;
         audio.play().catch(() => {});
         document.removeEventListener("click", tryPlay);
         document.removeEventListener("touchstart", tryPlay);
