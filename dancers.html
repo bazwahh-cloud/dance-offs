@@ -143,6 +143,7 @@
       font-weight: 600;
       color: #ffcc00;
       line-height: 1.4;
+      text-align: center;
     }
   </style>
 </head>
@@ -181,16 +182,10 @@
                placeholder="Paste YouTube URL" oninput="checkInputs()">
 
         <button id="saveBtn" class="save-button disabled-btn"
-                onclick="uploadDancer()" disabled>
+                onclick="attemptUpload()" disabled>
           Save
         </button>
       </div>
-
-      <!-- TEST BUTTON -->
-      <button id="testEmbedBtn" class="save-button" style="background:#444; margin-top:10px;"
-              onclick="testEmbeddability()">
-        Test Video
-      </button>
 
       <div id="embedTestResult"></div>
 
@@ -233,18 +228,18 @@
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* ⭐ RESTORED SHORTS-COMPATIBLE EXTRACTOR */
+    /* ⭐ SHORTS-COMPATIBLE EXTRACTOR */
     function extractID(url) {
       if (!url) return null;
 
       const clean = url.split("?")[0];
 
       const patterns = [
-        /shorts\/([^?&/]+)/,          // Shorts (any length)
-        /youtu\.be\/([^?&/]+)/,       // youtu.be
-        /v=([^?&/]+)/,                // watch?v=
-        /embed\/([^?&/]+)/,           // embed
-        /youtube\.com\/watch\/([^?&/]+)/ // watch/ID
+        /shorts\/([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /embed\/([^?&/]+)/,
+        /youtube\.com\/watch\/([^?&/]+)/
       ];
 
       for (const p of patterns) {
@@ -259,7 +254,7 @@
       return `
         <iframe 
           class="battle-frame"
-          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
+          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0"
           allow="autoplay; encrypted-media"
           allowfullscreen>
         </iframe>
@@ -280,8 +275,10 @@
       }
     }
 
-    /* ⭐ EMBEDDABILITY TEST */
-    async function testEmbeddability() {
+    /* ⭐ SAVE BUTTON NOW TESTS EMBEDDABILITY FIRST */
+    async function attemptUpload() {
+      embedTestResult.innerHTML = "⏳ Checking video embeddability…";
+
       const url = youtubeUrl.value.trim();
       const id = extractID(url);
 
@@ -312,7 +309,8 @@
       iframe.remove();
 
       if (result === "loaded") {
-        embedTestResult.innerHTML = "✅ Video is embeddable. You can upload!";
+        embedTestResult.innerHTML = "✅ Video is embeddable. Uploading…";
+        uploadDancer();
       } else {
         embedTestResult.innerHTML = `
           ❌ This video cannot be embedded.<br><br>
@@ -323,22 +321,16 @@
           4. Turn ON: <strong>Allow embedding</strong><br>
           5. Set visibility to <strong>Public</strong><br>
           6. Make sure the video is <strong>NOT marked “Made for Kids”</strong><br><br>
-          After fixing these, click <strong>Test Video</strong> again.
+          After fixing these, press <strong>Save</strong> again.
         `;
       }
     }
 
-    /* ⭐ SAVE RAW URL (Shorts-friendly) */
+    /* ⭐ RAW URL SAVED (Shorts-friendly) */
     async function uploadDancer() {
       const name = dancerName.value.trim();
       const email = dancerEmail.value.trim();
       const url = youtubeUrl.value.trim();
-
-      const id = extractID(url);
-      if (!id) {
-        alert("Please enter a valid YouTube URL.");
-        return;
-      }
 
       const params = new URLSearchParams();
       params.append("mode", "dancerupload");
@@ -353,12 +345,11 @@
           body: params
         });
 
-        alert("Dancer uploaded!");
+        embedTestResult.innerHTML = "✅ Upload successful!";
 
         dancerName.value = "";
         dancerEmail.value = "";
         youtubeUrl.value = "";
-        embedTestResult.innerHTML = "";
         checkInputs();
 
         loadDancerTable();
@@ -366,7 +357,7 @@
 
       } catch (err) {
         console.error(err);
-        alert("Upload failed. Please try again.");
+        embedTestResult.innerHTML = "❌ Upload failed. Please try again.";
       }
     }
 
@@ -401,16 +392,6 @@
         }
       } catch (err) {
         console.error("Could not load last dancer:", err);
-      }
-    }
-
-    async function loadVotes() {
-      try {
-        const res = await fetch(endpoint + "?mode=getvotes");
-        return await res.json();
-      } catch (err) {
-        console.error("Could not load votes:", err);
-        return [];
       }
     }
 
