@@ -24,9 +24,9 @@ jobs:
           username: ${{ secrets.MAIN_FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
 
-          # ⭐ REQUIRED FIX: SWITCH TO SFTP
-          protocol: sftp
-          port: 22
+          # ⭐ FIX: USE FTPS (NOT FTP, NOT SFTP)
+          protocol: ftps
+          port: 21
 
           local-dir: ./empty-dir/
           server-dir: /htdocs/
@@ -43,9 +43,9 @@ jobs:
           username: ${{ secrets.MAIN_FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
 
-          # ⭐ REQUIRED FIX: SWITCH TO SFTP
-          protocol: sftp
-          port: 22
+          # ⭐ FIX: USE FTPS (NOT FTP, NOT SFTP)
+          protocol: ftps
+          port: 21
 
           local-dir: ./
           server-dir: /htdocs/
