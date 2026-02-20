@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Main site CSS -->
+  <!-- Load CSS from MAIN SITE -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
 
   <!-- Hard overrides to GUARANTEE layout -->
@@ -90,6 +90,9 @@
         <button id="uploadBtn" class="upload-button">Upload Mix</button>
 
         <div id="uploadStatus"></div>
+
+        <!-- ONE MP3 PLAYER -->
+        <audio id="djPlayer" controls style="width:100%; margin-top:20px; display:none;"></audio>
       </div>
     </div>
 
@@ -120,6 +123,7 @@
       formData.append("file", file);
 
       try {
+        // Upload MP3 to PHP
         const uploadResponse = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
@@ -130,6 +134,12 @@
 
         const storedName = fileUrl.split("/").pop();
 
+        // Show MP3 player
+        const player = document.getElementById("djPlayer");
+        player.src = fileUrl;
+        player.style.display = "block";
+
+        // Log metadata to Google Sheets
         await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
