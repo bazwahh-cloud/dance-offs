@@ -217,7 +217,7 @@ body {
   }
 }
 
-/* Video preview (Dancers page only) */
+/* Video preview */
 .video-slot {
   margin-top: 20px;
   width: 100%;
@@ -375,46 +375,32 @@ body {
 }
 
 /* ----------------------------------------------------
-   DJ PAGE — COMPACT LAYOUT (SAFE SCOPED)
+   DJ PAGE — SCOPED TO SUBDOMAIN ONLY
 ---------------------------------------------------- */
 
-body.dj-upload .dj-booth,
-body.dj-upload .deck-row,
-body.dj-upload .deck,
-body.dj-upload .record,
-body.dj-upload .record-inner,
-body.dj-upload .mixer,
-body.dj-upload .mixer-wrap,
-body.dj-upload .dj-library,
-body.dj-upload .library-title {
-  all: unset;
-  display: revert;
-}
-
-/* DJ-specific styles */
 body.dj-upload {
   padding-bottom: 60px;
 }
 
-.dj-booth {
+body.dj-upload .dj-booth {
   max-width: 650px;
   margin: 20px auto;
   text-align: center;
 }
 
-.deck-row {
+body.dj-upload .deck-row {
   display: flex;
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.deck {
+body.dj-upload .deck {
   flex: 0 0 180px;
   text-align: center;
 }
 
-.record {
+body.dj-upload .record {
   width: 160px;
   height: 160px;
   border-radius: 50%;
@@ -425,12 +411,12 @@ body.dj-upload {
   justify-content: center;
 }
 
-.record-inner {
+body.dj-upload .record-inner {
   width: 110px;
   text-align: center;
 }
 
-.record-inner input {
+body.dj-upload .record-inner input {
   width: 100%;
   padding: 6px;
   margin: 4px 0;
@@ -442,12 +428,12 @@ body.dj-upload {
   text-align: center;
 }
 
-.mixer-wrap {
+body.dj-upload .mixer-wrap {
   margin: 15px auto 0;
   text-align: center;
 }
 
-.mixer {
+body.dj-upload .mixer {
   width: 260px;
   padding: 15px;
   background: #111;
@@ -459,8 +445,8 @@ body.dj-upload {
   gap: 8px;
 }
 
-.mixer input,
-.mixer button {
+body.dj-upload .mixer input,
+body.dj-upload .mixer button {
   width: 100%;
   padding: 8px;
   border-radius: 6px;
@@ -471,7 +457,7 @@ body.dj-upload {
   text-align: center;
 }
 
-.mixer button {
+body.dj-upload .mixer button {
   background: #ffcc00;
   color: #000;
   font-weight: 700;
@@ -479,13 +465,13 @@ body.dj-upload {
   border: none;
 }
 
-.mixer label {
+body.dj-upload .mixer label {
   margin-top: 2px;
   font-size: 13px;
   color: #ccc;
 }
 
-.library-title {
+body.dj-upload .library-title {
   text-align: center;
   margin-top: 40px;
   font-size: 26px;
@@ -493,7 +479,7 @@ body.dj-upload {
   color: #ffcc00;
 }
 
-.dj-library {
+body.dj-upload .dj-library {
   width: 100%;
   max-width: 900px;
   margin: 20px auto;
@@ -501,13 +487,13 @@ body.dj-upload {
   color: white;
 }
 
-.dj-library th,
-.dj-library td {
+body.dj-upload .dj-library th,
+body.dj-upload .dj-library td {
   padding: 10px;
   border-bottom: 1px solid #333;
   text-align: center;
 }
 
-.dj-library audio {
+body.dj-upload .dj-library audio {
   width: 160px;
 }
