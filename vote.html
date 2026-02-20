@@ -12,7 +12,7 @@
   <style>
     .video-slot {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 9 / 16;
       background: #000;
       border-radius: 8px;
       position: relative;
@@ -22,7 +22,6 @@
     .battle-frame {
       width: 100%;
       height: 100%;
-      border-radius: 8px;
       border: none;
       pointer-events: none;
     }
@@ -131,7 +130,7 @@
 
     </div>
 
-    <!-- ⭐ Last Uploaded DJ Track -->
+    <!-- DJ TRACK -->
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
         Now Playing
@@ -156,7 +155,7 @@
     let champion = null;
     let challenger = null;
 
-    /* PayPal */
+    /* PAYPAL */
     paypal.Buttons({
       createOrder: (data, actions) =>
         actions.order.create({
@@ -180,23 +179,23 @@
         })
     }).render("#paypal-button-container");
 
-    /* ⭐ BULLETPROOF YOUTUBE ID EXTRACTOR */
+    /* ⭐ RESTORED SHORTS-COMPATIBLE EXTRACTOR */
     function extractID(url) {
       if (!url) return null;
 
-      url = url.split("?")[0];
+      const clean = url.split("?")[0];
 
       const patterns = [
-        /youtu\.be\/([A-Za-z0-9_-]{11})/,
-        /youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/,
-        /youtube\.com\/watch\/([A-Za-z0-9_-]{11})/,
-        /watch\?v=([A-Za-z0-9_-]{11})/,
-        /embed\/([A-Za-z0-9_-]{11})/
+        /shorts\/([^?&/]+)/,          // Shorts (any length)
+        /youtu\.be\/([^?&/]+)/,       // youtu.be
+        /v=([^?&/]+)/,                // watch?v=
+        /embed\/([^?&/]+)/,           // embed
+        /youtube\.com\/watch\/([^?&/]+)/ // watch/ID
       ];
 
       for (const p of patterns) {
-        const m = url.match(p);
-        if (m) return m[1];
+        const m = clean.match(p);
+        if (m && m[1]) return m[1];
       }
 
       return null;
@@ -214,7 +213,7 @@
       `;
     }
 
-    /* Load Champion + Challenger */
+    /* LOAD BATTLE */
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
       const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
@@ -226,7 +225,7 @@
       document.getElementById("challengerVideo").innerHTML = embed(extractID(challenger.url));
     }
 
-    /* ⭐ Load last uploaded DJ MP3 + autoplay */
+    /* LOAD DJ TRACK */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -253,7 +252,7 @@
       });
     }
 
-    /* Vote counts */
+    /* LOAD VOTE COUNTS */
     async function loadVoteCounts() {
       const votes = await fetch(endpoint + "?mode=getvotes").then(r => r.json());
 
@@ -264,7 +263,7 @@
       document.getElementById("challengerCount").innerText = "Challenger Votes: " + challVotes;
     }
 
-    /* Voting */
+    /* VOTE */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -288,7 +287,7 @@
         });
     }
 
-    /* Countdown */
+    /* COUNTDOWN */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
