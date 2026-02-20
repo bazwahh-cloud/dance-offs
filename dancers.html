@@ -413,7 +413,20 @@
           d.votes = voteCount[d.dancer] || 0;
         });
 
-        dancers.sort((a, b) => b.votes - a.votes);
+        /* ⭐ OPTION C SORTING:
+           1. Votes DESC
+           2. If votes equal → newest timestamp first
+        */
+        dancers.sort((a, b) => {
+          if (b.votes !== a.votes) {
+            return b.votes - a.votes;
+          }
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
+
+        /* ⭐ SHARED RANKS */
+        let lastVotes = null;
+        let lastRank = 0;
 
         const tbody = document.querySelector("#dancerTable tbody");
         tbody.innerHTML = "";
@@ -423,9 +436,18 @@
 
           const id = extractID(row.url);
 
+          let rank;
+          if (row.votes === lastVotes) {
+            rank = lastRank;
+          } else {
+            rank = index + 1;
+            lastRank = rank;
+            lastVotes = row.votes;
+          }
+
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${index + 1}</td>
+            <td>${rank}</td>
             <td>${row.votes}</td>
             <td>${row.timestamp}</td>
             <td>${row.dancer}</td>
