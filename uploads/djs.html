@@ -73,7 +73,7 @@
 
   </div>
 
-  <!-- ⭐ LINK TO PAST UPLOADS -->
+  <!-- LINK TO PAST UPLOADS -->
   <div style="text-align:center; margin:50px 0;">
     <a href="djs-past.html"
        style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -86,7 +86,7 @@
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
-  <!-- FULL ORIGINAL JS (unchanged) -->
+  <!-- DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
@@ -138,3 +138,36 @@
             mode: "djupload",
 
             djEmail: document.getElementById("djEmail").value,
+            djName: document.getElementById("djName").value,
+
+            deck1Artist: document.getElementById("deck1Artist").value,
+            deck1Title: document.getElementById("deck1Title").value,
+            deck2Artist: document.getElementById("deck2Artist").value,
+            deck2Title: document.getElementById("deck2Title").value,
+
+            fileUrl: fileUrl,
+            originalName: file.name,
+            storedName: storedName,
+            sizeBytes: file.size,
+            mimeType: file.type,
+            status: "active"
+          })
+        });
+
+        status.innerHTML = "Mix uploaded and logged successfully!";
+
+        loadLatestMix();
+
+      } catch (err) {
+        console.error(err);
+        status.innerHTML = "Upload failed.";
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadLatestMix();
+    });
+  </script>
+
+</body>
+</html>
