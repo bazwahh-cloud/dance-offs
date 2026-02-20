@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Load CSS from MAIN SITE -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
 
-  <!-- Hard overrides to GUARANTEE layout -->
   <style>
     body.dj-upload {
       padding-bottom: 80px;
@@ -42,7 +40,6 @@
       width: 100%;
     }
 
-    /* Library table styling */
     .dj-library {
       width: 100%;
       max-width: 900px;
@@ -73,7 +70,6 @@
 
 <body class="dj-upload">
 
-  <!-- NAVIGATION (matches main site) -->
   <nav class="navbar">
     <a href="https://dance-offs.com/index.html">Home</a>
     <a href="https://dance-offs.com/dancers.html">Dancers</a>
@@ -85,9 +81,7 @@
 
   <div class="dj-booth">
 
-    <!-- DECKS SIDE BY SIDE -->
     <div class="deck-row">
-
       <div class="deck">
         <div class="deck-title">Deck 1</div>
         <input type="text" id="deck1Artist" placeholder="Artist" required>
@@ -99,10 +93,8 @@
         <input type="text" id="deck2Artist" placeholder="Artist" required>
         <input type="text" id="deck2Title" placeholder="Track Title" required>
       </div>
-
     </div>
 
-    <!-- MIXER CENTERED UNDERNEATH -->
     <div class="mixer-wrap">
       <div class="mixer">
         <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
@@ -118,14 +110,12 @@
 
         <div id="uploadStatus"></div>
 
-        <!-- ONE MP3 PLAYER (loads from Google Sheet) -->
         <audio id="djPlayer" controls style="width:100%; margin-top:20px; display:none;"></audio>
       </div>
     </div>
 
   </div>
 
-  <!-- LIBRARY SECTION -->
   <h2 class="library-title">Past Uploads</h2>
 
   <table class="dj-library" id="djLibrary">
@@ -140,27 +130,21 @@
     <tbody></tbody>
   </table>
 
-  <!-- FOOTER (matches main site) -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
-  <!-- UPLOAD + GOOGLE SHEET SCRIPT -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* ----------------------------------------------------
-       LOAD LATEST MIX FROM GOOGLE SHEET
-    ---------------------------------------------------- */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
         const list = await res.json();
-
         if (!list.length) return;
 
-        const latest = list[list.length - 1]; // newest
+        const latest = list[list.length - 1];
 
         const player = document.getElementById("djPlayer");
         player.src = latest.fileUrl;
@@ -171,9 +155,6 @@
       }
     }
 
-    /* ----------------------------------------------------
-       LOAD FULL LIBRARY (NEWEST → OLDEST)
-    ---------------------------------------------------- */
     async function loadLibrary() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -182,7 +163,6 @@
         const tbody = document.querySelector("#djLibrary tbody");
         tbody.innerHTML = "";
 
-        // Reverse so newest is at the top
         list.reverse();
 
         list.forEach(row => {
@@ -191,12 +171,8 @@
           tr.innerHTML = `
             <td>${row.djName}</td>
             <td>${row.deck1Artist} - ${row.deck1Title}</td>
-            <td>
-              <audio controls src="${row.fileUrl}" style="width:160px;"></audio>
-            </td>
-            <td>
-              <a href="${row.fileUrl}" download>Download</a>
-            </td>
+            <td><audio controls src="${row.fileUrl}" style="width:160px;"></audio></td>
+            <td><a href="${row.fileUrl}" download>Download</a></td>
           `;
 
           tbody.appendChild(tr);
@@ -212,9 +188,6 @@
       loadLibrary();
     });
 
-    /* ----------------------------------------------------
-       UPLOAD HANDLER (still logs to Google Sheet)
-    ---------------------------------------------------- */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
@@ -230,7 +203,6 @@
       formData.append("file", file);
 
       try {
-        // Upload MP3 to PHP (even if it fails, playback still works via Google Sheet)
         const uploadResponse = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
@@ -241,7 +213,6 @@
 
         const storedName = fileUrl.split("/").pop();
 
-        // Log metadata to Google Sheets
         await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -267,7 +238,6 @@
 
         status.innerHTML = "Mix uploaded and logged successfully!";
 
-        // Reload latest mix + library
         loadLatestMix();
         loadLibrary();
 
