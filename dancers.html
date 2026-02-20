@@ -78,7 +78,7 @@
     .video-slot {
       margin-top: 20px;
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 9 / 16;
       background: #000;
       border-radius: 10px;
       overflow: hidden;
@@ -136,6 +136,14 @@
       width: 100%;
       max-width: 500px;
     }
+
+    #embedTestResult {
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffcc00;
+      line-height: 1.4;
+    }
   </style>
 </head>
 
@@ -177,6 +185,14 @@
           Save
         </button>
       </div>
+
+      <!-- TEST BUTTON -->
+      <button id="testEmbedBtn" class="save-button" style="background:#444; margin-top:10px;"
+              onclick="testEmbeddability()">
+        Test Video
+      </button>
+
+      <div id="embedTestResult"></div>
 
       <h2 class="section-title" style="margin-top:35px;">Last Uploaded Dancer</h2>
       <div id="videoPreview" class="video-slot"></div>
@@ -264,7 +280,55 @@
       }
     }
 
-    /* ⭐ SAVE RAW URL (like your old system) */
+    /* ⭐ EMBEDDABILITY TEST */
+    async function testEmbeddability() {
+      const url = youtubeUrl.value.trim();
+      const id = extractID(url);
+
+      if (!id) {
+        embedTestResult.innerHTML = "❌ Invalid YouTube URL.";
+        return;
+      }
+
+      const testURL = `https://www.youtube.com/embed/${id}`;
+
+      const iframe = document.createElement("iframe");
+      iframe.style.width = "0";
+      iframe.style.height = "0";
+      iframe.style.border = "0";
+      iframe.src = testURL;
+
+      const timeout = new Promise(resolve => setTimeout(() => resolve("timeout"), 2500));
+
+      const loadCheck = new Promise(resolve => {
+        iframe.onload = () => resolve("loaded");
+        iframe.onerror = () => resolve("error");
+      });
+
+      document.body.appendChild(iframe);
+
+      const result = await Promise.race([timeout, loadCheck]);
+
+      iframe.remove();
+
+      if (result === "loaded") {
+        embedTestResult.innerHTML = "✅ Video is embeddable. You can upload!";
+      } else {
+        embedTestResult.innerHTML = `
+          ❌ This video cannot be embedded.<br><br>
+          <strong>To fix this:</strong><br>
+          1. Open <strong>YouTube Studio</strong><br>
+          2. Go to <strong>Content</strong> → Select your video<br>
+          3. Open <strong>Advanced Settings</strong><br>
+          4. Turn ON: <strong>Allow embedding</strong><br>
+          5. Set visibility to <strong>Public</strong><br>
+          6. Make sure the video is <strong>NOT marked “Made for Kids”</strong><br><br>
+          After fixing these, click <strong>Test Video</strong> again.
+        `;
+      }
+    }
+
+    /* ⭐ SAVE RAW URL (Shorts-friendly) */
     async function uploadDancer() {
       const name = dancerName.value.trim();
       const email = dancerEmail.value.trim();
@@ -280,7 +344,7 @@
       params.append("mode", "dancerupload");
       params.append("dancerName", name);
       params.append("dancerEmail", email);
-      params.append("youtubeUrl", url); // ← RAW URL (Shorts-friendly)
+      params.append("youtubeUrl", url);
 
       try {
         await fetch(endpoint, {
@@ -294,6 +358,7 @@
         dancerName.value = "";
         dancerEmail.value = "";
         youtubeUrl.value = "";
+        embedTestResult.innerHTML = "";
         checkInputs();
 
         loadDancerTable();
@@ -357,19 +422,16 @@
         const voteRes = await fetch(endpoint + "?mode=getvotes");
         const votes = await voteRes.json();
 
-        // Count votes per dancer
         const voteCount = {};
         votes.forEach(v => {
           const name = v.WinnerName;
           voteCount[name] = (voteCount[name] || 0) + 1;
         });
 
-        // Attach vote count
         dancers.forEach(d => {
           d.votes = voteCount[d.dancer] || 0;
         });
 
-        // Sort by votes DESC
         dancers.sort((a, b) => b.votes - a.votes);
 
         const tbody = document.querySelector("#dancerTable tbody");
