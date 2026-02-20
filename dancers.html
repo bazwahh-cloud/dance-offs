@@ -217,24 +217,23 @@
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* ⭐ BULLETPROOF YOUTUBE ID EXTRACTOR */
+    /* ⭐ RESTORED SHORTS-COMPATIBLE EXTRACTOR */
     function extractID(url) {
       if (!url) return null;
 
-      // Remove parameters
-      url = url.split("?")[0];
+      const clean = url.split("?")[0];
 
       const patterns = [
-        /youtu\.be\/([A-Za-z0-9_-]{11})/,
-        /youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/,
-        /youtube\.com\/watch\/([A-Za-z0-9_-]{11})/,
-        /watch\?v=([A-Za-z0-9_-]{11})/,
-        /embed\/([A-Za-z0-9_-]{11})/
+        /shorts\/([^?&/]+)/,          // Shorts (any length)
+        /youtu\.be\/([^?&/]+)/,       // youtu.be
+        /v=([^?&/]+)/,                // watch?v=
+        /embed\/([^?&/]+)/,           // embed
+        /youtube\.com\/watch\/([^?&/]+)/ // watch/ID
       ];
 
       for (const p of patterns) {
-        const m = url.match(p);
-        if (m) return m[1];
+        const m = clean.match(p);
+        if (m && m[1]) return m[1];
       }
 
       return null;
@@ -265,7 +264,7 @@
       }
     }
 
-    /* ⭐ CLEAN URL BEFORE SAVING */
+    /* ⭐ SAVE RAW URL (like your old system) */
     async function uploadDancer() {
       const name = dancerName.value.trim();
       const email = dancerEmail.value.trim();
@@ -277,13 +276,11 @@
         return;
       }
 
-      const cleanUrl = "https://youtube.com/watch?v=" + id;
-
       const params = new URLSearchParams();
       params.append("mode", "dancerupload");
       params.append("dancerName", name);
       params.append("dancerEmail", email);
-      params.append("youtubeUrl", cleanUrl);
+      params.append("youtubeUrl", url); // ← RAW URL (Shorts-friendly)
 
       try {
         await fetch(endpoint, {
