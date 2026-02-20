@@ -190,7 +190,9 @@
     <!-- LATEST DJ MIX -->
     <section class="dj-audio-wrap">
       <h3>Latest DJ Mix</h3>
-      <audio id="djPlayer" controls autoplay muted></audio>
+
+      <!-- ⭐ FIXED: playsinline added -->
+      <audio id="djPlayer" controls autoplay muted playsinline></audio>
     </section>
 
     <!-- LINK TO PAST DANCERS PAGE -->
@@ -208,7 +210,7 @@
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
-  <!-- FULL ORIGINAL JS (unchanged) -->
+  <!-- FULL JS -->
   <script>
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
@@ -339,6 +341,7 @@
       }
     }
 
+    /* ⭐ FIXED: Full iPhone-safe autoplay logic */
     async function loadLatestDJMix() {
       try {
         const res = await fetch(endpoint + "?mode=djlist");
@@ -350,7 +353,21 @@
 
         audio.src = latest.fileUrl;
         audio.autoplay = true;
-        audio.play().catch(() => {});
+
+        audio.play().then(() => {
+          audio.muted = false; // desktop + android
+        }).catch(() => {
+          const unmute = () => {
+            audio.muted = false;
+            audio.play().catch(() => {});
+            window.removeEventListener("touchstart", unmute);
+            window.removeEventListener("click", unmute);
+          };
+
+          window.addEventListener("touchstart", unmute);
+          window.addEventListener("click", unmute);
+        });
+
       } catch (err) {
         console.error("Could not load latest DJ mix:", err);
       }
@@ -405,20 +422,6 @@
       }
     }
 
-    function enableAutoplayAfterGesture() {
-      const audio = document.getElementById("djPlayer");
-
-      function tryPlay() {
-        audio.muted = false;
-        audio.play().catch(() => {});
-        document.removeEventListener("click", tryPlay);
-        document.removeEventListener("touchstart", tryPlay);
-      }
-
-      document.addEventListener("click", tryPlay);
-      document.addEventListener("touchstart", tryPlay);
-    }
-
     function hideDancersLoading() {
       const overlay = document.getElementById("loadingDancersOverlay");
       if (overlay) overlay.style.display = "none";
@@ -428,7 +431,6 @@
       loadLatestDJMix();
       loadDancerTable();
       loadLastDancerVideo();
-      enableAutoplayAfterGesture();
     });
   </script>
 
