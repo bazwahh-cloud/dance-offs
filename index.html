@@ -6,8 +6,8 @@
 
   <title>Dance-Offs: Home</title>
 
-  <!-- UPDATED VERSION NUMBER + ABSOLUTE URL -->
-  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2005">
+  <!-- MAIN SITE CSS -->
+  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
 
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
@@ -18,10 +18,7 @@
   <nav class="navbar">
     <a href="index.html" class="active">Home</a>
     <a href="dancers.html">Dancers</a>
-
-    <!-- FIXED DJ LINK -->
     <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
-
     <a href="vote.html">Vote</a>
     <a href="prizes.html">Prizes</a>
     <a href="shop.html">Shop</a>
@@ -31,24 +28,20 @@
   <div class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
-
-      <!-- Clickable zones -->
-      <a href="dancers.html" class="hero-zone hero-left"></a>
-      <a href="vote.html" class="hero-zone hero-right"></a>
     </div>
   </div>
 
   <!-- MAIN CONTENT -->
-  <main class="page-container" style="text-align:center;">
+  <main class="page-container">
 
-    <p class="instruction-line" style="max-width:800px; margin:10px auto 20px; line-height:1.6;">
+    <p class="instruction-line" style="max-width:800px; margin:10px auto 20px; line-height:1.6; text-align:center;">
       Vote for your favourite dancer — left or right — and you could win the Prize Draw!
     </p>
 
     <section style="max-width:900px; margin:40px auto;">
       <h2 style="text-align:center;">Frequently Asked Questions</h2>
 
-      <div align="center">
+      <div style="display:flex; flex-direction:column; align-items:center;">
 
         <details class="faq-item">
           <summary>&lt; How do I enter to win? &gt;</summary>
@@ -85,7 +78,7 @@
 
     <!-- CONTACT FORM -->
     <section id="contact" class="contact-section">
-      <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px;">Contact Us</h2>
+      <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px; text-align:center;">Contact Us</h2>
 
       <form id="contactForm" method="POST" onsubmit="return false;" style="display:flex; flex-direction:column; gap:15px;">
 
@@ -170,11 +163,11 @@
         const battle = await res.json();
 
         if (battle.left) {
-          document.querySelector(".hero-left").style.backgroundImage =
+          document.querySelector(".hero-img-wrap").style.backgroundImage =
             `url('${battle.left}')`;
         }
         if (battle.right) {
-          document.querySelector(".hero-right").style.backgroundImage =
+          document.querySelector(".hero-img-wrap").style.backgroundImage =
             `url('${battle.right}')`;
         }
       } catch (err) {
@@ -200,32 +193,6 @@
       loadBattle();
       loadState();
     });
-  </script>
-
-  <!-- ⭐ AUTO-FILL DJ BOOKING SUPPORT -->
-  <script>
-    (function() {
-      const params = new URLSearchParams(window.location.search);
-      const dj = params.get("dj");
-
-      if (dj) {
-        const nameField = document.getElementById("name");
-        const messageField = document.getElementById("message");
-
-        if (nameField && !nameField.value) {
-          nameField.value = `Booking request for DJ ${dj}`;
-        }
-
-        if (messageField) {
-          messageField.value = `Hi, I would like to book DJ ${dj} for an event.`;
-        }
-
-        const contactSection = document.getElementById("contact");
-        if (contactSection) {
-          contactSection.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    })();
   </script>
 
 </body>
