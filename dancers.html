@@ -10,20 +10,58 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* Page-specific layout */
-    .dancer-left {
-      max-width: 500px;
+    /* Upload grid layout */
+    .dancer-upload-grid {
+      max-width: 600px;
       margin: 0 auto;
-    }
-
-    .section-title {
-      font-family: 'Bangers', cursive;
-      font-size: 32px;
-      margin: 25px 0 10px;
       text-align: center;
-      letter-spacing: 1px;
     }
 
+    .dancer-upload-grid .grid-box {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px 20px;
+      margin-top: 20px;
+      justify-items: center;
+    }
+
+    .dancer-upload-grid .input-field,
+    .dancer-upload-grid .save-button {
+      width: 100%;
+      max-width: 260px;
+    }
+
+    .dancer-upload-grid .save-button {
+      padding: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      background: #ffcc00;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #000;
+      box-shadow: 0 0 10px #ffcc00;
+    }
+
+    .dancer-upload-grid .save-button.disabled-btn {
+      opacity: 0.4;
+      pointer-events: none;
+      background: #777 !important;
+      box-shadow: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .dancer-upload-grid .grid-box {
+        grid-template-columns: 1fr;
+      }
+
+      .dancer-upload-grid .input-field,
+      .dancer-upload-grid .save-button {
+        max-width: 100%;
+      }
+    }
+
+    /* Video preview */
     .video-slot {
       margin-top: 20px;
       width: 100%;
@@ -40,16 +78,15 @@
       border: 0;
     }
 
-    .dj-audio-wrap {
-      margin-top: 30px;
+    .section-title {
+      font-family: 'Bangers', cursive;
+      font-size: 32px;
+      margin: 25px 0 10px;
       text-align: center;
+      letter-spacing: 1px;
     }
 
-    .dj-audio-wrap audio {
-      width: 100%;
-      max-width: 500px;
-    }
-
+    /* Table */
     .dancer-table {
       width: 100%;
       max-width: 1000px;
@@ -75,6 +112,17 @@
       color: #ffcc00;
       text-decoration: underline;
     }
+
+    /* DJ audio */
+    .dj-audio-wrap {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .dj-audio-wrap audio {
+      width: 100%;
+      max-width: 500px;
+    }
   </style>
 </head>
 
@@ -96,21 +144,30 @@
 
   <main class="page-container dancer-layout">
 
-    <!-- UPLOAD SECTION (single column) -->
-    <div class="dancer-left">
+    <!-- UPLOAD GRID -->
+    <div class="dancer-upload-grid">
+
       <h2 class="section-title">Upload Your Dancer Video</h2>
 
-      <input id="dancerName" class="input-field" type="text" placeholder="Your Dancer Name" oninput="checkInputs()">
-      <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email" oninput="checkInputs()">
-      <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL" oninput="checkInputs()">
+      <div class="grid-box">
+        <input id="dancerName" class="input-field" type="text"
+               placeholder="Your Dancer Name" oninput="checkInputs()">
 
-      <button id="saveBtn" class="save-button disabled-btn" onclick="uploadDancer()" disabled>
-        Save
-      </button>
+        <input id="dancerEmail" class="input-field" type="email"
+               placeholder="Your Email" oninput="checkInputs()">
 
-      <!-- LAST UPLOADED DANCER (now underneath inputs) -->
+        <input id="youtubeUrl" class="input-field" type="text"
+               placeholder="Paste YouTube URL" oninput="checkInputs()">
+
+        <button id="saveBtn" class="save-button disabled-btn"
+                onclick="uploadDancer()" disabled>
+          Save
+        </button>
+      </div>
+
       <h2 class="section-title" style="margin-top:35px;">Last Uploaded Dancer</h2>
       <div id="videoPreview" class="video-slot"></div>
+
     </div>
 
     <!-- LATEST DJ MIX -->
