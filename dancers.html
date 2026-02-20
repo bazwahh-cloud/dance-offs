@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2015">
+  <link rel="stylesheet" href="style2.css?v=2016">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -50,69 +50,73 @@
       box-shadow: none !important;
     }
 
-    /* SoundCloud wrapper */
-    .sc-wrapper {
-      position: relative;
-      width: 100%;
-      height: 166px;
-      margin-top: 30px;
-    }
-
-    #scPlayer {}
-
-    .sc-tap-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      backdrop-filter: blur(2px);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-
-    .sc-tap-overlay-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sc-tap-button {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #ffcc00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.6);
-      animation: pulse 1.6s infinite ease-in-out;
-    }
-
-    .sc-tap-button::before {
-      content: "";
-      border-style: solid;
-      border-width: 18px 0 18px 28px;
-      border-color: transparent transparent transparent #000;
-      margin-left: 6px;
-    }
-
-    .sc-tap-text {
-      margin-top: 12px;
-      color: #ffcc00;
-      font-size: 22px;
-      font-weight: 700;
-      text-shadow: 0 0 10px black;
+    .section-title {
+      font-family: 'Bangers', cursive;
+      font-size: 32px;
+      margin: 25px 0 10px;
       text-align: center;
-      pointer-events: none;
+      letter-spacing: 1px;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
-      50% { transform: scale(1.15); box-shadow: 0 0 35px #ffcc00; }
-      100% { transform: scale(1); box-shadow: 0 0 20px #ffcc00; }
+    .dancer-layout {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .video-slot {
+      margin-top: 15px;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 12px #000;
+    }
+
+    .battle-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .dj-audio-wrap {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .dj-audio-wrap h3 {
+      margin-bottom: 10px;
+    }
+
+    .dj-audio-wrap audio {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .dancer-table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 30px auto 40px;
+      border-collapse: collapse;
+      color: #fff;
+    }
+
+    .dancer-table th,
+    .dancer-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #333;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .dancer-table th {
+      background: rgba(0, 0, 0, 0.5);
+      font-weight: 700;
+    }
+
+    .dancer-table a {
+      color: #ffcc00;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -123,55 +127,55 @@
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html" class="active">Dancers</a>
-    <a href="djs.html">DJs</a>
-    <a id="voteNav" href="javascript:void(0)" style="opacity:0.4; pointer-events:none;">Vote</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
+    <a id="voteNav" href="javascript:void(0)" class="disabled-btn" style="opacity:0.4; pointer-events:none;">Vote</a>
     <a href="prizes.html">Prizes</a>
     <a href="shop.html">Shop</a>
   </nav>
 
   <p class="instruction-line" style="text-align:center; margin-top:10px;">
-    Load your dancer, then vote
+    Upload your dancer video, then fans can book you from the homepage.
   </p>
 
-  <main class="page-container">
+  <main class="page-container dancer-layout">
 
-    <table class="battle-table">
-      <tr>
-        <td class="battle-cell">
-          <input id="leftUrl" class="input-field" type="text" placeholder="Paste YouTube URL Left">
-          <div id="leftVideo" class="video-slot"></div>
-        </td>
+    <!-- DANCER UPLOAD -->
+    <section>
+      <h2 class="section-title">Upload Your Dancer Video</h2>
 
-        <td class="battle-cell">
-          <input id="rightUrl" class="input-field" type="text" placeholder="Paste YouTube URL Right">
-          <div id="rightVideo" class="video-slot"></div>
-        </td>
-      </tr>
-    </table>
+      <input id="dancerName" class="input-field" type="text" placeholder="Your Dancer Name">
+      <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email">
+      <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL">
 
-    <div style="text-align:center; margin-top:20px;">
-      <button class="save-button" style="width:140px;" onclick="loadBattleOnly()">Load</button>
-      <button id="voteBtn" class="save-button disabled-btn" style="width:140px;" onclick="goVote()">Vote</button>
-    </div>
-
-    <!-- ⭐ Enhanced SoundCloud Player -->
-    <div class="sc-wrapper">
-      <iframe 
-        id="scPlayer"
-        width="100%" 
-        height="166"
-        scrolling="no"
-        frameborder="no"
-        allow="autoplay; encrypted-media">
-      </iframe>
-
-      <div class="sc-tap-overlay" id="scOverlay" onclick="startSC()">
-        <div class="sc-tap-overlay-inner">
-          <div class="sc-tap-button"></div>
-          <div class="sc-tap-text">Tap to Play</div>
-        </div>
+      <div style="text-align:center; margin-top:15px;">
+        <button class="save-button" style="width:140px;" onclick="previewVideo()">Preview</button>
+        <button class="save-button" style="width:180px;" onclick="uploadDancer()">Save Dancer</button>
       </div>
-    </div>
+
+      <div id="videoPreview" class="video-slot"></div>
+    </section>
+
+    <!-- LATEST DJ MIX -->
+    <section class="dj-audio-wrap">
+      <h3>Latest DJ Mix</h3>
+      <audio id="djPlayer" controls></audio>
+    </section>
+
+    <!-- PAST DANCER UPLOADS -->
+    <section>
+      <h2 class="section-title">Past Dancer Uploads</h2>
+
+      <table id="dancerTable" class="dancer-table">
+        <thead>
+          <tr>
+            <th>Dancer</th>
+            <th>Video</th>
+            <th>Booking</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
 
   </main>
 
@@ -182,21 +186,6 @@
   <script>
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
-
-    let scURL = "";
-    let scReady = false;
-
-    /* ⭐ Listen for SoundCloud widget READY event */
-    window.addEventListener("message", (event) => {
-      if (event.origin !== "https://w.soundcloud.com") return;
-
-      try {
-        const data = JSON.parse(event.data);
-        if (data.method === "ready") {
-          scReady = true;
-        }
-      } catch (e) {}
-    });
 
     function extractID(url) {
       if (!url) return null;
@@ -211,115 +200,119 @@
 
     function embed(id) {
       return `
-        <div style="position:relative; width:100%; height:100%;">
-          <iframe 
-            class="battle-frame"
-            src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-          </iframe>
-          <div class="blocker"></div>
-        </div>
+        <iframe 
+          class="battle-frame"
+          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&disablekb=1"
+          allow="autoplay; encrypted-media"
+          allowfullscreen>
+        </iframe>
       `;
     }
 
-    function enableVoteButton() {
-      const btn = document.getElementById("voteBtn");
-      btn.classList.remove("disabled-btn");
-      btn.style.opacity = "1";
-      btn.style.pointerEvents = "auto";
-    }
+    function previewVideo() {
+      const url = document.getElementById("youtubeUrl").value.trim();
+      const id = extractID(url);
+      const slot = document.getElementById("videoPreview");
 
-    function loadBattleOnly() {
-      const left = document.getElementById("leftUrl").value.trim();
-      const right = document.getElementById("rightUrl").value.trim();
-
-      const idL = extractID(left);
-      const idR = extractID(right);
-
-      if (!idL || !idR) {
-        alert("Both YouTube URLs must be valid.");
+      if (!id) {
+        alert("Please enter a valid YouTube URL.");
+        slot.innerHTML = "";
         return;
       }
 
-      document.getElementById("leftVideo").innerHTML = embed(idL);
-      document.getElementById("rightVideo").innerHTML = embed(idR);
-
-      enableVoteButton();
-
-      fetch(
-        endpoint +
-        "?mode=setbattle" +
-        "&left=" + encodeURIComponent(left) +
-        "&right=" + encodeURIComponent(right),
-        { method: "GET", cache: "no-store" }
-      );
+      slot.innerHTML = embed(id);
     }
 
-    function goVote() {
-      window.location.href = "vote.html";
-    }
+    async function uploadDancer() {
+      const name = document.getElementById("dancerName").value.trim();
+      const email = document.getElementById("dancerEmail").value.trim();
+      const url = document.getElementById("youtubeUrl").value.trim();
 
-    function loadCurrentBattle() {
-      fetch(endpoint + "?mode=getbattle")
-        .then(r => r.json())
-        .then(data => {
-          const left = data.left || "";
-          const right = data.right || "";
+      if (!name || !email || !url) {
+        alert("Please fill in your name, email, and YouTube URL.");
+        return;
+      }
 
-          if (!left || !right) return;
+      const id = extractID(url);
+      if (!id) {
+        alert("Please enter a valid YouTube URL.");
+        return;
+      }
 
-          document.getElementById("leftUrl").value = left;
-          document.getElementById("rightUrl").value = right;
+      const params = new URLSearchParams();
+      params.append("mode", "dancerupload");
+      params.append("dancerName", name);
+      params.append("dancerEmail", email);
+      params.append("youtubeUrl", url);
 
-          const idL = extractID(left);
-          const idR = extractID(right);
-
-          if (idL) document.getElementById("leftVideo").innerHTML = embed(idL);
-          if (idR) document.getElementById("rightVideo").innerHTML = embed(idR);
+      try {
+        await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params
         });
+
+        alert("Dancer uploaded!");
+
+        document.getElementById("dancerName").value = "";
+        document.getElementById("dancerEmail").value = "";
+        document.getElementById("youtubeUrl").value = "";
+        document.getElementById("videoPreview").innerHTML = "";
+
+        loadDancerTable();
+      } catch (err) {
+        console.error(err);
+        alert("Upload failed. Please try again.");
+      }
     }
 
-    /* ⭐ DO NOT load iframe here — iPhone fix */
-    function loadDJMix() {
-      fetch(endpoint + "?mode=getsound")
-        .then(r => r.json())
-        .then(data => {
-          let url = data.sound || "";
-          if (!url.startsWith("http")) return;
+    async function loadLatestDJMix() {
+      try {
+        const res = await fetch(endpoint + "?mode=djlist");
+        const list = await res.json();
+        if (!list.length) return;
 
-          scURL = url.split("?")[0];
+        const latest = list[list.length - 1];
+        const audio = document.getElementById("djPlayer");
+        audio.src = latest.fileUrl;
+        // Let the user press play; autoplay can be blocked on some devices
+      } catch (err) {
+        console.error("Could not load latest DJ mix:", err);
+      }
+    }
 
-          document.getElementById("scOverlay").style.display = "flex";
+    async function loadDancerTable() {
+      try {
+        const res = await fetch(endpoint + "?mode=getdancers");
+        const list = await res.json();
+
+        const tbody = document.querySelector("#dancerTable tbody");
+        tbody.innerHTML = "";
+
+        list.reverse().forEach(row => {
+          const dancer = row.dancer || "Unknown";
+          const url = row.url || row.youtubeUrl || "";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${dancer}</td>
+            <td>${url ? `<a href="${url}" target="_blank">Watch</a>` : "No link"}</td>
+            <td>
+              <a href="https://dance-offs.com/index.html?dancer=${encodeURIComponent(dancer)}">
+                Book Dancer
+              </a>
+            </td>
+          `;
+          tbody.appendChild(tr);
         });
-    }
-
-    /* ⭐ iPhone-safe autoplay */
-    function startSC() {
-      const overlay = document.getElementById("scOverlay");
-      overlay.style.display = "none";
-
-      const iframe = document.getElementById("scPlayer");
-
-      // Load iframe ONLY after user gesture
-      iframe.src =
-        "https://w.soundcloud.com/player/?url=" +
-        encodeURIComponent(scURL) +
-        "&auto_play=true";
-
-      const widget = iframe.contentWindow;
-
-      const wait = setInterval(() => {
-        if (scReady) {
-          clearInterval(wait);
-          widget.postMessage(JSON.stringify({ method: "play" }), "https://w.soundcloud.com");
-        }
-      }, 50);
+      } catch (err) {
+        console.error("Could not load dancers:", err);
+      }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      loadCurrentBattle();
-      loadDJMix();
+      loadLatestDJMix();
+      loadDancerTable();
     });
   </script>
 
