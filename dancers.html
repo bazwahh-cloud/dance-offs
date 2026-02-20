@@ -146,9 +146,7 @@
       text-align: center;
     }
 
-    /* ----------------------------------------------------
-       DANCERS PAGE — LOADING OVERLAY
-    ---------------------------------------------------- */
+    /* Loading overlay */
     #loadingDancersOverlay {
       position: fixed;
       inset: 0;
@@ -222,9 +220,9 @@
       <audio id="djPlayer" controls autoplay muted></audio>
     </section>
 
-    <!-- PAST UPLOADS -->
+    <!-- CURRENT DANCERS TABLE -->
     <section>
-      <h2 class="section-title">Past Dancer Uploads</h2>
+      <h2 class="section-title">Current Dancer Uploads</h2>
 
       <table id="dancerTable" class="dancer-table">
         <thead>
@@ -240,22 +238,29 @@
       </table>
     </section>
 
+    <!-- LINK TO PAST DANCERS PAGE -->
+    <div style="text-align:center; margin:50px 0;">
+      <a href="dancers-past.html"
+         style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
+                text-decoration:none; font-size:20px; font-weight:600;">
+        View Past Dancers →
+      </a>
+    </div>
+
   </main>
 
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
+  <!-- FULL ORIGINAL JS (unchanged) -->
   <script>
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* ⭐ SHORTS-COMPATIBLE EXTRACTOR */
     function extractID(url) {
       if (!url) return null;
-
       const clean = url.split("?")[0];
-
       const patterns = [
         /shorts\/([^?&/]+)/,
         /youtu\.be\/([^?&/]+)/,
@@ -263,12 +268,10 @@
         /embed\/([^?&/]+)/,
         /youtube\.com\/watch\/([^?&/]+)/
       ];
-
       for (const p of patterns) {
         const m = clean.match(p);
         if (m && m[1]) return m[1];
       }
-
       return null;
     }
 
@@ -297,7 +300,6 @@
       }
     }
 
-    /* ⭐ SAVE BUTTON NOW TESTS EMBEDDABILITY FIRST */
     async function attemptUpload() {
       embedTestResult.innerHTML = "⏳ Checking video embeddability…";
 
@@ -348,7 +350,6 @@
       }
     }
 
-    /* ⭐ RAW URL SAVED (Shorts-friendly) */
     async function uploadDancer() {
       const name = dancerName.value.trim();
       const email = dancerEmail.value.trim();
@@ -477,7 +478,6 @@
           tbody.appendChild(tr);
         });
 
-        /* ⭐ HIDE LOADING OVERLAY HERE */
         hideDancersLoading();
 
       } catch (err) {
@@ -499,7 +499,6 @@
       document.addEventListener("touchstart", tryPlay);
     }
 
-    /* ⭐ HIDE OVERLAY FUNCTION */
     function hideDancersLoading() {
       const overlay = document.getElementById("loadingDancersOverlay");
       if (overlay) overlay.style.display = "none";
@@ -507,7 +506,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       loadLatestDJMix();
-      loadDancerTable();        // overlay hides when this finishes
+      loadDancerTable();
       loadLastDancerVideo();
       enableAutoplayAfterGesture();
     });
