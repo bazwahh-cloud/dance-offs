@@ -10,6 +10,38 @@
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
 
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ⭐ LEFT/RIGHT CLICK OVERLAY */
+    .click-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      z-index: 5; /* Above hero image, below navbar */
+    }
+
+    .click-left,
+    .click-right {
+      flex: 1;
+      cursor: pointer;
+      background: rgba(0,0,0,0); /* fully transparent */
+    }
+
+    .click-left:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .click-right:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .hero {
+      position: relative; /* required for overlay */
+    }
+  </style>
 </head>
 
 <body>
@@ -28,6 +60,12 @@
   <div class="hero">
     <div class="hero-img-wrap">
       <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
+    </div>
+
+    <!-- ⭐ RESTORED LEFT/RIGHT CLICK OVERLAY -->
+    <div class="click-overlay">
+      <div class="click-left" onclick="location.href='dancers.html'"></div>
+      <div class="click-right" onclick="location.href='vote.html'"></div>
     </div>
   </div>
 
