@@ -5,13 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
+  <!-- Main site CSS -->
+  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3002">
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="dj-upload">
 
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="https://dance-offs.com/index.html">Home</a>
     <a href="https://dance-offs.com/dancers.html">Dancers</a>
@@ -21,10 +27,12 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
+  <!-- ⭐ INSTRUCTIONS -->
   <p>
-    Enter your mix details below, upload a short MP3 snippet (under 10 mins), and press <strong>Upload Mix</strong> to submit your entry.
+    Enter your track details into the decks, add your DJ name and email, upload a short MP3 snippet of your mix (under 10 minutes), and finish by pressing <strong>Upload Mix</strong> to submit your entry.
   </p>
 
+  <!-- ⭐ DJ BOOTH -->
   <div class="dj-booth">
 
     <div class="deck-row">
@@ -53,6 +61,7 @@
 
     </div>
 
+    <!-- MIXER -->
     <div class="mixer-wrap">
       <div class="mixer">
 
@@ -72,12 +81,17 @@
 
   </div>
 
+  <!-- ⭐ NOW PLAYING SECTION -->
   <div class="dj-player-section">
+
     <div class="now-playing">Now Playing</div>
     <div id="nowPlayingTrack" class="now-playing-track">Loading latest mix…</div>
+
     <audio id="djPlayer" controls autoplay muted playsinline></audio>
+
   </div>
 
+  <!-- LINK TO PAST UPLOADS -->
   <div style="text-align:center; margin:50px 0;">
     <a href="djs-past.html"
        style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -90,10 +104,12 @@
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
+  <!-- ⭐ DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
+    /* Load latest mix + update Now Playing text */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -131,6 +147,7 @@
       }
     }
 
+    /* Upload handler */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
