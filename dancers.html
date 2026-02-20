@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2022">
+  <link rel="stylesheet" href="style2.css?v=2023">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -31,7 +31,7 @@
     }
 
     .save-button {
-      margin-top: 15px;
+      margin-top: 20px;
       padding: 12px 20px;
       font-size: 20px;
       font-weight: 700;
@@ -42,6 +42,7 @@
       color: #000;
       width: 200px;
       box-shadow: 0 0 10px #ffcc00;
+      display: block;
     }
 
     .disabled-btn {
@@ -155,6 +156,7 @@
         <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email" oninput="checkInputs()">
         <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL" oninput="checkInputs()">
 
+        <!-- SAVE BUTTON MOVED UNDERNEATH -->
         <button id="saveBtn" class="save-button disabled-btn" onclick="uploadDancer()" disabled>Save</button>
       </div>
 
@@ -285,6 +287,8 @@
         const audio = document.getElementById("djPlayer");
 
         audio.src = latest.fileUrl;
+
+        // Autoplay fix for iPhone
         audio.autoplay = true;
         audio.play().catch(() => {});
       } catch (err) {
@@ -339,10 +343,24 @@
       }
     }
 
+    function enableAutoplayAfterGesture() {
+      const audio = document.getElementById("djPlayer");
+
+      function tryPlay() {
+        audio.play().catch(() => {});
+        document.removeEventListener("click", tryPlay);
+        document.removeEventListener("touchstart", tryPlay);
+      }
+
+      document.addEventListener("click", tryPlay);
+      document.addEventListener("touchstart", tryPlay);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       loadLatestDJMix();
       loadDancerTable();
       loadLastDancerVideo();
+      enableAutoplayAfterGesture();
     });
   </script>
 
