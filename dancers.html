@@ -99,33 +99,6 @@
       letter-spacing: 1px;
     }
 
-    /* Table */
-    .dancer-table {
-      width: 100%;
-      max-width: 1000px;
-      margin: 30px auto 40px;
-      border-collapse: collapse;
-      color: #fff;
-    }
-
-    .dancer-table th,
-    .dancer-table td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #333;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .dancer-table th {
-      background: rgba(0, 0, 0, 0.5);
-      font-weight: 700;
-    }
-
-    .dancer-table img {
-      width: 120px;
-      border-radius: 6px;
-    }
-
     /* DJ audio */
     .dj-audio-wrap {
       margin-top: 30px;
@@ -220,30 +193,12 @@
       <audio id="djPlayer" controls autoplay muted></audio>
     </section>
 
-    <!-- CURRENT DANCERS TABLE -->
-    <section>
-      <h2 class="section-title">Current Dancer Uploads</h2>
-
-      <table id="dancerTable" class="dancer-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Votes</th>
-            <th>Timestamp</th>
-            <th>Dancer</th>
-            <th>Video</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
     <!-- LINK TO PAST DANCERS PAGE -->
     <div style="text-align:center; margin:50px 0;">
       <a href="dancers-past.html"
          style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
                 text-decoration:none; font-size:20px; font-weight:600;">
-        View Past Dancers →
+        View All Dancer Uploads →
       </a>
     </div>
 
@@ -441,41 +396,6 @@
             return b.votes - a.votes;
           }
           return new Date(b.timestamp) - new Date(a.timestamp);
-        });
-
-        let lastVotes = null;
-        let lastRank = 0;
-
-        const tbody = document.querySelector("#dancerTable tbody");
-        tbody.innerHTML = "";
-
-        dancers.forEach((row, index) => {
-          if (!row.url) return;
-
-          const id = extractID(row.url);
-
-          let rank;
-          if (row.votes === lastVotes) {
-            rank = lastRank;
-          } else {
-            rank = index + 1;
-            lastRank = rank;
-            lastVotes = row.votes;
-          }
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${rank}</td>
-            <td>${row.votes}</td>
-            <td>${row.timestamp}</td>
-            <td>${row.dancer}</td>
-            <td>
-              <a href="${row.url}" target="_blank">
-                <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
-              </a>
-            </td>
-          `;
-          tbody.appendChild(tr);
         });
 
         hideDancersLoading();
