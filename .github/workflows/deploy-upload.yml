@@ -20,15 +20,15 @@ jobs:
       - name: FTP Deploy (Uploads Subdomain)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD_UPLOAD }}
+          server: ${{ secrets.UPLOAD_FTP_HOST }}
+          username: ${{ secrets.UPLOAD_FTP_USERNAME }}
+          password: ${{ secrets.UPLOAD_FTP_PASSWORD }}
 
           protocol: ftp
           port: 21
 
-          local-dir: ./uploads/        # ⭐ MUST end with /
-          server-dir: /htdocs/uploads/ # optional but recommended
+          local-dir: ./uploads/
+          server-dir: /htdocs/uploads/
 
           timeout: 60000
           security: loose
