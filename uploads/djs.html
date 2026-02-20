@@ -8,47 +8,174 @@
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
 
   <style>
+    /* PAGE WRAPPER */
     body.dj-upload {
       padding-bottom: 80px;
     }
 
+    /* ----------------------------------------------------
+       DJ BOOTH LAYOUT
+    ---------------------------------------------------- */
     .dj-booth {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-      margin: 30px auto;
+      max-width: 900px;
+      margin: 40px auto;
+      text-align: center;
     }
 
     .deck-row {
       display: flex;
-      justify-content: center;
-      gap: 30px;
+      justify-content: space-between;
+      gap: 20px;
       flex-wrap: wrap;
-      width: 100%;
     }
 
+    .deck {
+      flex: 1;
+      min-width: 260px;
+      text-align: center;
+    }
+
+    /* ----------------------------------------------------
+       RECORD GRAPHICS
+    ---------------------------------------------------- */
+    .record {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #222 0%, #000 70%);
+      margin: 0 auto 15px;
+      position: relative;
+      box-shadow: 0 0 15px #000;
+    }
+
+    .record::before {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      background: #111;
+    }
+
+    .record::after {
+      content: "";
+      position: absolute;
+      inset: 90px;
+      border-radius: 50%;
+      background: #ffcc00;
+      box-shadow: 0 0 8px #ffcc00;
+    }
+
+    .record-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 120px;
+      color: #000;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    /* ----------------------------------------------------
+       MIXER
+    ---------------------------------------------------- */
     .mixer-wrap {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
+      margin: 30px auto;
+      text-align: center;
     }
 
     .mixer {
-      max-width: 350px;
+      width: 180px;
+      height: 220px;
+      margin: 0 auto;
+      background: linear-gradient(#222, #000);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 0 15px #000;
+    }
+
+    .mixer .knob {
+      width: 28px;
+      height: 28px;
+      background: #444;
+      border-radius: 50%;
+      margin: 10px auto;
+      box-shadow: inset 0 0 5px #000;
+    }
+
+    .mixer .slider {
+      width: 6px;
+      height: 70px;
+      background: #555;
+      margin: 15px auto;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .mixer .slider::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 10px;
+      background: #ffcc00;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 30px;
+      border-radius: 3px;
+    }
+
+    /* ----------------------------------------------------
+       UPLOAD FORM
+    ---------------------------------------------------- */
+    .upload-panel {
+      max-width: 400px;
+      margin: 30px auto;
+      text-align: center;
+    }
+
+    .upload-panel input,
+    .upload-panel button {
       width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 2px solid #444;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
+
+    .upload-panel button {
+      background: #ffcc00;
+      color: #000;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* ----------------------------------------------------
+       PAST UPLOADS
+    ---------------------------------------------------- */
+    .library-title {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffcc00;
     }
 
     .dj-library {
       width: 100%;
       max-width: 900px;
-      margin: 40px auto;
+      margin: 20px auto;
       border-collapse: collapse;
       color: white;
     }
 
-    .dj-library th, .dj-library td {
+    .dj-library th,
+    .dj-library td {
       padding: 12px;
       border-bottom: 1px solid #333;
       text-align: center;
@@ -57,19 +184,12 @@
     .dj-library audio {
       width: 180px;
     }
-
-    .library-title {
-      text-align: center;
-      margin-top: 50px;
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffcc00;
-    }
   </style>
 </head>
 
 <body class="dj-upload">
 
+  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="https://dance-offs.com/index.html">Home</a>
     <a href="https://dance-offs.com/dancers.html">Dancers</a>
@@ -79,43 +199,63 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
+  <!-- DJ BOOTH -->
   <div class="dj-booth">
 
     <div class="deck-row">
+
+      <!-- LEFT DECK -->
       <div class="deck">
-        <div class="deck-title">Deck 1</div>
-        <input type="text" id="deck1Artist" placeholder="Artist" required>
-        <input type="text" id="deck1Title" placeholder="Track Title" required>
+        <div class="record">
+          <div class="record-label" id="label1">Artist<br>Title</div>
+        </div>
+
+        <input type="text" id="deck1Artist" placeholder="Artist" oninput="updateLabel(1)">
+        <input type="text" id="deck1Title" placeholder="Track Title" oninput="updateLabel(1)">
       </div>
 
+      <!-- RIGHT DECK -->
       <div class="deck">
-        <div class="deck-title">Deck 2</div>
-        <input type="text" id="deck2Artist" placeholder="Artist" required>
-        <input type="text" id="deck2Title" placeholder="Track Title" required>
+        <div class="record">
+          <div class="record-label" id="label2">Artist<br>Title</div>
+        </div>
+
+        <input type="text" id="deck2Artist" placeholder="Artist" oninput="updateLabel(2)">
+        <input type="text" id="deck2Title" placeholder="Track Title" oninput="updateLabel(2)">
+      </div>
+
+    </div>
+
+    <!-- MIXER -->
+    <div class="mixer-wrap">
+      <div class="mixer">
+        <div class="knob"></div>
+        <div class="slider"></div>
+        <div class="knob"></div>
       </div>
     </div>
 
-    <div class="mixer-wrap">
-      <div class="mixer">
-        <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
-        <input type="text" id="djName" placeholder="DJ Name" required>
+    <!-- UPLOAD PANEL -->
+    <div class="upload-panel">
+      <input type="email" id="djEmail" placeholder="Your Email (DJ ID)">
+      <input type="text" id="djName" placeholder="DJ Name">
 
-        <label class="upload-label">
-          Upload MP3 only <span style="color:#fff;">(~10 minutes max)</span>
-        </label>
+      <label style="display:block; margin-top:10px;">
+        Upload MP3 only (~10 minutes max)
+      </label>
 
-        <input type="file" id="djFile" accept=".mp3,audio/mpeg" required>
+      <input type="file" id="djFile" accept=".mp3,audio/mpeg">
 
-        <button id="uploadBtn" class="upload-button">Upload Mix</button>
+      <button id="uploadBtn">Upload Mix</button>
 
-        <div id="uploadStatus"></div>
+      <div id="uploadStatus" style="margin-top:10px;"></div>
 
-        <audio id="djPlayer" controls style="width:100%; margin-top:20px; display:none;"></audio>
-      </div>
+      <audio id="djPlayer" controls style="width:100%; margin-top:20px; display:none;"></audio>
     </div>
 
   </div>
 
+  <!-- PAST UPLOADS -->
   <h2 class="library-title">Past Uploads</h2>
 
   <table class="dj-library" id="djLibrary">
@@ -135,9 +275,18 @@
   </footer>
 
   <script>
+    /* UPDATE LABELS ON RECORDS */
+    function updateLabel(deck) {
+      const artist = document.getElementById(`deck${deck}Artist`).value || "Artist";
+      const title = document.getElementById(`deck${deck}Title`).value || "Title";
+      document.getElementById(`label${deck}`).innerHTML = `${artist}<br>${title}`;
+    }
+
+    /* BACKEND URL */
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
+    /* LOAD LATEST MIX */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -145,16 +294,15 @@
         if (!list.length) return;
 
         const latest = list[list.length - 1];
-
         const player = document.getElementById("djPlayer");
         player.src = latest.fileUrl;
         player.style.display = "block";
-
       } catch (err) {
         console.error("Could not load latest mix:", err);
       }
     }
 
+    /* LOAD LIBRARY */
     async function loadLibrary() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -170,17 +318,12 @@
 
           tr.innerHTML = `
             <td>${row.djName || "Unknown DJ"}</td>
-
             <td>
               ${(row.deck1Title || "Unknown Title")} (${row.deck1Artist || "Unknown Artist"})
               vs.
               ${(row.deck2Title || "Unknown Title")} (${row.deck2Artist || "Unknown Artist"})
             </td>
-
-            <td>
-              <audio controls src="${row.fileUrl}" style="width:160px;"></audio>
-            </td>
-
+            <td><audio controls src="${row.fileUrl}" style="width:160px;"></audio></td>
             <td>
               <a href="https://dance-offs.com/index.html?dj=${encodeURIComponent(row.djName || "")}">
                 Book DJ
@@ -196,11 +339,7 @@
       }
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      loadLatestMix();
-      loadLibrary();
-    });
-
+    /* UPLOAD HANDLER */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
@@ -258,6 +397,11 @@
         console.error(err);
         status.innerHTML = "Upload failed.";
       }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadLatestMix();
+      loadLibrary();
     });
   </script>
 
