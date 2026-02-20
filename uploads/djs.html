@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta-name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
   <!-- Shared stylesheet -->
@@ -30,7 +30,7 @@
 
     </div>
 
-    <!-- MIXER (half width) -->
+    <!-- MIXER -->
     <div class="mixer">
       <input type="email" id="djEmail" placeholder="Your Email (DJ ID)" required>
       <input type="text" id="djName" placeholder="DJ Name" required>
@@ -48,10 +48,10 @@
 
   </div>
 
-
   <!-- UPLOAD + GOOGLE SHEET SCRIPT -->
   <script>
-    const GOOGLE_SCRIPT_URL = "YOUR_WEB_APP_URL_HERE"; // <-- Replace with your Apps Script URL
+    const BACKEND_URL =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
@@ -82,8 +82,8 @@
         // Extract stored filename from URL
         const storedName = fileUrl.split("/").pop();
 
-        // 2️⃣ Send metadata to Google Sheets
-        await fetch(GOOGLE_SCRIPT_URL, {
+        // 2️⃣ Send metadata to Google Sheets via backend
+        await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({
