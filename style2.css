@@ -375,7 +375,7 @@ body {
 }
 
 /* ----------------------------------------------------
-   DJ PAGE — ENLARGED VERSION (OVERRIDES)
+   DJ PAGE — ENLARGED VERSION
 ---------------------------------------------------- */
 
 body.dj-upload {
@@ -383,77 +383,77 @@ body.dj-upload {
 }
 
 body.dj-upload .dj-booth {
-  max-width: 850px;
-  margin: 30px auto;
+  max-width: 900px;
+  margin: 40px auto;
   text-align: center;
 }
 
 body.dj-upload .deck-row {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 40px;
   flex-wrap: wrap;
 }
 
 body.dj-upload .deck {
-  flex: 0 0 230px;
+  flex: 0 0 260px;
   text-align: center;
 }
 
 body.dj-upload .record {
-  width: 220px;
-  height: 220px;
+  width: 260px;
+  height: 260px;
   border-radius: 50%;
-  border: 5px solid #444;
-  margin: 0 auto 12px;
+  border: 6px solid #444;
+  margin: 0 auto 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 body.dj-upload .record-inner {
-  width: 160px;
+  width: 180px;
   text-align: center;
 }
 
 body.dj-upload .record-inner input {
   width: 100%;
-  padding: 12px;
-  margin: 8px 0;
+  padding: 14px;
+  margin: 10px 0;
   border-radius: 6px;
   border: 2px solid #555;
   background: #000;
   color: white;
-  font-size: 20px;
+  font-size: 22px;
   text-align: center;
 }
 
 body.dj-upload .mixer-wrap {
-  margin: 25px auto 0;
+  margin: 30px auto 0;
   text-align: center;
 }
 
 body.dj-upload .mixer {
-  width: 380px;
-  padding: 20px;
+  width: 420px;
+  padding: 24px;
   background: #111;
-  border: 5px solid #444;
-  border-radius: 12px;
+  border: 6px solid #444;
+  border-radius: 14px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 body.dj-upload .mixer input,
 body.dj-upload .mixer button {
   width: 100%;
-  padding: 14px;
+  padding: 16px;
   border-radius: 6px;
   border: 2px solid #555;
   background: #000;
   color: white;
-  font-size: 20px;
+  font-size: 22px;
   text-align: center;
 }
 
@@ -466,7 +466,7 @@ body.dj-upload .mixer button {
 }
 
 body.dj-upload .mixer label {
-  margin-top: 4px;
-  font-size: 18px;
+  margin-top: 6px;
+  font-size: 20px;
   color: #ccc;
 }
