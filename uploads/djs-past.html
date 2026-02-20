@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past DJ Uploads</title>
+
+  <!-- Correct CSS (matches live site) -->
+  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
+
+  <!-- Envelope icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    .library-title {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffcc00;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
+    }
+
+    .dj-library {
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto 60px;
+      border-collapse: collapse;
+      color: white;
+    }
+
+    .dj-library th,
+    .dj-library td {
+      padding: 12px;
+      border-bottom: 1px solid #333;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .dj-library th {
+      background: rgba(0, 0, 0, 0.5);
+      font-weight: 700;
+    }
+
+    .dj-library audio {
+      width: 180px;
+    }
+
+    .booking-link {
+      color: #ffcc00;
+      font-size: 22px;
+    }
+
+    .booking-link:hover {
+      color: #ffffff;
+    }
+
+    #loadingPastDJs {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingPastDJs">
+    Loading DJ uploads…
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="https://dance-offs.com/index.html">Home</a>
+    <a href="https://dance-offs.com/dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
+    <a href="https://dance-offs.com/vote.html">Vote</a>
+    <a href="https://dance-offs.com/prizes.html">Prizes</a>
+    <a href="https://dance-offs.com/shop.html">Shop</a>
+  </nav>
+
+  <h2 class="library-title">Past DJ Uploads</h2>
+
+  <table class="dj-library" id="djLibrary">
+    <thead>
+      <tr>
+        <th>DJ</th>
+        <th>Track</th>
+        <th>Preview</th>
+        <th>Booking</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div style="text-align:center; margin-bottom:60px;">
+    <a href="djs.html"
+       style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
+              text-decoration:none; font-size:20px; font-weight:600;">
+      ← Back to DJ Uploads
+    </a>
+  </div>
+
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+  </footer>
+
+  <script>
+    const BACKEND_URL =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
+    async function loadLibrary() {
+      try {
+        const res = await fetch(BACKEND_URL + "?mode=djlist");
+        const list = await res.json();
+
+        const tbody = document.querySelector("#djLibrary tbody");
+        tbody.innerHTML = "";
+
+        // newest first
+        list.reverse();
+
+        list.forEach(row => {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${row.djName || "Unknown DJ"}</td>
+            <td>
+              ${(row.deck1Title || "Unknown Title")} (${row.deck1Artist || "Unknown Artist"})
+              vs.
+              ${(row.deck2Title || "Unknown Title")} (${row.deck2Artist || "Unknown Artist"})
+            </td>
+            <td><audio controls src="${row.fileUrl}" style="width:180px;"></audio></td>
+            <td>
+              <a href="mailto:${row.djEmail || ""}" class="booking-link">
+                <i class="fa-solid fa-envelope"></i>
+              </a>
+            </td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("loadingPastDJs").style.display = "none";
+
+      } catch (err) {
+        console.error("DJ library load failed:", err);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadLibrary);
+  </script>
+
+</body>
+</html>
 
