@@ -8,7 +8,7 @@
   <!-- Correct CSS -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
 
-  <!-- Google Fonts (ensures Bangers loads) -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- Envelope icon -->
@@ -19,14 +19,39 @@
     .dj-booth {
       transform: scale(1.2);
       transform-origin: top center;
-      margin-top: 40px; /* keeps spacing natural after scaling */
+      margin-top: 40px;
     }
 
-    /* Optional: ensure booth doesn't overflow on mobile */
     @media (max-width: 600px) {
       .dj-booth {
         transform: scale(1.1);
       }
+    }
+
+    /* ⭐ MP3 player full-width section */
+    .dj-player-section {
+      max-width: 700px;
+      margin: 40px auto 0;
+      text-align: center;
+    }
+
+    .dj-player-section audio {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .now-playing {
+      font-family: 'Bangers', cursive;
+      font-size: 26px;
+      color: #ffcc00;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .now-playing-track {
+      color: #ccc;
+      font-size: 18px;
+      margin-bottom: 15px;
     }
   </style>
 </head>
@@ -43,7 +68,7 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
-  <!-- ⭐ INSTRUCTION LINE -->
+  <!-- INSTRUCTION LINE -->
   <p style="
     text-align:center;
     margin:25px 0 15px;
@@ -55,7 +80,7 @@
     Enter the details of your mix into the decks below.
   </p>
 
-  <!-- ⭐ DJ BOOTH (NOW 20% BIGGER) -->
+  <!-- ⭐ DJ BOOTH (20% bigger) -->
   <div class="dj-booth">
 
     <div class="deck-row">
@@ -97,12 +122,18 @@
 
         <div id="uploadStatus" style="font-size:15px;"></div>
 
-        <!-- Audio preview -->
-        <audio id="djPlayer" controls autoplay muted playsinline style="width:100%; display:none; margin-top:8px;"></audio>
-
       </div>
     </div>
 
+  </div>
+
+  <!-- ⭐ NEW: MP3 PLAYER BELOW THE BOOTH -->
+  <div class="dj-player-section">
+
+    <div class="now-playing">Now Playing</div>
+    <div id="nowPlayingTrack" class="now-playing-track">Loading latest mix…</div>
+
+    <audio id="djPlayer" controls autoplay muted playsinline></audio>
   </div>
 
   <!-- LINK TO PAST UPLOADS -->
@@ -123,7 +154,7 @@
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* Autoplay-safe audio loader */
+    /* ⭐ Autoplay-safe audio loader + Now Playing text */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -132,10 +163,19 @@
 
         const latest = list[list.length - 1];
         const player = document.getElementById("djPlayer");
+        const nowPlaying = document.getElementById("nowPlayingTrack");
 
         player.src = latest.fileUrl;
-        player.style.display = "block";
 
+        // ⭐ Build track name text
+        const trackName =
+          `${latest.deck1Title || "Unknown"} (${latest.deck1Artist || "Unknown"}) 
+           vs 
+           ${latest.deck2Title || "Unknown"} (${latest.deck2Artist || "Unknown"})`;
+
+        nowPlaying.textContent = trackName;
+
+        // Autoplay logic
         player.play().then(() => {
           player.muted = false;
         }).catch(() => {
