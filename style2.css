@@ -264,7 +264,7 @@ body {
 }
 
 /* ----------------------------------------------------
-   DJ AUDIO PLAYER
+   DJ AUDIO PLAYER (OLD)
 ---------------------------------------------------- */
 .dj-audio-wrap {
   margin-top: 30px;
@@ -386,6 +386,8 @@ body.dj-upload .dj-booth {
   max-width: 900px;
   margin: 40px auto;
   text-align: center;
+  transform: scale(1.2);
+  transform-origin: top center;
 }
 
 body.dj-upload .deck-row {
@@ -469,4 +471,35 @@ body.dj-upload .mixer label {
   margin-top: 6px;
   font-size: 20px;
   color: #ccc;
+}
+
+/* ----------------------------------------------------
+   ⭐ NOW PLAYING SECTION — FIXED SPACING
+---------------------------------------------------- */
+
+.dj-player-section {
+  max-width: 700px;
+  margin: 60px auto 0;
+  padding: 25px 15px;
+  text-align: center;
+}
+
+.now-playing {
+  font-family: 'Bangers', cursive;
+  font-size: 26px;
+  color: #ffcc00;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.now-playing-track {
+  color: #ccc;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.dj-player-section audio {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 6px;
 }
