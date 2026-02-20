@@ -18,9 +18,9 @@ jobs:
       - name: Reset main site state
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp.fasthosts.co.uk
-          username: dance-offs.com
-          password: ${{ secrets.FTP_PASSWORD_MAIN }}
+          server: ${{ secrets.MAIN_FTP_HOST }}
+          username: ${{ secrets.MAIN_FTP_USERNAME }}
+          password: ${{ secrets.MAIN_FTP_PASSWORD }}
           local-dir: ./empty-dir/
           server-dir: /htdocs/
           dangerous-clean-slate: true
@@ -29,9 +29,9 @@ jobs:
       - name: Deploy full root to main site
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp.fasthosts.co.uk
-          username: dance-offs.com
-          password: ${{ secrets.FTP_PASSWORD_MAIN }}
+          server: ${{ secrets.MAIN_FTP_HOST }}
+          username: ${{ secrets.MAIN_FTP_USERNAME }}
+          password: ${{ secrets.MAIN_FTP_PASSWORD }}
           local-dir: ./
           server-dir: /htdocs/
           exclude: |
