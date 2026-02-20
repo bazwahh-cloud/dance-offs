@@ -8,6 +8,9 @@
   <!-- Correct CSS (matches live site) -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
 
+  <!-- Google Fonts (THIS WAS MISSING) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
   <!-- Envelope icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -127,7 +130,6 @@
         const tbody = document.querySelector("#djLibrary tbody");
         tbody.innerHTML = "";
 
-        // newest first
         list.reverse();
 
         list.forEach(row => {
@@ -163,4 +165,3 @@
 
 </body>
 </html>
-
