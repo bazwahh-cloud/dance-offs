@@ -4,58 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Past Dancers – Dance-Offs</title>
+  <title>Past Dancer Uploads – Dance-Offs</title>
 
-  <!-- MAIN SITE CSS -->
-  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
-
+  <link rel="stylesheet" href="style2.css?v=2024">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    .section-title {
+      font-family: 'Bangers', cursive;
+      font-size: 42px;
+      text-align: center;
+      margin: 40px 0 20px;
+      letter-spacing: 1px;
+    }
+
+    .dancer-table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto 60px;
+      border-collapse: collapse;
+      color: #fff;
+    }
+
+    .dancer-table th,
+    .dancer-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #333;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .dancer-table th {
+      background: rgba(0, 0, 0, 0.5);
+      font-weight: 700;
+    }
+
+    .dancer-table img {
+      width: 120px;
+      border-radius: 6px;
+    }
+
+    #loadingPastOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
+      z-index: 9999;
+    }
+  </style>
 </head>
 
 <body>
 
+  <!-- LOADING OVERLAY -->
+  <div id="loadingPastOverlay">
+    Loading past dancers…
+  </div>
+
   <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
-    <a href="dancers.html" class="active">Dancers</a>
+    <a href="dancers.html">Dancers</a>
     <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
     <a href="vote.html">Vote</a>
     <a href="prizes.html">Prizes</a>
     <a href="shop.html">Shop</a>
   </nav>
 
-  <main class="page-container" style="max-width:900px; margin:auto;">
+  <main class="page-container">
 
-    <h1 style="font-family:'Bangers', cursive; font-size:52px; text-align:center; margin:40px 0;">
-      Past Dancers
-    </h1>
+    <h1 class="section-title">Past Dancer Uploads</h1>
 
-    <!-- ⭐ PAST DANCERS TABLE GOES HERE -->
-    <div style="overflow-x:auto; margin-bottom:60px;">
-      <table class="dancer-table">
-        <thead>
-          <tr>
-            <th>Dancer</th>
-            <th>Year</th>
-            <th>Category</th>
-            <th>Placement</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Replace with your real data -->
-          <tr>
-            <td>Example Dancer</td>
-            <td>2024</td>
-            <td>Hip-Hop</td>
-            <td>Winner</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table id="pastDancerTable" class="dancer-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Votes</th>
+          <th>Timestamp</th>
+          <th>Dancer</th>
+          <th>Video</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-    <div style="text-align:center;">
-      <a href="dancers.html" style="padding:12px 25px; background:#0077cc; color:white; border-radius:6px; text-decoration:none;">
-        ← Back to Current Dancers
+    <div style="text-align:center; margin-bottom:60px;">
+      <a href="dancers.html"
+         style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
+                text-decoration:none; font-size:20px; font-weight:600;">
+        ← Back to Dancers
       </a>
     </div>
 
@@ -65,6 +108,94 @@
     © 2026 Dance-Offs. All rights reserved.
   </footer>
 
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
+    function extractID(url) {
+      if (!url) return null;
+      const clean = url.split("?")[0];
+      const patterns = [
+        /shorts\/([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /embed\/([^?&/]+)/,
+        /youtube\.com\/watch\/([^?&/]+)/
+      ];
+      for (const p of patterns) {
+        const m = clean.match(p);
+        if (m && m[1]) return m[1];
+      }
+      return null;
+    }
+
+    async function loadPastDancers() {
+      try {
+        const dancerRes = await fetch(endpoint + "?mode=getdancers");
+        const dancers = await dancerRes.json();
+
+        const voteRes = await fetch(endpoint + "?mode=getvotes");
+        const votes = await voteRes.json();
+
+        const voteCount = {};
+        votes.forEach(v => {
+          const name = v.WinnerName;
+          voteCount[name] = (voteCount[name] || 0) + 1;
+        });
+
+        dancers.forEach(d => {
+          d.votes = voteCount[d.dancer] || 0;
+        });
+
+        dancers.sort((a, b) => {
+          if (b.votes !== a.votes) return b.votes - a.votes;
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
+
+        let lastVotes = null;
+        let lastRank = 0;
+
+        const tbody = document.querySelector("#pastDancerTable tbody");
+        tbody.innerHTML = "";
+
+        dancers.forEach((row, index) => {
+          if (!row.url) return;
+
+          const id = extractID(row.url);
+
+          let rank;
+          if (row.votes === lastVotes) {
+            rank = lastRank;
+          } else {
+            rank = index + 1;
+            lastRank = rank;
+            lastVotes = row.votes;
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${rank}</td>
+            <td>${row.votes}</td>
+            <td>${row.timestamp}</td>
+            <td>${row.dancer}</td>
+            <td>
+              <a href="${row.url}" target="_blank">
+                <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+              </a>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("loadingPastOverlay").style.display = "none";
+
+      } catch (err) {
+        console.error("Could not load past dancers:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadPastDancers);
+  </script>
+
 </body>
 </html>
-
