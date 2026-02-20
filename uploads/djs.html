@@ -7,13 +7,43 @@
 
   <!-- Load CSS from MAIN SITE -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
+
+  <style>
+    /* Ensure decks sit side-by-side */
+    .deck-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .deck {
+      width: 260px;
+    }
+
+    /* Ensure footer spacing matches main site */
+    body.dj-upload {
+      padding-bottom: 80px;
+    }
+  </style>
 </head>
 
 <body class="dj-upload">
 
+  <!-- NAVIGATION (matches main site) -->
+  <nav class="navbar">
+    <a href="https://dance-offs.com/index.html">Home</a>
+    <a href="https://dance-offs.com/dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html" class="active">DJs</a>
+    <a href="https://dance-offs.com/vote.html">Vote</a>
+    <a href="https://dance-offs.com/prizes.html">Prizes</a>
+    <a href="https://dance-offs.com/shop.html">Shop</a>
+  </nav>
+
   <div class="dj-booth">
 
-    <!-- DECKS -->
+    <!-- DECKS (now side-by-side) -->
     <div class="deck-row">
 
       <div class="deck">
@@ -47,6 +77,11 @@
     </div>
 
   </div>
+
+  <!-- FOOTER (matches main site) -->
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+  </footer>
 
   <!-- UPLOAD + GOOGLE SHEET SCRIPT -->
   <script>
