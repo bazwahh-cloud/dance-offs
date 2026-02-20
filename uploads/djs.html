@@ -7,6 +7,9 @@
 
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
 
+  <!-- Envelope icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     /* ----------------------------------------------------
        DJ UPLOAD PAGE WRAPPER
@@ -111,6 +114,18 @@
       margin-top: 2px;
       font-size: 13px;
       color: #ccc;
+    }
+
+    /* ----------------------------------------------------
+       BOOKING ICON
+    ---------------------------------------------------- */
+    .booking-link {
+      color: #ffcc00;
+      font-size: 20px;
+    }
+
+    .booking-link:hover {
+      color: #ffffff;
     }
 
     /* ----------------------------------------------------
@@ -266,8 +281,8 @@
             </td>
             <td><audio controls src="${row.fileUrl}" style="width:160px;"></audio></td>
             <td>
-              <a href="https://dance-offs.com/index.html?dj=${encodeURIComponent(row.djName || "")}">
-                Book DJ
+              <a href="mailto:${row.djEmail || ""}" class="booking-link">
+                <i class="fa-solid fa-envelope"></i>
               </a>
             </td>
           `;
