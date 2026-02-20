@@ -1,13 +1,401 @@
 /* ----------------------------------------------------
-   DJ UPLOAD PAGE WRAPPER
+   GLOBAL RESET 
 ---------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ----------------------------------------------------
+   NAVIGATION (MAIN SITE)
+---------------------------------------------------- */
+.navbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px;
+  background: #111;
+}
+
+.navbar a {
+  display: block;
+  text-align: center;
+  padding: 14px 10px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar a.active {
+  background: #0077cc;
+  border-color: #0077cc;
+}
+
+/* ----------------------------------------------------
+   HERO — FULL IMAGE, NO CROPPING
+---------------------------------------------------- */
+.hero {
+  width: 100%;
+}
+
+.hero-img-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: top;
+}
+
+/* ----------------------------------------------------
+   PAGE CONTAINER
+---------------------------------------------------- */
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ----------------------------------------------------
+   FAQ
+---------------------------------------------------- */
+.faq-item {
+  margin: 10px 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+}
+
+.faq-item p {
+  padding: 10px;
+  color: #66aaff;
+}
+
+/* ----------------------------------------------------
+   CONTACT FORM
+---------------------------------------------------- */
+.contact-section input,
+.contact-section textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 2px solid #555;
+  background: #111;
+  color: white;
+  font-size: 16px;
+}
+
+.contact-section button {
+  padding: 12px;
+  background: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------
+   MOBILE COMPACT MODE
+---------------------------------------------------- */
+@media (max-width: 600px) {
+  .contact-section {
+    padding: 10px 15px !important;
+  }
+
+  #contactForm {
+    gap: 10px !important;
+  }
+
+  #contactForm input,
+  #contactForm textarea {
+    padding: 10px !important;
+    font-size: 15px !important;
+    border-width: 1px !important;
+  }
+
+  #contactForm button {
+    padding: 10px !important;
+    font-size: 16px !important;
+  }
+
+  #contact h2 {
+    font-size: 32px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .faq-item summary {
+    padding: 6px 0 !important;
+  }
+}
+
+/* ----------------------------------------------------
+   DANCERS PAGE — 2×2 GRID UPLOAD LAYOUT
+---------------------------------------------------- */
+
+.dancer-upload-grid {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dancer-upload-grid .grid-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+  justify-items: center;
+}
+
+.dancer-upload-grid .input-field,
+.dancer-upload-grid .save-button {
+  width: 100%;
+  max-width: 260px;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+.input-field {
+  padding: 12px;
+  border-radius: 6px;
+  border: 2px solid #ffcc00;
+  background: #332b00;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 0 8px #ffcc00;
+}
+
+.save-button {
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  background: #ffcc00;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000;
+  box-shadow: 0 0 10px #ffcc00;
+}
+
+.save-button.disabled-btn {
+  opacity: 0.4;
+  pointer-events: none;
+  background: #777 !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 600px) {
+  .dancer-upload-grid .grid-box {
+    grid-template-columns: 1fr;
+  }
+
+  .dancer-upload-grid .input-field,
+  .dancer-upload-grid .save-button {
+    max-width: 100%;
+  }
+}
+
+/* Video preview (Dancers page only) */
+.video-slot {
+  margin-top: 20px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 12px #000;
+}
+
+.battle-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ----------------------------------------------------
+   DANCER TABLE
+---------------------------------------------------- */
+.dancer-table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 30px auto 40px;
+  border-collapse: collapse;
+  color: #fff;
+}
+
+.dancer-table th,
+.dancer-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  font-size: 14px;
+}
+
+.dancer-table th {
+  background: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+}
+
+.dancer-table a {
+  color: #ffcc00;
+  text-decoration: underline;
+}
+
+/* ----------------------------------------------------
+   DJ AUDIO PLAYER
+---------------------------------------------------- */
+.dj-audio-wrap {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.dj-audio-wrap audio {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ----------------------------------------------------
+   FOOTER
+---------------------------------------------------- */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+  margin-top: 40px;
+}
+
+/* ----------------------------------------------------
+   VOTE PAGE — ISOLATED STYLES
+---------------------------------------------------- */
+
+.vote-page .video-slot {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  background: #000;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.vote-page .battle-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: none;
+}
+
+.vote-page .blocker {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.vote-page .vote-button {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 6px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.5;
+}
+
+.vote-page .vote-button.enabled {
+  opacity: 1;
+}
+
+.vote-page .vote-count {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #bbb;
+  text-align: center;
+}
+
+.vote-page .vote-layout {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.vote-page .vote-column {
+  width: 300px;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .vote-page .vote-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  .vote-page .vote-column {
+    width: 100%;
+    max-width: 360px;
+  }
+}
+
+.vote-page #loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-family: 'Bangers', cursive;
+  letter-spacing: 1px;
+  z-index: 9999;
+}
+
+/* ----------------------------------------------------
+   DJ PAGE — COMPACT LAYOUT (SAFE SCOPED)
+---------------------------------------------------- */
+
+body.dj-upload .dj-booth,
+body.dj-upload .deck-row,
+body.dj-upload .deck,
+body.dj-upload .record,
+body.dj-upload .record-inner,
+body.dj-upload .mixer,
+body.dj-upload .mixer-wrap,
+body.dj-upload .dj-library,
+body.dj-upload .library-title {
+  all: unset;
+  display: revert;
+}
+
+/* DJ-specific styles */
 body.dj-upload {
   padding-bottom: 60px;
 }
 
-/* ----------------------------------------------------
-   DJ BOOTH — COMPACT LAYOUT
----------------------------------------------------- */
 .dj-booth {
   max-width: 650px;
   margin: 20px auto;
@@ -17,24 +405,21 @@ body.dj-upload {
 .deck-row {
   display: flex;
   justify-content: center;
-  gap: 10px;              /* tighter spacing between decks */
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .deck {
-  flex: 0 0 180px;        /* compact deck width */
+  flex: 0 0 180px;
   text-align: center;
 }
 
-/* ----------------------------------------------------
-   SIMPLE RECORD GRAPHIC (COMPACT)
----------------------------------------------------- */
 .record {
   width: 160px;
   height: 160px;
   border-radius: 50%;
   border: 4px solid #444;
-  margin: 0 auto 8px;     /* reduced spacing */
+  margin: 0 auto 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,16 +442,13 @@ body.dj-upload {
   text-align: center;
 }
 
-/* ----------------------------------------------------
-   MIXER — COMPACT WITH ALL UPLOAD ELEMENTS INSIDE
----------------------------------------------------- */
 .mixer-wrap {
-  margin: 15px auto 0;    /* pull mixer closer to decks */
+  margin: 15px auto 0;
   text-align: center;
 }
 
 .mixer {
-  width: 260px;           /* slightly wider to match decks visually */
+  width: 260px;
   padding: 15px;
   background: #111;
   border: 4px solid #444;
@@ -74,7 +456,7 @@ body.dj-upload {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;               /* tighter spacing */
+  gap: 8px;
 }
 
 .mixer input,
@@ -103,9 +485,6 @@ body.dj-upload {
   color: #ccc;
 }
 
-/* ----------------------------------------------------
-   PAST UPLOADS TABLE
----------------------------------------------------- */
 .library-title {
   text-align: center;
   margin-top: 40px;
