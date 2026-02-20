@@ -11,16 +11,9 @@
 
   <style>
     /* Page-specific layout */
-    .dancer-flex {
-      display: flex;
-      gap: 30px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .dancer-left, .dancer-right {
-      flex: 1;
-      min-width: 320px;
+    .dancer-left {
+      max-width: 500px;
+      margin: 0 auto;
     }
 
     .section-title {
@@ -32,7 +25,7 @@
     }
 
     .video-slot {
-      margin-top: 15px;
+      margin-top: 20px;
       width: 100%;
       aspect-ratio: 16 / 9;
       background: #000;
@@ -103,29 +96,22 @@
 
   <main class="page-container dancer-layout">
 
-    <!-- UPLOAD + LAST VIDEO -->
-    <section class="dancer-flex">
+    <!-- UPLOAD SECTION (single column) -->
+    <div class="dancer-left">
+      <h2 class="section-title">Upload Your Dancer Video</h2>
 
-      <!-- LEFT SIDE -->
-      <div class="dancer-left">
-        <h2 class="section-title">Upload Your Dancer Video</h2>
+      <input id="dancerName" class="input-field" type="text" placeholder="Your Dancer Name" oninput="checkInputs()">
+      <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email" oninput="checkInputs()">
+      <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL" oninput="checkInputs()">
 
-        <input id="dancerName" class="input-field" type="text" placeholder="Your Dancer Name" oninput="checkInputs()">
-        <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email" oninput="checkInputs()">
-        <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL" oninput="checkInputs()">
+      <button id="saveBtn" class="save-button disabled-btn" onclick="uploadDancer()" disabled>
+        Save
+      </button>
 
-        <button id="saveBtn" class="save-button disabled-btn" onclick="uploadDancer()" disabled>
-          Save
-        </button>
-      </div>
-
-      <!-- RIGHT SIDE -->
-      <div class="dancer-right">
-        <h2 class="section-title">Last Uploaded Dancer</h2>
-        <div id="videoPreview" class="video-slot"></div>
-      </div>
-
-    </section>
+      <!-- LAST UPLOADED DANCER (now underneath inputs) -->
+      <h2 class="section-title" style="margin-top:35px;">Last Uploaded Dancer</h2>
+      <div id="videoPreview" class="video-slot"></div>
+    </div>
 
     <!-- LATEST DJ MIX -->
     <section class="dj-audio-wrap">
