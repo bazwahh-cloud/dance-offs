@@ -362,11 +362,19 @@ body {
 }
 
 /* ----------------------------------------------------
-   DJ PAGE — ENLARGED VERSION
+   DJ PAGE — FORMATTING + ALIGNMENT FIXES
 ---------------------------------------------------- */
 
 body.dj-upload {
   padding-bottom: 60px;
+}
+
+/* Instruction text aligned with booth */
+.dj-upload p {
+  max-width: 900px;
+  margin: 30px auto 20px;
+  padding: 0 20px;
+  text-align: center;
 }
 
 body.dj-upload .dj-booth {
@@ -375,6 +383,7 @@ body.dj-upload .dj-booth {
   text-align: center;
   transform: scale(1.2);
   transform-origin: top center;
+  margin-bottom: 40px;
 }
 
 body.dj-upload .deck-row {
@@ -423,7 +432,7 @@ body.dj-upload .mixer-wrap {
 }
 
 body.dj-upload .mixer {
-  width: 420px;
+  width: 500px; /* widened to match booth visually */
   padding: 24px;
   background: #111;
   border: 6px solid #444;
@@ -461,13 +470,13 @@ body.dj-upload .mixer label {
 }
 
 /* ----------------------------------------------------
-   ⭐ NOW PLAYING SECTION — FIXED CENTERING & SPACING
+   NOW PLAYING SECTION — PERFECTLY CENTERED
 ---------------------------------------------------- */
 
 .dj-player-section {
   max-width: 900px;
-  margin: 60px auto 0;
-  padding: 25px 15px;
+  margin: 50px auto 0;
+  padding: 25px 20px;
   text-align: center;
 }
 
