@@ -231,15 +231,39 @@ body {
 /* ----------------------------------------------------
    DJ UPLOAD PAGE (ISOLATED)
 ---------------------------------------------------- */
-.dj-upload .dj-booth {
+
+/* Decks side-by-side */
+.dj-upload .deck-row {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  gap: 25px;
-  margin: 30px auto;
+  gap: 30px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
+/* Center mixer underneath */
+.dj-upload .mixer-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.dj-upload .mixer {
+  max-width: 350px;
+  width: 100%;
+}
+
+/* DJ Booth container */
+.dj-upload .dj-booth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin: 30px auto;
+}
+
+/* Deck styling */
 .dj-upload .deck {
   width: 220px;
   height: 220px;
@@ -271,8 +295,8 @@ body {
   color: white;
 }
 
+/* Mixer styling */
 .dj-upload .mixer {
-  width: 260px;
   padding: 20px;
   background: linear-gradient(180deg, #111, #222);
   border-radius: 12px;
@@ -326,13 +350,8 @@ body {
   color: #ffcc00;
 }
 
+/* Mobile layout */
 @media (max-width: 600px) {
-  .dj-upload .dj-booth {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
   .dj-upload .deck {
     width: 180px;
     height: 180px;
