@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2020">
+  <link rel="stylesheet" href="style2.css?v=2022">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -42,6 +42,13 @@
       color: #000;
       width: 200px;
       box-shadow: 0 0 10px #ffcc00;
+    }
+
+    .disabled-btn {
+      opacity: 0.4;
+      pointer-events: none;
+      background: #777 !important;
+      box-shadow: none !important;
     }
 
     .section-title {
@@ -144,12 +151,11 @@
       <div class="dancer-left">
         <h2 class="section-title">Upload Your Dancer Video</h2>
 
-        <input id="dancerName" class="input-field" type="text" placeholder="Your Dancer Name">
-        <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email">
-        <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL">
+        <input id="dancerName" class="input-field" type="text" placeholder="Your Dancer Name" oninput="checkInputs()">
+        <input id="dancerEmail" class="input-field" type="email" placeholder="Your Email" oninput="checkInputs()">
+        <input id="youtubeUrl" class="input-field" type="text" placeholder="Paste YouTube URL" oninput="checkInputs()">
 
-        <button class="save-button" onclick="previewVideo()">Preview</button>
-        <button class="save-button" onclick="uploadDancer()">Save Dancer</button>
+        <button id="saveBtn" class="save-button disabled-btn" onclick="uploadDancer()" disabled>Save</button>
       </div>
 
       <!-- RIGHT SIDE -->
@@ -214,29 +220,25 @@
       `;
     }
 
-    function previewVideo() {
+    function checkInputs() {
+      const name = document.getElementById("dancerName").value.trim();
+      const email = document.getElementById("dancerEmail").value.trim();
       const url = document.getElementById("youtubeUrl").value.trim();
-      const id = extractID(url);
-      const slot = document.getElementById("videoPreview");
+      const btn = document.getElementById("saveBtn");
 
-      if (!id) {
-        alert("Please enter a valid YouTube URL.");
-        slot.innerHTML = "";
-        return;
+      if (name && email && url) {
+        btn.disabled = false;
+        btn.classList.remove("disabled-btn");
+      } else {
+        btn.disabled = true;
+        btn.classList.add("disabled-btn");
       }
-
-      slot.innerHTML = embed(id);
     }
 
     async function uploadDancer() {
       const name = document.getElementById("dancerName").value.trim();
       const email = document.getElementById("dancerEmail").value.trim();
       const url = document.getElementById("youtubeUrl").value.trim();
-
-      if (!name || !email || !url) {
-        alert("Please fill in your name, email, and YouTube URL.");
-        return;
-      }
 
       const id = extractID(url);
       if (!id) {
@@ -262,9 +264,10 @@
         document.getElementById("dancerName").value = "";
         document.getElementById("dancerEmail").value = "";
         document.getElementById("youtubeUrl").value = "";
+        checkInputs();
 
         loadDancerTable();
-        loadLastDancerVideo(); // update right side immediately
+        loadLastDancerVideo();
 
       } catch (err) {
         console.error(err);
@@ -282,7 +285,6 @@
         const audio = document.getElementById("djPlayer");
 
         audio.src = latest.fileUrl;
-
         audio.autoplay = true;
         audio.play().catch(() => {});
       } catch (err) {
