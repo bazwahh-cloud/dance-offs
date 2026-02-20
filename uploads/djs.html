@@ -12,86 +12,85 @@
        DJ UPLOAD PAGE WRAPPER
     ---------------------------------------------------- */
     body.dj-upload {
-      padding-bottom: 80px;
+      padding-bottom: 60px;
     }
 
     /* ----------------------------------------------------
-       DJ BOOTH LAYOUT
+       DJ BOOTH — COMPACT LAYOUT
     ---------------------------------------------------- */
     .dj-booth {
-      max-width: 900px;
-      margin: 40px auto;
+      max-width: 650px;
+      margin: 20px auto;
       text-align: center;
     }
 
     .deck-row {
       display: flex;
-      justify-content: space-between;
-      gap: 20px;
+      justify-content: center;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .deck {
-      flex: 1;
-      min-width: 260px;
+      flex: 0 0 180px;
       text-align: center;
     }
 
     /* ----------------------------------------------------
-       SIMPLE RECORD GRAPHIC WITH INPUTS INSIDE
+       SIMPLE RECORD GRAPHIC (COMPACT)
     ---------------------------------------------------- */
     .record {
-      width: 220px;
-      height: 220px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       border: 4px solid #444;
-      margin: 0 auto 15px;
+      margin: 0 auto 8px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .record-inner {
-      width: 140px;
+      width: 110px;
       text-align: center;
     }
 
     .record-inner input {
       width: 100%;
-      padding: 8px;
-      margin: 6px 0;
+      padding: 6px;
+      margin: 4px 0;
       border-radius: 6px;
       border: 2px solid #555;
       background: #000;
       color: white;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
     }
 
     /* ----------------------------------------------------
-       SIMPLE MIXER WITH ALL UPLOAD ELEMENTS INSIDE
+       MIXER — COMPACT WITH ALL UPLOAD ELEMENTS INSIDE
     ---------------------------------------------------- */
     .mixer-wrap {
-      margin: 40px auto;
+      margin: 15px auto 0;
       text-align: center;
     }
 
     .mixer {
       width: 260px;
-      padding: 20px;
+      padding: 15px;
       background: #111;
       border: 4px solid #444;
-      border-radius: 12px;
+      border-radius: 10px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
 
     .mixer input,
     .mixer button {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       border-radius: 6px;
       border: 2px solid #555;
       background: #000;
@@ -108,13 +107,19 @@
       border: none;
     }
 
+    .mixer label {
+      margin-top: 2px;
+      font-size: 13px;
+      color: #ccc;
+    }
+
     /* ----------------------------------------------------
        PAST UPLOADS TABLE
     ---------------------------------------------------- */
     .library-title {
       text-align: center;
-      margin-top: 50px;
-      font-size: 28px;
+      margin-top: 40px;
+      font-size: 26px;
       font-weight: 700;
       color: #ffcc00;
     }
@@ -129,13 +134,13 @@
 
     .dj-library th,
     .dj-library td {
-      padding: 12px;
+      padding: 10px;
       border-bottom: 1px solid #333;
       text-align: center;
     }
 
     .dj-library audio {
-      width: 180px;
+      width: 160px;
     }
   </style>
 </head>
@@ -186,17 +191,15 @@
         <input type="email" id="djEmail" placeholder="Your Email (DJ ID)">
         <input type="text" id="djName" placeholder="DJ Name">
 
-        <label style="color:#ccc; font-size:14px; margin-top:5px;">
-          Upload MP3 only (~10 minutes max)
-        </label>
+        <label>MP3 only (&lt;10mins)</label>
 
         <input type="file" id="djFile" accept=".mp3,audio/mpeg">
 
         <button id="uploadBtn">Upload Mix</button>
 
-        <div id="uploadStatus" style="margin-top:5px; font-size:14px;"></div>
+        <div id="uploadStatus" style="font-size:13px;"></div>
 
-        <audio id="djPlayer" controls style="width:100%; margin-top:10px; display:none;"></audio>
+        <audio id="djPlayer" controls style="width:100%; display:none; margin-top:8px;"></audio>
 
       </div>
     </div>
@@ -223,11 +226,9 @@
   </footer>
 
   <script>
-    /* BACKEND URL */
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* LOAD LATEST MIX */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -243,7 +244,6 @@
       }
     }
 
-    /* LOAD LIBRARY */
     async function loadLibrary() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -280,7 +280,6 @@
       }
     }
 
-    /* UPLOAD HANDLER */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
