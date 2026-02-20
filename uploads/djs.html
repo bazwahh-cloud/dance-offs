@@ -8,13 +8,12 @@
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=2004">
 
   <style>
-    /* PAGE WRAPPER */
     body.dj-upload {
       padding-bottom: 80px;
     }
 
     /* ----------------------------------------------------
-       DJ BOOTH LAYOUT
+       DJ BOOTH
     ---------------------------------------------------- */
     .dj-booth {
       max-width: 900px;
@@ -36,50 +35,39 @@
     }
 
     /* ----------------------------------------------------
-       RECORD GRAPHICS
+       SIMPLE RECORD GRAPHIC
     ---------------------------------------------------- */
     .record {
       width: 220px;
       height: 220px;
       border-radius: 50%;
-      background: radial-gradient(circle, #222 0%, #000 70%);
+      border: 4px solid #444;
       margin: 0 auto 15px;
       position: relative;
-      box-shadow: 0 0 15px #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .record::before {
-      content: "";
-      position: absolute;
-      inset: 20px;
-      border-radius: 50%;
-      background: #111;
-    }
-
-    .record::after {
-      content: "";
-      position: absolute;
-      inset: 90px;
-      border-radius: 50%;
-      background: #ffcc00;
-      box-shadow: 0 0 8px #ffcc00;
-    }
-
-    .record-label {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    .record-inner {
+      width: 140px;
       text-align: center;
-      width: 120px;
-      color: #000;
-      font-weight: 700;
+    }
+
+    .record-inner input {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 6px;
+      border: 2px solid #555;
+      background: #111;
+      color: white;
       font-size: 14px;
-      line-height: 1.2;
+      text-align: center;
     }
 
     /* ----------------------------------------------------
-       MIXER
+       SIMPLE MIXER
     ---------------------------------------------------- */
     .mixer-wrap {
       margin: 30px auto;
@@ -87,29 +75,22 @@
     }
 
     .mixer {
-      width: 180px;
-      height: 220px;
+      width: 160px;
+      height: 120px;
+      background: #111;
+      border: 3px solid #444;
+      border-radius: 10px;
       margin: 0 auto;
-      background: linear-gradient(#222, #000);
-      border-radius: 12px;
       padding: 15px;
-      box-shadow: 0 0 15px #000;
-    }
-
-    .mixer .knob {
-      width: 28px;
-      height: 28px;
-      background: #444;
-      border-radius: 50%;
-      margin: 10px auto;
-      box-shadow: inset 0 0 5px #000;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
     }
 
     .mixer .slider {
       width: 6px;
       height: 70px;
-      background: #555;
-      margin: 15px auto;
+      background: #333;
       border-radius: 3px;
       position: relative;
     }
@@ -117,7 +98,7 @@
     .mixer .slider::after {
       content: "";
       position: absolute;
-      width: 20px;
+      width: 18px;
       height: 10px;
       background: #ffcc00;
       left: 50%;
@@ -127,7 +108,7 @@
     }
 
     /* ----------------------------------------------------
-       UPLOAD FORM
+       UPLOAD PANEL
     ---------------------------------------------------- */
     .upload-panel {
       max-width: 400px;
@@ -207,21 +188,21 @@
       <!-- LEFT DECK -->
       <div class="deck">
         <div class="record">
-          <div class="record-label" id="label1">Artist<br>Title</div>
+          <div class="record-inner">
+            <input type="text" id="deck1Artist" placeholder="Artist">
+            <input type="text" id="deck1Title" placeholder="Track Title">
+          </div>
         </div>
-
-        <input type="text" id="deck1Artist" placeholder="Artist" oninput="updateLabel(1)">
-        <input type="text" id="deck1Title" placeholder="Track Title" oninput="updateLabel(1)">
       </div>
 
       <!-- RIGHT DECK -->
       <div class="deck">
         <div class="record">
-          <div class="record-label" id="label2">Artist<br>Title</div>
+          <div class="record-inner">
+            <input type="text" id="deck2Artist" placeholder="Artist">
+            <input type="text" id="deck2Title" placeholder="Track Title">
+          </div>
         </div>
-
-        <input type="text" id="deck2Artist" placeholder="Artist" oninput="updateLabel(2)">
-        <input type="text" id="deck2Title" placeholder="Track Title" oninput="updateLabel(2)">
       </div>
 
     </div>
@@ -229,9 +210,8 @@
     <!-- MIXER -->
     <div class="mixer-wrap">
       <div class="mixer">
-        <div class="knob"></div>
         <div class="slider"></div>
-        <div class="knob"></div>
+        <div class="slider"></div>
       </div>
     </div>
 
@@ -275,13 +255,6 @@
   </footer>
 
   <script>
-    /* UPDATE LABELS ON RECORDS */
-    function updateLabel(deck) {
-      const artist = document.getElementById(`deck${deck}Artist`).value || "Artist";
-      const title = document.getElementById(`deck${deck}Title`).value || "Title";
-      document.getElementById(`label${deck}`).innerHTML = `${artist}<br>${title}`;
-    }
-
     /* BACKEND URL */
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
