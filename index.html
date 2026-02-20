@@ -202,5 +202,32 @@
     });
   </script>
 
+  <!-- ⭐ AUTO-FILL DJ BOOKING SUPPORT -->
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const dj = params.get("dj");
+
+      if (dj) {
+        const nameField = document.getElementById("name");
+        const messageField = document.getElementById("message");
+
+        if (nameField && !nameField.value) {
+          nameField.value = `Booking request for DJ ${dj}`;
+        }
+
+        if (messageField) {
+          messageField.value = `Hi, I would like to book DJ ${dj} for an event.`;
+        }
+
+        // Smooth scroll to contact form
+        const contactSection = document.getElementById("contact");
+        if (contactSection) {
+          contactSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>
