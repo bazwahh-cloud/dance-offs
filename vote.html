@@ -18,21 +18,18 @@
       position: relative;
       overflow: hidden;
     }
-
     .battle-frame {
       width: 100%;
       height: 100%;
       border: none;
       pointer-events: none;
     }
-
     .blocker {
       position: absolute;
       inset: 0;
       z-index: 10;
       pointer-events: auto;
     }
-
     .vote-button {
       font-size: 18px;
       padding: 10px 20px;
@@ -48,26 +45,22 @@
     .vote-button.enabled {
       opacity: 1;
     }
-
     .vote-count {
       margin-top: 6px;
       font-size: 14px;
       color: #bbb;
       text-align: center;
     }
-
     .vote-layout {
       display: flex;
       justify-content: center;
       gap: 20px;
       margin-top: 20px;
     }
-
     .vote-column {
       width: 300px;
       text-align: center;
     }
-
     @media (max-width: 700px) {
       .vote-layout {
         flex-direction: column;
@@ -78,7 +71,6 @@
         max-width: 360px;
       }
     }
-
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -172,6 +164,9 @@
     let champion = null;
     let challenger = null;
 
+    // ----------------------------------------------------
+    // PAYPAL
+    // ----------------------------------------------------
     paypal.Buttons({
       createOrder: (data, actions) =>
         actions.order.create({
@@ -182,11 +177,7 @@
         actions.order.capture().then(details => {
           currentTransactionID = details.id;
 
-          const ts = new Date();
-          const date = ts.toISOString().slice(0,10).replace(/-/g,"");
-          const uid = Math.random().toString(36).substring(2,8).toUpperCase();
-          currentBattleID = "VOTE-" + date + "-" + uid;
-
+          // Enable vote buttons
           document.getElementById("voteChampion").disabled = false;
           document.getElementById("voteChallenger").disabled = false;
 
@@ -195,6 +186,9 @@
         })
     }).render("#paypal-button-container");
 
+    // ----------------------------------------------------
+    // HELPERS
+    // ----------------------------------------------------
     function extractID(url) {
       if (!url) return null;
       const clean = url.split("?")[0];
@@ -233,15 +227,27 @@
       return wrapper;
     }
 
+    function normalize(str) {
+      return (str || "")
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    // ----------------------------------------------------
+    // LOAD BATTLE + BATTLE ID
+    // ----------------------------------------------------
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
       const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
+
+      currentBattleID = state.battleID;
 
       champion = dancers[state.championIndex];
       challenger = dancers[state.challengerIndex];
 
       let videosLoaded = 0;
-
       function checkDone() {
         videosLoaded++;
         if (videosLoaded === 2) {
@@ -258,6 +264,9 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
+    // ----------------------------------------------------
+    // LOAD DJ TRACK
+    // ----------------------------------------------------
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -285,20 +294,11 @@
     }
 
     // ----------------------------------------------------
-    // NORMALIZATION HELPER
-    // ----------------------------------------------------
-    function normalize(str) {
-      return (str || "")
-        .toString()
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, " ");
-    }
-
-    // ----------------------------------------------------
-    // UPDATED VOTE COUNTING (BattleID + WinnerName)
+    // LOAD VOTE COUNTS
     // ----------------------------------------------------
     async function loadVoteCounts() {
+      if (!currentBattleID || !champion || !challenger) return;
+
       const votes = await fetch(endpoint + "?mode=getvotes").then(r => r.json());
 
       const champKey = normalize(currentBattleID + champion.dancer);
@@ -319,6 +319,9 @@
         "Challenger Votes: " + challVotes;
     }
 
+    // ----------------------------------------------------
+    // SUBMIT VOTE
+    // ----------------------------------------------------
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -326,7 +329,7 @@
       }
 
       const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
-      const dancerURL = side === "champion" ? champion.url : challenger.url;
+      const dancerURL  = side === "champion" ? champion.url    : challenger.url;
 
       const formData = new URLSearchParams();
       formData.append("mode", "vote");
@@ -342,6 +345,9 @@
         });
     }
 
+    // ----------------------------------------------------
+    // COUNTDOWN
+    // ----------------------------------------------------
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
@@ -373,13 +379,16 @@
         });
     }
 
-    window.onload = function () {
-      loadBattle();
-      loadDJTrack();
+    // ----------------------------------------------------
+    // PAGE LOAD
+    // ----------------------------------------------------
+    window.onload = async function () {
+      await loadBattle();
+      await loadDJTrack();
       loadCountdown();
 
-      // Delay vote count load slightly to ensure champion/challenger are ready
-      setTimeout(loadVoteCounts, 800);
+      // Load vote counts AFTER battle + battleID are ready
+      setTimeout(loadVoteCounts, 1000);
     };
   </script>
 
