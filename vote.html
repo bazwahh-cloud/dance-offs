@@ -264,7 +264,7 @@
     }
 
     // ----------------------------------------------------
-    // LOAD DJ TRACK (iPhone‑safe autoplay)
+    // LOAD DJ TRACK (iPhone‑safe autoplay + unmute)
     // ----------------------------------------------------
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
@@ -278,29 +278,21 @@
       const player = document.getElementById("djPlayer");
       player.src = last.mp3url;
 
-      // iPhone-safe autoplay
+      // Always start muted for iPhone autoplay
       player.muted = true;
 
-      player.play().then(() => {
-        const enableSound = () => {
-          player.muted = false;
-          player.play();
-          window.removeEventListener("touchstart", enableSound);
-          window.removeEventListener("click", enableSound);
-        };
+      // Attach unmute listeners immediately (required by iOS)
+      const enableSound = () => {
+        player.muted = false;
+        player.play();
+      };
 
-        window.addEventListener("touchstart", enableSound, { once: true });
-        window.addEventListener("click", enableSound, { once: true });
-      }).catch(() => {
-        const startAudio = () => {
-          player.muted = false;
-          player.play();
-          window.removeEventListener("touchstart", startAudio);
-          window.removeEventListener("click", startAudio);
-        };
+      window.addEventListener("touchstart", enableSound, { once: true });
+      window.addEventListener("click", enableSound, { once: true });
 
-        window.addEventListener("touchstart", startAudio, { once: true });
-        window.addEventListener("click", startAudio, { once: true });
+      // Attempt autoplay (works on desktop + Android)
+      player.play().catch(() => {
+        // iPhone will ignore this until user taps
       });
     }
 
