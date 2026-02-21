@@ -118,6 +118,31 @@
     }
   </style>
 </head>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Only run if user is on the #contact section
+  if (window.location.hash === "#contact") {
+
+    // Prefill message
+    const msg = localStorage.getItem("prefillMessage");
+    if (msg) {
+      const msgField = document.getElementById("message");
+      if (msgField) msgField.value = msg;
+    }
+
+    // Prefill email (optional future use)
+    const email = localStorage.getItem("prefillEmail");
+    if (email) {
+      const emailField = document.getElementById("contact_email");
+      if (emailField) emailField.value = email;
+    }
+
+    // Clear after use
+    localStorage.removeItem("prefillMessage");
+    localStorage.removeItem("prefillEmail");
+  }
+});
+</script>
 
 <body>
 
