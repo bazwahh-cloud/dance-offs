@@ -255,3 +255,50 @@ body.dj-upload .mixer label {
   color: #aaa;
   margin-top: 40px;
 }
+
+/* ----------------------------------------------------
+   DJ PAGE — MOBILE RESPONSIVE FIXES
+---------------------------------------------------- */
+@media (max-width: 600px) {
+
+  /* Remove scaling so layout fits the screen */
+  body.dj-upload .dj-booth {
+    transform: none;
+  }
+
+  /* Reduce deck size */
+  body.dj-upload .deck {
+    flex: 0 0 200px;
+  }
+
+  body.dj-upload .record {
+    width: 200px;
+    height: 200px;
+  }
+
+  body.dj-upload .record-inner {
+    width: 140px;
+  }
+
+  body.dj-upload .record-inner input {
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  /* Mixer width fix */
+  body.dj-upload .mixer {
+    width: 90%;
+    padding: 18px;
+  }
+
+  body.dj-upload .mixer input,
+  body.dj-upload .mixer button {
+    font-size: 18px;
+    padding: 14px;
+  }
+
+  /* Now Playing spacing */
+  .dj-player-section {
+    margin-top: 30px;
+  }
+}
