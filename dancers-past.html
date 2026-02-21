@@ -10,6 +10,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    body {
+      overflow-x: hidden;
+    }
+
+    /* LOADING OVERLAY */
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 2px;
+      z-index: 9999;
+      text-align: center;
+    }
+
     .page-title {
       text-align: center;
       margin-top: 40px;
@@ -20,6 +40,7 @@
       letter-spacing: 1px;
     }
 
+    /* DESKTOP TABLE */
     table {
       width: 100%;
       max-width: 1000px;
@@ -52,6 +73,46 @@
       transform: scale(1.05);
     }
 
+    /* MOBILE: Convert table into cards */
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        background: rgba(0,0,0,0.4);
+        margin: 12px;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px #000;
+      }
+
+      td {
+        text-align: left;
+        padding: 6px 0;
+        border: none;
+        font-size: 17px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #ffcc00;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .thumb {
+        width: 100%;
+        max-width: 320px;
+        margin: 10px 0;
+      }
+    }
+
     .back-link {
       display: inline-block;
       padding: 14px 28px;
@@ -67,6 +128,9 @@
 </head>
 
 <body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay">Loading<br>Please Wait…</div>
 
   <!-- NAVIGATION -->
   <nav class="navbar">
@@ -111,15 +175,12 @@
 
     async function loadDancers() {
       try {
-        // Load dancers
         const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
         const dancers = await dancersRes.json();
 
-        // Load votes
         const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
         const votes = await votesRes.json();
 
-        // Count votes per dancer URL
         const voteCount = {};
         votes.forEach(v => {
           const url = v.WinnerURL;
@@ -127,14 +188,10 @@
           voteCount[url]++;
         });
 
-        // Merge vote counts into dancers
         dancers.forEach(d => {
           d.votes = voteCount[d.url] || 0;
         });
 
-        // Sort:
-        // 1. Most votes first
-        // 2. If tie → newest timestamp first
         dancers.sort((a, b) => {
           if (b.votes !== a.votes) return b.votes - a.votes;
           return new Date(b.timestamp) - new Date(a.timestamp);
@@ -154,15 +211,15 @@
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>
+            <td data-label="Rank">${index + 1}</td>
+            <td data-label="Video">
               <a href="${yt}" target="_blank">
                 <img src="${thumb}" class="thumb">
               </a>
             </td>
-            <td>${row.dancer || "Unknown"}</td>
-            <td>${row.votes}</td>
-            <td>${row.timestamp || ""}</td>
+            <td data-label="Dancer">${row.dancer || "Unknown"}</td>
+            <td data-label="Votes">${row.votes}</td>
+            <td data-label="Uploaded">${row.timestamp || ""}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -170,6 +227,9 @@
       } catch (err) {
         console.error("Failed to load dancers:", err);
       }
+
+      // Hide loading overlay
+      document.getElementById("loadingOverlay").style.display = "none";
     }
 
     window.addEventListener("DOMContentLoaded", loadDancers);
