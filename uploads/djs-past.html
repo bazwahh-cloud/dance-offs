@@ -5,16 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Past DJ Uploads</title>
 
-  <!-- Correct CSS (matches live site) -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- Envelope icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
+    body {
+      overflow-x: hidden;
+    }
+
     .library-title {
       text-align: center;
       margin-top: 40px;
@@ -25,6 +24,7 @@
       letter-spacing: 1px;
     }
 
+    /* DESKTOP TABLE */
     .dj-library {
       width: 100%;
       max-width: 900px;
@@ -59,6 +59,7 @@
       color: #ffffff;
     }
 
+    /* LOADING OVERLAY */
     #loadingPastDJs {
       position: fixed;
       inset: 0;
@@ -72,17 +73,62 @@
       letter-spacing: 1px;
       z-index: 9999;
     }
+
+    /* MOBILE RESPONSIVE MODE */
+    @media (max-width: 700px) {
+
+      .dj-library,
+      .dj-library thead,
+      .dj-library tbody,
+      .dj-library th,
+      .dj-library td,
+      .dj-library tr {
+        display: block;
+      }
+
+      .dj-library thead {
+        display: none;
+      }
+
+      .dj-library tr {
+        background: rgba(0,0,0,0.4);
+        margin: 12px;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px #000;
+      }
+
+      .dj-library td {
+        text-align: left;
+        padding: 8px 0;
+        border: none;
+        font-size: 17px;
+      }
+
+      .dj-library td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #ffcc00;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .dj-library audio {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .booking-link {
+        font-size: 26px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingPastDJs">
-    Loading DJ uploads…
-  </div>
+  <div id="loadingPastDJs">Loading DJ uploads…</div>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="https://dance-offs.com/index.html">Home</a>
     <a href="https://dance-offs.com/dancers.html">Dancers</a>
@@ -114,7 +160,6 @@
     </a>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
@@ -141,14 +186,16 @@
           const tr = document.createElement("tr");
 
           tr.innerHTML = `
-            <td>${row.djName || "Unknown DJ"}</td>
-            <td>
+            <td data-label="DJ">${row.djName || "Unknown DJ"}</td>
+            <td data-label="Track">
               ${(row.deck1Title || "Unknown Title")} (${row.deck1Artist || "Unknown Artist"})
               vs.
               ${(row.deck2Title || "Unknown Title")} (${row.deck2Artist || "Unknown Artist"})
             </td>
-            <td><audio controls src="${row.fileUrl}" style="width:180px;"></audio></td>
-            <td>
+            <td data-label="Preview">
+              <audio controls src="${row.fileUrl}" style="width:180px;"></audio>
+            </td>
+            <td data-label="Booking">
               <a href="mailto:${row.djEmail || ""}" class="booking-link">
                 <i class="fa-solid fa-envelope"></i>
               </a>
