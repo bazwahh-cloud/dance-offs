@@ -173,6 +173,24 @@
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
+    /* UNIVERSAL YOUTUBE ID EXTRACTOR */
+    function extractYouTubeID(url) {
+      try {
+        if (url.includes("/shorts/")) {
+          return url.split("/shorts/")[1].split("?")[0];
+        }
+        const watchID = url.match(/v=([^&]+)/);
+        if (watchID) return watchID[1];
+        const shortID = url.match(/youtu\.be\/([^?]+)/);
+        if (shortID) return shortID[1];
+        const embedID = url.match(/embed\/([^?]+)/);
+        if (embedID) return embedID[1];
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
     async function loadDancers() {
       try {
         const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
@@ -202,8 +220,7 @@
 
         dancers.forEach((row, index) => {
           const yt = row.url || "";
-          const idMatch = yt.match(/(?:v=|youtu\.be\/)([^&]+)/);
-          const videoId = idMatch ? idMatch[1] : null;
+          const videoId = extractYouTubeID(yt);
 
           const thumb = videoId
             ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
@@ -228,7 +245,6 @@
         console.error("Failed to load dancers:", err);
       }
 
-      // Hide loading overlay
       document.getElementById("loadingOverlay").style.display = "none";
     }
 
