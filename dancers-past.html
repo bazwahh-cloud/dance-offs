@@ -22,7 +22,7 @@
 
     table {
       width: 100%;
-      max-width: 900px;
+      max-width: 1000px;
       margin: 30px auto 60px;
       border-collapse: collapse;
       color: white;
@@ -41,9 +41,15 @@
     }
 
     .thumb {
-      width: 120px;
+      width: 140px;
       border-radius: 6px;
       box-shadow: 0 0 6px #000;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .thumb:hover {
+      transform: scale(1.05);
     }
 
     .back-link {
@@ -77,9 +83,10 @@
   <table id="dancerTable">
     <thead>
       <tr>
-        <th>Thumbnail</th>
-        <th>Dancer</th>
+        <th>Rank</th>
         <th>Video</th>
+        <th>Dancer</th>
+        <th>Votes</th>
         <th>Uploaded</th>
       </tr>
     </thead>
@@ -104,28 +111,57 @@
 
     async function loadDancers() {
       try {
-        const res = await fetch(BACKEND_URL + "?mode=getdancers");
-        const list = await res.json();
+        // Load dancers
+        const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
+        const dancers = await dancersRes.json();
+
+        // Load votes
+        const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
+        const votes = await votesRes.json();
+
+        // Count votes per dancer URL
+        const voteCount = {};
+        votes.forEach(v => {
+          const url = v.WinnerURL;
+          if (!voteCount[url]) voteCount[url] = 0;
+          voteCount[url]++;
+        });
+
+        // Merge vote counts into dancers
+        dancers.forEach(d => {
+          d.votes = voteCount[d.url] || 0;
+        });
+
+        // Sort:
+        // 1. Most votes first
+        // 2. If tie → newest timestamp first
+        dancers.sort((a, b) => {
+          if (b.votes !== a.votes) return b.votes - a.votes;
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
 
         const tbody = document.querySelector("#dancerTable tbody");
         tbody.innerHTML = "";
 
-        list.reverse(); // newest first
-
-        list.forEach(row => {
+        dancers.forEach((row, index) => {
           const yt = row.url || "";
           const idMatch = yt.match(/(?:v=|youtu\.be\/)([^&]+)/);
           const videoId = idMatch ? idMatch[1] : null;
 
           const thumb = videoId
             ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-            : "https://via.placeholder.com/120x90?text=No+Preview";
+            : "https://via.placeholder.com/140x100?text=No+Preview";
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td><img src="${thumb}" class="thumb"></td>
+            <td>${index + 1}</td>
+            <td>
+              <a href="${yt}" target="_blank">
+                <img src="${thumb}" class="thumb">
+              </a>
+            </td>
             <td>${row.dancer || "Unknown"}</td>
-            <td><a href="${yt}" target="_blank">Watch Video</a></td>
+            <td>${row.votes}</td>
             <td>${row.timestamp || ""}</td>
           `;
           tbody.appendChild(tr);
