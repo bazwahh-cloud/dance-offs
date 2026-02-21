@@ -118,31 +118,6 @@
     }
   </style>
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // Only run if user is on the #contact section
-  if (window.location.hash === "#contact") {
-
-    // Prefill message
-    const msg = localStorage.getItem("prefillMessage");
-    if (msg) {
-      const msgField = document.getElementById("message");
-      if (msgField) msgField.value = msg;
-    }
-
-    // Prefill email (optional future use)
-    const email = localStorage.getItem("prefillEmail");
-    if (email) {
-      const emailField = document.getElementById("contact_email");
-      if (emailField) emailField.value = email;
-    }
-
-    // Clear after use
-    localStorage.removeItem("prefillMessage");
-    localStorage.removeItem("prefillEmail");
-  }
-});
-</script>
 
 <body>
 
@@ -369,6 +344,48 @@ YouTube has a setting called “Allow embedding”. This must be turned ON.</p>
       loadBattle();
       loadState();
     });
+  </script>
+
+  <!-- ⭐ BOOKING AUTO‑POPULATE SCRIPT -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    if (window.location.hash.startsWith("#contact")) {
+
+      const hash = window.location.hash;
+      const queryIndex = hash.indexOf("?");
+      let params = {};
+
+      if (queryIndex !== -1) {
+        const queryString = hash.substring(queryIndex + 1);
+        params = Object.fromEntries(
+          queryString.split("&").map(pair => pair.split("=").map(decodeURIComponent))
+        );
+      }
+
+      if (params.email) {
+        const emailField = document.getElementById("contact_email");
+        if (emailField) emailField.value = params.email;
+      }
+
+      if (params.dj || params.track) {
+        const msgField = document.getElementById("message");
+        if (msgField) {
+          msgField.value =
+            `Booking request for DJ: ${params.dj || "Unknown DJ"}\n` +
+            `Track: ${params.track || "Unknown Track"}\n\n` +
+            `Please provide more details below:\n`;
+        }
+      }
+
+      const contactSection = document.querySelector("#contact");
+      if (contactSection) {
+        setTimeout(() => {
+          contactSection.scrollIntoView({ behavior: "smooth" });
+        }, 200);
+      }
+    }
+  });
   </script>
 
 </body>
