@@ -143,14 +143,12 @@
 
     </div>
 
-    <!-- ⭐ DJ TRACK (AUTOPLAY FIXED FOR iPHONE) -->
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
         Now Playing
       </h3>
       <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
 
-      <!-- ⭐ playsinline is REQUIRED for iPhone autoplay -->
       <audio id="djPlayer" controls autoplay muted playsinline style="width:100%; max-width:500px;"></audio>
     </div>
 
@@ -158,6 +156,10 @@
 
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
+    <br>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
   </footer>
 
   <script>
@@ -268,7 +270,6 @@
       const player = document.getElementById("djPlayer");
       player.src = last.mp3url;
 
-      // ⭐ iPhone autoplay fix
       player.play().then(() => {
         player.muted = false;
       }).catch(() => {
@@ -286,8 +287,15 @@
     async function loadVoteCounts() {
       const votes = await fetch(endpoint + "?mode=getvotes").then(r => r.json());
 
-      const champVotes = votes.filter(v => v.WinnerName === champion.dancer).length;
-      const challVotes = votes.filter(v => v.WinnerName === challenger.dancer).length;
+      const champVotes = votes.filter(v =>
+        (v.WinnerName || "").trim().toLowerCase() ===
+        (champion.dancer || "").trim().toLowerCase()
+      ).length;
+
+      const challVotes = votes.filter(v =>
+        (v.WinnerName || "").trim().toLowerCase() ===
+        (challenger.dancer || "").trim().toLowerCase()
+      ).length;
 
       document.getElementById("championCount").innerText = "Champion Votes: " + champVotes;
       document.getElementById("challengerCount").innerText = "Challenger Votes: " + challVotes;
