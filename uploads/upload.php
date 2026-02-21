@@ -6,6 +6,12 @@
 $UPLOAD_DIR = __DIR__ . "/tracks/";  
 $PUBLIC_BASE_URL = "https://upload.dance-offs.com/uploads/tracks/";
 
+// IMPORTANT (outside PHP):
+// In /uploads/tracks/.htaccess, add:
+//   php_flag engine off
+//   Options -Indexes
+// This prevents any uploaded PHP from executing.
+
 
 // -----------------------------
 // ENSURE UPLOAD DIRECTORY EXISTS
@@ -32,18 +38,38 @@ if ($file['error'] !== UPLOAD_ERR_OK) {
 
 
 // -----------------------------
-// VALIDATE FILE TYPE (MP3 ONLY)
+// LIMIT FILE SIZE (30MB MAX)
 // -----------------------------
-$allowedTypes = ['audio/mpeg', 'audio/mp3', 'application/octet-stream'];
+$maxSize = 30 * 1024 * 1024; // 30MB in bytes
 
-if (!in_array($file['type'], $allowedTypes)) {
+if ($file['size'] > $maxSize) {
+    http_response_code(400);
+    die("File too large. Maximum size is 30MB.");
+}
+
+
+// -----------------------------
+// VALIDATE FILE TYPE (MP3 ONLY)
+// - Use finfo to inspect actual content
+// -----------------------------
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+if ($finfo === false) {
+    http_response_code(500);
+    die("Server error: cannot validate file type.");
+}
+
+$mime = finfo_file($finfo, $file['tmp_name']);
+finfo_close($finfo);
+
+// Common MP3 MIME type
+if ($mime !== 'audio/mpeg') {
     http_response_code(400);
     die("Invalid file type. MP3 only.");
 }
 
 
 // -----------------------------
-// SANITIZE FILENAME
+// SANITIZE FILENAME + EXTENSION
 // -----------------------------
 $originalName = basename($file['name']);
 $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
@@ -53,8 +79,9 @@ if ($extension !== "mp3") {
     die("Only MP3 files allowed.");
 }
 
-// Create a unique filename
-$finalName = time() . "-" . preg_replace("/[^A-Za-z0-9_\-\.]/", "_", $originalName);
+// We don't trust the original name for storage, only for logging.
+// Force a safe, unique .mp3 filename.
+$finalName = time() . "-" . uniqid() . ".mp3";
 $targetPath = $UPLOAD_DIR . $finalName;
 
 
