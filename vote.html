@@ -177,7 +177,6 @@
         actions.order.capture().then(details => {
           currentTransactionID = details.id;
 
-          // Enable vote buttons
           document.getElementById("voteChampion").disabled = false;
           document.getElementById("voteChallenger").disabled = false;
 
@@ -236,7 +235,7 @@
     }
 
     // ----------------------------------------------------
-    // LOAD BATTLE + BATTLE ID
+    // LOAD BATTLE
     // ----------------------------------------------------
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
@@ -265,7 +264,7 @@
     }
 
     // ----------------------------------------------------
-    // LOAD DJ TRACK
+    // LOAD DJ TRACK (iPhone‑safe autoplay)
     // ----------------------------------------------------
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
@@ -279,17 +278,29 @@
       const player = document.getElementById("djPlayer");
       player.src = last.mp3url;
 
+      // iPhone-safe autoplay
+      player.muted = true;
+
       player.play().then(() => {
-        player.muted = false;
-      }).catch(() => {
-        const unmute = () => {
+        const enableSound = () => {
           player.muted = false;
           player.play();
-          window.removeEventListener("touchstart", unmute);
-          window.removeEventListener("click", unmute);
+          window.removeEventListener("touchstart", enableSound);
+          window.removeEventListener("click", enableSound);
         };
-        window.addEventListener("touchstart", unmute);
-        window.addEventListener("click", unmute);
+
+        window.addEventListener("touchstart", enableSound, { once: true });
+        window.addEventListener("click", enableSound, { once: true });
+      }).catch(() => {
+        const startAudio = () => {
+          player.muted = false;
+          player.play();
+          window.removeEventListener("touchstart", startAudio);
+          window.removeEventListener("click", startAudio);
+        };
+
+        window.addEventListener("touchstart", startAudio, { once: true });
+        window.addEventListener("click", startAudio, { once: true });
       });
     }
 
@@ -387,7 +398,6 @@
       await loadDJTrack();
       loadCountdown();
 
-      // Load vote counts AFTER battle + battleID are ready
       setTimeout(loadVoteCounts, 1000);
     };
   </script>
