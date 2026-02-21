@@ -183,20 +183,26 @@
         list.reverse();
 
         list.forEach(row => {
+          const trackInfo =
+            `${row.deck1Title || "Unknown Title"} (${row.deck1Artist || "Unknown Artist"}) vs ` +
+            `${row.deck2Title || "Unknown Title"} (${row.deck2Artist || "Unknown Artist"})`;
+
+          const bookingUrl =
+            `https://dance-offs.com/index.html#contact` +
+            `?dj=${encodeURIComponent(row.djName || "")}` +
+            `&email=${encodeURIComponent(row.djEmail || "")}` +
+            `&track=${encodeURIComponent(trackInfo)}`;
+
           const tr = document.createElement("tr");
 
           tr.innerHTML = `
             <td data-label="DJ">${row.djName || "Unknown DJ"}</td>
-            <td data-label="Track">
-              ${(row.deck1Title || "Unknown Title")} (${row.deck1Artist || "Unknown Artist"})
-              vs.
-              ${(row.deck2Title || "Unknown Title")} (${row.deck2Artist || "Unknown Artist"})
-            </td>
+            <td data-label="Track">${trackInfo}</td>
             <td data-label="Preview">
               <audio controls src="${row.fileUrl}" style="width:180px;"></audio>
             </td>
             <td data-label="Booking">
-              <a href="mailto:${row.djEmail || ""}" class="booking-link">
+              <a href="${bookingUrl}" class="booking-link">
                 <i class="fa-solid fa-envelope"></i>
               </a>
             </td>
