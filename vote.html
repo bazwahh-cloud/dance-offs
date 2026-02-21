@@ -284,21 +284,39 @@
       });
     }
 
+    // ----------------------------------------------------
+    // NORMALIZATION HELPER
+    // ----------------------------------------------------
+    function normalize(str) {
+      return (str || "")
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    // ----------------------------------------------------
+    // UPDATED VOTE COUNTING (BattleID + WinnerName)
+    // ----------------------------------------------------
     async function loadVoteCounts() {
       const votes = await fetch(endpoint + "?mode=getvotes").then(r => r.json());
 
+      const champKey = normalize(currentBattleID + champion.dancer);
+      const challKey = normalize(currentBattleID + challenger.dancer);
+
       const champVotes = votes.filter(v =>
-        (v.WinnerName || "").trim().toLowerCase() ===
-        (champion.dancer || "").trim().toLowerCase()
+        normalize((v.BattleID || "") + (v.WinnerName || "")) === champKey
       ).length;
 
       const challVotes = votes.filter(v =>
-        (v.WinnerName || "").trim().toLowerCase() ===
-        (challenger.dancer || "").trim().toLowerCase()
+        normalize((v.BattleID || "") + (v.WinnerName || "")) === challKey
       ).length;
 
-      document.getElementById("championCount").innerText = "Champion Votes: " + champVotes;
-      document.getElementById("challengerCount").innerText = "Challenger Votes: " + challVotes;
+      document.getElementById("championCount").innerText =
+        "Champion Votes: " + champVotes;
+
+      document.getElementById("challengerCount").innerText =
+        "Challenger Votes: " + challVotes;
     }
 
     function vote(side) {
@@ -358,8 +376,10 @@
     window.onload = function () {
       loadBattle();
       loadDJTrack();
-      loadVoteCounts();
       loadCountdown();
+
+      // Delay vote count load slightly to ensure champion/challenger are ready
+      setTimeout(loadVoteCounts, 800);
     };
   </script>
 
