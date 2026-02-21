@@ -8,7 +8,7 @@
   <!-- Correct CSS (matches live site) -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3001">
 
-  <!-- Google Fonts (THIS WAS MISSING) -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- Envelope icon -->
@@ -114,11 +114,13 @@
     </a>
   </div>
 
-!-- FOOTER -->
-  class="footer">
+  <!-- FOOTER -->
+  <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
-    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">Terms & Conditions</a>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
   </footer>
 
   <script>
@@ -160,6 +162,8 @@
 
       } catch (err) {
         console.error("DJ library load failed:", err);
+        document.getElementById("loadingPastDJs").innerText =
+          "Failed to load DJ uploads. Please try again.";
       }
     }
 
