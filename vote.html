@@ -321,7 +321,7 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    /* ⭐ FINAL FIXED AUDIO LOGIC */
+    /* ⭐ FINAL FIXED AUDIO  LOGIC */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
