@@ -26,13 +26,10 @@ jobs:
           server: ${{ secrets.UPLOAD_FTP_HOST }}
           username: ${{ secrets.UPLOAD_FTP_USERNAME }}
           password: ${{ secrets.UPLOAD_FTP_PASSWORD }}
-
           protocol: ftp
           port: 21
-
           local-dir: ./uploads/
           server-dir: /htdocs/uploads/
-
           timeout: 60000
           security: loose
           log-level: verbose
@@ -40,7 +37,7 @@ jobs:
 
 
       # ----------------------------------------------------
-      # 2) DEPLOY CSS TO MAIN DOMAIN ROOT
+      # 2) DEPLOY ONLY style2.css TO MAIN DOMAIN
       # ----------------------------------------------------
       - name: Deploy style2.css to main domain
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -48,16 +45,17 @@ jobs:
           server: ${{ secrets.MAIN_FTP_HOST }}
           username: ${{ secrets.MAIN_FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
-
           protocol: ftp
           port: 21
 
-          # Only upload the CSS file
+          # Upload from repo root
           local-dir: ./
           server-dir: /htdocs/
 
-          include: |
-            style2.css
+          # Exclude everything except style2.css
+          exclude: |
+            **
+            !style2.css
 
           timeout: 60000
           security: loose
