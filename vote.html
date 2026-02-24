@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ⭐ FIXED: RESPONSIVE VIDEO CONTAINER (NO COLLAPSE) */
     .video-slot {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -66,7 +65,6 @@
       text-align: center;
     }
 
-    /* Progress Bars */
     .progress-wrapper {
       width: 100%;
       max-width: 260px;
@@ -151,7 +149,6 @@
 
     <div class="vote-layout">
 
-      <!-- Champion Column -->
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
@@ -159,7 +156,6 @@
         </button>
       </div>
 
-      <!-- PayPal Column -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -169,7 +165,6 @@
         </div>
       </div>
 
-      <!-- Challenger Column -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
@@ -179,14 +174,12 @@
 
     </div>
 
-    <!-- Vote Progress Section -->
     <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
 
       <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
         Vote Progress
       </h3>
 
-      <!-- Champion -->
       <div style="margin-bottom:20px;">
         <div id="championCount" class="vote-count" style="font-size:16px;">
           Champion Votes: 0
@@ -197,7 +190,6 @@
         </div>
       </div>
 
-      <!-- Challenger -->
       <div>
         <div id="challengerCount" class="vote-count" style="font-size:16px;">
           Challenger Votes: 0
@@ -239,7 +231,6 @@
     let champion = null;
     let challenger = null;
 
-    /* PAYPAL */
     paypal.Buttons({
       createOrder: (data, actions) =>
         actions.order.create({
@@ -258,7 +249,6 @@
         })
     }).render("#paypal-button-container");
 
-    /* HELPERS */
     function extractID(url) {
       if (!url) return null;
       const clean = url.split("?")[0];
@@ -276,7 +266,6 @@
       return null;
     }
 
-    /* ⭐ FIXED EMBED FUNCTION — NO COLLAPSING WRAPPER */
     function embed(id, onLoadCallback) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
@@ -297,7 +286,6 @@
       return container;
     }
 
-    /* LOAD BATTLE */
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
       const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
@@ -333,7 +321,7 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    /* ⭐ UPDATED LOAD DJ TRACK — DESKTOP + iPHONE UNMUTE FIX */
+    /* ⭐ FINAL FIXED AUDIO LOGIC */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -344,29 +332,26 @@
       document.getElementById("djTrackName").innerText =
         last.trackname || "Latest DJ Track";
 
-      // Load MP3
       player.src = last.mp3url;
       player.muted = true;
       player.volume = 0;
 
-      // Wait for metadata (required for Safari + desktop unmute)
       await new Promise(resolve => {
         player.onloadedmetadata = resolve;
       });
 
-      // Try autoplay muted
       try {
         await player.play();
       } catch (e) {}
 
-      // Unmute + fade in on first user interaction
       function enableAudio() {
         player.muted = false;
 
         let vol = 0;
         const fade = setInterval(() => {
-          vol += 0.05;
+          vol = Math.min(1, vol + 0.05);   // ⭐ CAP VOLUME AT 1.0
           player.volume = vol;
+
           if (vol >= 1) clearInterval(fade);
         }, 80);
 
@@ -374,12 +359,10 @@
         window.removeEventListener("touchstart", enableAudio);
       }
 
-      // ⭐ FIX: attach to window so overlays/iframes can't block it
       window.addEventListener("click", enableAudio, { once: true });
       window.addEventListener("touchstart", enableAudio, { once: true });
     }
 
-    /* LOAD VOTE COUNTS */
     async function loadVoteCounts() {
       if (!currentBattleID) return;
 
@@ -402,7 +385,6 @@
         data.challenger.used + "%";
     }
 
-    /* SUBMIT VOTE */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -427,7 +409,6 @@
         });
     }
 
-    /* COUNTDOWN */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
@@ -459,7 +440,6 @@
         });
     }
 
-    /* PAGE LOAD */
     window.onload = async function () {
       await loadBattle();
       await loadDJTrack();
