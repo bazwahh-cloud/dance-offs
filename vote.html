@@ -17,6 +17,7 @@
       border-radius: 8px;
       position: relative;
       overflow: hidden;
+      min-height: 50vw; /* Prevent iframe collapse */
     }
     .battle-frame {
       width: 100%;
@@ -52,14 +53,14 @@
       text-align: center;
     }
 
-    /* NEW: Progress Bars */
+    /* Progress Bars */
     .progress-wrapper {
       width: 100%;
       max-width: 260px;
       height: 10px;
       background: #333;
       border-radius: 5px;
-      margin: 6px auto 12px auto;
+      margin: 0 auto;
       overflow: hidden;
     }
     .progress-bar {
@@ -137,12 +138,6 @@
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
           Vote Champion
         </button>
-        <div id="championCount" class="vote-count">Champion Votes: 0</div>
-
-        <!-- NEW: Champion Progress Bar -->
-        <div class="progress-wrapper">
-          <div id="championBar" class="progress-bar champion-bar"></div>
-        </div>
       </div>
 
       <!-- PayPal Column -->
@@ -161,15 +156,40 @@
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
           Vote Challenger
         </button>
-        <div id="challengerCount" class="vote-count">Challenger Votes: 0</div>
+      </div>
 
-        <!-- NEW: Challenger Progress Bar -->
-        <div class="progress-wrapper">
+    </div>
+
+    <!-- NEW: Vote Progress Section -->
+    <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
+
+      <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
+        Vote Progress
+      </h3>
+
+      <!-- Champion -->
+      <div style="margin-bottom:20px;">
+        <div id="championCount" class="vote-count" style="font-size:16px;">
+          Champion Votes: 0
+        </div>
+
+        <div class="progress-wrapper" style="margin-top:6px;">
+          <div id="championBar" class="progress-bar champion-bar"></div>
+        </div>
+      </div>
+
+      <!-- Challenger -->
+      <div>
+        <div id="challengerCount" class="vote-count" style="font-size:16px;">
+          Challenger Votes: 0
+        </div>
+
+        <div class="progress-wrapper" style="margin-top:6px;">
           <div id="challengerBar" class="progress-bar challenger-bar"></div>
         </div>
       </div>
 
-    </div>
+    </section>
 
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
@@ -262,16 +282,8 @@
       return wrapper;
     }
 
-    function normalize(str) {
-      return (str || "")
-        .toString()
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, " ");
-    }
-
     // ----------------------------------------------------
-    // LOAD BATTLE
+    // LOAD BATTLE (with fallback timeout)
     // ----------------------------------------------------
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
@@ -283,12 +295,22 @@
       challenger = dancers[state.challengerIndex];
 
       let videosLoaded = 0;
-      function checkDone() {
-        videosLoaded++;
-        if (videosLoaded === 2) {
+      let overlayHidden = false;
+
+      function hideOverlay() {
+        if (!overlayHidden) {
+          overlayHidden = true;
           document.getElementById("loadingOverlay").style.display = "none";
         }
       }
+
+      function checkDone() {
+        videosLoaded++;
+        if (videosLoaded >= 2) hideOverlay();
+      }
+
+      // Fallback: always hide after 3 seconds
+      setTimeout(hideOverlay, 3000);
 
       const champID = extractID(champion.url);
       const champEmbed = embed(champID, checkDone);
@@ -331,7 +353,7 @@
     }
 
     // ----------------------------------------------------
-    // NEW: LOAD VOTE COUNTS + PROGRESS BARS
+    // LOAD VOTE COUNTS + PROGRESS BARS
     // ----------------------------------------------------
     async function loadVoteCounts() {
       if (!currentBattleID) return;
@@ -350,11 +372,11 @@
         " (Remaining: " + data.challenger.remaining + ")";
 
       // Update progress bars
-      const champPercent = (data.champion.used / 100) * 100;
-      const challPercent = (data.challenger.used / 100) * 100;
+      document.getElementById("championBar").style.width =
+        data.champion.used + "%";
 
-      document.getElementById("championBar").style.width = champPercent + "%";
-      document.getElementById("challengerBar").style.width = challPercent + "%";
+      document.getElementById("challengerBar").style.width =
+        data.challenger.used + "%";
     }
 
     // ----------------------------------------------------
