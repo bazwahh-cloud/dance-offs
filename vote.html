@@ -6,31 +6,43 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2015">
+  <link rel="stylesheet" href="style2.css?v=2016">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    /* ⭐ FIXED: RESPONSIVE VIDEO CONTAINER (NO COLLAPSE) */
     .video-slot {
       width: 100%;
-      aspect-ratio: 9 / 16;
+      aspect-ratio: 16 / 9;
       background: #000;
       border-radius: 8px;
       position: relative;
       overflow: hidden;
-      min-height: 50vw; /* Prevent iframe collapse */
     }
+
+    .video-slot iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     .battle-frame {
       width: 100%;
       height: 100%;
       border: none;
       pointer-events: none;
     }
+
     .blocker {
       position: absolute;
       inset: 0;
       z-index: 10;
       pointer-events: auto;
     }
+
     .vote-button {
       font-size: 18px;
       padding: 10px 20px;
@@ -43,9 +55,11 @@
       width: 100%;
       opacity: 0.5;
     }
+
     .vote-button.enabled {
       opacity: 1;
     }
+
     .vote-count {
       margin-top: 6px;
       font-size: 14px;
@@ -63,14 +77,17 @@
       margin: 0 auto;
       overflow: hidden;
     }
+
     .progress-bar {
       height: 100%;
       width: 0%;
       transition: width 0.4s ease;
     }
+
     .champion-bar {
       background: #1e90ff;
     }
+
     .challenger-bar {
       background: #ff4444;
     }
@@ -81,10 +98,12 @@
       gap: 20px;
       margin-top: 20px;
     }
+
     .vote-column {
       width: 300px;
       text-align: center;
     }
+
     @media (max-width: 700px) {
       .vote-layout {
         flex-direction: column;
@@ -95,6 +114,7 @@
         max-width: 360px;
       }
     }
+
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -160,7 +180,7 @@
 
     </div>
 
-    <!-- NEW: Vote Progress Section -->
+    <!-- Vote Progress Section -->
     <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
 
       <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
@@ -220,9 +240,7 @@
     let champion = null;
     let challenger = null;
 
-    // ----------------------------------------------------
-    // PAYPAL
-    // ----------------------------------------------------
+    /* PAYPAL */
     paypal.Buttons({
       createOrder: (data, actions) =>
         actions.order.create({
@@ -241,9 +259,7 @@
         })
     }).render("#paypal-button-container");
 
-    // ----------------------------------------------------
-    // HELPERS
-    // ----------------------------------------------------
+    /* HELPERS */
     function extractID(url) {
       if (!url) return null;
       const clean = url.split("?")[0];
@@ -282,9 +298,7 @@
       return wrapper;
     }
 
-    // ----------------------------------------------------
-    // LOAD BATTLE (with fallback timeout)
-    // ----------------------------------------------------
+    /* LOAD BATTLE */
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
       const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
@@ -309,7 +323,6 @@
         if (videosLoaded >= 2) hideOverlay();
       }
 
-      // Fallback: always hide after 3 seconds
       setTimeout(hideOverlay, 3000);
 
       const champID = extractID(champion.url);
@@ -321,9 +334,7 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    // ----------------------------------------------------
-    // LOAD DJ TRACK
-    // ----------------------------------------------------
+    /* LOAD DJ TRACK */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -352,9 +363,7 @@
       }
     }
 
-    // ----------------------------------------------------
-    // LOAD VOTE COUNTS + PROGRESS BARS
-    // ----------------------------------------------------
+    /* LOAD VOTE COUNTS */
     async function loadVoteCounts() {
       if (!currentBattleID) return;
 
@@ -362,7 +371,6 @@
         endpoint + "?mode=getvotestate&battleID=" + currentBattleID
       ).then(r => r.json());
 
-      // Update text
       document.getElementById("championCount").innerText =
         "Champion Votes: " + data.champion.used +
         " (Remaining: " + data.champion.remaining + ")";
@@ -371,7 +379,6 @@
         "Challenger Votes: " + data.challenger.used +
         " (Remaining: " + data.challenger.remaining + ")";
 
-      // Update progress bars
       document.getElementById("championBar").style.width =
         data.champion.used + "%";
 
@@ -379,9 +386,7 @@
         data.challenger.used + "%";
     }
 
-    // ----------------------------------------------------
-    // SUBMIT VOTE
-    // ----------------------------------------------------
+    /* SUBMIT VOTE */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -406,9 +411,7 @@
         });
     }
 
-    // ----------------------------------------------------
-    // COUNTDOWN
-    // ----------------------------------------------------
+    /* COUNTDOWN */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
@@ -440,9 +443,7 @@
         });
     }
 
-    // ----------------------------------------------------
-    // PAGE LOAD
-    // ----------------------------------------------------
+    /* PAGE LOAD */
     window.onload = async function () {
       await loadBattle();
       await loadDJTrack();
