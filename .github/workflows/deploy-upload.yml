@@ -34,4 +34,4 @@ jobs:
           security: loose
           log-level: verbose
 
-          exclude: ""   # ⭐ THIS ALLOWS .htaccess TO BE UPLOADED
+          exclude: ""   # ⭐ REQUIRED — ensures .htaccess is uploaded
