@@ -99,7 +99,6 @@ body.dj-upload p {
   margin: 30px auto 20px;
   padding: 0 20px;
   text-align: center;
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 600;
   color: #ffcc00;
@@ -299,27 +298,42 @@ body.dj-upload .mixer label {
 }
 
 /* ----------------------------------------------------
-   VOTE PAGE — VIDEO + PROGRESS BARS
+   VOTE PAGE — FULL-WIDTH RESPONSIVE LAYOUT (FIXED)
 ---------------------------------------------------- */
 
-/* ⭐ FIXED: RESPONSIVE VIDEO CONTAINER (NO COLLAPSE) */
+/* Full-width stacked layout */
+.vote-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto 0;
+}
+
+.vote-column {
+  width: 100%;
+  text-align: center;
+}
+
+/* Responsive video container */
 .video-slot {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
   position: relative;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .video-slot iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  display: block;
 }
 
-/* Progress bar container */
+/* Progress bars */
 .progress-wrapper {
   width: 100%;
   max-width: 260px;
@@ -330,19 +344,16 @@ body.dj-upload .mixer label {
   overflow: hidden;
 }
 
-/* Progress bar fill */
 .progress-bar {
   height: 100%;
   width: 0%;
   transition: width 0.4s ease;
 }
 
-/* Champion = blue */
 .champion-bar {
   background: #1e90ff;
 }
 
-/* Challenger = red */
 .challenger-bar {
   background: #ff4444;
 }
