@@ -6,7 +6,8 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2017">
+  <!-- Use absolute URL so CSS loads from the uploads subdomain -->
+  <link rel="stylesheet" href="https://upload.dance-offs.com/uploads/style2.css?v=2017">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -321,7 +322,6 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    /* ⭐ FINAL FIXED AUDIO  LOGIC */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -349,7 +349,7 @@
 
         let vol = 0;
         const fade = setInterval(() => {
-          vol = Math.min(1, vol + 0.05);   // CAP VOLUME AT 1.0
+          vol = Math.min(1, vol + 0.05);
           player.volume = vol;
 
           if (vol >= 1) clearInterval(fade);
