@@ -302,9 +302,21 @@ body.dj-upload .mixer label {
    VOTE PAGE — VIDEO + PROGRESS BARS
 ---------------------------------------------------- */
 
-/* Prevent iframe collapse */
+/* ⭐ FIXED: RESPONSIVE VIDEO CONTAINER (NO COLLAPSE) */
 .video-slot {
-  min-height: 50vw;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  position: relative;
+}
+
+.video-slot iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* Progress bar container */
