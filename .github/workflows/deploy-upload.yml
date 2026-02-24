@@ -33,3 +33,5 @@ jobs:
           timeout: 60000
           security: loose
           log-level: verbose
+
+          exclude: ""   # ⭐ THIS ALLOWS .htaccess TO BE UPLOADED
