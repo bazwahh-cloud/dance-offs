@@ -349,7 +349,7 @@
 
         let vol = 0;
         const fade = setInterval(() => {
-          vol = Math.min(1, vol + 0.05);   // ⭐ CAP VOLUME AT 1.0
+          vol = Math.min(1, vol + 0.05);   // CAP VOLUME AT 1.0
           player.volume = vol;
 
           if (vol >= 1) clearInterval(fade);
