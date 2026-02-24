@@ -1,4 +1,4 @@
-name: Deploy to upload.dance-offs.com (Uploads Subdomain)
+name: Deploy Uploads + Main CSS
 
 on:
   push:
@@ -10,14 +10,17 @@ on:
       - ".github/workflows/deploy-upload.yml"
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: FTP Deploy (Uploads Subdomain)
+      # ----------------------------------------------------
+      # 1) DEPLOY UPLOADS SUBDOMAIN
+      # ----------------------------------------------------
+      - name: Deploy to upload.dance-offs.com (Uploads Subdomain)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.UPLOAD_FTP_HOST }}
@@ -33,5 +36,29 @@ jobs:
           timeout: 60000
           security: loose
           log-level: verbose
+          exclude: ""
 
-          exclude: ""   # ⭐ REQUIRED — ensures .htaccess is uploaded
+
+      # ----------------------------------------------------
+      # 2) DEPLOY CSS TO MAIN DOMAIN ROOT
+      # ----------------------------------------------------
+      - name: Deploy style2.css to main domain
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.MAIN_FTP_HOST }}
+          username: ${{ secrets.MAIN_FTP_USERNAME }}
+          password: ${{ secrets.MAIN_FTP_PASSWORD }}
+
+          protocol: ftp
+          port: 21
+
+          # Only upload the CSS file
+          local-dir: ./
+          server-dir: /htdocs/
+
+          include: |
+            style2.css
+
+          timeout: 60000
+          security: loose
+          log-level: verbose
