@@ -333,29 +333,31 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    /* ⭐ UPDATED LOAD DJ TRACK — AUTOPLAY + UNMUTE FIX */
+    /* ⭐ UPDATED LOAD DJ TRACK — DESKTOP + iPHONE UNMUTE FIX */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
 
       const last = data[data.length - 1];
+      const player = document.getElementById("djPlayer");
 
       document.getElementById("djTrackName").innerText =
         last.trackname || "Latest DJ Track";
-
-      const player = document.getElementById("djPlayer");
 
       // Load MP3
       player.src = last.mp3url;
       player.muted = true;
       player.volume = 0;
 
-      // Try autoplay (muted)
+      // Wait for metadata (required for Safari + desktop unmute)
+      await new Promise(resolve => {
+        player.onloadedmetadata = resolve;
+      });
+
+      // Try autoplay muted
       try {
         await player.play();
-      } catch (err) {
-        // Ignore autoplay errors
-      }
+      } catch (e) {}
 
       // Unmute + fade in on first user interaction
       function enableAudio() {
@@ -368,12 +370,13 @@
           if (vol >= 1) clearInterval(fade);
         }, 80);
 
-        document.removeEventListener("click", enableAudio);
-        document.removeEventListener("touchstart", enableAudio);
+        window.removeEventListener("click", enableAudio);
+        window.removeEventListener("touchstart", enableAudio);
       }
 
-      document.addEventListener("click", enableAudio, { once: true });
-      document.addEventListener("touchstart", enableAudio, { once: true });
+      // ⭐ FIX: attach to window so overlays/iframes can't block it
+      window.addEventListener("click", enableAudio, { once: true });
+      window.addEventListener("touchstart", enableAudio, { once: true });
     }
 
     /* LOAD VOTE COUNTS */
