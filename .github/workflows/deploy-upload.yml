@@ -37,9 +37,9 @@ jobs:
 
 
       # ----------------------------------------------------
-      # 2) DEPLOY ONLY style2.css TO MAIN DOMAIN
+      # 2) DEPLOY ONLY style2.css TO MAIN SITE
       # ----------------------------------------------------
-      - name: Deploy style2.css to main domain
+      - name: Deploy style2.css to main site
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MAIN_FTP_HOST }}
