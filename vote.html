@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2016">
+  <link rel="stylesheet" href="style2.css?v=2017">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -22,8 +22,7 @@
 
     .video-slot iframe {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       display: block;
@@ -277,6 +276,7 @@
       return null;
     }
 
+    /* ⭐ FIXED EMBED FUNCTION — NO COLLAPSING WRAPPER */
     function embed(id, onLoadCallback) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
@@ -285,17 +285,16 @@
       iframe.allow = "autoplay; encrypted-media";
       iframe.onload = onLoadCallback;
 
-      const wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-      wrapper.style.width = "100%";
-      wrapper.style.height = "100%";
-      wrapper.appendChild(iframe);
-
       const blocker = document.createElement("div");
       blocker.className = "blocker";
-      wrapper.appendChild(blocker);
 
-      return wrapper;
+      const container = document.createElement("div");
+      container.style.position = "absolute";
+      container.style.inset = "0";
+      container.appendChild(iframe);
+      container.appendChild(blocker);
+
+      return container;
     }
 
     /* LOAD BATTLE */
