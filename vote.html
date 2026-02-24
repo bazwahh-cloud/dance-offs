@@ -51,6 +51,29 @@
       color: #bbb;
       text-align: center;
     }
+
+    /* NEW: Progress Bars */
+    .progress-wrapper {
+      width: 100%;
+      max-width: 260px;
+      height: 10px;
+      background: #333;
+      border-radius: 5px;
+      margin: 6px auto 12px auto;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .champion-bar {
+      background: #1e90ff;
+    }
+    .challenger-bar {
+      background: #ff4444;
+    }
+
     .vote-layout {
       display: flex;
       justify-content: center;
@@ -108,14 +131,21 @@
 
     <div class="vote-layout">
 
+      <!-- Champion Column -->
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
           Vote Champion
         </button>
         <div id="championCount" class="vote-count">Champion Votes: 0</div>
+
+        <!-- NEW: Champion Progress Bar -->
+        <div class="progress-wrapper">
+          <div id="championBar" class="progress-bar champion-bar"></div>
+        </div>
       </div>
 
+      <!-- PayPal Column -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -125,12 +155,18 @@
         </div>
       </div>
 
+      <!-- Challenger Column -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
           Vote Challenger
         </button>
         <div id="challengerCount" class="vote-count">Challenger Votes: 0</div>
+
+        <!-- NEW: Challenger Progress Bar -->
+        <div class="progress-wrapper">
+          <div id="challengerBar" class="progress-bar challenger-bar"></div>
+        </div>
       </div>
 
     </div>
@@ -264,7 +300,7 @@
     }
 
     // ----------------------------------------------------
-    // FIXED: LOAD DJ TRACK (iPhone‑safe autoplay)
+    // LOAD DJ TRACK
     // ----------------------------------------------------
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
@@ -277,18 +313,13 @@
 
       const player = document.getElementById("djPlayer");
 
-      // Set src BEFORE any play attempt
       player.src = last.mp3url;
-
-      // Start muted for autoplay
       player.muted = true;
 
       try {
-        await player.play();     // allowed because muted
-        player.muted = false;    // unmute AFTER playback begins
+        await player.play();
+        player.muted = false;
       } catch (err) {
-        console.log("Autoplay blocked, waiting for user gesture");
-
         const enableSound = () => {
           player.muted = false;
           player.play();
@@ -300,29 +331,30 @@
     }
 
     // ----------------------------------------------------
-    // LOAD VOTE COUNTS
+    // NEW: LOAD VOTE COUNTS + PROGRESS BARS
     // ----------------------------------------------------
     async function loadVoteCounts() {
-      if (!currentBattleID || !champion || !challenger) return;
+      if (!currentBattleID) return;
 
-      const votes = await fetch(endpoint + "?mode=getvotes").then(r => r.json());
+      const data = await fetch(
+        endpoint + "?mode=getvotestate&battleID=" + currentBattleID
+      ).then(r => r.json());
 
-      const champKey = normalize(currentBattleID + champion.dancer);
-      const challKey = normalize(currentBattleID + challenger.dancer);
-
-      const champVotes = votes.filter(v =>
-        normalize((v.BattleID || "") + (v.WinnerName || "")) === champKey
-      ).length;
-
-      const challVotes = votes.filter(v =>
-        normalize((v.BattleID || "") + (v.WinnerName || "")) === challKey
-      ).length;
-
+      // Update text
       document.getElementById("championCount").innerText =
-        "Champion Votes: " + champVotes;
+        "Champion Votes: " + data.champion.used +
+        " (Remaining: " + data.champion.remaining + ")";
 
       document.getElementById("challengerCount").innerText =
-        "Challenger Votes: " + challVotes;
+        "Challenger Votes: " + data.challenger.used +
+        " (Remaining: " + data.challenger.remaining + ")";
+
+      // Update progress bars
+      const champPercent = (data.champion.used / 100) * 100;
+      const challPercent = (data.challenger.used / 100) * 100;
+
+      document.getElementById("championBar").style.width = champPercent + "%";
+      document.getElementById("challengerBar").style.width = challPercent + "%";
     }
 
     // ----------------------------------------------------
@@ -343,6 +375,7 @@
       formData.append("WinnerURL", dancerURL);
       formData.append("TransactionID", currentTransactionID);
       formData.append("BattleID", currentBattleID);
+      formData.append("side", side);
 
       fetch(endpoint, { method: "POST", body: formData })
         .then(() => {
