@@ -1,16 +1,13 @@
-name: Deploy Uploads + Main CSS
+name: Deploy to dance-offs.com (Main Site)
 
 on:
   push:
     branches:
       - main
-    paths:
-      - "uploads/**"
-      - "style2.css"
-      - ".github/workflows/deploy-upload.yml"
 
 jobs:
-  deploy:
+  ftp-deploy:
+    name: FTP Deploy (Main Site)
     runs-on: ubuntu-latest
 
     steps:
@@ -18,45 +15,44 @@ jobs:
         uses: actions/checkout@v3
 
       # ----------------------------------------------------
-      # 1) DEPLOY UPLOADS SUBDOMAIN
+      # 1. RESET MAIN SITE (CLEAN SLATE)
       # ----------------------------------------------------
-      - name: Deploy to upload.dance-offs.com (Uploads Subdomain)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.UPLOAD_FTP_HOST }}
-          username: ${{ secrets.UPLOAD_FTP_USERNAME }}
-          password: ${{ secrets.UPLOAD_FTP_PASSWORD }}
-          protocol: ftp
-          port: 21
-          local-dir: ./uploads/
-          server-dir: /htdocs/uploads/
-          timeout: 60000
-          security: loose
-          log-level: verbose
-          exclude: ""
-
-
-      # ----------------------------------------------------
-      # 2) DEPLOY ONLY style2.css TO MAIN SITE
-      # ----------------------------------------------------
-      - name: Deploy style2.css to main site
+      - name: Reset main site state
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MAIN_FTP_HOST }}
           username: ${{ secrets.MAIN_FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
-          protocol: ftp
+
+          # ⭐ FIX: USE FTPS (NOT FTP, NOT SFTP)
+          protocol: ftps
           port: 21
 
-          # Upload from repo root
+          local-dir: ./empty-dir/
+          server-dir: /htdocs/
+          dangerous-clean-slate: true
+          log-level: verbose
+
+      # ----------------------------------------------------
+      # 2. DEPLOY FULL SITE
+      # ----------------------------------------------------
+      - name: Deploy full root to main site
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.MAIN_FTP_HOST }}
+          username: ${{ secrets.MAIN_FTP_USERNAME }}
+          password: ${{ secrets.MAIN_FTP_PASSWORD }}
+
+          # ⭐ FIX: USE FTPS (NOT FTP, NOT SFTP)
+          protocol: ftps
+          port: 21
+
           local-dir: ./
           server-dir: /htdocs/
 
-          # Exclude everything except style2.css
           exclude: |
-            **
-            !style2.css
+            .git/**
+            .github/**
+            empty-dir/**
 
-          timeout: 60000
-          security: loose
           log-level: verbose
