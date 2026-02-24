@@ -42,7 +42,7 @@ body {
 }
 
 /* ----------------------------------------------------
-   HERO — RESPONSIVE + CENTRED (SAFE FOR ALL PAGES)
+   HERO — RESPONSIVE + CENTRED
 ---------------------------------------------------- */
 .hero {
   position: relative;
@@ -93,7 +93,7 @@ body.dj-upload {
   padding-bottom: 60px;
 }
 
-/* ⭐ Instruction text (more readable) */
+/* Instruction text */
 body.dj-upload p {
   max-width: 900px;
   margin: 30px auto 20px;
@@ -106,7 +106,7 @@ body.dj-upload p {
   line-height: 1.4;
 }
 
-/* ⭐ Deck labels */
+/* Deck labels */
 .deck-label {
   font-family: 'Bangers', cursive;
   font-size: 28px;
@@ -115,7 +115,7 @@ body.dj-upload p {
   text-align: center;
 }
 
-/* ⭐ Booth layout */
+/* Booth layout */
 body.dj-upload .dj-booth {
   max-width: 900px;
   margin: 40px auto;
@@ -137,7 +137,7 @@ body.dj-upload .deck {
   text-align: center;
 }
 
-/* ⭐ Vinyl circles */
+/* Vinyl circles */
 body.dj-upload .record {
   width: 260px;
   height: 260px;
@@ -154,7 +154,6 @@ body.dj-upload .record-inner {
   text-align: center;
 }
 
-/* ⭐ Deck input fields */
 body.dj-upload .record-inner input {
   width: 100%;
   padding: 14px;
@@ -173,7 +172,7 @@ body.dj-upload .record-inner input {
 
 body.dj-upload .mixer-wrap {
   margin: 40px auto 0;
-  padding-bottom: 40px; /* prevents overlap with Now Playing */
+  padding-bottom: 40px;
   text-align: center;
 }
 
@@ -183,7 +182,7 @@ body.dj-upload .mixer {
   background: #111;
   border: 6px solid #444;
   border-radius: 14px;
-  margin: 0 auto 40px; /* extra spacing below Upload Mix button */
+  margin: 0 auto 40px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -216,7 +215,7 @@ body.dj-upload .mixer label {
 }
 
 /* ----------------------------------------------------
-   NOW PLAYING SECTION — PERFECTLY CENTERED
+   NOW PLAYING SECTION
 ---------------------------------------------------- */
 
 .dj-player-section {
@@ -261,12 +260,10 @@ body.dj-upload .mixer label {
 ---------------------------------------------------- */
 @media (max-width: 600px) {
 
-  /* Remove scaling so layout fits the screen */
   body.dj-upload .dj-booth {
     transform: none;
   }
 
-  /* Reduce deck size */
   body.dj-upload .deck {
     flex: 0 0 200px;
   }
@@ -285,7 +282,6 @@ body.dj-upload .mixer label {
     padding: 10px;
   }
 
-  /* Mixer width fix */
   body.dj-upload .mixer {
     width: 90%;
     padding: 18px;
@@ -297,8 +293,44 @@ body.dj-upload .mixer label {
     padding: 14px;
   }
 
-  /* Now Playing spacing */
   .dj-player-section {
     margin-top: 30px;
   }
+}
+
+/* ----------------------------------------------------
+   VOTE PAGE — VIDEO + PROGRESS BARS
+---------------------------------------------------- */
+
+/* Prevent iframe collapse */
+.video-slot {
+  min-height: 50vw;
+}
+
+/* Progress bar container */
+.progress-wrapper {
+  width: 100%;
+  max-width: 260px;
+  height: 10px;
+  background: #333;
+  border-radius: 5px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Progress bar fill */
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+/* Champion = blue */
+.champion-bar {
+  background: #1e90ff;
+}
+
+/* Challenger = red */
+.challenger-bar {
+  background: #ff4444;
 }
