@@ -1,93 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJ Upload – Dance-Offs</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ Upload</title>
 
-    <!-- Shared main-site CSS (absolute URL) -->
-    <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3006">
+  <!-- Main site CSS -->
+  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3006">
 
-    <!-- Optional: favicon from main site -->
-    <link rel="icon" type="image/png" href="https://dance-offs.com/favicon.png">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body>
+<body class="dj-upload">
 
-    <header class="header">
-        <h1>DJ Upload</h1>
-        <p>Upload your track for this month’s Dance-Off</p>
-    </header>
+  <!-- ⭐ REQUIRED WRAPPERS FOR MIXER LAYOUT -->
+  <div class="page-wrapper">
+  <div class="content">
 
-    <main class="container">
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+      <a href="https://dance-offs.com/index.html">Home</a>
+      <a href="https://dance-offs.com/dancers.html">Dancers</a>
+      <a href="https://upload.dance-offs.com/uploads/djs.html" class="active">DJs</a>
+      <a href="https://dance-offs.com/vote.html">Vote</a>
+      <a href="https://dance-offs.com/prizes.html">Prizes</a>
+      <a href="https://dance-offs.com/shop.html">Shop</a>
+    </nav>
 
-        <!-- Upload form -->
-        <section class="upload-box">
-            <h2>Upload Your MP3</h2>
+    <!-- INSTRUCTIONS -->
+    <p>
+      Enter your mix details before selecting the MP3 file (under 10 mins long), then press
+      <strong>Upload Mix</strong> to submit your entry.
+    </p>
 
-            <form id="uploadForm" enctype="multipart/form-data">
-                <input type="file" id="fileInput" name="file" accept=".mp3" required>
-                <button type="submit" class="btn">Upload Track</button>
-            </form>
+    <!-- ⭐ DJ BOOTH -->
+    <div class="dj-booth">
 
-            <div id="uploadStatus" class="status"></div>
-        </section>
+      <div class="deck-row">
 
-        <!-- Player -->
-        <section class="player-box">
-            <h2>Your Uploaded Track</h2>
-            <audio id="audioPlayer" controls>
-                <source id="audioSource" src="" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </section>
+        <!-- LEFT DECK -->
+        <div class="deck">
+          <h3 class="deck-label">Deck 1</h3>
+          <div class="record">
+            <div class="record-inner">
+              <input type="text" id="deck1Artist" placeholder="Input Artist">
+              <input type="text" id="deck1Title" placeholder="Input Track">
+            </div>
+          </div>
+        </div>
 
-    </main>
+        <!-- RIGHT DECK -->
+        <div class="deck">
+          <h3 class="deck-label">Deck 2</h3>
+          <div class="record">
+            <div class="record-inner">
+              <input type="text" id="deck2Artist" placeholder="Input Artist">
+              <input type="text" id="deck2Title" placeholder="Input Track">
+            </div>
+          </div>
+        </div>
 
-    <script>
-        const form = document.getElementById("uploadForm");
-        const fileInput = document.getElementById("fileInput");
-        const statusBox = document.getElementById("uploadStatus");
-        const audioPlayer = document.getElementById("audioPlayer");
-        const audioSource = document.getElementById("audioSource");
+      </div>
 
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
+      <!-- MIXER -->
+      <div class="mixer-wrap">
+        <div class="mixer">
 
-            const file = fileInput.files[0];
-            if (!file) {
-                statusBox.textContent = "Please select an MP3 file.";
-                return;
-            }
+          <input type="email" id="djEmail" placeholder="Your Email">
+          <input type="text" id="djName" placeholder="Your DJ Name">
 
-            statusBox.textContent = "Uploading…";
+          <label>MP3 only (&lt;10mins)</label>
 
-            const formData = new FormData();
-            formData.append("file", file);
+          <input type="file" id="djFile" accept=".mp3,audio/mpeg">
 
-            try {
-                const response = await fetch("upload.php", {
-                    method: "POST",
-                    body: formData
-                });
+          <button id="uploadBtn">Upload Mix</button>
 
-                const text = await response.text();
+          <div id="uploadStatus" style="font-size:15px;"></div>
 
-                if (!response.ok) {
-                    statusBox.textContent = "Upload failed: " + text;
-                    return;
-                }
+        </div>
+      </div>
 
-                statusBox.textContent = "Upload successful!";
-                audioSource.src = text;
-                audioPlayer.load();
-                audioPlayer.play();
+    </div>
 
-            } catch (err) {
-                statusBox.textContent = "Error: " + err;
-            }
+    <!-- NOW PLAYING -->
+    <div class="dj-player-section">
+      <div class="now-playing">Now Playing</div>
+      <div id="nowPlayingTrack" class="now-playing-track">Loading latest mix…</div>
+      <audio id="djPlayer" controls autoplay muted playsinline></audio>
+    </div>
+
+    <!-- PAST UPLOADS -->
+    <div style="text-align:center; margin:50px 0;">
+      <a href="djs-past.html"
+         style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
+                text-decoration:none; font-size:20px; font-weight:600;">
+        View Past DJ Uploads →
+      </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      © 2026 Dance-Offs. All rights reserved.
+      <br>
+      <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+        Terms & Conditions
+      </a>
+    </footer>
+
+  </div>
+  </div> <!-- END WRAPPERS -->
+
+  <!-- ⭐ DJ UPLOAD LOGIC -->
+  <script>
+    const BACKEND_URL =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
+    /* Load latest mix + update Now Playing text */
+    async function loadLatestMix() {
+      try {
+        const res = await fetch(BACKEND_URL + "?mode=djlist");
+        const list = await res.json();
+        if (!list.length) return;
+
+        const latest = list[list.length - 1];
+        const player = document.getElementById("djPlayer");
+        const nowPlaying = document.getElementById("nowPlayingTrack");
+
+        player.src = latest.fileUrl;
+
+        const trackName =
+          `${latest.deck1Title || "Unknown"} (${latest.deck1Artist || "Unknown"}) 
+           vs 
+           ${latest.deck2Title || "Unknown"} (${latest.deck2Artist || "Unknown"})`;
+
+        nowPlaying.textContent = trackName;
+
+        player.play().then(() => {
+          player.muted = false;
+        }).catch(() => {
+          const unmute = () => {
+            player.muted = false;
+            player.play().catch(() => {});
+            window.removeEventListener("touchstart", unmute);
+            window.removeEventListener("click", unmute);
+          };
+          window.addEventListener("touchstart", unmute);
+          window.addEventListener("click", unmute);
         });
-    </script>
+
+      } catch (err) {
+        console.error("Could not load latest mix:", err);
+      }
+    }
+
+    /* Upload handler */
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+      const status = document.getElementById("uploadStatus");
+      status.innerHTML = "Uploading...";
+
+      const fileInput = document.getElementById("djFile");
+      if (!fileInput.files.length) {
+        status.innerHTML = "Please select an MP3 file.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const uploadResponse = await fetch("/uploads/upload.php", {
+          method: "POST",
+          body: formData
+        });
+
+        const fileUrl = await uploadResponse.text();
+        status.innerHTML = "Upload complete! Logging metadata...";
+
+        const storedName = fileUrl.split("/").pop();
+
+        await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            mode: "djupload",
+
+            djEmail: document.getElementById("djEmail").value,
+            djName: document.getElementById("djName").value,
+
+            deck1Artist: document.getElementById("deck1Artist").value,
+            deck1Title: document.getElementById("deck1Title").value,
+            deck2Artist: document.getElementById("deck2Artist").value,
+            deck2Title: document.getElementById("deck2Title").value,
+
+            fileUrl: fileUrl,
+            originalName: file.name,
+            storedName: storedName,
+            sizeBytes: file.size,
+            mimeType: file.type,
+            status: "active"
+          })
+        });
+
+        status.innerHTML = "Mix uploaded and logged successfully!";
+        loadLatestMix();
+
+      } catch (err) {
+        console.error(err);
+        status.innerHTML = "Upload failed.";
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadLatestMix();
+    });
+  </script>
 
 </body>
 </html>
