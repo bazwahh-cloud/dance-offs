@@ -14,11 +14,10 @@ body {
 }
 
 /* ----------------------------------------------------
-   SAFARI TAP FIX — SAFE VERSION
-   Only resets stacking for normal elements.
-   (Added :not(#tapOverlay) so overlay stays fixed)
+   SAFARI TAP FIX — SCOPED TO VOTE PAGE ONLY
+   (Prevents breaking uploads turntable/mixer layout)
 ---------------------------------------------------- */
-body *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
+.vote-page *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
   position: static !important;
 }
 
