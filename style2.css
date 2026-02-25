@@ -191,6 +191,28 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
 }
 
 /* ----------------------------------------------------
+   DARK THEME VOTE BUTTONS
+---------------------------------------------------- */
+#voteChampion,
+#voteChallenger {
+  background: #111;
+  border: 2px solid #333;
+  color: #ffcc00;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.vote-button.enabled {
+  opacity: 1;
+  cursor: pointer;
+  border-color: #ffcc00;
+}
+
+.vote-button.enabled:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* ----------------------------------------------------
    VIDEO SLOTS
 ---------------------------------------------------- */
 .video-slot {
@@ -266,7 +288,7 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
 }
 
 /* ----------------------------------------------------
-   DJ UPLOAD PAGE (PROTECT LAYOUT)
+   DJ UPLOAD PAGE
 ---------------------------------------------------- */
 .dj-upload .dj-booth {
   max-width: 900px;
@@ -347,7 +369,6 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
 ---------------------------------------------------- */
 @media (max-width: 768px) {
 
-  /* NAVIGATION */
   .navbar {
     grid-template-columns: repeat(2, 1fr);
     gap: 6px;
@@ -358,7 +379,6 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
     padding: 12px 8px;
   }
 
-  /* HOMEPAGE */
   .instruction-line {
     font-size: 18px;
     padding: 0 10px;
@@ -369,7 +389,6 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
     padding: 0 10px;
   }
 
-  /* DJ PAGE */
   .dj-upload .deck-row {
     flex-direction: column;
     align-items: center;
