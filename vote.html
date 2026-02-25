@@ -6,12 +6,15 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=20260225">
+  <!-- UPDATED CSS VERSION -->
+  <link rel="stylesheet" href="style2.css?v=4001">
+
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
+    /* LOADING OVERLAY */
     #loadingOverlay {
       position: fixed !important;
       inset: 0 !important;
@@ -29,6 +32,7 @@
       transition: opacity 0.4s ease;
     }
 
+    /* BASE VOTE BUTTON STYLE (COLORS COME FROM GLOBAL CSS) */
     .vote-button {
       width: 100%;
       padding: 12px 16px;
@@ -44,14 +48,6 @@
       transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease;
     }
 
-    #voteChampion {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    }
-
-    #voteChallenger {
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
-    }
-
     .vote-button.enabled {
       cursor: pointer;
       opacity: 1;
@@ -62,12 +58,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
-    .vote-button span.icon {
-      margin-right: 6px;
-      font-size: 18px;
-      vertical-align: -1px;
-    }
-
+    /* VIDEO SLOT */
     .video-slot {
       position: relative;
       width: 100%;
@@ -113,13 +104,15 @@
 
     <div class="vote-layout">
 
+      <!-- CHAMPION COLUMN -->
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
-          <span class="icon">⭐</span>Vote Champion
+          Vote Champion
         </button>
       </div>
 
+      <!-- PAYPAL COLUMN -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -129,15 +122,17 @@
         </div>
       </div>
 
+      <!-- CHALLENGER COLUMN -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
-          <span class="icon">⚡</span>Vote Challenger
+          Vote Challenger
         </button>
       </div>
 
     </div>
 
+    <!-- VOTE PROGRESS -->
     <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
 
       <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
@@ -170,6 +165,7 @@
 
     </section>
 
+    <!-- DJ PLAYER -->
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
         Now Playing
