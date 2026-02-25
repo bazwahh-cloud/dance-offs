@@ -1,4 +1,4 @@
-name: Deploy to dance-offs.com (Main Site)
+name: Deploy to upload.dance-offs.com (Upload Subdomain)
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  ftp-deploy:
-    name: FTP Deploy (Main Site)
+  ftp-deploy-upload:
+    name: FTP Deploy (Upload Subdomain)
     runs-on: ubuntu-latest
 
     steps:
@@ -15,40 +15,24 @@ jobs:
         uses: actions/checkout@v3
 
       # ----------------------------------------------------
-      # 1. RESET MAIN SITE (CLEAN SLATE)
+      # 1. DEPLOY ONLY THE /uploads/ FOLDER
       # ----------------------------------------------------
-      - name: Reset main site state
+      - name: Deploy uploads folder to upload subdomain
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.MAIN_FTP_HOST }}
-          username: ${{ secrets.MAIN_FTP_USERNAME }}
-          password: ${{ secrets.MAIN_FTP_PASSWORD }}
+          server: ${{ secrets.UPLOAD_FTP_HOST }}
+          username: ${{ secrets.UPLOAD_FTP_USERNAME }}
+          password: ${{ secrets.UPLOAD_FTP_PASSWORD }}
 
-          # ⭐ FIX: USE FTPS (NOT FTP, NOT SFTP)
           protocol: ftps
           port: 21
 
-          local-dir: ./empty-dir/
-          server-dir: /htdocs/
-          dangerous-clean-slate: true
-          log-level: verbose
+          # ⭐ This is the folder in your repo that contains djs.html
+          local-dir: ./uploads/
 
-      # ----------------------------------------------------
-      # 2. DEPLOY FULL SITE
-      # ----------------------------------------------------
-      - name: Deploy full root to main site
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.MAIN_FTP_HOST }}
-          username: ${{ secrets.MAIN_FTP_USERNAME }}
-          password: ${{ secrets.MAIN_FTP_PASSWORD }}
-
-          # ⭐ FIX: USE FTPS (NOT FTP, NOT SFTP)
-          protocol: ftps
-          port: 21
-
-          local-dir: ./
-          server-dir: /htdocs/
+          # ⭐ THIS MUST MATCH THE DOCUMENT ROOT OF THE SUBDOMAIN
+          # Replace this with the correct path from your hosting panel:
+          server-dir: /uploads/
 
           exclude: |
             .git/**
