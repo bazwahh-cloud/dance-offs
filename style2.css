@@ -14,9 +14,9 @@ body {
 }
 
 /* ----------------------------------------------------
-   SAFARI TAP FIX — SCOPED TO VOTE PAGE ONLY
+   SAFARI TAP FIX — VOTE PAGE ONLY
 ---------------------------------------------------- */
-.vote-page *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
+body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
   position: static !important;
 }
 
@@ -49,7 +49,7 @@ body {
 }
 
 /* ----------------------------------------------------
-   HERO (HOMEPAGE)
+   HOMEPAGE HERO
 ---------------------------------------------------- */
 .hero {
   position: relative;
@@ -62,13 +62,9 @@ body {
   display: block;
 }
 
-/* Click overlay */
 .click-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   display: flex;
   z-index: 5;
 }
@@ -270,6 +266,83 @@ body {
 }
 
 /* ----------------------------------------------------
+   DJ UPLOAD PAGE (PROTECT LAYOUT)
+---------------------------------------------------- */
+.dj-upload .dj-booth {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.dj-upload .deck-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dj-upload .deck {
+  flex: 1;
+  min-width: 260px;
+  text-align: center;
+}
+
+.dj-upload .record {
+  width: 260px;
+  height: 260px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle, #222 0%, #000 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dj-upload .record-inner {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dj-upload input[type="text"],
+.dj-upload input[type="email"],
+.dj-upload input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 2px solid #555;
+  background: #000;
+  color: white;
+}
+
+.dj-upload #uploadBtn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  background: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dj-upload .mixer-wrap {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.dj-upload .mixer {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ----------------------------------------------------
    MOBILE RESPONSIVE FIXES
 ---------------------------------------------------- */
 @media (max-width: 768px) {
@@ -285,57 +358,29 @@ body {
     padding: 12px 8px;
   }
 
-  /* HERO */
-  .hero-img-wrap img {
-    width: 100%;
-    height: auto;
-  }
-
-  .click-overlay {
-    height: 100%;
-  }
-
-  /* PAGE CONTAINER */
-  .page-container {
-    padding: 0 12px;
-  }
-
-  /* INSTRUCTION LINE */
+  /* HOMEPAGE */
   .instruction-line {
     font-size: 18px;
     padding: 0 10px;
   }
 
-  /* FAQ */
-  .faq-section {
-    padding: 0 10px;
-  }
-
-  .faq-item {
-    padding: 12px 14px;
-  }
-
-  .faq-item summary {
-    font-size: 16px;
-  }
-
-  .faq-item p {
-    font-size: 15px;
-  }
-
-  /* CONTACT FORM */
+  .faq-section,
   .contact-section {
     padding: 0 10px;
   }
 
-  .contact-section input,
-  .contact-section textarea,
-  .contact-section button {
-    font-size: 16px;
+  /* DJ PAGE */
+  .dj-upload .deck-row {
+    flex-direction: column;
+    align-items: center;
   }
 
-  /* FOOTER */
-  .footer {
-    padding: 20px 10px;
+  .dj-upload .record {
+    width: 220px;
+    height: 220px;
+  }
+
+  .dj-upload .mixer {
+    width: 100%;
   }
 }
