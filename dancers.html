@@ -6,7 +6,9 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <link rel="stylesheet" href="style2.css?v=2024">
+  <!-- UPDATED CSS VERSION -->
+  <link rel="stylesheet" href="style2.css?v=4001">
+
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -190,8 +192,6 @@
     <!-- LATEST DJ MIX -->
     <section class="dj-audio-wrap">
       <h3>Latest DJ Mix</h3>
-
-      <!-- ⭐ FIXED: playsinline added -->
       <audio id="djPlayer" controls autoplay muted playsinline></audio>
     </section>
 
@@ -345,7 +345,7 @@
       }
     }
 
-    /* ⭐ FIXED: Full iPhone-safe autoplay logic */
+    /* iPhone-safe autoplay logic */
     async function loadLatestDJMix() {
       try {
         const res = await fetch(endpoint + "?mode=djlist");
@@ -359,7 +359,7 @@
         audio.autoplay = true;
 
         audio.play().then(() => {
-          audio.muted = false; // desktop + android
+          audio.muted = false;
         }).catch(() => {
           const unmute = () => {
             audio.muted = false;
