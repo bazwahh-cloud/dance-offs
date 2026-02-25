@@ -58,7 +58,7 @@
     }
 
     /* ----------------------------------------------------
-       NEW VOTE SELECTOR UI
+       VOTE SELECTOR UI
     ---------------------------------------------------- */
 
     .vote-option input[type="radio"] {
@@ -109,6 +109,15 @@
       cursor: pointer;
       opacity: 1;
     }
+
+    /* Hint text under each tile */
+    .vote-hint {
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 6px;
+      min-height: 18px;
+    }
   </style>
 </head>
 
@@ -135,12 +144,12 @@
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
 
-        <!-- Champion vote tile -->
         <label class="vote-option">
-          <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled>
+          <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled onclick="submitVote()">
           <div class="vote-box">
             <span class="vote-title">Vote Champion</span>
           </div>
+          <div class="vote-hint" id="championHint">Pay £1.50 to unlock voting</div>
         </label>
       </div>
 
@@ -152,33 +161,18 @@
         <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
           <div id="paypal-button-container"></div>
         </div>
-
-        <button onclick="submitVote()" style="
-          margin-top:15px;
-          padding:14px 20px;
-          background:#0077cc;
-          border:none;
-          border-radius:8px;
-          color:white;
-          font-size:18px;
-          font-weight:600;
-          cursor:pointer;
-          width:100%;
-        ">
-          Submit Vote
-        </button>
       </div>
 
       <!-- CHALLENGER COLUMN -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
 
-        <!-- Challenger vote tile -->
         <label class="vote-option">
-          <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled>
+          <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled onclick="submitVote()">
           <div class="vote-box">
             <span class="vote-title">Vote Challenger</span>
           </div>
+          <div class="vote-hint" id="challengerHint">Pay £1.50 to unlock voting</div>
         </label>
       </div>
 
@@ -268,11 +262,15 @@
       actions.order.capture().then(details => {
         currentTransactionID = details.id;
 
-        // Enable the new vote selectors
+        // Enable vote tiles
         document.querySelectorAll(".vote-option").forEach(opt => {
           opt.classList.add("enabled");
           opt.querySelector("input").disabled = false;
         });
+
+        // Update hint text
+        document.getElementById("championHint").innerText = "Click to vote for Champion";
+        document.getElementById("challengerHint").innerText = "Click to vote for Challenger";
       })
   }).render("#paypal-button-container");
 
@@ -422,7 +420,7 @@
   }
 
   /* ------------------------------
-     SUBMIT VOTE
+     SUBMIT VOTE (tiles call this directly)
   ------------------------------ */
   function submitVote() {
     if (!currentTransactionID) {
@@ -431,10 +429,7 @@
     }
 
     const choice = document.querySelector('input[name="voteChoice"]:checked');
-    if (!choice) {
-      alert("Please select Champion or Challenger before voting.");
-      return;
-    }
+    if (!choice) return;
 
     const side = choice.value;
     const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
