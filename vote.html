@@ -12,11 +12,6 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
     #loadingOverlay {
       position: fixed !important;
       inset: 0 !important;
@@ -25,55 +20,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
       font-size: 28px;
       font-family: 'Bangers', cursive;
       letter-spacing: 1px;
-      z-index: 999998 !important;
-    }
-
-    /* Full-viewport Tap to Play overlay */
-    #tapOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.88);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: #fff;
-      z-index: 999999;
-      cursor: pointer;
+      z-index: 999999 !important;
       text-align: center;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      transition: opacity 0.4s ease;
     }
 
-    #tapOverlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    #tapOverlay h1 {
-      font-family: 'Bangers', cursive;
-      font-size: 40px;
-      letter-spacing: 2px;
-      margin: 0 0 10px;
-    }
-
-    #tapOverlay p {
-      margin: 0;
-      font-size: 16px;
-      color: #ddd;
-    }
-
-    /* Blocker over each iframe (kept but not used for gesture now) */
-    .blocker {
-      position: absolute !important;
-      inset: 0 !important;
-      z-index: 10 !important;
-      pointer-events: none !important;
-    }
-
-    /* Modern vote buttons */
     .vote-button {
       width: 100%;
       padding: 12px 16px;
@@ -90,11 +45,11 @@
     }
 
     #voteChampion {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8); /* blue */
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
     }
 
     #voteChallenger {
-      background: linear-gradient(135deg, #ef4444, #b91c1c); /* red */
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
     }
 
     .vote-button.enabled {
@@ -118,8 +73,8 @@
       width: 100%;
       padding-top: 56.25%;
       background: #000;
-      overflow: hidden;
       border-radius: 10px;
+      overflow: hidden;
     }
 
     .video-slot iframe.battle-frame {
@@ -129,19 +84,19 @@
       height: 100%;
       border: 0;
     }
+
+    .blocker {
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 10 !important;
+      pointer-events: none !important;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Initial loading overlay (while battle data loads) -->
   <div id="loadingOverlay">Loading battle… please wait</div>
-
-  <!-- Full-viewport Tap to Play overlay -->
-  <div id="tapOverlay">
-    <h1>Tap to Play</h1>
-    <p>Tap once to start the battle videos and DJ mix.</p>
-  </div>
 
   <nav class="navbar">
     <a href="index.html">Home</a>
@@ -158,7 +113,6 @@
 
     <div class="vote-layout">
 
-      <!-- CHAMPION -->
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
@@ -166,7 +120,6 @@
         </button>
       </div>
 
-      <!-- PAYPAL -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -176,7 +129,6 @@
         </div>
       </div>
 
-      <!-- CHALLENGER -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
@@ -186,7 +138,6 @@
 
     </div>
 
-    <!-- PROGRESS -->
     <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
 
       <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
@@ -219,7 +170,6 @@
 
     </section>
 
-    <!-- NOW PLAYING -->
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
         Now Playing
@@ -239,263 +189,252 @@
     </a>
   </footer>
 
-  <script>
-    const endpoint =
-      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+<script>
+  const endpoint =
+    "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    // Cache-buster helper
-    function nocache(url) {
-      const sep = url.includes("?") ? "&" : "?";
-      return fetch(url + sep + "t=" + Date.now());
+  function nocache(url) {
+    const sep = url.includes("?") ? "&" : "?";
+    return fetch(url + sep + "t=" + Date.now());
+  }
+
+  let currentTransactionID = null;
+  let currentBattleID = null;
+
+  let champion = null;
+  let challenger = null;
+
+  let djData = null;
+  let djPlayerReady = false;
+
+  paypal.Buttons({
+    createOrder: (data, actions) =>
+      actions.order.create({
+        purchase_units: [{ amount: { value: "1.50" } }]
+      }),
+
+    onApprove: (data, actions) =>
+      actions.order.capture().then(details => {
+        currentTransactionID = details.id;
+
+        const btnChamp = document.getElementById("voteChampion");
+        const btnChall = document.getElementById("voteChallenger");
+
+        btnChamp.disabled = false;
+        btnChall.disabled = false;
+
+        btnChamp.classList.add("enabled");
+        btnChall.classList.add("enabled");
+      })
+  }).render("#paypal-button-container");
+
+  function extractID(url) {
+    if (!url) return null;
+    const clean = url.split("?")[0];
+    const patterns = [
+      /shorts\/([^?&/]+)/,
+      /youtu\.be\/([^?&/]+)/,
+      /v=([^?&/]+)/,
+      /embed\/([^?&/]+)/,
+      /youtube\.com\/watch\/([^?&/]+)/
+    ];
+    for (const p of patterns) {
+      const m = clean.match(p);
+      if (m && m[1]) return m[1];
     }
+    return null;
+  }
 
-    let currentTransactionID = null;
-    let currentBattleID = null;
+  function embed(id) {
+    const iframe = document.createElement("iframe");
+    iframe.className = "battle-frame";
+    iframe.src =
+      `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+    iframe.allow = "autoplay; encrypted-media";
 
-    let champion = null;
-    let challenger = null;
+    const blocker = document.createElement("div");
+    blocker.className = "blocker";
 
-    let djData = null; // store DJ data for unified tap
-    let djPlayerReady = false;
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.inset = "0";
+    container.appendChild(iframe);
+    container.appendChild(blocker);
 
-    /* PAYPAL */
-    paypal.Buttons({
-      createOrder: (data, actions) =>
-        actions.order.create({
-          purchase_units: [{ amount: { value: "1.50" } }]
-        }),
+    return container;
+  }
 
-      onApprove: (data, actions) =>
-        actions.order.capture().then(details => {
-          currentTransactionID = details.id;
+  async function loadBattle() {
+    const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
+    const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
 
-          const btnChamp = document.getElementById("voteChampion");
-          const btnChall = document.getElementById("voteChallenger");
+    currentBattleID = state.battleID;
 
-          btnChamp.disabled = false;
-          btnChall.disabled = false;
+    champion = dancers[state.championIndex];
+    challenger = dancers[state.challengerIndex];
 
-          btnChamp.classList.add("enabled");
-          btnChall.classList.add("enabled");
-        })
-    }).render("#paypal-button-container");
+    const champID = extractID(champion.url);
+    const challID = extractID(challenger.url);
 
-    /* YOUTUBE ID EXTRACTOR */
-    function extractID(url) {
-      if (!url) return null;
-      const clean = url.split("?")[0];
-      const patterns = [
-        /shorts\/([^?&/]+)/,
-        /youtu\.be\/([^?&/]+)/,
-        /v=([^?&/]+)/,
-        /embed\/([^?&/]+)/,
-        /youtube\.com\/watch\/([^?&/]+)/
-      ];
-      for (const p of patterns) {
-        const m = clean.match(p);
-        if (m && m[1]) return m[1];
-      }
-      return null;
-    }
+    document.getElementById("championVideo").appendChild(embed(champID));
+    document.getElementById("challengerVideo").appendChild(embed(challID));
+  }
 
-    /* EMBED BUILDER – autoplay disabled initially */
-    function embed(id) {
-      const iframe = document.createElement("iframe");
-      iframe.className = "battle-frame";
-      iframe.src =
-        `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
-      iframe.allow = "autoplay; encrypted-media";
+  async function loadDJTrack() {
+    const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
+    if (!data || data.length === 0) return;
 
-      const blocker = document.createElement("div");
-      blocker.className = "blocker";
+    djData = data;
+    const last = data[data.length - 1];
+    const player = document.getElementById("djPlayer");
 
-      const container = document.createElement("div");
-      container.style.position = "absolute";
-      container.style.inset = "0";
-      container.appendChild(iframe);
-      container.appendChild(blocker);
+    document.getElementById("djTrackName").innerText =
+      last.trackname || "Latest DJ Track";
 
-      return container;
-    }
+    player.src = last.mp3url;
+    player.volume = 0;
+    djPlayerReady = true;
+  }
 
-    /* LOAD BATTLE */
-    async function loadBattle() {
-      const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
-      const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
+  function setupTapToPlay() {
+    const overlay = document.getElementById("loadingOverlay");
+    const player = document.getElementById("djPlayer");
 
-      currentBattleID = state.battleID;
+    overlay.innerText = "Tap to Play";
 
-      champion = dancers[state.championIndex];
-      challenger = dancers[state.challengerIndex];
-
-      const champID = extractID(champion.url);
-      const challID = extractID(challenger.url);
-
-      document.getElementById("championVideo").appendChild(embed(champID));
-      document.getElementById("challengerVideo").appendChild(embed(challID));
+    function handleTap() {
+      overlay.style.opacity = "0";
 
       setTimeout(() => {
-        document.getElementById("loadingOverlay").style.display = "none";
-      }, 800);
-    }
+        overlay.style.display = "none";
+      }, 400);
 
-    /* LOAD DJ TRACK – but don't auto-play yet (unified tap will start it) */
-    async function loadDJTrack() {
-      const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
-      if (!data || data.length === 0) return;
-
-      djData = data;
-      const last = data[data.length - 1];
-      const player = document.getElementById("djPlayer");
-
-      document.getElementById("djTrackName").innerText =
-        last.trackname || "Latest DJ Track";
-
-      player.src = last.mp3url;
-      player.volume = 0;
-      djPlayerReady = true;
-    }
-
-    /* UNIFIED TAP HANDLER: overlay click -> start MP3 + YouTube */
-    function setupUnifiedTap() {
-      const overlay = document.getElementById("tapOverlay");
-      const player = document.getElementById("djPlayer");
-
-      function handleTap() {
-        // Fade out overlay
-        overlay.classList.add("hidden");
-
-        // Start MP3 with fade-in (if we have a track)
-        if (djPlayerReady && player.src) {
-          player.play().then(() => {
-            let vol = 0;
-            const fade = setInterval(() => {
-              vol = Math.min(1, vol + 0.05);
-              player.volume = vol;
-              if (vol >= 1) clearInterval(fade);
-            }, 80);
-          }).catch(() => {
-            // If play fails, just leave volume at 0 and do nothing
-          });
-        }
-
-        // Start YouTube videos
-        document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
-          try {
-            iframe.contentWindow.postMessage(
-              JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-              "*"
-            );
-          } catch (e) {
-            // ignore
-          }
+      if (djPlayerReady && player.src) {
+        player.play().then(() => {
+          let vol = 0;
+          const fade = setInterval(() => {
+            vol = Math.min(1, vol + 0.05);
+            player.volume = vol;
+            if (vol >= 1) clearInterval(fade);
+          }, 80);
         });
-
-        overlay.removeEventListener("click", handleTap);
       }
 
-      overlay.addEventListener("click", handleTap, { once: true });
+      document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+          "*"
+        );
+      });
+
+      overlay.removeEventListener("click", handleTap);
     }
 
-    /* LOAD VOTE COUNTS – shared pool */
-    async function loadVoteCounts() {
-      if (!currentBattleID) return;
+    overlay.addEventListener("click", handleTap, { once: true });
+  }
 
-      const data = await nocache(
-        endpoint + "?mode=getvotestate&battleID=" + currentBattleID
-      ).then(r => r.json());
+  async function loadVoteCounts() {
+    if (!currentBattleID) return;
 
-      document.getElementById("championCount").innerText =
-        "Champion Votes: " + data.champion.used;
+    const data = await nocache(
+      endpoint + "?mode=getvotestate&battleID=" + currentBattleID
+    ).then(r => r.json());
 
-      document.getElementById("challengerCount").innerText =
-        "Challenger Votes: " + data.challenger.used;
+    document.getElementById("championCount").innerText =
+      "Champion Votes: " + data.champion.used;
 
-      document.getElementById("remainingVotesText").innerText =
-        "Remaining votes: " + data.remaining;
+    document.getElementById("challengerCount").innerText =
+      "Challenger Votes: " + data.challenger.used;
 
-      const max = data.maxVotes || 200;
+    document.getElementById("remainingVotesText").innerText =
+      "Remaining votes: " + data.remaining;
 
-      document.getElementById("championBar").style.width =
-        (data.champion.used / max * 100) + "%";
+    const max = data.maxVotes || 200;
 
-      document.getElementById("challengerBar").style.width =
-        (data.challenger.used / max * 100) + "%";
+    document.getElementById("championBar").style.width =
+      (data.champion.used / max * 100) + "%";
+
+    document.getElementById("challengerBar").style.width =
+      (data.challenger.used / max * 100) + "%";
+  }
+
+  function vote(side) {
+    if (!currentTransactionID) {
+      alert("Payment required before voting.");
+      return;
     }
 
-    /* VOTE */
-    function vote(side) {
-      if (!currentTransactionID) {
-        alert("Payment required before voting.");
-        return;
-      }
+    const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
+    const dancerURL  = side === "champion" ? champion.url    : challenger.url;
 
-      const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
-      const dancerURL  = side === "champion" ? champion.url    : challenger.url;
+    const formData = new URLSearchParams();
+    formData.append("mode", "vote");
+    formData.append("WinnerName", dancerName);
+    formData.append("WinnerURL", dancerURL);
+    formData.append("TransactionID", currentTransactionID);
+    formData.append("BattleID", currentBattleID);
+    formData.append("side", side);
 
-      const formData = new URLSearchParams();
-      formData.append("mode", "vote");
-      formData.append("WinnerName", dancerName);
-      formData.append("WinnerURL", dancerURL);
-      formData.append("TransactionID", currentTransactionID);
-      formData.append("BattleID", currentBattleID);
-      formData.append("side", side);
+    fetch(endpoint, { method: "POST", body: formData })
+      .then(r => r.text())
+      .then(text => {
+        if (text && text.indexOf("Voting closed") !== -1) {
+          alert("Voting is now closed for this battle.");
+          return;
+        }
+        window.location.href =
+          "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
+      });
+  }
 
-      fetch(endpoint, { method: "POST", body: formData })
-        .then(r => r.text())
-        .then(text => {
-          if (text && text.indexOf("Voting closed") !== -1) {
-            alert("Voting is now closed for this battle.");
+  function loadCountdown() {
+    nocache(endpoint + "?mode=getstate")
+      .then(r => r.json())
+      .then(state => {
+        const lastUpdated = new Date(state.lastUpdated);
+        const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        function updateTimer() {
+          const now = new Date();
+          const diff = nextReset - now;
+
+          if (diff <= 0) {
+            document.getElementById("countdownTimer").innerText =
+              "New battle dropping soon…";
             return;
           }
-          window.location.href =
-            "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
-        });
-    }
 
-    /* COUNTDOWN */
-    function loadCountdown() {
-      nocache(endpoint + "?mode=getstate")
-        .then(r => r.json())
-        .then(state => {
-          const lastUpdated = new Date(state.lastUpdated);
-          const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
+          const days = Math.floor(diff / 86400000);
+          const hours = Math.floor((diff / 3600000) % 24);
+          const mins = Math.floor((diff / 60000) % 60);
+          const secs = Math.floor((diff / 1000) % 60);
 
-          function updateTimer() {
-            const now = new Date();
-            const diff = nextReset - now;
+          document.getElementById("countdownTimer").innerText =
+            `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
+        }
 
-            if (diff <= 0) {
-              document.getElementById("countdownTimer").innerText =
-                "New battle dropping soon…";
-              return;
-            }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      });
+  }
 
-            const days = Math.floor(diff / 86400000);
-            const hours = Math.floor((diff / 3600000) % 24);
-            const mins = Math.floor((diff / 60000) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
+  window.onload = async function () {
+    await loadBattle();
+    await loadDJTrack();
+    loadCountdown();
 
-            document.getElementById("countdownTimer").innerText =
-              `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
-          }
+    setTimeout(setupTapToPlay, 800);
 
-          updateTimer();
-          setInterval(updateTimer, 1000);
-        });
-    }
+    setTimeout(loadVoteCounts, 1000);
+    setInterval(loadVoteCounts, 5000);
+  };
+</script>
 
-    /* INIT */
-    window.onload = async function () {
-      await loadBattle();
-      await loadDJTrack();
-      loadCountdown();
-      setupUnifiedTap();
+</body>
+</html>
 
-      setTimeout(loadVoteCounts, 1000);
-      setInterval(loadVoteCounts, 5000);
-    };
-  </script>
 
+
+  
 </body>
 </html>
