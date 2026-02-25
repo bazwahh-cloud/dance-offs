@@ -6,9 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <!-- UPDATED CSS VERSION -->
   <link rel="stylesheet" href="style2.css?v=4001">
-
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
@@ -32,7 +30,6 @@
       transition: opacity 0.4s ease;
     }
 
-    /* VIDEO SLOT */
     .video-slot {
       position: relative;
       width: 100%;
@@ -56,10 +53,6 @@
       z-index: 10 !important;
       pointer-events: none !important;
     }
-
-    /* ----------------------------------------------------
-       VOTE SELECTOR UI
-    ---------------------------------------------------- */
 
     .vote-option input[type="radio"] {
       display: none;
@@ -87,7 +80,6 @@
       letter-spacing: 1px;
     }
 
-    /* Hover (only when enabled) */
     .vote-option.enabled:hover .vote-box {
       border-color: #ffcc00;
       background: #1a1a1a;
@@ -95,7 +87,6 @@
       opacity: 1;
     }
 
-    /* Selected */
     .vote-option input[type="radio"]:checked + .vote-box {
       border-color: #ffcc00;
       background: #222;
@@ -104,13 +95,11 @@
       opacity: 1;
     }
 
-    /* Enabled after PayPal */
     .vote-option.enabled .vote-box {
       cursor: pointer;
       opacity: 1;
     }
 
-    /* Hint text under each tile */
     .vote-hint {
       text-align: center;
       font-size: 14px;
@@ -250,7 +239,7 @@
   let djPlayerReady = false;
 
   /* ------------------------------
-     PAYPAL UNLOCK
+     PAYPAL UNLOCK (FIXED)
   ------------------------------ */
   paypal.Buttons({
     createOrder: (data, actions) =>
@@ -260,15 +249,15 @@
 
     onApprove: (data, actions) =>
       actions.order.capture().then(details => {
-        currentTransactionID = details.id;
 
-        // Enable vote tiles
+        // ⭐ FIXED: use the ORDER ID, not the capture ID
+        currentTransactionID = data.orderID;
+
         document.querySelectorAll(".vote-option").forEach(opt => {
           opt.classList.add("enabled");
           opt.querySelector("input").disabled = false;
         });
 
-        // Update hint text
         document.getElementById("championHint").innerText = "Click to vote for Champion";
         document.getElementById("challengerHint").innerText = "Click to vote for Challenger";
       })
@@ -420,7 +409,7 @@
   }
 
   /* ------------------------------
-     SUBMIT VOTE (tiles call this directly)
+     SUBMIT VOTE
   ------------------------------ */
   function submitVote() {
     if (!currentTransactionID) {
