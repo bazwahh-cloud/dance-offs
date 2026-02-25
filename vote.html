@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2023">
+  <link rel="stylesheet" href="style2.css?v=2024">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
@@ -14,8 +14,8 @@
   <style>
     /* Page-specific overrides */
     #loadingOverlay {
-      position: fixed;
-      inset: 0;
+      position: fixed !important;
+      inset: 0 !important;
       background: rgba(0,0,0,0.9);
       color: #fff;
       display: flex;
@@ -24,13 +24,13 @@
       font-size: 28px;
       font-family: 'Bangers', cursive;
       letter-spacing: 1px;
-      z-index: 9999;
+      z-index: 999999 !important;
     }
 
     /* Ensure blocker stays above iframe */
     .blocker {
       position: absolute !important;
-      inset: 0;
+      inset: 0 !important;
       z-index: 999999 !important;
       pointer-events: auto !important;
     }
@@ -290,7 +290,7 @@
         " (Remaining: " + data.champion.remaining + ")";
 
       document.getElementById("challengerCount").innerText =
-        "Challaller Votes: " + data.challenger.used +
+        "Challenger Votes: " + data.challenger.used +
         " (Remaining: " + data.challenger.remaining + ")";
 
       document.getElementById("championBar").style.width =
