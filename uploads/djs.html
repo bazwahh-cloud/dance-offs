@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- UPDATED CSS VERSION (THIS IS THE FIX) -->
+  <!-- UPDATED CSS VERSION -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=4001">
 
   <!-- Google Fonts -->
@@ -37,6 +37,7 @@
 
     <div class="deck-row">
 
+      <!-- LEFT DECK -->
       <div class="deck">
         <h3 class="deck-label">Deck 1</h3>
         <div class="record">
@@ -47,6 +48,7 @@
         </div>
       </div>
 
+      <!-- RIGHT DECK -->
       <div class="deck">
         <h3 class="deck-label">Deck 2</h3>
         <div class="record">
@@ -59,6 +61,7 @@
 
     </div>
 
+    <!-- MIXER -->
     <div class="mixer-wrap">
       <div class="mixer">
 
@@ -78,15 +81,15 @@
 
   </div>
 
+  <!-- NOW PLAYING (ONLY CURRENT UPLOAD) -->
   <div class="dj-player-section">
-
     <div class="now-playing">Now Playing</div>
-    <div id="nowPlayingTrack" class="now-playing-track">Loading latest mix…</div>
+    <div id="nowPlayingTrack" class="now-playing-track">No track uploaded yet…</div>
 
-    <audio id="djPlayer" controls autoplay muted playsinline></audio>
-
+    <audio id="djPlayer" controls playsinline></audio>
   </div>
 
+  <!-- LINK TO PAST UPLOADS -->
   <div style="text-align:center; margin:50px 0;">
     <a href="djs-past.html"
        style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -95,6 +98,7 @@
     </a>
   </div>
 
+  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
@@ -103,49 +107,17 @@
     </a>
   </footer>
 
+  <!-- DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    async function loadLatestMix() {
-      try {
-        const res = await fetch(BACKEND_URL + "?mode=djlist");
-        const list = await res.json();
-        if (!list.length) return;
-
-        const latest = list[list.length - 1];
-        const player = document.getElementById("djPlayer");
-        const nowPlaying = document.getElementById("nowPlayingTrack");
-
-        player.src = latest.fileUrl;
-
-        const trackName =
-          `${latest.deck1Title || "Unknown"} (${latest.deck1Artist || "Unknown"}) 
-           vs 
-           ${latest.deck2Title || "Unknown"} (${latest.deck2Artist || "Unknown"})`;
-
-        nowPlaying.textContent = trackName;
-
-        player.play().then(() => {
-          player.muted = false;
-        }).catch(() => {
-          const unmute = () => {
-            player.muted = false;
-            player.play().catch(() => {});
-            window.removeEventListener("touchstart", unmute);
-            window.removeEventListener("click", unmute);
-          };
-          window.addEventListener("touchstart", unmute);
-          window.addEventListener("click", unmute);
-        });
-
-      } catch (err) {
-        console.error("Could not load latest mix:", err);
-      }
-    }
-
+    /* Upload handler */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
+      const player = document.getElementById("djPlayer");
+      const nowPlaying = document.getElementById("nowPlayingTrack");
+
       status.innerHTML = "Uploading...";
 
       const fileInput = document.getElementById("djFile");
@@ -159,6 +131,7 @@
       formData.append("file", file);
 
       try {
+        /* Upload MP3 to server */
         const uploadResponse = await fetch("/uploads/upload.php", {
           method: "POST",
           body: formData
@@ -169,6 +142,7 @@
 
         const storedName = fileUrl.split("/").pop();
 
+        /* Log metadata to backend */
         await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -192,17 +166,27 @@
           })
         });
 
-        status.innerHTML = "Mix uploaded and logged successfully!";
-        loadLatestMix();
+        /* PLAY ONLY THE NEWLY UPLOADED MP3 */
+        player.src = fileUrl;
+        nowPlaying.textContent = file.name;
+
+        player.play().catch(() => {
+          // Safari tap-to-play fallback
+          const unmute = () => {
+            player.play().catch(() => {});
+            window.removeEventListener("touchstart", unmute);
+            window.removeEventListener("click", unmute);
+          };
+          window.addEventListener("touchstart", unmute);
+          window.addEventListener("click", unmute);
+        });
+
+        status.innerHTML = "Mix uploaded and ready to play!";
 
       } catch (err) {
         console.error(err);
         status.innerHTML = "Upload failed.";
       }
-    });
-
-    window.addEventListener("DOMContentLoaded", () => {
-      loadLatestMix();
     });
   </script>
 
