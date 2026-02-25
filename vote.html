@@ -2,53 +2,371 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dance-Off Vote</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dance-Offs: Vote</title>
+
+  <!-- FORCE LATEST CSS -->
+  <link rel="stylesheet" href="style2.css?v=20260225">
+
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      text-align: center;
+    #loadingOverlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
+      z-index: 999999 !important;
     }
-    button {
-      padding: 14px 22px;
-      font-size: 18px;
-      border: none;
-      background: #ff0066;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
+
+    .blocker {
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 999999 !important;
+      pointer-events: auto !important;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Vote for Your Dancer</h1>
+  <div id="loadingOverlay">Loading battle… please wait</div>
 
-  <!-- AUDIO ELEMENT -->
-  <audio id="battle-audio" src="yourfile.mp3" playsinline></audio>
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
+    <a href="vote.html" class="active">Vote</a>
+    <a href="prizes.html">Prizes</a>
+    <a href="shop.html">Shop</a>
+  </nav>
 
-  <!-- USER ACTION BUTTON -->
-  <button id="playBtn">Tap to Enable Sound</button>
+  <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
+
+  <main class="page-container">
+
+    <div class="vote-layout">
+
+      <!-- CHAMPION -->
+      <div class="vote-column">
+        <div id="championVideo" class="video-slot"></div>
+        <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
+          Vote Champion
+        </button>
+      </div>
+
+      <!-- PAYPAL -->
+      <div class="vote-column">
+        <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
+        <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
+
+        <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+
+      <!-- CHALLENGER -->
+      <div class="vote-column">
+        <div id="challengerVideo" class="video-slot"></div>
+        <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
+          Vote Challenger
+        </button>
+      </div>
+
+    </div>
+
+    <!-- PROGRESS -->
+    <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
+
+      <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
+        Vote Progress
+      </h3>
+
+      <div style="margin-bottom:20px;">
+        <div id="championCount" class="vote-count" style="font-size:16px;">
+          Champion Votes: 0
+        </div>
+
+        <div class="progress-wrapper" style="margin-top:6px;">
+          <div id="championBar" class="progress-bar champion-bar"></div>
+        </div>
+      </div>
+
+      <div>
+        <div id="challengerCount" class="vote-count" style="font-size:16px;">
+          Challenger Votes: 0
+        </div>
+
+        <div class="progress-wrapper" style="margin-top:6px;">
+          <div id="challengerBar" class="progress-bar challenger-bar"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- NOW PLAYING -->
+    <div style="margin-top:40px; text-align:center;">
+      <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
+        Now Playing
+      </h3>
+      <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
+
+      <!-- FIXED: removed muted -->
+      <audio id="djPlayer" controls autoplay playsinline style="width:100%; max-width:500px;"></audio>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+    <br>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
+  </footer>
 
   <script>
-    const audio = document.getElementById("battle-audio");
-    const btn = document.getElementById("playBtn");
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    // iPhone/Safari requires a user gesture to start audio with sound
-    btn.addEventListener("click", async () => {
-      try {
-        await audio.play();
-        btn.textContent = "Sound Enabled";
-        btn.style.background = "#00aa55";
-      } catch (err) {
-        console.log("Audio play blocked:", err);
-        btn.textContent = "Tap Again to Enable Sound";
+    let currentTransactionID = null;
+    let currentBattleID = null;
+
+    let champion = null;
+    let challenger = null;
+
+    /* PAYPAL */
+    paypal.Buttons({
+      createOrder: (data, actions) =>
+        actions.order.create({
+          purchase_units: [{ amount: { value: "1.50" } }]
+        }),
+
+      onApprove: (data, actions) =>
+        actions.order.capture().then(details => {
+          currentTransactionID = details.id;
+
+          document.getElementById("voteChampion").disabled = false;
+          document.getElementById("voteChallenger").disabled = false;
+
+          document.getElementById("voteChampion").classList.add("enabled");
+          document.getElementById("voteChallenger").classList.add("enabled");
+        })
+    }).render("#paypal-button-container");
+
+    /* YOUTUBE ID EXTRACTOR */
+    function extractID(url) {
+      if (!url) return null;
+      const clean = url.split("?")[0];
+      const patterns = [
+        /shorts\/([^?&/]+)/,
+        /youtu\.be\/([^?&/]+)/,
+        /v=([^?&/]+)/,
+        /embed\/([^?&/]+)/,
+        /youtube\.com\/watch\/([^?&/]+)/
+      ];
+      for (const p of patterns) {
+        const m = clean.match(p);
+        if (m && m[1]) return m[1];
       }
-    });
+      return null;
+    }
+
+    /* EMBED BUILDER — FIXED */
+    function embed(id, onLoadCallback) {
+      const iframe = document.createElement("iframe");
+      iframe.className = "battle-frame";
+
+      /* FIX: removed mute=1 */
+      iframe.src =
+        `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1`;
+
+      iframe.allow = "autoplay; encrypted-media";
+
+      /* FIX: mute AFTER load (Safari-safe) */
+      iframe.onload = () => {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({ event: "command", func: "mute", args: [] }),
+          "*"
+        );
+        if (onLoadCallback) onLoadCallback();
+      };
+
+      const blocker = document.createElement("div");
+      blocker.className = "blocker";
+
+      const container = document.createElement("div");
+      container.style.position = "absolute";
+      container.style.inset = "0";
+      container.appendChild(iframe);
+      container.appendChild(blocker);
+
+      return container;
+    }
+
+    /* LOAD BATTLE */
+    async function loadBattle() {
+      const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
+      const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
+
+      currentBattleID = state.battleID;
+
+      champion = dancers[state.championIndex];
+      challenger = dancers[state.challengerIndex];
+
+      let videosLoaded = 0;
+      let overlayHidden = false;
+
+      function hideOverlay() {
+        if (!overlayHidden) {
+          overlayHidden = true;
+          document.getElementById("loadingOverlay").style.display = "none";
+        }
+      }
+
+      function checkDone() {
+        videosLoaded++;
+        if (videosLoaded >= 2) hideOverlay();
+      }
+
+      setTimeout(hideOverlay, 3000);
+
+      const champID = extractID(champion.url);
+      const champEmbed = embed(champID, checkDone);
+      document.getElementById("championVideo").appendChild(champEmbed);
+
+      const challID = extractID(challenger.url);
+      const challEmbed = embed(challID, checkDone);
+      document.getElementById("challengerVideo").appendChild(challEmbed);
+    }
+
+    /* LOAD DJ TRACK — FIXED */
+    async function loadDJTrack() {
+      const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
+      if (!data || data.length === 0) return;
+
+      const last = data[data.length - 1];
+      const player = document.getElementById("djPlayer");
+
+      document.getElementById("djTrackName").innerText =
+        last.trackname || "Latest DJ Track";
+
+      player.src = last.mp3url;
+      player.volume = 0;
+
+      function startAudio() {
+        player.play().then(() => {
+          let vol = 0;
+          const fade = setInterval(() => {
+            vol = Math.min(1, vol + 0.05);
+            player.volume = vol;
+            if (vol >= 1) clearInterval(fade);
+          }, 80);
+        });
+
+        document.removeEventListener("click", startAudio);
+      }
+
+      document.addEventListener("click", startAudio, { once: true });
+    }
+
+    /* LOAD VOTE COUNTS */
+    async function loadVoteCounts() {
+      if (!currentBattleID) return;
+
+      const data = await fetch(
+        endpoint + "?mode=getvotestate&battleID=" + currentBattleID
+      ).then(r => r.json());
+
+      document.getElementById("championCount").innerText =
+        "Champion Votes: " + data.champion.used +
+        " (Remaining: " + data.champion.remaining + ")";
+
+      document.getElementById("challengerCount").innerText =
+        "Challenger Votes: " + data.challenger.used +
+        " (Remaining: " + data.challenger.remaining + ")";
+
+      document.getElementById("championBar").style.width =
+        data.champion.used + "%";
+
+      document.getElementById("challengerBar").style.width =
+        data.challenger.used + "%";
+    }
+
+    /* VOTE */
+    function vote(side) {
+      if (!currentTransactionID) {
+        alert("Payment required before voting.");
+        return;
+      }
+
+      const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
+      const dancerURL  = side === "champion" ? champion.url    : challenger.url;
+
+      const formData = new URLSearchParams();
+      formData.append("mode", "vote");
+      formData.append("WinnerName", dancerName);
+      formData.append("WinnerURL", dancerURL);
+      formData.append("TransactionID", currentTransactionID);
+      formData.append("BattleID", currentBattleID);
+      formData.append("side", side);
+
+      fetch(endpoint, { method: "POST", body: formData })
+        .then(() => {
+          window.location.href =
+            "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
+        });
+    }
+
+    /* COUNTDOWN */
+    function loadCountdown() {
+      fetch(endpoint + "?mode=getstate")
+        .then(r => r.json())
+        .then(state => {
+          const lastUpdated = new Date(state.lastUpdated);
+          const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+          function updateTimer() {
+            const now = new Date();
+            const diff = nextReset - now;
+
+            if (diff <= 0) {
+              document.getElementById("countdownTimer").innerText =
+                "New battle dropping soon…";
+              return;
+            }
+
+            const days = Math.floor(diff / 86400000);
+            const hours = Math.floor((diff / 3600000) % 24);
+            const mins = Math.floor((diff / 60000) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            document.getElementById("countdownTimer").innerText =
+              `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
+          }
+
+          updateTimer();
+          setInterval(updateTimer, 1000);
+        });
+    }
+
+    /* INIT */
+    window.onload = async function () {
+      await loadBattle();
+      await loadDJTrack();
+      loadCountdown();
+
+      setTimeout(loadVoteCounts, 1000);
+    };
   </script>
 
 </body>
