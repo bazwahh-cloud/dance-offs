@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta-name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Dance-Offs: Vote</title>
 
@@ -187,7 +187,6 @@
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
 
-      // IMPORTANT: autoplay=0 so Safari does NOT mark page as media-active
       iframe.src =
         `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
       iframe.allow = "autoplay; encrypted-media";
@@ -240,6 +239,10 @@
       player.volume = 0;
 
       function startAudio() {
+
+        /* 🔥 FIX: Explicitly unmute MP3 so browser separates it from muted YouTube */
+        player.muted = false;
+
         // Fade in MP3
         player.play().then(() => {
           let vol = 0;
@@ -250,7 +253,7 @@
           }, 80);
         });
 
-        // NOW start YouTube autoplay (AFTER user interaction)
+        // Start YouTube autoplay AFTER user gesture
         document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
           iframe.contentWindow.postMessage(
             JSON.stringify({ event: "command", func: "playVideo", args: [] }),
@@ -264,7 +267,7 @@
       document.addEventListener("click", startAudio, { once: true });
     }
 
-    /* LOAD VOTE COUNTS – shared pool */
+    /* LOAD VOTE COUNTS */
     async function loadVoteCounts() {
       if (!currentBattleID) return;
 
