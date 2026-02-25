@@ -1,370 +1,145 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Dance-Offs: Vote</title>
-
-  <link rel="stylesheet" href="style2.css?v=2025">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
-
-  <style>
-    /* Page-specific overrides */
-    #loadingOverlay {
-      position: fixed !important;
-      inset: 0 !important;
-      background: rgba(0,0,0,0.9);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      font-family: 'Bangers', cursive;
-      letter-spacing: 1px;
-      z-index: 999999 !important;
-    }
-
-    .blocker {
-      position: absolute !important;
-      inset: 0 !important;
-      z-index: 999999 !important;
-      pointer-events: auto !important;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div id="loadingOverlay">Loading battle… please wait</div>
-
-  <nav class="navbar">
-    <a href="index.html">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
-    <a href="vote.html" class="active">Vote</a>
-    <a href="prizes.html">Prizes</a>
-    <a href="shop.html">Shop</a>
-  </nav>
-
-  <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
-
-  <main class="page-container">
-
-    <div class="vote-layout">
-
-      <!-- CHAMPION -->
-      <div class="vote-column">
-        <div id="championVideo" class="video-slot"></div>
-        <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
-          Vote Champion
-        </button>
-      </div>
-
-      <!-- PAYPAL -->
-      <div class="vote-column">
-        <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
-        <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
-
-        <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
-          <div id="paypal-button-container"></div>
-        </div>
-      </div>
-
-      <!-- CHALLENGER -->
-      <div class="vote-column">
-        <div id="challengerVideo" class="video-slot"></div>
-        <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
-          Vote Challenger
-        </button>
-      </div>
-
-    </div>
-
-    <!-- PROGRESS -->
-    <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
-
-      <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
-        Vote Progress
-      </h3>
-
-      <div style="margin-bottom:20px;">
-        <div id="championCount" class="vote-count" style="font-size:16px;">
-          Champion Votes: 0
-        </div>
-
-        <div class="progress-wrapper" style="margin-top:6px;">
-          <div id="championBar" class="progress-bar champion-bar"></div>
-        </div>
-      </div>
-
-      <div>
-        <div id="challengerCount" class="vote-count" style="font-size:16px;">
-          Challenger Votes: 0
-        </div>
-
-        <div class="progress-wrapper" style="margin-top:6px;">
-          <div id="challengerBar" class="progress-bar challenger-bar"></div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- NOW PLAYING -->
-    <div style="margin-top:40px; text-align:center;">
-      <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
-        Now Playing
-      </h3>
-      <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
-
-      <audio id="djPlayer" controls autoplay muted playsinline style="width:100%; max-width:500px;"></audio>
-    </div>
-
-  </main>
-
-  <footer class="footer">
-    © 2026 Dance-Offs. All rights reserved.
-    <br>
-    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
-      Terms & Conditions
-    </a>
-  </footer>
-
-  <script>
-    const endpoint =
-      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
-
-    let currentTransactionID = null;
-    let currentBattleID = null;
-
-    let champion = null;
-    let challenger = null;
-
-    /* PAYPAL */
-    paypal.Buttons({
-      createOrder: (data, actions) =>
-        actions.order.create({
-          purchase_units: [{ amount: { value: "1.50" } }]
-        }),
-
-      onApprove: (data, actions) =>
-        actions.order.capture().then(details => {
-          currentTransactionID = details.id;
-
-          document.getElementById("voteChampion").disabled = false;
-          document.getElementById("voteChallenger").disabled = false;
-
-          document.getElementById("voteChampion").classList.add("enabled");
-          document.getElementById("voteChallenger").classList.add("enabled");
-        })
-    }).render("#paypal-button-container");
-
-    /* YOUTUBE ID EXTRACTOR */
-    function extractID(url) {
-      if (!url) return null;
-      const clean = url.split("?")[0];
-      const patterns = [
-        /shorts\/([^?&/]+)/,
-        /youtu\.be\/([^?&/]+)/,
-        /v=([^?&/]+)/,
-        /embed\/([^?&/]+)/,
-        /youtube\.com\/watch\/([^?&/]+)/
-      ];
-      for (const p of patterns) {
-        const m = clean.match(p);
-        if (m && m[1]) return m[1];
-      }
-      return null;
-    }
-
-    /* EMBED BUILDER */
-    function embed(id, onLoadCallback) {
-      const iframe = document.createElement("iframe");
-      iframe.className = "battle-frame";
-      iframe.src =
-        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1`;
-      iframe.allow = "autoplay; encrypted-media";
-      iframe.onload = onLoadCallback;
-
-      const blocker = document.createElement("div");
-      blocker.className = "blocker";
-
-      const container = document.createElement("div");
-      container.style.position = "absolute";
-      container.style.inset = "0";
-      container.appendChild(iframe);
-      container.appendChild(blocker);
-
-      return container;
-    }
-
-    /* LOAD BATTLE */
-    async function loadBattle() {
-      const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
-      const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
-
-      currentBattleID = state.battleID;
-
-      champion = dancers[state.championIndex];
-      challenger = dancers[state.challengerIndex];
-
-      let videosLoaded = 0;
-      let overlayHidden = false;
-
-      function hideOverlay() {
-        if (!overlayHidden) {
-          overlayHidden = true;
-          document.getElementById("loadingOverlay").style.display = "none";
-        }
-      }
-
-      function checkDone() {
-        videosLoaded++;
-        if (videosLoaded >= 2) hideOverlay();
-      }
-
-      setTimeout(hideOverlay, 3000);
-
-      const champID = extractID(champion.url);
-      const champEmbed = embed(champID, checkDone);
-      document.getElementById("championVideo").appendChild(champEmbed);
-
-      const challID = extractID(challenger.url);
-      const challEmbed = embed(challID, checkDone);
-      document.getElementById("challengerVideo").appendChild(challEmbed);
-    }
-
-    /* LOAD DJ TRACK */
-    async function loadDJTrack() {
-      const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
-      if (!data || data.length === 0) return;
-
-      const last = data[data.length - 1];
-      const player = document.getElementById("djPlayer");
-
-      document.getElementById("djTrackName").innerText =
-        last.trackname || "Latest DJ Track";
-
-      player.src = last.mp3url;
-      player.muted = true;
-      player.volume = 0;
-
-      await new Promise(resolve => {
-        player.onloadedmetadata = resolve;
-      });
-
-      try {
-        await player.play();
-      } catch (e) {}
-
-      function enableAudio() {
-        player.muted = false;
-
-        let vol = 0;
-        const fade = setInterval(() => {
-          vol = Math.min(1, vol + 0.05);
-          player.volume = vol;
-
-          if (vol >= 1) clearInterval(fade);
-        }, 80);
-
-        document.removeEventListener("click", enableAudio);
-      }
-
-      document.addEventListener("click", enableAudio, { once: true });
-    }
-
-    /* LOAD VOTE COUNTS */
-    async function loadVoteCounts() {
-      if (!currentBattleID) return;
-
-      const data = await fetch(
-        endpoint + "?mode=getvotestate&battleID=" + currentBattleID
-      ).then(r => r.json());
-
-      document.getElementById("championCount").innerText =
-        "Champion Votes: " + data.champion.used +
-        " (Remaining: " + data.champion.remaining + ")";
-
-      document.getElementById("challengerCount").innerText =
-        "Challenger Votes: " + data.challenger.used +
-        " (Remaining: " + data.challenger.remaining + ")";
-
-      document.getElementById("championBar").style.width =
-        data.champion.used + "%";
-
-      document.getElementById("challengerBar").style.width =
-        data.challenger.used + "%";
-    }
-
-    /* VOTE */
-    function vote(side) {
-      if (!currentTransactionID) {
-        alert("Payment required before voting.");
-        return;
-      }
-
-      const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
-      const dancerURL  = side === "champion" ? champion.url    : challenger.url;
-
-      const formData = new URLSearchParams();
-      formData.append("mode", "vote");
-      formData.append("WinnerName", dancerName);
-      formData.append("WinnerURL", dancerURL);
-      formData.append("TransactionID", currentTransactionID);
-      formData.append("BattleID", currentBattleID);
-      formData.append("side", side);
-
-      fetch(endpoint, { method: "POST", body: formData })
-        .then(() => {
-          window.location.href =
-            "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
-        });
-    }
-
-    /* COUNTDOWN */
-    function loadCountdown() {
-      fetch(endpoint + "?mode=getstate")
-        .then(r => r.json())
-        .then(state => {
-          const lastUpdated = new Date(state.lastUpdated);
-          const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-          function updateTimer() {
-            const now = new Date();
-            const diff = nextReset - now;
-
-            if (diff <= 0) {
-              document.getElementById("countdownTimer").innerText =
-                "New battle dropping soon…";
-              return;
-            }
-
-            const days = Math.floor(diff / 86400000);
-            const hours = Math.floor((diff / 3600000) % 24);
-            const mins = Math.floor((diff / 60000) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
-
-            document.getElementById("countdownTimer").innerText =
-              `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
-          }
-
-          updateTimer();
-          setInterval(updateTimer, 1000);
-        });
-    }
-
-    /* INIT */
-    window.onload = async function () {
-      await loadBattle();
-      await loadDJTrack();
-      loadCountdown();
-
-      setTimeout(loadVoteCounts, 1000);
-    };
-  </script>
-
-</body>
-</html>
+/* ----------------------------------------------------
+   GLOBAL RESET 
+---------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ----------------------------------------------------
+   SAFARI TAP FIX — SAFE VERSION
+   Only resets stacking for normal elements.
+---------------------------------------------------- */
+body *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
+  position: static !important;
+}
+
+/* ----------------------------------------------------
+   NAVIGATION
+---------------------------------------------------- */
+.navbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px;
+  background: #111;
+}
+
+.navbar a {
+  display: block;
+  text-align: center;
+  padding: 14px 10px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar a.active {
+  background: #0077cc;
+  border-color: #0077cc;
+}
+
+/* ----------------------------------------------------
+   VOTE PAGE LAYOUT
+---------------------------------------------------- */
+.vote-layout {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.vote-column {
+  width: 300px;
+  text-align: center;
+}
+
+/* ----------------------------------------------------
+   VIDEO SLOTS
+---------------------------------------------------- */
+.video-slot {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Wrapper created by JS */
+.video-slot > div {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+/* YouTube iframe */
+.video-slot iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+}
+
+/* Blocker above iframe */
+.video-slot .blocker {
+  position: absolute !important;
+  inset: 0;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* PayPal must sit above blocker */
+#paypal-button-container,
+#paypal-button-container * {
+  position: relative !important;
+  z-index: 1000000 !important;
+}
+
+/* ----------------------------------------------------
+   PROGRESS BARS
+---------------------------------------------------- */
+.progress-wrapper {
+  width: 100%;
+  max-width: 260px;
+  height: 10px;
+  background: #333;
+  border-radius: 5px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.champion-bar {
+  background: #1e90ff;
+}
+
+.challenger-bar {
+  background: #ff4444;
+}
+
+/* ----------------------------------------------------
+   FOOTER
+---------------------------------------------------- */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+  margin-top: 40px;
+}
