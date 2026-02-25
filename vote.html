@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta-name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Dance-Offs: Vote</title>
 
@@ -12,7 +12,8 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    #loadingOverlay {
+    #loadingOverlay,
+    #tapToStartOverlay {
       position: fixed !important;
       inset: 0 !important;
       background: rgba(0,0,0,0.9);
@@ -24,6 +25,13 @@
       font-family: 'Bangers', cursive;
       letter-spacing: 1px;
       z-index: 999999 !important;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #tapToStartOverlay {
+      display: none;
+      cursor: pointer;
     }
 
     .blocker {
@@ -37,7 +45,11 @@
 
 <body>
 
+  <!-- FIRST OVERLAY -->
   <div id="loadingOverlay">Loading battle… please wait</div>
+
+  <!-- SECOND OVERLAY (tap to start audio) -->
+  <div id="tapToStartOverlay">Tap to start the battle</div>
 
   <nav class="navbar">
     <a href="index.html">Home</a>
@@ -182,7 +194,7 @@
       return null;
     }
 
-    /* EMBED BUILDER – autoplay disabled initially */
+    /* EMBED BUILDER */
     function embed(id) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
@@ -219,12 +231,44 @@
       document.getElementById("championVideo").appendChild(embed(champID));
       document.getElementById("challengerVideo").appendChild(embed(challID));
 
+      // Remove loading overlay and show tap overlay
       setTimeout(() => {
         document.getElementById("loadingOverlay").style.display = "none";
+        document.getElementById("tapToStartOverlay").style.display = "flex";
       }, 2000);
     }
 
-    /* LOAD DJ TRACK – click‑to‑unmute with fade‑in */
+    /* AUDIO + YOUTUBE STARTER */
+    function activateAudio() {
+      const player = document.getElementById("djPlayer");
+
+      // Explicit unmute
+      player.muted = false;
+      player.volume = 0;
+
+      // Fade in MP3
+      player.play().then(() => {
+        let vol = 0;
+        const fade = setInterval(() => {
+          vol = Math.min(1, vol + 0.05);
+          player.volume = vol;
+          if (vol >= 1) clearInterval(fade);
+        }, 80);
+      });
+
+      // Start YouTube videos
+      document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+          "*"
+        );
+      });
+
+      // Remove overlay
+      document.getElementById("tapToStartOverlay").style.display = "none";
+    }
+
+    /* LOAD DJ TRACK */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -236,35 +280,6 @@
         last.trackname || "Latest DJ Track";
 
       player.src = last.mp3url;
-      player.volume = 0;
-
-      function startAudio() {
-
-        /* 🔥 FIX: Explicitly unmute MP3 so browser separates it from muted YouTube */
-        player.muted = false;
-
-        // Fade in MP3
-        player.play().then(() => {
-          let vol = 0;
-          const fade = setInterval(() => {
-            vol = Math.min(1, vol + 0.05);
-            player.volume = vol;
-            if (vol >= 1) clearInterval(fade);
-          }, 80);
-        });
-
-        // Start YouTube autoplay AFTER user gesture
-        document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
-          iframe.contentWindow.postMessage(
-            JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-            "*"
-          );
-        });
-
-        document.removeEventListener("click", startAudio);
-      }
-
-      document.addEventListener("click", startAudio, { once: true });
     }
 
     /* LOAD VOTE COUNTS */
@@ -363,6 +378,10 @@
 
       setTimeout(loadVoteCounts, 1000);
       setInterval(loadVoteCounts, 5000);
+
+      // Tap overlay listener
+      document.getElementById("tapToStartOverlay")
+        .addEventListener("click", activateAudio);
     };
   </script>
 
