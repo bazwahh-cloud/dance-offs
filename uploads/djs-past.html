@@ -10,9 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    body {
-      overflow-x: hidden;
-    }
+    body { overflow-x: hidden; }
 
     .library-title {
       text-align: center;
@@ -45,18 +43,14 @@
       font-weight: 700;
     }
 
-    .dj-library audio {
-      width: 180px;
-    }
+    .dj-library audio { width: 180px; }
 
     .booking-link {
       color: #ffcc00;
       font-size: 22px;
     }
 
-    .booking-link:hover {
-      color: #ffffff;
-    }
+    .booking-link:hover { color: #ffffff; }
 
     #loadingPastDJs {
       position: fixed;
@@ -73,19 +67,12 @@
     }
 
     @media (max-width: 700px) {
-
-      .dj-library,
-      .dj-library thead,
-      .dj-library tbody,
-      .dj-library th,
-      .dj-library td,
-      .dj-library tr {
+      .dj-library, .dj-library thead, .dj-library tbody,
+      .dj-library th, .dj-library td, .dj-library tr {
         display: block;
       }
 
-      .dj-library thead {
-        display: none;
-      }
+      .dj-library thead { display: none; }
 
       .dj-library tr {
         background: rgba(0,0,0,0.4);
@@ -115,9 +102,7 @@
         max-width: 300px;
       }
 
-      .booking-link {
-        font-size: 26px;
-      }
+      .booking-link { font-size: 26px; }
     }
   </style>
 </head>
@@ -171,19 +156,17 @@
 
     async function loadLibrary() {
       try {
-        // ⭐ FIXED: backend mode is getdjs
-        const res = await fetch(BACKEND_URL + "?mode=getdjs");
+        const res = await fetch(BACKEND_URL + "?mode=djlist");
         const list = await res.json();
 
         const tbody = document.querySelector("#djLibrary tbody");
         tbody.innerHTML = "";
 
-        // newest first
         list.reverse();
 
         list.forEach(row => {
-          const trackInfo = row.trackname || "Unknown Track";
-          const fileUrl = row.mp3url || "";
+          const trackInfo =
+            `${row.deck1Artist} – ${row.deck1Title}  vs  ${row.deck2Artist} – ${row.deck2Title}`;
 
           const bookingUrl =
             `https://dance-offs.com/index.html#contact` +
@@ -194,10 +177,10 @@
           const tr = document.createElement("tr");
 
           tr.innerHTML = `
-            <td data-label="DJ">${row.djName || "Unknown DJ"}</td>
+            <td data-label="DJ">${row.djName}</td>
             <td data-label="Track">${trackInfo}</td>
             <td data-label="Preview">
-              <audio controls src="${fileUrl}" style="width:180px;"></audio>
+              <audio controls src="${row.fileUrl}" style="width:180px;"></audio>
             </td>
             <td data-label="Booking">
               <a href="${bookingUrl}" class="booking-link">
