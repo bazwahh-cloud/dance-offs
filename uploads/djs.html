@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- UPDATED CSS VERSION -->
+  <!-- UPDATED CSS VERSION (THIS IS THE FIX) -->
   <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=4001">
 
   <!-- Google Fonts -->
@@ -27,18 +27,16 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
-  <!-- ⭐ INSTRUCTIONS -->
   <p>
     Enter your mix details before selecting the MP3 file (under 10 mins long), then press
     <strong>Upload Mix</strong> to submit your entry.
   </p>
 
-  <!-- ⭐ DJ BOOTH -->
+  <!-- DJ BOOTH -->
   <div class="dj-booth">
 
     <div class="deck-row">
 
-      <!-- LEFT DECK -->
       <div class="deck">
         <h3 class="deck-label">Deck 1</h3>
         <div class="record">
@@ -49,7 +47,6 @@
         </div>
       </div>
 
-      <!-- RIGHT DECK -->
       <div class="deck">
         <h3 class="deck-label">Deck 2</h3>
         <div class="record">
@@ -62,7 +59,6 @@
 
     </div>
 
-    <!-- MIXER -->
     <div class="mixer-wrap">
       <div class="mixer">
 
@@ -82,7 +78,6 @@
 
   </div>
 
-  <!-- ⭐ NOW PLAYING SECTION -->
   <div class="dj-player-section">
 
     <div class="now-playing">Now Playing</div>
@@ -92,7 +87,6 @@
 
   </div>
 
-  <!-- LINK TO PAST UPLOADS -->
   <div style="text-align:center; margin:50px 0;">
     <a href="djs-past.html"
        style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -101,7 +95,6 @@
     </a>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
@@ -110,12 +103,10 @@
     </a>
   </footer>
 
-  <!-- ⭐ DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* Load latest mix + update Now Playing text */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -153,7 +144,6 @@
       }
     }
 
-    /* Upload handler */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
