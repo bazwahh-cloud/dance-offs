@@ -14,7 +14,6 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    /* Page-specific overrides */
     #loadingOverlay {
       position: fixed !important;
       inset: 0 !important;
@@ -238,7 +237,7 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    /* LOAD DJ TRACK */
+    /* LOAD DJ TRACK — FIXED VERSION */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -253,29 +252,23 @@
       player.muted = true;
       player.volume = 0;
 
-      await new Promise(resolve => {
-        player.onloadedmetadata = resolve;
-      });
+      // FIX: Start playback only after user gesture
+      function startAudio() {
+        player.play().then(() => {
+          player.muted = false;
 
-      try {
-        await player.play();
-      } catch (e) {}
+          let vol = 0;
+          const fade = setInterval(() => {
+            vol = Math.min(1, vol + 0.05);
+            player.volume = vol;
+            if (vol >= 1) clearInterval(fade);
+          }, 80);
+        });
 
-      function enableAudio() {
-        player.muted = false;
-
-        let vol = 0;
-        const fade = setInterval(() => {
-          vol = Math.min(1, vol + 0.05);
-          player.volume = vol;
-
-          if (vol >= 1) clearInterval(fade);
-        }, 80);
-
-        document.removeEventListener("click", enableAudio);
+        document.removeEventListener("click", startAudio);
       }
 
-      document.addEventListener("click", enableAudio, { once: true });
+      document.addEventListener("click", startAudio, { once: true });
     }
 
     /* LOAD VOTE COUNTS */
