@@ -1,41 +1,38 @@
-name: Deploy to upload.dance-offs.com (Upload Subdomain)
+name: Deploy to upload.dance-offs.com (Uploads Subdomain)
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "uploads/**"
+      - "style2.css"
+      - ".github/workflows/deploy-upload.yml"
 
 jobs:
-  ftp-deploy-upload:
-    name: FTP Deploy (Upload Subdomain)
+  ftp-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # ----------------------------------------------------
-      # DEPLOY ONLY THE /uploads/ FOLDER TO THE SUBDOMAIN
-      # ----------------------------------------------------
-      - name: Deploy uploads folder to upload subdomain
+      - name: FTP Deploy (Uploads Subdomain)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.UPLOAD_FTP_HOST }}
           username: ${{ secrets.UPLOAD_FTP_USERNAME }}
           password: ${{ secrets.UPLOAD_FTP_PASSWORD }}
 
-          protocol: ftps
+          protocol: ftp
           port: 21
 
-          # This is the folder in your repo that contains djs.html and upload.php
+          # This is correct — your repo's uploads folder
           local-dir: ./uploads/
 
-          # ⭐ THIS IS THE CORRECT DOCUMENT ROOT FOR YOUR SUBDOMAIN
-          server-dir: /htdocs/
+          # ⭐ THIS is the correct server directory
+          server-dir: /htdocs/uploads/
 
-          exclude: |
-            .git/**
-            .github/**
-            empty-dir/**
-
+          timeout: 60000
+          security: loose
           log-level: verbose
