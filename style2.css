@@ -21,6 +21,13 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
 }
 
 /* ----------------------------------------------------
+   DJ UPLOAD FIX — OVERRIDE SAFARI RULE
+---------------------------------------------------- */
+.dj-upload * {
+  position: unset !important;
+}
+
+/* ----------------------------------------------------
    NAVIGATION
 ---------------------------------------------------- */
 .navbar {
@@ -402,8 +409,4 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
   .dj-upload .mixer {
     width: 100%;
   }
-   .dj-upload * {
-  position: unset !important;
-}
-
 }
