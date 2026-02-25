@@ -47,11 +47,14 @@
       border: 0;
     }
 
+    /* FIXED: blocker must be clickable */
     .blocker {
       position: absolute !important;
       inset: 0 !important;
       z-index: 10 !important;
-      pointer-events: none !important;
+      pointer-events: auto !important;
+      cursor: pointer;
+      background: rgba(0,0,0,0.35);
     }
 
     .vote-option input[type="radio"] {
@@ -239,7 +242,7 @@
   let djPlayerReady = false;
 
   /* ------------------------------
-     PAYPAL UNLOCK (FIXED)
+     PAYPAL UNLOCK
   ------------------------------ */
   paypal.Buttons({
     createOrder: (data, actions) =>
@@ -250,7 +253,6 @@
     onApprove: (data, actions) =>
       actions.order.capture().then(details => {
 
-        // ⭐ FIXED: use the ORDER ID, not the capture ID
         currentTransactionID = data.orderID;
 
         document.querySelectorAll(".vote-option").forEach(opt => {
@@ -283,6 +285,9 @@
     return null;
   }
 
+  /* ------------------------------
+     FIXED EMBED FUNCTION
+  ------------------------------ */
   function embed(id) {
     const iframe = document.createElement("iframe");
     iframe.className = "battle-frame";
@@ -292,6 +297,15 @@
 
     const blocker = document.createElement("div");
     blocker.className = "blocker";
+
+    blocker.addEventListener("click", () => {
+      blocker.style.display = "none";
+
+      iframe.contentWindow.postMessage(
+        JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+        "*"
+      );
+    });
 
     const container = document.createElement("div");
     container.style.position = "absolute";
@@ -341,7 +355,7 @@
   }
 
   /* ------------------------------
-     TAP TO PLAY (SMOOTH MOBILE FIX)
+     TAP TO PLAY (AUDIO ONLY)
   ------------------------------ */
   function setupTapToPlay() {
     const overlay = document.getElementById("loadingOverlay");
@@ -351,17 +365,14 @@
 
     function handleTap() {
 
-      // Start audio FIRST — mobile browsers freeze here
       if (djPlayerReady && player.src) {
         player.play().then(() => {
 
-          // Fade overlay AFTER audio is confirmed playing
           overlay.style.opacity = "0";
           setTimeout(() => {
             overlay.style.display = "none";
           }, 350);
 
-          // Smooth fade-in
           let vol = 0;
           const fade = setInterval(() => {
             vol = Math.min(1, vol + 0.05);
@@ -370,20 +381,11 @@
           }, 80);
         });
       } else {
-        // Fallback if no audio
         overlay.style.opacity = "0";
         setTimeout(() => {
           overlay.style.display = "none";
         }, 350);
       }
-
-      // Trigger YouTube AFTER gesture is accepted
-      document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
-        iframe.contentWindow.postMessage(
-          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-          "*"
-        );
-      });
 
       overlay.removeEventListener("click", handleTap);
     }
