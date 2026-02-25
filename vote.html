@@ -12,8 +12,12 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    #loadingOverlay,
-    #tapToStartOverlay {
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    #loadingOverlay {
       position: fixed !important;
       inset: 0 !important;
       background: rgba(0,0,0,0.9);
@@ -24,32 +28,120 @@
       font-size: 28px;
       font-family: 'Bangers', cursive;
       letter-spacing: 1px;
-      z-index: 999999 !important;
-      text-align: center;
-      padding: 20px;
+      z-index: 999998 !important;
     }
 
-    #tapToStartOverlay {
-      display: none;
+    /* Full-viewport Tap to Play overlay */
+    #tapOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #fff;
+      z-index: 999999;
       cursor: pointer;
+      text-align: center;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
+    #tapOverlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #tapOverlay h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 40px;
+      letter-spacing: 2px;
+      margin: 0 0 10px;
+    }
+
+    #tapOverlay p {
+      margin: 0;
+      font-size: 16px;
+      color: #ddd;
+    }
+
+    /* Blocker over each iframe (kept but not used for gesture now) */
     .blocker {
       position: absolute !important;
       inset: 0 !important;
-      z-index: 999999 !important;
-      pointer-events: auto !important;
+      z-index: 10 !important;
+      pointer-events: none !important;
+    }
+
+    /* Modern vote buttons */
+    .vote-button {
+      width: 100%;
+      padding: 12px 16px;
+      margin-top: 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      cursor: not-allowed;
+      opacity: 0.6;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease;
+    }
+
+    #voteChampion {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8); /* blue */
+    }
+
+    #voteChallenger {
+      background: linear-gradient(135deg, #ef4444, #b91c1c); /* red */
+    }
+
+    .vote-button.enabled {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .vote-button.enabled:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .vote-button span.icon {
+      margin-right: 6px;
+      font-size: 18px;
+      vertical-align: -1px;
+    }
+
+    .video-slot {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .video-slot iframe.battle-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- FIRST OVERLAY -->
+  <!-- Initial loading overlay (while battle data loads) -->
   <div id="loadingOverlay">Loading battle… please wait</div>
 
-  <!-- SECOND OVERLAY (tap to start audio) -->
-  <div id="tapToStartOverlay">Tap to start the battle</div>
+  <!-- Full-viewport Tap to Play overlay -->
+  <div id="tapOverlay">
+    <h1>Tap to Play</h1>
+    <p>Tap once to start the battle videos and DJ mix.</p>
+  </div>
 
   <nav class="navbar">
     <a href="index.html">Home</a>
@@ -70,7 +162,7 @@
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
-          Vote Champion
+          <span class="icon">⭐</span>Vote Champion
         </button>
       </div>
 
@@ -88,7 +180,7 @@
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
-          Vote Challenger
+          <span class="icon">⚡</span>Vote Challenger
         </button>
       </div>
 
@@ -134,7 +226,7 @@
       </h3>
       <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
 
-      <audio id="djPlayer" controls autoplay playsinline style="width:100%; max-width:500px;"></audio>
+      <audio id="djPlayer" controls playsinline style="width:100%; max-width:500px;"></audio>
     </div>
 
   </main>
@@ -151,11 +243,20 @@
     const endpoint =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
+    // Cache-buster helper
+    function nocache(url) {
+      const sep = url.includes("?") ? "&" : "?";
+      return fetch(url + sep + "t=" + Date.now());
+    }
+
     let currentTransactionID = null;
     let currentBattleID = null;
 
     let champion = null;
     let challenger = null;
+
+    let djData = null; // store DJ data for unified tap
+    let djPlayerReady = false;
 
     /* PAYPAL */
     paypal.Buttons({
@@ -168,11 +269,14 @@
         actions.order.capture().then(details => {
           currentTransactionID = details.id;
 
-          document.getElementById("voteChampion").disabled = false;
-          document.getElementById("voteChallenger").disabled = false;
+          const btnChamp = document.getElementById("voteChampion");
+          const btnChall = document.getElementById("voteChallenger");
 
-          document.getElementById("voteChampion").classList.add("enabled");
-          document.getElementById("voteChallenger").classList.add("enabled");
+          btnChamp.disabled = false;
+          btnChall.disabled = false;
+
+          btnChamp.classList.add("enabled");
+          btnChall.classList.add("enabled");
         })
     }).render("#paypal-button-container");
 
@@ -194,11 +298,10 @@
       return null;
     }
 
-    /* EMBED BUILDER */
+    /* EMBED BUILDER – autoplay disabled initially */
     function embed(id) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
-
       iframe.src =
         `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
       iframe.allow = "autoplay; encrypted-media";
@@ -217,8 +320,8 @@
 
     /* LOAD BATTLE */
     async function loadBattle() {
-      const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
-      const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
+      const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
+      const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
 
       currentBattleID = state.battleID;
 
@@ -231,48 +334,17 @@
       document.getElementById("championVideo").appendChild(embed(champID));
       document.getElementById("challengerVideo").appendChild(embed(challID));
 
-      // Remove loading overlay and show tap overlay
       setTimeout(() => {
         document.getElementById("loadingOverlay").style.display = "none";
-        document.getElementById("tapToStartOverlay").style.display = "flex";
-      }, 2000);
+      }, 800);
     }
 
-    /* AUDIO + YOUTUBE STARTER */
-    function activateAudio() {
-      const player = document.getElementById("djPlayer");
-
-      // Explicit unmute
-      player.muted = false;
-      player.volume = 0;
-
-      // Fade in MP3
-      player.play().then(() => {
-        let vol = 0;
-        const fade = setInterval(() => {
-          vol = Math.min(1, vol + 0.05);
-          player.volume = vol;
-          if (vol >= 1) clearInterval(fade);
-        }, 80);
-      });
-
-      // Start YouTube videos
-      document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
-        iframe.contentWindow.postMessage(
-          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-          "*"
-        );
-      });
-
-      // Remove overlay
-      document.getElementById("tapToStartOverlay").style.display = "none";
-    }
-
-    /* LOAD DJ TRACK */
+    /* LOAD DJ TRACK – but don't auto-play yet (unified tap will start it) */
     async function loadDJTrack() {
-      const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
+      const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
 
+      djData = data;
       const last = data[data.length - 1];
       const player = document.getElementById("djPlayer");
 
@@ -280,13 +352,56 @@
         last.trackname || "Latest DJ Track";
 
       player.src = last.mp3url;
+      player.volume = 0;
+      djPlayerReady = true;
     }
 
-    /* LOAD VOTE COUNTS */
+    /* UNIFIED TAP HANDLER: overlay click -> start MP3 + YouTube */
+    function setupUnifiedTap() {
+      const overlay = document.getElementById("tapOverlay");
+      const player = document.getElementById("djPlayer");
+
+      function handleTap() {
+        // Fade out overlay
+        overlay.classList.add("hidden");
+
+        // Start MP3 with fade-in (if we have a track)
+        if (djPlayerReady && player.src) {
+          player.play().then(() => {
+            let vol = 0;
+            const fade = setInterval(() => {
+              vol = Math.min(1, vol + 0.05);
+              player.volume = vol;
+              if (vol >= 1) clearInterval(fade);
+            }, 80);
+          }).catch(() => {
+            // If play fails, just leave volume at 0 and do nothing
+          });
+        }
+
+        // Start YouTube videos
+        document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
+          try {
+            iframe.contentWindow.postMessage(
+              JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+              "*"
+            );
+          } catch (e) {
+            // ignore
+          }
+        });
+
+        overlay.removeEventListener("click", handleTap);
+      }
+
+      overlay.addEventListener("click", handleTap, { once: true });
+    }
+
+    /* LOAD VOTE COUNTS – shared pool */
     async function loadVoteCounts() {
       if (!currentBattleID) return;
 
-      const data = await fetch(
+      const data = await nocache(
         endpoint + "?mode=getvotestate&battleID=" + currentBattleID
       ).then(r => r.json());
 
@@ -340,7 +455,7 @@
 
     /* COUNTDOWN */
     function loadCountdown() {
-      fetch(endpoint + "?mode=getstate")
+      nocache(endpoint + "?mode=getstate")
         .then(r => r.json())
         .then(state => {
           const lastUpdated = new Date(state.lastUpdated);
@@ -375,13 +490,10 @@
       await loadBattle();
       await loadDJTrack();
       loadCountdown();
+      setupUnifiedTap();
 
       setTimeout(loadVoteCounts, 1000);
       setInterval(loadVoteCounts, 5000);
-
-      // Tap overlay listener
-      document.getElementById("tapToStartOverlay")
-        .addEventListener("click", activateAudio);
     };
   </script>
 
