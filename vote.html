@@ -341,7 +341,7 @@
   }
 
   /* ------------------------------
-     TAP TO PLAY
+     TAP TO PLAY (SMOOTH MOBILE FIX)
   ------------------------------ */
   function setupTapToPlay() {
     const overlay = document.getElementById("loadingOverlay");
@@ -350,14 +350,18 @@
     overlay.innerText = "Tap to Play";
 
     function handleTap() {
-      overlay.style.opacity = "0";
 
-      setTimeout(() => {
-        overlay.style.display = "none";
-      }, 400);
-
+      // Start audio FIRST — mobile browsers freeze here
       if (djPlayerReady && player.src) {
         player.play().then(() => {
+
+          // Fade overlay AFTER audio is confirmed playing
+          overlay.style.opacity = "0";
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 350);
+
+          // Smooth fade-in
           let vol = 0;
           const fade = setInterval(() => {
             vol = Math.min(1, vol + 0.05);
@@ -365,8 +369,15 @@
             if (vol >= 1) clearInterval(fade);
           }, 80);
         });
+      } else {
+        // Fallback if no audio
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 350);
       }
 
+      // Trigger YouTube AFTER gesture is accepted
       document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
         iframe.contentWindow.postMessage(
           JSON.stringify({ event: "command", func: "playVideo", args: [] }),
