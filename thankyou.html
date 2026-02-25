@@ -134,7 +134,7 @@
     // Read Battle ID + TX from URL
     const urlParams = new URLSearchParams(window.location.search);
     const battleID = urlParams.get("battle") || "";
-    const txID = urlParams.get("tx") || ""; // optional
+    const txID = urlParams.get("tx") || "";
 
     const navBar = document.getElementById("navBar");
     const msg = document.getElementById("emailMessage");
@@ -164,21 +164,14 @@
       msg.innerText = "Submitting…";
 
       try {
-        // Send to Apps Script
-        const formData = new URLSearchParams();
-        formData.append("mode", "saveemail");
-        formData.append("email", email);
-        formData.append("battle", battleID);
-        formData.append("tx", txID);
+        // Call Apps Script email sender
+        const res = await fetch(
+          `${endpoint}?mode=sendemail&email=${encodeURIComponent(email)}&battle=${battleID}&tx=${txID}`
+        );
 
-        const response = await fetch(endpoint, {
-          method: "POST",
-          body: formData
-        });
+        const data = await res.json();
 
-        const text = await response.text();
-
-        if (text !== "OK") {
+        if (!data.success) {
           msg.innerText = "Error sending email. Please try again.";
           submitBtn.disabled = false;
           submitBtn.style.opacity = "1";
