@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ Upload</title>
+
+  <!-- UPDATED CSS VERSION -->
+  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=4001">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="dj-upload">
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="https://dance-offs.com/index.html">Home</a>
+    <a href="https://dance-offs.com/dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html" class="active">DJs</a>
+    <a href="https://dance-offs.com/vote.html">Vote</a>
+    <a href="https://dance-offs.com/prizes.html">Prizes</a>
+    <a href="https://dance-offs.com/shop.html">Shop</a>
+  </nav>
+
+  <p>
+    Enter your mix details before selecting the MP3 file (under 10 mins long), then press
+    <strong>Upload Mix</strong> to submit your entry.
+  </p>
+
+  <!-- DJ BOOTH -->
+  <div class="dj-booth">
+
+    <div class="deck-row">
+
+      <!-- LEFT DECK -->
+      <div class="deck">
+        <h3 class="deck-label">Deck 1</h3>
+        <div class="record">
+          <div class="record-inner">
+            <input type="text" id="deck1Artist" placeholder="Input Artist">
+            <input type="text" id="deck1Title" placeholder="Input Track">
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT DECK -->
+      <div class="deck">
+        <h3 class="deck-label">Deck 2</h3>
+        <div class="record">
+          <div class="record-inner">
+            <input type="text" id="deck2Artist" placeholder="Input Artist">
+            <input type="text" id="deck2Title" placeholder="Input Track">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MIXER -->
+    <div class="mixer-wrap">
+      <div class="mixer">
+
+        <input type="email" id="djEmail" placeholder="Your Email">
+        <input type="text" id="djName" placeholder="Your DJ Name">
+
+        <label>MP3 only (&lt;10mins)</label>
+
+        <input type="file" id="djFile" accept=".mp3,audio/mpeg">
+
+        <button id="uploadBtn">Upload Mix</button>
+
+        <div id="uploadStatus" style="font-size:15px;"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NOW PLAYING (ONLY CURRENT UPLOAD) -->
+  <div class="dj-player-section">
+    <div class="now-playing">Now Playing</div>
+    <div id="nowPlayingTrack" class="now-playing-track">No track uploaded yet…</div>
+
+    <audio id="djPlayer" controls playsinline></audio>
+  </div>
+
+  <!-- LINK TO PAST UPLOADS -->
+  <div style="text-align:center; margin:50px 0;">
+    <a href="djs-past.html"
+       style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
+              text-decoration:none; font-size:20px; font-weight:600;">
+      View Past DJ Uploads →
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+    <br>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
+  </footer>
+
+  <!-- DJ UPLOAD LOGIC -->
+  <script>
+    const BACKEND_URL =
+      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+
+    /* Upload handler */
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+      const status = document.getElementById("uploadStatus");
+      const player = document.getElementById("djPlayer");
+      const nowPlaying = document.getElementById("nowPlayingTrack");
+
+      status.innerHTML = "Uploading...";
+
+      const fileInput = document.getElementById("djFile");
+      if (!fileInput.files.length) {
+        status.innerHTML = "Please select an MP3 file.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        /* Upload MP3 to server */
+        const uploadResponse = await fetch("/uploads/upload.php", {
+          method: "POST",
+          body: formData
+        });
+
+        const fileUrl = await uploadResponse.text();
+        status.innerHTML = "Upload complete! Logging metadata...";
+
+        const storedName = fileUrl.split("/").pop();
+
+        /* Log metadata to backend */
+        await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            mode: "djupload",
+
+            djEmail: document.getElementById("djEmail").value,
+            djName: document.getElementById("djName").value,
+
+            deck1Artist: document.getElementById("deck1Artist").value,
+            deck1Title: document.getElementById("deck1Title").value,
+            deck2Artist: document.getElementById("deck2Artist").value,
+            deck2Title: document.getElementById("deck2Title").value,
+
+            fileUrl: fileUrl,
+            originalName: file.name,
+            storedName: storedName,
+            sizeBytes: file.size,
+            mimeType: file.type,
+            status: "active"
+          })
+        });
+
+        /* PLAY ONLY THE NEWLY UPLOADED MP3 */
+        player.src = fileUrl;
+        nowPlaying.textContent = file.name;
+
+        player.play().catch(() => {
+          // Safari tap-to-play fallback
+          const unmute = () => {
+            player.play().catch(() => {});
+            window.removeEventListener("touchstart", unmute);
+            window.removeEventListener("click", unmute);
+          };
+          window.addEventListener("touchstart", unmute);
+          window.addEventListener("click", unmute);
+        });
+
+        status.innerHTML = "Mix uploaded and ready to play!";
+
+      } catch (err) {
+        console.error(err);
+        status.innerHTML = "Upload failed.";
+      }
+    });
+  </script>
+
+</body>
+</html>
