@@ -7,8 +7,11 @@
   box-sizing: border-box;
 }
 
-/* FIX GLOBAL STACKING + SAFARI TAP ISSUES */
-body * {
+/* ----------------------------------------------------
+   FIX SAFARI TAP WITHOUT BREAKING LAYOUT
+   Only reset stacking for normal elements.
+---------------------------------------------------- */
+body *:not(.video-slot *):not(#loadingOverlay):not(#paypal-button-container *):not(.blocker) {
   position: static !important;
 }
 
