@@ -101,17 +101,6 @@
       letter-spacing: 1px;
     }
 
-    /* DJ audio */
-    .dj-audio-wrap {
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    .dj-audio-wrap audio {
-      width: 100%;
-      max-width: 500px;
-    }
-
     #embedTestResult {
       margin-top: 12px;
       font-size: 15px;
@@ -189,11 +178,7 @@
 
     </div>
 
-    <!-- LATEST DJ MIX -->
-    <section class="dj-audio-wrap">
-      <h3>Latest DJ Mix</h3>
-      <audio id="djPlayer" controls autoplay muted playsinline></audio>
-    </section>
+    <!-- REMOVED: DJ AUDIO PLAYER -->
 
     <!-- LINK TO PAST DANCERS PAGE -->
     <div style="text-align:center; margin:50px 0;">
@@ -240,7 +225,7 @@
       return `
         <iframe 
           class="battle-frame"
-          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0"
+          src="https://www.youtube.com/embed/${id}?autoplay=1&mute=0&loop=1&playlist=${id}&modestbranding=1&rel=0"
           allow="autoplay; encrypted-media"
           allowfullscreen>
         </iframe>
@@ -345,38 +330,6 @@
       }
     }
 
-    /* iPhone-safe autoplay logic */
-    async function loadLatestDJMix() {
-      try {
-        const res = await fetch(endpoint + "?mode=djlist");
-        const list = await res.json();
-        if (!list.length) return;
-
-        const latest = list[list.length - 1];
-        const audio = document.getElementById("djPlayer");
-
-        audio.src = latest.fileUrl;
-        audio.autoplay = true;
-
-        audio.play().then(() => {
-          audio.muted = false;
-        }).catch(() => {
-          const unmute = () => {
-            audio.muted = false;
-            audio.play().catch(() => {});
-            window.removeEventListener("touchstart", unmute);
-            window.removeEventListener("click", unmute);
-          };
-
-          window.addEventListener("touchstart", unmute);
-          window.addEventListener("click", unmute);
-        });
-
-      } catch (err) {
-        console.error("Could not load latest DJ mix:", err);
-      }
-    }
-
     async function loadLastDancerVideo() {
       try {
         const res = await fetch(endpoint + "?mode=getdancers");
@@ -432,7 +385,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      loadLatestDJMix();
       loadDancerTable();
       loadLastDancerVideo();
     });
