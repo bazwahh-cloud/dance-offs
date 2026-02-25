@@ -1,392 +1,146 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Dance-Offs: Home</title>
-
-  <!-- MAIN SITE CSS -->
-  <link rel="stylesheet" href="https://dance-offs.com/style2.css?v=3004">
-
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <style>
-    /* HERO CLICK OVERLAY */
-    .click-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      z-index: 5;
-    }
-
-    .click-left,
-    .click-right {
-      flex: 1;
-      cursor: pointer;
-      background: rgba(0,0,0,0);
-    }
-
-    .click-left:hover,
-    .click-right:hover {
-      background: rgba(255,255,255,0.05);
-    }
-
-    .hero {
-      position: relative;
-    }
-
-    /* HOME PAGE CONTENT */
-    .instruction-line {
-      max-width: 800px;
-      margin: 20px auto 30px;
-      padding: 0 20px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-      color: #ffcc00;
-      line-height: 1.5;
-    }
-
-    /* FAQ */
-    .faq-section {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-      text-align: center;
-    }
-
-    .faq-item {
-      width: 100%;
-      max-width: 700px;
-      margin: 10px auto;
-      padding: 14px 18px;
-      background: rgba(255,255,255,0.05);
-      border: 2px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      text-align: left;
-    }
-
-    .faq-item summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: #ffcc00;
-      font-size: 18px;
-    }
-
-    .faq-item p {
-      margin-top: 10px;
-      color: #ccc;
-      line-height: 1.5;
-    }
-
-    /* CONTACT FORM */
-    .contact-section {
-      max-width: 700px;
-      margin: 60px auto;
-      padding: 0 20px;
-      text-align: center;
-    }
-
-    .contact-section input,
-    .contact-section textarea,
-    .contact-section button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 6px;
-      border: 2px solid #555;
-      background: #000;
-      color: white;
-      font-size: 18px;
-    }
-
-    .contact-section button {
-      background: #ffcc00;
-      color: #000;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-    }
-
-    #formStatus {
-      margin-top: 15px;
-      font-size: 16px;
-      display: none;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- NAVIGATION -->
-  <nav class="navbar">
-    <a href="index.html" class="active">Home</a>
-    <a href="dancers.html">Dancers</a>
-    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
-    <a href="vote.html">Vote</a>
-    <a href="prizes.html">Prizes</a>
-    <a href="shop.html">Shop</a>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="dancer-hero2.jpg" alt="Dance-Offs Home Banner">
-    </div>
-
-    <div class="click-overlay">
-      <div class="click-left" onclick="location.href='dancers.html'"></div>
-      <div class="click-right" onclick="location.href='vote.html'"></div>
-    </div>
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <main class="page-container">
-
-    <p class="instruction-line">
-      Vote for your favourite dancer and you could win the Prize Draw!
-    </p>
-
-    <!-- ⭐ NEW 3‑SECTION FAQ -->
-    <section class="faq-section">
-      <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:30px;">
-        Frequently Asked Questions
-      </h2>
-
-      <!-- ========================= -->
-      <!-- ⭐ VOTERS FAQ -->
-      <!-- ========================= -->
-      <h3 style="font-family:'Bangers', cursive; font-size:32px; margin:30px 0 15px;">
-        For Voters
-      </h3>
-
-      <details class="faq-item">
-        <summary>&lt; How do I enter to win? &gt;</summary>
-        <p>Every paid vote counts as one entry into that month's Prize Draw. The more votes you cast, the more chances you have to win!</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; How is the winning ticket drawn? &gt;</summary>
-        <p>At the end of each month, all valid paid votes are placed into a randomised draw. One lucky entry is selected at random using a secure, automated system.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; What is this month's prize? &gt;</summary>
-        <p>This month’s prize is shown on the Prize page.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; How will I know if I win? &gt;</summary>
-        <p>Winners are contacted via the email address used during voting. Make sure your email is correct when you cast your vote!</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; Can I vote from outside the UK? &gt;</summary>
-        <p>Yes. Dance‑Offs accepts votes from most countries worldwide. Prize winners outside the UK may receive a cash alternative if travel is not possible.</p>
-      </details>
-
-
-      <!-- ========================= -->
-      <!-- ⭐ DANCERS FAQ -->
-      <!-- ========================= -->
-      <h3 style="font-family:'Bangers', cursive; font-size:32px; margin:40px 0 15px;">
-        For Dancers
-      </h3>
-
-      <details class="faq-item">
-        <summary>&lt; Can I use this site for free? &gt;</summary>
-        <p>Yes. All dancers can use Dance‑Offs for free. You can appear in battles, receive votes, and share your profile without paying anything.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; How do I upload a video? &gt;</summary>
-        <p>Paste your YouTube link, in YouTube ensure you have set the video visibility to "Public". Make sure your video is allowed to play on other websites
-YouTube has a setting called “Allow embedding”. This must be turned ON.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; How do I get to the top of the leaderboard? &gt;</summary>
-        <p>The leaderboard is based on votes. The more votes you receive, the higher you climb. Sharing your battle link on social media is the best way to boost your ranking.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; What happens if I get votes? &gt;</summary>
-        <p>Votes increase your position in the battle rankings. If you win your battle, you move closer to the monthly finals and gain more visibility across the platform.</p>
-      </details>
-
-
-      <!-- ========================= -->
-      <!-- ⭐ DJs FAQ -->
-      <!-- ========================= -->
-      <h3 style="font-family:'Bangers', cursive; font-size:32px; margin:40px 0 15px;">
-        For DJs
-      </h3>
-
-      <details class="faq-item">
-        <summary>&lt; Can I use the site for free? &gt;</summary>
-        <p>Yes. Uploading your mix and appearing on the DJ leaderboard is completely free. There are no fees to take part.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>&lt; How do I upload a mix? &gt;</summary>
-        <p>Go to the DJs page, enter your mix details, choose your MP3 file (around 10 mins long), and press "Upload Mix". Your track will appear on the site once it’s processed.</p>
-      </details>
-
-    </section>
-
-    <!-- CONTACT FORM -->
-    <section id="contact" class="contact-section">
-      <h2 style="font-family:'Bangers', cursive; font-size:42px; margin-bottom:20px;">Contact Us</h2>
-
-      <form id="contactForm" method="POST" onsubmit="return false;">
-        <input type="text" id="name" name="name" placeholder="Your Name" required>
-        <input type="email" id="contact_email" name="contact_email" placeholder="Your Email" required>
-        <input type="hidden" id="office_email" name="office_email" value="office@dance-offs.com">
-        <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
-        <button type="submit">Send Message</button>
-      </form>
-
-      <p id="formStatus">Message sent!</p>
-    </section>
-
-  </main>
-
- <footer class="footer">
-  © 2026 Dance-Offs. All rights reserved.
-  <br>
-  <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
-    Terms & Conditions
-  </a>
-</footer>
-
-  <!-- CONTACT FORM HANDLER -->
-  <script>
-    const PROXY_URL = "https://dance-offs.com/contact";
-
-    document.getElementById("contactForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-
-      const params = new URLSearchParams();
-      params.append("mode", "contact");
-      params.append("name", document.getElementById("name").value);
-      params.append("contact_email", document.getElementById("contact_email").value);
-      params.append("office_email", document.getElementById("office_email").value);
-      params.append("message", document.getElementById("message").value);
-
-      const status = document.getElementById("formStatus");
-      status.style.display = "none";
-
-      try {
-        const response = await fetch(PROXY_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: params
-        });
-
-        const text = await response.text();
-
-        if (text.includes("Email sent")) {
-          status.style.display = "block";
-          status.style.color = "#00c853";
-          status.innerText = "Message sent!";
-          document.getElementById("contactForm").reset();
-        } else {
-          status.style.display = "block";
-          status.style.color = "#ff4444";
-          status.innerText = "Failed to send message.";
-        }
-
-      } catch (err) {
-        status.style.display = "block";
-        status.style.color = "#ff4444";
-        status.innerText = "Network error. Please try again.";
-        console.error(err);
-      }
-    });
-  </script>
-
-  <!-- BACKEND INTEGRATION -->
-  <script>
-    const BACKEND_URL =
-      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
-
-    async function loadBattle() {
-      try {
-        const res = await fetch(BACKEND_URL + "?mode=getbattle");
-        const battle = await res.json();
-
-        if (battle.left) {
-          document.querySelector(".hero-img-wrap img").src = battle.left;
-        }
-      } catch (err) {
-        console.error("Battle load failed:", err);
-      }
-    }
-
-    async function loadState() {
-      try {
-        const res = await fetch(BACKEND_URL + "?mode=getstate");
-        const data = await res.json();
-
-        if (data.lastUpdated) {
-          document.getElementById("lastUpdated").textContent =
-            "Last updated: " + new Date(data.lastUpdated).toLocaleString();
-        }
-      } catch (err) {
-        console.error("State load failed:", err);
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      loadBattle();
-      loadState();
-    });
-  </script>
-
-  <!-- ⭐ BOOKING AUTO‑POPULATE SCRIPT -->
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-
-    if (window.location.hash.startsWith("#contact")) {
-
-      const hash = window.location.hash;
-      const queryIndex = hash.indexOf("?");
-      let params = {};
-
-      if (queryIndex !== -1) {
-        const queryString = hash.substring(queryIndex + 1);
-        params = Object.fromEntries(
-          queryString.split("&").map(pair => pair.split("=").map(decodeURIComponent))
-        );
-      }
-
-      if (params.email) {
-        const emailField = document.getElementById("contact_email");
-        if (emailField) emailField.value = params.email;
-      }
-
-      if (params.dj || params.track) {
-        const msgField = document.getElementById("message");
-        if (msgField) {
-          msgField.value =
-            `Booking request for DJ: ${params.dj || "Unknown DJ"}\n` +
-            `Track: ${params.track || "Unknown Track"}\n\n` +
-            `Please provide more details below:\n`;
-        }
-      }
-
-      const contactSection = document.querySelector("#contact");
-      if (contactSection) {
-        setTimeout(() => {
-          contactSection.scrollIntoView({ behavior: "smooth" });
-        }, 200);
-      }
-    }
-  });
-  </script>
-
-</body>
-</html>
+/* ----------------------------------------------------
+   GLOBAL RESET 
+---------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ----------------------------------------------------
+   SAFARI TAP FIX — SAFE VERSION
+   Only resets stacking for normal elements.
+   (Added :not(#tapOverlay) so overlay stays fixed)
+---------------------------------------------------- */
+body *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
+  position: static !important;
+}
+
+/* ----------------------------------------------------
+   NAVIGATION
+---------------------------------------------------- */
+.navbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px;
+  background: #111;
+}
+
+.navbar a {
+  display: block;
+  text-align: center;
+  padding: 14px 10px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar a.active {
+  background: #0077cc;
+  border-color: #0077cc;
+}
+
+/* ----------------------------------------------------
+   VOTE PAGE LAYOUT
+---------------------------------------------------- */
+.vote-layout {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.vote-column {
+  width: 300px;
+  text-align: center;
+}
+
+/* ----------------------------------------------------
+   VIDEO SLOTS
+---------------------------------------------------- */
+.video-slot {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Wrapper created by JS */
+.video-slot > div {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+/* YouTube iframe */
+.video-slot iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+}
+
+/* Blocker above iframe */
+.video-slot .blocker {
+  position: absolute !important;
+  inset: 0;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* PayPal must sit above blocker */
+#paypal-button-container,
+#paypal-button-container * {
+  position: relative !important;
+  z-index: 1000000 !important;
+}
+
+/* ----------------------------------------------------
+   PROGRESS BARS
+---------------------------------------------------- */
+.progress-wrapper {
+  width: 100%;
+  max-width: 260px;
+  height: 10px;
+  background: #333;
+  border-radius: 5px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.champion-bar {
+  background: #1e90ff;
+}
+
+.challenger-bar {
+  background: #ff4444;
+}
+
+/* ----------------------------------------------------
+   FOOTER
+---------------------------------------------------- */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+  margin-top: 40px;
+}
