@@ -6,117 +6,13 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2021">
+  <link rel="stylesheet" href="style2.css?v=2022">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
+  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
+
   <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: white;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* FIX 1 — Restore proper layout width */
-    .page-container {
-      max-width: 1200px !important;
-      margin: auto;
-      padding: 10px;
-    }
-
-    .video-slot {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .video-slot iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .battle-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      pointer-events: none;
-    }
-
-    /* FIX 2 — Ensure blocker sits ABOVE iframe so taps reach document */
-    .blocker {
-      position: absolute;
-      inset: 0;
-      z-index: 999999;
-      pointer-events: auto;
-    }
-
-    .vote-button {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin-top: 10px;
-      border-radius: 6px;
-      background-color: #0077cc;
-      color: white;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-      opacity: 0.5;
-    }
-
-    .vote-button.enabled {
-      opacity: 1;
-    }
-
-    .vote-count {
-      margin-top: 6px;
-      font-size: 14px;
-      color: #bbb;
-      text-align: center;
-    }
-
-    .progress-wrapper {
-      width: 100%;
-      max-width: 260px;
-      height: 10px;
-      background: #333;
-      border-radius: 5px;
-      margin: 0 auto;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      transition: width 0.4s ease;
-    }
-
-    .champion-bar {
-      background: #1e90ff;
-    }
-
-    .challenger-bar {
-      background: #ff4444;
-    }
-
-    .vote-layout {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .vote-column {
-      width: 300px;
-      text-align: center;
-    }
-
+    /* Page-specific overrides that must stay here */
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -130,9 +26,15 @@
       letter-spacing: 1px;
       z-index: 9999;
     }
-  </style>
 
-  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
+    /* Ensure blocker stays above iframe even with global reset */
+    .blocker {
+      position: absolute !important;
+      inset: 0;
+      z-index: 999999 !important;
+      pointer-events: auto !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -154,6 +56,7 @@
 
     <div class="vote-layout">
 
+      <!-- CHAMPION -->
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChampion" onclick="vote('champion')" disabled>
@@ -161,6 +64,7 @@
         </button>
       </div>
 
+      <!-- PAYPAL -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -170,6 +74,7 @@
         </div>
       </div>
 
+      <!-- CHALLENGER -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
         <button class="vote-button" id="voteChallenger" onclick="vote('challenger')" disabled>
@@ -179,6 +84,7 @@
 
     </div>
 
+    <!-- PROGRESS -->
     <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
 
       <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
@@ -207,6 +113,7 @@
 
     </section>
 
+    <!-- NOW PLAYING -->
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
         Now Playing
@@ -236,6 +143,7 @@
     let champion = null;
     let challenger = null;
 
+    /* PAYPAL */
     paypal.Buttons({
       createOrder: (data, actions) =>
         actions.order.create({
@@ -254,6 +162,7 @@
         })
     }).render("#paypal-button-container");
 
+    /* YOUTUBE ID EXTRACTOR */
     function extractID(url) {
       if (!url) return null;
       const clean = url.split("?")[0];
@@ -271,6 +180,7 @@
       return null;
     }
 
+    /* EMBED BUILDER */
     function embed(id, onLoadCallback) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
@@ -291,6 +201,7 @@
       return container;
     }
 
+    /* LOAD BATTLE */
     async function loadBattle() {
       const state = await fetch(endpoint + "?mode=getstate").then(r => r.json());
       const dancers = await fetch(endpoint + "?mode=getdancers").then(r => r.json());
@@ -326,6 +237,7 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
+    /* LOAD DJ TRACK */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -365,6 +277,7 @@
       document.addEventListener("click", enableAudio, { once: true });
     }
 
+    /* LOAD VOTE COUNTS */
     async function loadVoteCounts() {
       if (!currentBattleID) return;
 
@@ -387,6 +300,7 @@
         data.challenger.used + "%";
     }
 
+    /* VOTE */
     function vote(side) {
       if (!currentTransactionID) {
         alert("Payment required before voting.");
@@ -411,6 +325,7 @@
         });
     }
 
+    /* COUNTDOWN */
     function loadCountdown() {
       fetch(endpoint + "?mode=getstate")
         .then(r => r.json())
@@ -442,6 +357,7 @@
         });
     }
 
+    /* INIT */
     window.onload = async function () {
       await loadBattle();
       await loadDJTrack();
