@@ -182,26 +182,15 @@
       return null;
     }
 
-    /* EMBED BUILDER – autoplay + muted immediately */
-    function embed(id, onLoadCallback) {
+    /* EMBED BUILDER – autoplay disabled initially */
+    function embed(id) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
 
+      // IMPORTANT: autoplay=0 so Safari does NOT mark page as media-active
       iframe.src =
-        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+        `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
       iframe.allow = "autoplay; encrypted-media";
-
-      iframe.onload = () => {
-        try {
-          iframe.contentWindow.postMessage(
-            JSON.stringify({ event: "command", func: "mute", args: [] }),
-            "*"
-          );
-        } catch (e) {
-          console.log("Mute postMessage failed:", e);
-        }
-        if (onLoadCallback) onLoadCallback();
-      };
 
       const blocker = document.createElement("div");
       blocker.className = "blocker";
@@ -225,30 +214,15 @@
       champion = dancers[state.championIndex];
       challenger = dancers[state.challengerIndex];
 
-      let videosLoaded = 0;
-      let overlayHidden = false;
-
-      function hideOverlay() {
-        if (!overlayHidden) {
-          overlayHidden = true;
-          document.getElementById("loadingOverlay").style.display = "none";
-        }
-      }
-
-      function checkDone() {
-        videosLoaded++;
-        if (videosLoaded >= 2) hideOverlay();
-      }
-
-      setTimeout(hideOverlay, 3000);
-
       const champID = extractID(champion.url);
-      const champEmbed = embed(champID, checkDone);
-      document.getElementById("championVideo").appendChild(champEmbed);
-
       const challID = extractID(challenger.url);
-      const challEmbed = embed(challID, checkDone);
-      document.getElementById("challengerVideo").appendChild(challEmbed);
+
+      document.getElementById("championVideo").appendChild(embed(champID));
+      document.getElementById("challengerVideo").appendChild(embed(challID));
+
+      setTimeout(() => {
+        document.getElementById("loadingOverlay").style.display = "none";
+      }, 2000);
     }
 
     /* LOAD DJ TRACK – click‑to‑unmute with fade‑in */
@@ -266,6 +240,7 @@
       player.volume = 0;
 
       function startAudio() {
+        // Fade in MP3
         player.play().then(() => {
           let vol = 0;
           const fade = setInterval(() => {
@@ -273,8 +248,14 @@
             player.volume = vol;
             if (vol >= 1) clearInterval(fade);
           }, 80);
-        }).catch(err => {
-          console.log("Audio play blocked:", err);
+        });
+
+        // NOW start YouTube autoplay (AFTER user interaction)
+        document.querySelectorAll("iframe.battle-frame").forEach(iframe => {
+          iframe.contentWindow.postMessage(
+            JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+            "*"
+          );
         });
 
         document.removeEventListener("click", startAudio);
