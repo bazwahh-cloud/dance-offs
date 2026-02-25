@@ -6,9 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <!-- FORCE LATEST CSS -->
   <link rel="stylesheet" href="style2.css?v=20260225">
-
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
@@ -111,6 +109,10 @@
         </div>
       </div>
 
+      <div style="margin-top:10px; font-size:14px; color:#ccc;">
+        <span id="remainingVotesText">Remaining votes: 200</span>
+      </div>
+
     </section>
 
     <!-- NOW PLAYING -->
@@ -120,7 +122,7 @@
       </h3>
       <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
 
-      <!-- FIXED: removed muted -->
+      <!-- MP3: not muted -->
       <audio id="djPlayer" controls autoplay playsinline style="width:100%; max-width:500px;"></audio>
     </div>
 
@@ -181,23 +183,24 @@
       return null;
     }
 
-    /* EMBED BUILDER — FIXED */
+    /* EMBED BUILDER – autoplay + muted via API */
     function embed(id, onLoadCallback) {
       const iframe = document.createElement("iframe");
       iframe.className = "battle-frame";
 
-      /* FIX: removed mute=1 */
       iframe.src =
         `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1`;
-
       iframe.allow = "autoplay; encrypted-media";
 
-      /* FIX: mute AFTER load (Safari-safe) */
       iframe.onload = () => {
-        iframe.contentWindow.postMessage(
-          JSON.stringify({ event: "command", func: "mute", args: [] }),
-          "*"
-        );
+        try {
+          iframe.contentWindow.postMessage(
+            JSON.stringify({ event: "command", func: "mute", args: [] }),
+            "*"
+          );
+        } catch (e) {
+          console.log("Mute postMessage failed:", e);
+        }
         if (onLoadCallback) onLoadCallback();
       };
 
@@ -249,7 +252,7 @@
       document.getElementById("challengerVideo").appendChild(challEmbed);
     }
 
-    /* LOAD DJ TRACK — FIXED */
+    /* LOAD DJ TRACK – click‑to‑unmute with fade‑in */
     async function loadDJTrack() {
       const data = await fetch(endpoint + "?mode=getdjs").then(r => r.json());
       if (!data || data.length === 0) return;
@@ -271,6 +274,8 @@
             player.volume = vol;
             if (vol >= 1) clearInterval(fade);
           }, 80);
+        }).catch(err => {
+          console.log("Audio play blocked:", err);
         });
 
         document.removeEventListener("click", startAudio);
@@ -279,7 +284,7 @@
       document.addEventListener("click", startAudio, { once: true });
     }
 
-    /* LOAD VOTE COUNTS */
+    /* LOAD VOTE COUNTS – shared pool */
     async function loadVoteCounts() {
       if (!currentBattleID) return;
 
@@ -288,18 +293,21 @@
       ).then(r => r.json());
 
       document.getElementById("championCount").innerText =
-        "Champion Votes: " + data.champion.used +
-        " (Remaining: " + data.champion.remaining + ")";
+        "Champion Votes: " + data.champion.used;
 
       document.getElementById("challengerCount").innerText =
-        "Challenger Votes: " + data.challenger.used +
-        " (Remaining: " + data.challenger.remaining + ")";
+        "Challenger Votes: " + data.challenger.used;
+
+      document.getElementById("remainingVotesText").innerText =
+        "Remaining votes: " + data.remaining;
+
+      const max = data.maxVotes || 200;
 
       document.getElementById("championBar").style.width =
-        data.champion.used + "%";
+        (data.champion.used / max * 100) + "%";
 
       document.getElementById("challengerBar").style.width =
-        data.challenger.used + "%";
+        (data.challenger.used / max * 100) + "%";
     }
 
     /* VOTE */
@@ -321,7 +329,12 @@
       formData.append("side", side);
 
       fetch(endpoint, { method: "POST", body: formData })
-        .then(() => {
+        .then(r => r.text())
+        .then(text => {
+          if (text && text.indexOf("Voting closed") !== -1) {
+            alert("Voting is now closed for this battle.");
+            return;
+          }
           window.location.href =
             "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
         });
@@ -366,6 +379,7 @@
       loadCountdown();
 
       setTimeout(loadVoteCounts, 1000);
+      setInterval(loadVoteCounts, 5000);
     };
   </script>
 
