@@ -13,113 +13,290 @@
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- ⭐ RESTORED OLD DJ BOOTH CSS (Option A) -->
+  <style>
+
+  /* ----------------------------------------------------
+     GLOBAL RESET
+  ---------------------------------------------------- */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #000;
+    color: white;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ----------------------------------------------------
+     SAFARI TAP FIX — VOTE PAGE ONLY
+  ---------------------------------------------------- */
+  body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
+    position: static !important;
+  }
+
+  /* ----------------------------------------------------
+     DJ UPLOAD FIX — OVERRIDE SAFARI RULE
+  ---------------------------------------------------- */
+  .dj-upload * {
+    position: unset !important;
+  }
+
+  /* ----------------------------------------------------
+     NAVIGATION
+  ---------------------------------------------------- */
+  .navbar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+    background: #111;
+  }
+
+  .navbar a {
+    display: block;
+    text-align: center;
+    padding: 14px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .navbar a.active {
+    background: #0077cc;
+    border-color: #0077cc;
+  }
+
+  /* ----------------------------------------------------
+     FOOTER
+  ---------------------------------------------------- */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+
+  /* ----------------------------------------------------
+     RESTORE OLD DJ BOOTH LAYOUT (Option A)
+  ---------------------------------------------------- */
+
+  .dj-upload .dj-booth {
+    max-width: 900px !important;
+    margin: 40px auto !important;
+    text-align: center !important;
+    transform: scale(1.2) !important;
+    transform-origin: top center !important;
+    padding: 0 !important;
+  }
+
+  .dj-upload .deck-row {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 40px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .dj-upload .deck {
+    flex: 0 0 260px !important;
+    text-align: center !important;
+  }
+
+  .dj-upload .record {
+    width: 260px !important;
+    height: 260px !important;
+    border-radius: 50% !important;
+    border: 6px solid #444 !important;
+    background: #000 !important;
+    margin: 0 auto 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .dj-upload .record-inner {
+    width: 180px !important;
+    text-align: center !important;
+  }
+
+  .dj-upload .record-inner input {
+    width: 100% !important;
+    padding: 14px !important;
+    margin: 10px 0 !important;
+    border-radius: 6px !important;
+    border: 2px solid #555 !important;
+    background: #000 !important;
+    color: white !important;
+    font-size: 22px !important;
+    text-align: center !important;
+  }
+
+  .dj-upload .mixer-wrap {
+    margin: 40px auto 0 !important;
+    padding-bottom: 40px !important;
+    text-align: center !important;
+  }
+
+  .dj-upload .mixer {
+    width: 500px !important;
+    padding: 24px !important;
+    background: #111 !important;
+    border: 6px solid #444 !important;
+    border-radius: 14px !important;
+    margin: 0 auto 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .dj-upload .mixer input,
+  .dj-upload .mixer button {
+    width: 100% !important;
+    padding: 16px !important;
+    border-radius: 6px !important;
+    border: 2px solid #555 !important;
+    background: #000 !important;
+    color: white !important;
+    font-size: 22px !important;
+    text-align: center !important;
+  }
+
+  .dj-upload .mixer button {
+    background: #ffcc00 !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    border: none !important;
+  }
+
+  .dj-upload .mixer label {
+    margin-top: 6px !important;
+    font-size: 20px !important;
+    color: #ccc !important;
+  }
+
+  @media (max-width: 768px) {
+    .dj-upload .dj-booth {
+      transform: scale(1) !important;
+    }
+
+    .dj-upload .record {
+      width: 220px !important;
+      height: 220px !important;
+    }
+
+    .dj-upload .mixer {
+      width: 100% !important;
+    }
+  }
+
+  </style>
 </head>
 
 <body class="dj-upload">
 
-  <!-- ⭐ REQUIRED WRAPPERS FOR MIXER LAYOUT -->
-  <div class="page-wrapper">
-  <div class="content">
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="https://dance-offs.com/index.html">Home</a>
+    <a href="https://dance-offs.com/dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html" class="active">DJs</a>
+    <a href="https://dance-offs.com/vote.html">Vote</a>
+    <a href="https://dance-offs.com/prizes.html">Prizes</a>
+    <a href="https://dance-offs.com/shop.html">Shop</a>
+  </nav>
 
-    <!-- NAVIGATION -->
-    <nav class="navbar">
-      <a href="https://dance-offs.com/index.html">Home</a>
-      <a href="https://dance-offs.com/dancers.html">Dancers</a>
-      <a href="https://upload.dance-offs.com/uploads/djs.html" class="active">DJs</a>
-      <a href="https://dance-offs.com/vote.html">Vote</a>
-      <a href="https://dance-offs.com/prizes.html">Prizes</a>
-      <a href="https://dance-offs.com/shop.html">Shop</a>
-    </nav>
+  <!-- INSTRUCTIONS -->
+  <p style="max-width:900px;margin:30px auto 20px;padding:0 20px;text-align:center;font-size:20px;font-weight:600;color:#ffcc00;">
+    Enter your mix details before selecting the MP3 file (under 10 mins long), then press
+    <strong>Upload Mix</strong> to submit your entry.
+  </p>
 
-    <!-- INSTRUCTIONS -->
-    <p>
-      Enter your mix details before selecting the MP3 file (under 10 mins long), then press
-      <strong>Upload Mix</strong> to submit your entry.
-    </p>
+  <!-- ⭐ DJ BOOTH -->
+  <div class="dj-booth">
 
-    <!-- ⭐ DJ BOOTH -->
-    <div class="dj-booth">
+    <div class="deck-row">
 
-      <div class="deck-row">
-
-        <!-- LEFT DECK -->
-        <div class="deck">
-          <h3 class="deck-label">Deck 1</h3>
-          <div class="record">
-            <div class="record-inner">
-              <input type="text" id="deck1Artist" placeholder="Input Artist">
-              <input type="text" id="deck1Title" placeholder="Input Track">
-            </div>
+      <!-- LEFT DECK -->
+      <div class="deck">
+        <h3 class="deck-label" style="font-family:'Bangers';font-size:28px;color:#ffcc00;margin-bottom:10px;">Deck 1</h3>
+        <div class="record">
+          <div class="record-inner">
+            <input type="text" id="deck1Artist" placeholder="Input Artist">
+            <input type="text" id="deck1Title" placeholder="Input Track">
           </div>
         </div>
-
-        <!-- RIGHT DECK -->
-        <div class="deck">
-          <h3 class="deck-label">Deck 2</h3>
-          <div class="record">
-            <div class="record-inner">
-              <input type="text" id="deck2Artist" placeholder="Input Artist">
-              <input type="text" id="deck2Title" placeholder="Input Track">
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      <!-- MIXER -->
-      <div class="mixer-wrap">
-        <div class="mixer">
-
-          <input type="email" id="djEmail" placeholder="Your Email">
-          <input type="text" id="djName" placeholder="Your DJ Name">
-
-          <label>MP3 only (&lt;10mins)</label>
-
-          <input type="file" id="djFile" accept=".mp3,audio/mpeg">
-
-          <button id="uploadBtn">Upload Mix</button>
-
-          <div id="uploadStatus" style="font-size:15px;"></div>
-
+      <!-- RIGHT DECK -->
+      <div class="deck">
+        <h3 class="deck-label" style="font-family:'Bangers';font-size:28px;color:#ffcc00;margin-bottom:10px;">Deck 2</h3>
+        <div class="record">
+          <div class="record-inner">
+            <input type="text" id="deck2Artist" placeholder="Input Artist">
+            <input type="text" id="deck2Title" placeholder="Input Track">
+          </div>
         </div>
       </div>
 
     </div>
 
-    <!-- NOW PLAYING -->
-    <div class="dj-player-section">
-      <div class="now-playing">Now Playing</div>
-      <div id="nowPlayingTrack" class="now-playing-track">Loading latest mix…</div>
-      <audio id="djPlayer" controls autoplay muted playsinline></audio>
-    </div>
+    <!-- MIXER -->
+    <div class="mixer-wrap">
+      <div class="mixer">
 
-    <!-- PAST UPLOADS -->
-    <div style="text-align:center; margin:50px 0;">
-      <a href="djs-past.html"
-         style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
-                text-decoration:none; font-size:20px; font-weight:600;">
-        View Past DJ Uploads →
-      </a>
-    </div>
+        <input type="email" id="djEmail" placeholder="Your Email">
+        <input type="text" id="djName" placeholder="Your DJ Name">
 
-    <!-- FOOTER -->
-    <footer class="footer">
-      © 2026 Dance-Offs. All rights reserved.
-      <br>
-      <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
-        Terms & Conditions
-      </a>
-    </footer>
+        <label>MP3 only (&lt;10mins)</label>
+
+        <input type="file" id="djFile" accept=".mp3,audio/mpeg">
+
+        <button id="uploadBtn">Upload Mix</button>
+
+        <div id="uploadStatus" style="font-size:15px;"></div>
+
+      </div>
+    </div>
 
   </div>
-  </div> <!-- END WRAPPERS -->
+
+  <!-- NOW PLAYING -->
+  <div class="dj-player-section" style="max-width:900px;margin:50px auto 0;padding:25px 20px;text-align:center;">
+    <div class="now-playing" style="font-family:'Bangers';font-size:26px;color:#ffcc00;margin-bottom:8px;">Now Playing</div>
+    <div id="nowPlayingTrack" class="now-playing-track" style="color:#ccc;font-size:18px;margin-bottom:20px;">Loading latest mix…</div>
+    <audio id="djPlayer" controls autoplay muted playsinline style="width:100%;max-width:900px;"></audio>
+  </div>
+
+  <!-- PAST UPLOADS -->
+  <div style="text-align:center; margin:50px 0;">
+    <a href="djs-past.html"
+       style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
+              text-decoration:none; font-size:20px; font-weight:600;">
+      View Past DJ Uploads →
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+    <br>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
+  </footer>
 
   <!-- ⭐ DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* Load latest mix + update Now Playing text */
     async function loadLatestMix() {
       try {
         const res = await fetch(BACKEND_URL + "?mode=djlist");
@@ -157,7 +334,6 @@
       }
     }
 
-    /* Upload handler */
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
