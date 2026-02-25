@@ -6,12 +6,17 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <!-- Correct unified CSS path (MAIN DOMAIN) -->
-  <link rel="stylesheet" href="style2.css?v=2017">
-
+  <link rel="stylesheet" href="style2.css?v=2020">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+
     .video-slot {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -96,22 +101,12 @@
       justify-content: center;
       gap: 20px;
       margin-top: 20px;
+      flex-wrap: wrap;
     }
 
     .vote-column {
       width: 300px;
       text-align: center;
-    }
-
-    @media (max-width: 700px) {
-      .vote-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-      .vote-column {
-        width: 100%;
-        max-width: 360px;
-      }
     }
 
     #loadingOverlay {
@@ -356,12 +351,10 @@
           if (vol >= 1) clearInterval(fade);
         }, 80);
 
-        window.removeEventListener("click", enableAudio);
-        window.removeEventListener("touchstart", enableAudio);
+        document.removeEventListener("click", enableAudio);
       }
 
-      window.addEventListener("click", enableAudio, { once: true });
-      window.addEventListener("touchstart", enableAudio, { once: true });
+      document.addEventListener("click", enableAudio, { once: true });
     }
 
     async function loadVoteCounts() {
