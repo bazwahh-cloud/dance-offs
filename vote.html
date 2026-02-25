@@ -6,7 +6,7 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2020">
+  <link rel="stylesheet" href="style2.css?v=2021">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -15,6 +15,13 @@
       background: #000;
       color: white;
       font-family: 'Inter', sans-serif;
+    }
+
+    /* FIX 1 — Restore proper layout width */
+    .page-container {
+      max-width: 1200px !important;
+      margin: auto;
+      padding: 10px;
     }
 
     .video-slot {
@@ -41,10 +48,11 @@
       pointer-events: none;
     }
 
+    /* FIX 2 — Ensure blocker sits ABOVE iframe so taps reach document */
     .blocker {
       position: absolute;
       inset: 0;
-      z-index: 10;
+      z-index: 999999;
       pointer-events: auto;
     }
 
