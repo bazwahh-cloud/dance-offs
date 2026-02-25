@@ -14,79 +14,8 @@
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- ⭐ RESTORED OLD DJ BOOTH CSS (Option A) -->
+  <!-- ⭐ RESTORED OLD DJ BOOTH CSS -->
   <style>
-
-  /* ----------------------------------------------------
-     GLOBAL RESET
-  ---------------------------------------------------- */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    background: #000;
-    color: white;
-    font-family: 'Inter', sans-serif;
-  }
-
-  /* ----------------------------------------------------
-     SAFARI TAP FIX — VOTE PAGE ONLY
-  ---------------------------------------------------- */
-  body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
-    position: static !important;
-  }
-
-  /* ----------------------------------------------------
-     DJ UPLOAD FIX — OVERRIDE SAFARI RULE
-  ---------------------------------------------------- */
-  .dj-upload * {
-    position: unset !important;
-  }
-
-  /* ----------------------------------------------------
-     NAVIGATION
-  ---------------------------------------------------- */
-  .navbar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 12px;
-    background: #111;
-  }
-
-  .navbar a {
-    display: block;
-    text-align: center;
-    padding: 14px 10px;
-    background: rgba(255,255,255,0.05);
-    border: 2px solid rgba(255,255,255,0.15);
-    border-radius: 8px;
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  .navbar a.active {
-    background: #0077cc;
-    border-color: #0077cc;
-  }
-
-  /* ----------------------------------------------------
-     FOOTER
-  ---------------------------------------------------- */
-  .footer {
-    text-align: center;
-    padding: 20px;
-    color: #aaa;
-    margin-top: 40px;
-  }
-
-  /* ----------------------------------------------------
-     RESTORE OLD DJ BOOTH LAYOUT (Option A)
-  ---------------------------------------------------- */
 
   .dj-upload .dj-booth {
     max-width: 900px !important;
@@ -176,12 +105,6 @@
     border: none !important;
   }
 
-  .dj-upload .mixer label {
-    margin-top: 6px !important;
-    font-size: 20px !important;
-    color: #ccc !important;
-  }
-
   @media (max-width: 768px) {
     .dj-upload .dj-booth {
       transform: scale(1) !important;
@@ -269,9 +192,9 @@
 
   <!-- NOW PLAYING -->
   <div class="dj-player-section" style="max-width:900px;margin:50px auto 0;padding:25px 20px;text-align:center;">
-    <div class="now-playing" style="font-family:'Bangers';font-size:26px;color:#ffcc00;margin-bottom:8px;">Now Playing</div>
-    <div id="nowPlayingTrack" class="now-playing-track" style="color:#ccc;font-size:18px;margin-bottom:20px;">Loading latest mix…</div>
-    <audio id="djPlayer" controls autoplay muted playsinline style="width:100%;max-width:900px;"></audio>
+    <div class="now-playing" style="font-family:'Bangers';font-size:26px;color:#ffcc00;margin-bottom:8px;">Your Uploaded Mix</div>
+    <div id="nowPlayingTrack" class="now-playing-track" style="color:#ccc;font-size:18px;margin-bottom:20px;"></div>
+    <audio id="djPlayer" controls playsinline style="width:100%;max-width:900px;"></audio>
   </div>
 
   <!-- PAST UPLOADS -->
@@ -297,43 +220,6 @@
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    async function loadLatestMix() {
-      try {
-        const res = await fetch(BACKEND_URL + "?mode=djlist");
-        const list = await res.json();
-        if (!list.length) return;
-
-        const latest = list[list.length - 1];
-        const player = document.getElementById("djPlayer");
-        const nowPlaying = document.getElementById("nowPlayingTrack");
-
-        player.src = latest.fileUrl;
-
-        const trackName =
-          `${latest.deck1Title || "Unknown"} (${latest.deck1Artist || "Unknown"}) 
-           vs 
-           ${latest.deck2Title || "Unknown"} (${latest.deck2Artist || "Unknown"})`;
-
-        nowPlaying.textContent = trackName;
-
-        player.play().then(() => {
-          player.muted = false;
-        }).catch(() => {
-          const unmute = () => {
-            player.muted = false;
-            player.play().catch(() => {});
-            window.removeEventListener("touchstart", unmute);
-            window.removeEventListener("click", unmute);
-          };
-          window.addEventListener("touchstart", unmute);
-          window.addEventListener("click", unmute);
-        });
-
-      } catch (err) {
-        console.error("Could not load latest mix:", err);
-      }
-    }
-
     document.getElementById("uploadBtn").addEventListener("click", async () => {
       const status = document.getElementById("uploadStatus");
       status.innerHTML = "Uploading...";
@@ -355,8 +241,18 @@
         });
 
         const fileUrl = await uploadResponse.text();
-        status.innerHTML = "Upload complete! Logging metadata...";
+        status.innerHTML = "Mix uploaded successfully!";
 
+        // ⭐ Play the uploaded file immediately
+        const player = document.getElementById("djPlayer");
+        player.src = fileUrl;
+        player.load();
+        player.play().catch(() => {});
+
+        // ⭐ Update Now Playing text
+        document.getElementById("nowPlayingTrack").textContent = file.name;
+
+        // ⭐ Log metadata to Google Sheet
         const storedName = fileUrl.split("/").pop();
 
         await fetch(BACKEND_URL, {
@@ -382,17 +278,10 @@
           })
         });
 
-        status.innerHTML = "Mix uploaded and logged successfully!";
-        loadLatestMix();
-
       } catch (err) {
         console.error(err);
         status.innerHTML = "Upload failed.";
       }
-    });
-
-    window.addEventListener("DOMContentLoaded", () => {
-      loadLatestMix();
     });
   </script>
 
