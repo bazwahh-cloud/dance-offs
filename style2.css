@@ -328,6 +328,12 @@ body.dj-upload .mixer label {
   overflow: hidden;
 }
 
+/* Fix YouTube wrapper escaping container */
+.video-slot > div {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
 .video-slot iframe {
   position: absolute;
   inset: 0;
@@ -335,12 +341,19 @@ body.dj-upload .mixer label {
   height: 100%;
 }
 
-/* Blocker must sit ABOVE iframe */
-.blocker {
+/* Blocker must sit ABOVE iframe but BELOW PayPal */
+.video-slot .blocker {
   position: absolute !important;
   inset: 0;
   z-index: 999999 !important;
   pointer-events: auto !important;
+}
+
+/* PayPal must sit ABOVE blocker */
+#paypal-button-container,
+#paypal-button-container * {
+  position: relative !important;
+  z-index: 1000000 !important;
 }
 
 /* Progress bars */
