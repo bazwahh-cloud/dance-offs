@@ -6,13 +6,13 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="style2.css?v=2022">
+  <link rel="stylesheet" href="style2.css?v=2023">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    /* Page-specific overrides that must stay here */
+    /* Page-specific overrides */
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -27,7 +27,7 @@
       z-index: 9999;
     }
 
-    /* Ensure blocker stays above iframe even with global reset */
+    /* Ensure blocker stays above iframe */
     .blocker {
       position: absolute !important;
       inset: 0;
@@ -290,7 +290,7 @@
         " (Remaining: " + data.champion.remaining + ")";
 
       document.getElementById("challengerCount").innerText =
-        "Challenger Votes: " + data.challenger.used +
+        "Challaller Votes: " + data.challenger.used +
         " (Remaining: " + data.challenger.remaining + ")";
 
       document.getElementById("championBar").style.width =
