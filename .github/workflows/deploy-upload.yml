@@ -31,7 +31,7 @@ jobs:
           local-dir: ./uploads/
 
           # ⭐ THIS IS THE CORRECT DOCUMENT ROOT FOR YOUR SUBDOMAIN
-          server-dir: /uploads/
+          server-dir: /htdocs/
 
           exclude: |
             .git/**
