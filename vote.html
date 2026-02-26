@@ -396,7 +396,7 @@
   }
 
   /* ----------------------------------------------------
-     FIXED submitVote() — matches backend exactly
+     FINAL WORKING submitVote() — CORS-SAFE FORM POST
   ---------------------------------------------------- */
   function submitVote() {
     if (!currentTransactionID) {
@@ -411,30 +411,28 @@
     const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
     const dancerURL  = side === "champion" ? champion.url    : challenger.url;
 
-    const formData = new URLSearchParams();
-    formData.append("mode", "vote");
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = endpoint;
 
-    // FIELD NAMES FIXED TO MATCH BACKEND
-    formData.append("battle", currentBattleID);
-    formData.append("side", side);
-    formData.append("tx", currentTransactionID);
-    formData.append("email", window.currentVoterEmail || "");
+    function add(name, value) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    }
 
-    // Winner info (your backend uses these names)
-    formData.append("WinnerName", dancerName);
-    formData.append("WinnerURL", dancerURL);
+    add("mode", "vote");
+    add("battle", currentBattleID);
+    add("side", side);
+    add("tx", currentTransactionID);
+    add("email", window.currentVoterEmail || "");
+    add("WinnerName", dancerName);
+    add("WinnerURL", dancerURL);
 
-    fetch(endpoint, { method: "POST", body: formData })
-      .then(r => r.text())
-      .then(text => {
-        if (text.includes("Voting closed")) {
-          alert("Voting is now closed for this battle.");
-          return;
-        }
-
-        window.location.href =
-          "thankyou.html?battle=" + currentBattleID + "&tx=" + currentTransactionID;
-      });
+    document.body.appendChild(form);
+    form.submit();
   }
 
   function loadCountdown() {
