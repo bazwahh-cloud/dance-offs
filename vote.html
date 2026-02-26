@@ -12,7 +12,6 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    /* LOADING OVERLAY */
     #loadingOverlay {
       position: fixed !important;
       inset: 0 !important;
@@ -131,7 +130,6 @@
 
     <div class="vote-layout">
 
-      <!-- CHAMPION COLUMN -->
       <div class="vote-column">
         <div id="championVideo" class="video-slot"></div>
 
@@ -144,7 +142,6 @@
         </label>
       </div>
 
-      <!-- PAYPAL COLUMN -->
       <div class="vote-column">
         <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
         <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -154,7 +151,6 @@
         </div>
       </div>
 
-      <!-- CHALLENGER COLUMN -->
       <div class="vote-column">
         <div id="challengerVideo" class="video-slot"></div>
 
@@ -169,7 +165,6 @@
 
     </div>
 
-    <!-- VOTE PROGRESS -->
     <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
 
       <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
@@ -202,7 +197,6 @@
 
     </section>
 
-    <!-- DJ PLAYER -->
     <div style="margin-top:40px; text-align:center;">
       <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
         Now Playing
@@ -224,7 +218,7 @@
 
 <script>
   const endpoint =
-    "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+    "https://script.google.com/macros/s/AKfycbwWkuPI7UUQtrzb51hkkhybyVG9k_NX5YIowFV2twOD0Z06nRf1ghJLOcjJHha8mWdT/exec";
 
   function nocache(url) {
     const sep = url.includes("?") ? "&" : "?";
@@ -233,7 +227,7 @@
 
   let currentTransactionID = null;
   let currentBattleID = null;
-  let currentVoterEmail = null;   /* NEW */
+  let currentVoterEmail = null;
 
   let champion = null;
   let challenger = null;
@@ -241,9 +235,6 @@
   let djData = null;
   let djPlayerReady = false;
 
-  /* ------------------------------
-     PAYPAL UNLOCK (EMAIL CAPTURE ADDED)
-  ------------------------------ */
   paypal.Buttons({
     createOrder: (data, actions) =>
       actions.order.create({
@@ -253,7 +244,6 @@
     onApprove: (data, actions) =>
       actions.order.capture().then(details => {
 
-        /* ⭐ NEW: Capture PayPal email silently */
         const payerEmail = details.payer.email_address;
         window.currentVoterEmail = payerEmail;
 
@@ -269,9 +259,6 @@
       })
   }).render("#paypal-button-container");
 
-  /* ------------------------------
-     YOUTUBE EMBED HELPERS
-  ------------------------------ */
   function extractID(url) {
     if (!url) return null;
     const clean = url.split("?")[0];
@@ -289,9 +276,6 @@
     return null;
   }
 
-  /* ------------------------------
-     EMBED FUNCTION (LOOPING, MUTED, BLOCKER PERMANENT)
-  ------------------------------ */
   function embed(id) {
     const iframe = document.createElement("iframe");
     iframe.className = "battle-frame";
@@ -311,9 +295,6 @@
     return container;
   }
 
-  /* ------------------------------
-     LOAD BATTLE
-  ------------------------------ */
   async function loadBattle() {
     const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
     const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
@@ -330,9 +311,6 @@
     document.getElementById("challengerVideo").appendChild(embed(challID));
   }
 
-  /* ------------------------------
-     LOAD DJ TRACK
-  ------------------------------ */
   async function loadDJTrack() {
     const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
     if (!data || data.length === 0) return;
@@ -349,9 +327,6 @@
     djPlayerReady = true;
   }
 
-  /* ------------------------------
-     TAP TO PLAY (AUDIO + VIDEO AUTOPLAY)
-  ------------------------------ */
   function setupTapToPlay() {
     const overlay = document.getElementById("loadingOverlay");
     const player = document.getElementById("djPlayer");
@@ -395,9 +370,6 @@
     overlay.addEventListener("click", handleTap, { once: true });
   }
 
-  /* ------------------------------
-     LOAD VOTE COUNTS
-  ------------------------------ */
   async function loadVoteCounts() {
     if (!currentBattleID) return;
 
@@ -423,9 +395,6 @@
       (data.challenger.used / max * 100) + "%";
   }
 
-  /* ------------------------------
-     SUBMIT VOTE (EMAIL ADDED)
-  ------------------------------ */
   function submitVote() {
     if (!currentTransactionID) {
       alert("Payment required before voting.");
@@ -447,7 +416,6 @@
     formData.append("BattleID", currentBattleID);
     formData.append("side", side);
 
-    /* ⭐ NEW: Send PayPal email to backend */
     formData.append("Email", window.currentVoterEmail || "");
 
     fetch(endpoint, { method: "POST", body: formData })
@@ -462,9 +430,6 @@
       });
   }
 
-  /* ------------------------------
-     COUNTDOWN TIMER
-  ------------------------------ */
   function loadCountdown() {
     nocache(endpoint + "?mode=getstate")
       .then(r => r.json())
@@ -496,9 +461,6 @@
       });
   }
 
-  /* ------------------------------
-     PAGE LOAD
-  ------------------------------ */
   window.onload = async function () {
     await loadBattle();
     await loadDJTrack();
