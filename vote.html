@@ -233,6 +233,7 @@
 
   let currentTransactionID = null;
   let currentBattleID = null;
+  let currentVoterEmail = null;   /* NEW */
 
   let champion = null;
   let challenger = null;
@@ -241,7 +242,7 @@
   let djPlayerReady = false;
 
   /* ------------------------------
-     PAYPAL UNLOCK
+     PAYPAL UNLOCK (EMAIL CAPTURE ADDED)
   ------------------------------ */
   paypal.Buttons({
     createOrder: (data, actions) =>
@@ -251,6 +252,10 @@
 
     onApprove: (data, actions) =>
       actions.order.capture().then(details => {
+
+        /* ⭐ NEW: Capture PayPal email silently */
+        const payerEmail = details.payer.email_address;
+        window.currentVoterEmail = payerEmail;
 
         currentTransactionID = data.orderID;
 
@@ -296,7 +301,6 @@
 
     const blocker = document.createElement("div");
     blocker.className = "blocker";
-    // No click/touch handlers: blocker stays, iframe never receives input
 
     const container = document.createElement("div");
     container.style.position = "absolute";
@@ -359,7 +363,6 @@
       if (djPlayerReady && player.src) {
         player.play().then(() => {
 
-          // Start both YouTube videos (muted, looping) after user gesture
           document.querySelectorAll("iframe.battle-frame").forEach(frame => {
             frame.contentWindow.postMessage(
               JSON.stringify({ event: "command", func: "playVideo", args: [] }),
@@ -421,7 +424,7 @@
   }
 
   /* ------------------------------
-     SUBMIT VOTE
+     SUBMIT VOTE (EMAIL ADDED)
   ------------------------------ */
   function submitVote() {
     if (!currentTransactionID) {
@@ -443,6 +446,9 @@
     formData.append("TransactionID", currentTransactionID);
     formData.append("BattleID", currentBattleID);
     formData.append("side", side);
+
+    /* ⭐ NEW: Send PayPal email to backend */
+    formData.append("Email", window.currentVoterEmail || "");
 
     fetch(endpoint, { method: "POST", body: formData })
       .then(r => r.text())
