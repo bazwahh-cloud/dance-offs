@@ -47,7 +47,6 @@
       border: 0;
     }
 
-    /* FIXED: blocker must be clickable */
     .blocker {
       position: absolute !important;
       inset: 0 !important;
@@ -286,7 +285,7 @@
   }
 
   /* ------------------------------
-     FIXED EMBED FUNCTION
+     FIXED EMBED FUNCTION (BLOCKER NEVER REMOVED)
   ------------------------------ */
   function embed(id) {
     const iframe = document.createElement("iframe");
@@ -298,14 +297,16 @@
     const blocker = document.createElement("div");
     blocker.className = "blocker";
 
-    blocker.addEventListener("click", () => {
-      blocker.style.display = "none";
-
+    function startVideo() {
       iframe.contentWindow.postMessage(
         JSON.stringify({ event: "command", func: "playVideo", args: [] }),
         "*"
       );
-    });
+      /* blocker stays permanently */
+    }
+
+    blocker.addEventListener("touchstart", startVideo, { passive: true });
+    blocker.addEventListener("click", startVideo);
 
     const container = document.createElement("div");
     container.style.position = "absolute";
