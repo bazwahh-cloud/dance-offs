@@ -14,7 +14,6 @@
       overflow-x: hidden;
     }
 
-    /* LOADING OVERLAY */
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -40,7 +39,6 @@
       letter-spacing: 1px;
     }
 
-    /* DESKTOP TABLE */
     table {
       width: 100%;
       max-width: 1000px;
@@ -73,7 +71,6 @@
       transform: scale(1.05);
     }
 
-    /* MOBILE: Convert table into cards */
     @media (max-width: 700px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -129,10 +126,8 @@
 
 <body>
 
-  <!-- LOADING OVERLAY -->
   <div id="loadingOverlay">Loading<br>Please Wait…</div>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html">Dancers</a>
@@ -171,7 +166,7 @@
 
   <script>
     const BACKEND_URL =
-      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+      "https://script.google.com/macros/s/AKfycbwWkuPI7UUQtrzb51hkkhybyVG9k_NX5YIowFV2twOD0Z06nRf1ghJLOcjJHha8mWdT/exec";
 
     function extractYouTubeID(url) {
       try {
@@ -193,7 +188,7 @@
     function formatUploadTimestamp(ts) {
       if (!ts) return "";
       const d = new Date(ts);
-      if (isNaN(d.getTime())) return ts; // fallback to raw if parsing fails
+      if (isNaN(d.getTime())) return ts;
       return d.toLocaleString(undefined, {
         year: "numeric",
         month: "short",
