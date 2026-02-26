@@ -173,7 +173,6 @@
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
 
-    /* UNIVERSAL YOUTUBE ID EXTRACTOR */
     function extractYouTubeID(url) {
       try {
         if (url.includes("/shorts/")) {
@@ -189,6 +188,19 @@
       } catch {
         return null;
       }
+    }
+
+    function formatUploadTimestamp(ts) {
+      if (!ts) return "";
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return ts; // fallback to raw if parsing fails
+      return d.toLocaleString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
 
     async function loadDancers() {
@@ -226,17 +238,19 @@
             ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
             : "https://via.placeholder.com/140x100?text=No+Preview";
 
+          const uploadedDisplay = formatUploadTimestamp(row.timestamp);
+
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td data-label="Rank">${index + 1}</td>
             <td data-label="Video">
-              <a href="${yt}" target="_blank">
-                <img src="${thumb}" class="thumb">
+              <a href="${yt}" target="_blank" rel="noopener">
+                <img src="${thumb}" class="thumb" alt="Dancer video thumbnail">
               </a>
             </td>
             <td data-label="Dancer">${row.dancer || "Unknown"}</td>
             <td data-label="Votes">${row.votes}</td>
-            <td data-label="Uploaded">${row.timestamp || ""}</td>
+            <td data-label="Uploaded">${uploadedDisplay}</td>
           `;
           tbody.appendChild(tr);
         });
