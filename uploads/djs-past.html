@@ -66,6 +66,13 @@
       z-index: 9999;
     }
 
+    /* ⭐ NEW: Highlight row when playing */
+    .dj-library tr.playing {
+      background: rgba(255, 204, 0, 0.15) !important;
+      box-shadow: 0 0 12px rgba(255, 204, 0, 0.4);
+      transition: 0.25s ease;
+    }
+
     @media (max-width: 700px) {
       .dj-library, .dj-library thead, .dj-library tbody,
       .dj-library th, .dj-library td, .dj-library tr {
@@ -202,6 +209,30 @@
     }
 
     window.addEventListener("DOMContentLoaded", loadLibrary);
+
+    /* ⭐ NEW: Only one audio plays at a time + highlight row */
+    document.addEventListener("play", function (e) {
+      if (e.target.tagName !== "AUDIO") return;
+
+      const all = document.querySelectorAll("audio");
+      all.forEach(player => {
+        const row = player.closest("tr");
+        if (player !== e.target) {
+          player.pause();
+          player.currentTime = 0;
+          if (row) row.classList.remove("playing");
+        }
+      });
+
+      const activeRow = e.target.closest("tr");
+      if (activeRow) activeRow.classList.add("playing");
+    }, true);
+
+    document.addEventListener("pause", function (e) {
+      if (e.target.tagName !== "AUDIO") return;
+      const row = e.target.closest("tr");
+      if (row) row.classList.remove("playing");
+    }, true);
   </script>
 
 </body>
