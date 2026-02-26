@@ -108,6 +108,15 @@
       margin-top: 6px;
       min-height: 18px;
     }
+
+    /* NEW: Instruction line styling */
+    #voteInstruction {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 
@@ -126,6 +135,9 @@
 
   <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
+  <!-- NEW: Instruction line -->
+  <div id="voteInstruction">Voting locked — complete payment to continue.</div>
+
   <main class="page-container">
 
     <div class="vote-layout">
@@ -138,7 +150,6 @@
           <div class="vote-box">
             <span class="vote-title">Vote Champion</span>
           </div>
-          <div class="vote-hint" id="championHint">Pay £1.50 to unlock voting</div>
         </label>
       </div>
 
@@ -159,7 +170,6 @@
           <div class="vote-box">
             <span class="vote-title">Vote Challenger</span>
           </div>
-          <div class="vote-hint" id="challengerHint">Pay £1.50 to unlock voting</div>
         </label>
       </div>
 
@@ -254,8 +264,9 @@
           opt.querySelector("input").disabled = false;
         });
 
-        document.getElementById("championHint").innerText = "Click to vote for Champion";
-        document.getElementById("challengerHint").innerText = "Click to vote for Challenger";
+        // NEW: update instruction text
+        document.getElementById("voteInstruction").innerText =
+          "Voting unlocked — choose Champion or Challenger.";
       })
   }).render("#paypal-button-container");
 
@@ -396,7 +407,7 @@
   }
 
   /* ----------------------------------------------------
-     FINAL WORKING submitVote() — CORS-SAFE FORM POST
+     UPDATED submitVote() — with redirect + instruction update
   ---------------------------------------------------- */
   function submitVote() {
     if (!currentTransactionID) {
@@ -410,6 +421,10 @@
     const side = choice.value;
     const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
     const dancerURL  = side === "champion" ? champion.url    : challenger.url;
+
+    // NEW: update instruction text immediately
+    document.getElementById("voteInstruction").innerText =
+      "Your vote has been cast — one moment…";
 
     const form = document.createElement("form");
     form.method = "POST";
@@ -433,6 +448,11 @@
 
     document.body.appendChild(form);
     form.submit();
+
+    // NEW: redirect after POST
+    setTimeout(() => {
+      window.location.href = "thankyou.html";
+    }, 400);
   }
 
   function loadCountdown() {
