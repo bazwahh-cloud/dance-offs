@@ -285,7 +285,7 @@
   }
 
   /* ------------------------------
-     FIXED EMBED FUNCTION (BLOCKER NEVER REMOVED)
+     EMBED FUNCTION (LOOPING, MUTED, BLOCKER PERMANENT)
   ------------------------------ */
   function embed(id) {
     const iframe = document.createElement("iframe");
@@ -296,17 +296,7 @@
 
     const blocker = document.createElement("div");
     blocker.className = "blocker";
-
-    function startVideo() {
-      iframe.contentWindow.postMessage(
-        JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-        "*"
-      );
-      /* blocker stays permanently */
-    }
-
-    blocker.addEventListener("touchstart", startVideo, { passive: true });
-    blocker.addEventListener("click", startVideo);
+    // No click/touch handlers: blocker stays, iframe never receives input
 
     const container = document.createElement("div");
     container.style.position = "absolute";
@@ -356,7 +346,7 @@
   }
 
   /* ------------------------------
-     TAP TO PLAY (AUDIO ONLY)
+     TAP TO PLAY (AUDIO + VIDEO AUTOPLAY)
   ------------------------------ */
   function setupTapToPlay() {
     const overlay = document.getElementById("loadingOverlay");
@@ -368,6 +358,14 @@
 
       if (djPlayerReady && player.src) {
         player.play().then(() => {
+
+          // Start both YouTube videos (muted, looping) after user gesture
+          document.querySelectorAll("iframe.battle-frame").forEach(frame => {
+            frame.contentWindow.postMessage(
+              JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+              "*"
+            );
+          });
 
           overlay.style.opacity = "0";
           setTimeout(() => {
