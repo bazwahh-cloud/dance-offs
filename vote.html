@@ -344,26 +344,38 @@
   }
 
   async function loadBattle() {
-    const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
-    const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
+    let state, dancers;
 
-    currentBattleID = state.battleID;
+    try {
+      state = await Promise.race([
+        nocache(endpoint + "?mode=getstate").then(r => r.json()),
+        new Promise((_, reject) => setTimeout(() => reject("timeout"), 3000))
+      ]);
 
-    champion = dancers[state.championIndex];
-    challenger = dancers[state.challengerIndex];
+      dancers = await Promise.race([
+        nocache(endpoint + "?mode=getdancers").then(r => r.json()),
+        new Promise((_, reject) => setTimeout(() => reject("timeout"), 3000))
+      ]);
+    } catch (e) {
+      console.warn("Battle load timeout, continuing without data");
+    }
 
-    const champID = extractID(champion.url);
-    const challID = extractID(challenger.url);
+    if (state && dancers) {
+      currentBattleID = state.battleID;
+      champion = dancers[state.championIndex];
+      challenger = dancers[state.challengerIndex];
 
-    document.getElementById("championVideo").appendChild(embed(champID));
-    document.getElementById("challengerVideo").appendChild(embed(challID));
+      const champID = extractID(champion.url);
+      const challID = extractID(challenger.url);
 
-    // --- FIX: hide overlay once videos are ready ---
+      document.getElementById("championVideo").appendChild(embed(champID));
+      document.getElementById("challengerVideo").appendChild(embed(challID));
+    }
+
+    // ALWAYS hide overlay, even if data failed
     const overlay = document.getElementById("loadingOverlay");
     overlay.style.opacity = "0";
-    setTimeout(() => {
-      overlay.style.display = "none";
-    }, 350);
+    setTimeout(() => overlay.style.display = "none", 350);
   }
 
   async function loadDJTrack() {
@@ -385,8 +397,6 @@
   function setupTapToPlay() {
     const overlay = document.getElementById("loadingOverlay");
     const player = document.getElementById("djPlayer");
-
-    overlay.innerText = "Tap to Play";
 
     function handleTap() {
 
@@ -512,13 +522,4 @@
           }
 
           const days = Math.floor(diff / 86400000);
-          const hours = Math.floor((diff / 3600000) % 24);
-          const mins = Math.floor((diff / 60000) % 60);
-          const secs = Math.floor((diff / 1000) % 60);
-
-          document.getElementById("countdownTimer").innerText =
-            `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
-        }
-
-        updateTimer();
-        setInterval(updateTimer, 1000
+          const hours
