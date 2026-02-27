@@ -1,133 +1,511 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vote</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dance-Offs: Vote</title>
+
+  <link rel="stylesheet" href="style2.css?v=4001">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
+
+  <style>
+    #loadingOverlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 28px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
+      z-index: 999999 !important;
+      text-align: center;
+      transition: opacity 0.4s ease;
+    }
+
+    .video-slot {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .video-slot iframe.battle-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .play-overlay {
+      position: absolute !important;
+      inset: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.45);
+      z-index: 10;
+      cursor: pointer;
+      transition: opacity 0.25s ease;
+    }
+
+    .play-overlay.hidden {
+      opacity: 0;
+      pointer-events: none !important;
+    }
+
+    .play-overlay .icon {
+      font-size: 64px;
+      color: #ffcc00;
+      text-shadow: 0 0 10px #000;
+    }
+
+    @media (max-width: 600px) {
+      .play-overlay .icon {
+        font-size: 48px;
+      }
+    }
+
+    .vote-option input[type="radio"] {
+      display: none;
+    }
+
+    .vote-box {
+      width: 100%;
+      max-width: 240px;
+      padding: 18px;
+      background: #111;
+      border: 3px solid #333;
+      border-radius: 12px;
+      text-align: center;
+      cursor: not-allowed;
+      opacity: 0.5;
+      transition: 0.25s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      margin: 15px auto 0;
+    }
+
+    .vote-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffcc00;
+      letter-spacing: 1px;
+    }
+
+    .vote-option.enabled:hover .vote-box {
+      border-color: #ffcc00;
+      background: #1a1a1a;
+      transform: translateY(-3px);
+      opacity: 1;
+    }
+
+    .vote-option input[type="radio"]:checked + .vote-box {
+      border-color: #ffcc00;
+      background: #222;
+      box-shadow: 0 0 12px rgba(255,204,0,0.6);
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+
+    .vote-option.enabled .vote-box {
+      cursor: pointer;
+      opacity: 1;
+    }
+  </style>
 </head>
 
 <body class="vote-page-only">
 
-  <!-- NAVIGATION -->
+  <div id="loadingOverlay">Loading battle… please wait</div>
+
   <nav class="navbar">
     <a href="index.html">Home</a>
+    <a href="dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
     <a href="vote.html" class="active">Vote</a>
-    <a href="faq.html">FAQ</a>
+    <a href="prizes.html">Prizes</a>
+    <a href="shop.html">Shop</a>
   </nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-img-wrap">
-      <img src="images/hero.jpg" alt="Battle Hero Image" />
-    </div>
-  </div>
+  <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
-  <!-- INSTRUCTION LINE -->
-  <div class="instruction-line">
-    Watch both dancers and cast your vote!
-  </div>
+  <!-- voteInstruction removed -->
 
-  <!-- PAGE CONTAINER -->
-  <div class="page-container">
+  <main class="page-container">
+
     <div class="vote-layout">
 
-      <!-- CHAMPION COLUMN -->
       <div class="vote-column">
-        <h2>Champion</h2>
+        <div id="championVideo" data-tip="Tap to play the battle video"></div>
 
-        <div id="championVideo" class="video-slot">
-
-          <!-- NEW: Hover tooltip layer -->
-          <div class="video-hover" data-tooltip="Click to watch this video"></div>
-
-          <!-- YouTube iframe (JS will replace VIDEO_ID) -->
-          <iframe
-            class="battle-frame"
-            src="https://www.youtube.com/embed/CHAMPION_VIDEO_ID?autoplay=0&mute=1&loop=1&playlist=CHAMPION_VIDEO_ID&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
-            allow="autoplay; encrypted-media"
-          ></iframe>
-
-          <!-- Play overlay -->
-          <div class="play-overlay">
-            <div class="icon">▶</div>
+        <label class="vote-option" data-tip="Unlock voting by completing payment">
+          <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled onclick="submitVote()">
+          <div class="vote-box">
+            <span class="vote-title">Vote Champion</span>
           </div>
+        </label>
+      </div>
 
+      <div class="vote-column">
+        <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
+        <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
+
+        <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+
+      <div class="vote-column">
+        <div id="challengerVideo" data-tip="Tap to play the battle video"></div>
+
+        <label class="vote-option" data-tip="Unlock voting by completing payment">
+          <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled onclick="submitVote()">
+          <div class="vote-box">
+            <span class="vote-title">Vote Challenger</span>
+          </div>
+        </label>
+      </div>
+
+    </div>
+
+    <section id="voteProgressSection" style="margin-top:30px; text-align:center;">
+
+      <h3 style="font-family:'Bangers', cursive; font-size:26px; margin-bottom:15px;">
+        Vote Progress
+      </h3>
+
+      <div style="margin-bottom:20px;">
+        <div id="championCount" class="vote-count" style="font-size:16px;">
+          Champion Votes: 0
         </div>
 
-        <!-- Vote button -->
-        <button id="voteChampion" class="vote-button enabled" data-tip="Vote for the Champion">
-          Vote Champion
-        </button>
-
-        <!-- Progress bar -->
-        <div class="progress-wrapper">
+        <div class="progress-wrapper" style="margin-top:6px;">
           <div id="championBar" class="progress-bar champion-bar"></div>
         </div>
-
-        <div id="championCount" class="vote-count">Champion Votes: 0</div>
       </div>
 
-
-      <!-- CHALLENGER COLUMN -->
-      <div class="vote-column">
-        <h2>Challenger</h2>
-
-        <div id="challengerVideo" class="video-slot">
-
-          <!-- NEW: Hover tooltip layer -->
-          <div class="video-hover" data-tooltip="Click to watch this video"></div>
-
-          <!-- YouTube iframe (JS will replace VIDEO_ID) -->
-          <iframe
-            class="battle-frame"
-            src="https://www.youtube.com/embed/CHALLENGER_VIDEO_ID?autoplay=0&mute=1&loop=1&playlist=CHALLENGER_VIDEO_ID&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
-            allow="autoplay; encrypted-media"
-          ></iframe>
-
-          <!-- Play overlay -->
-          <div class="play-overlay">
-            <div class="icon">▶</div>
-          </div>
-
+      <div>
+        <div id="challengerCount" class="vote-count" style="font-size:16px;">
+          Challenger Votes: 0
         </div>
 
-        <!-- Vote button -->
-        <button id="voteChallenger" class="vote-button enabled" data-tip="Vote for the Challenger">
-          Vote Challenger
-        </button>
-
-        <!-- Progress bar -->
-        <div class="progress-wrapper">
+        <div class="progress-wrapper" style="margin-top:6px;">
           <div id="challengerBar" class="progress-bar challenger-bar"></div>
         </div>
-
-        <div id="challengerCount" class="vote-count">Challenger Votes: 0</div>
       </div>
 
-    </div> <!-- end vote-layout -->
+      <div style="margin-top:10px; font-size:14px; color:#ccc;">
+        <span id="remainingVotesText">Remaining votes: 200</span>
+      </div>
 
-    <div id="remainingVotesText" class="remaining-votes">
-      Remaining votes: 0
-    </div>
-    <!-- DJ TRACK -->
-    <div class="dj-track">
-      <h3>Now Playing</h3>
-      <div id="djTrackName">Loading…</div>
-      <audio id="djPlayer" controls></audio>
-    </div>
+    </section>
 
-    <!-- COUNTDOWN -->
-    <div id="countdownTimer" class="countdown">
-      Loading next battle timer…
+    <div style="margin-top:40px; text-align:center;">
+      <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">
+        Now Playing
+      </h3>
+      <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
+
+      <audio id="djPlayer" controls playsinline style="width:100%; max-width:500px;"></audio>
     </div>
 
-  </div> <!-- end page-container -->
+  </main>
 
-  <!-- TAP-TO-PLAY OVERLAY -->
-  <div id="loadingOverlay" class="play-overlay">
-    Tap to Play
-  </div>
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+    <br>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
+  </footer>
+<script>
+  const endpoint =
+    "https://script.google.com/macros/s/AKfycbwWkuPI7UUQtrzb51hkkhybyVG9k_NX5YIowFV2twOD0Z06nRf1ghJLOcjJHha8mWdT/exec";
+
+  function nocache(url) {
+    const sep = url.includes("?") ? "&" : "?";
+    return fetch(url + sep + "t=" + Date.now());
+  }
+
+  let currentTransactionID = null;
+  let currentBattleID = null;
+  let currentVoterEmail = null;
+
+  let champion = null;
+  let challenger = null;
+
+  let djData = null;
+  let djPlayerReady = false;
+
+  paypal.Buttons({
+    createOrder: (data, actions) =>
+      actions.order.create({
+        purchase_units: [{ amount: { value: "1.50" } }]
+      }),
+
+    onApprove: (data, actions) =>
+      actions.order.capture().then(details => {
+
+        const payerEmail = details.payer.email_address;
+        window.currentVoterEmail = payerEmail;
+
+        currentTransactionID = data.orderID;
+
+        document.querySelectorAll(".vote-option").forEach(opt => {
+          opt.classList.add("enabled");
+          opt.querySelector("input").disabled = false;
+        });
+
+        /* voteInstruction removed */
+      })
+  }).render("#paypal-button-container");
+
+  function extractID(url) {
+    if (!url) return null;
+    const clean = url.split("?")[0];
+    const patterns = [
+      /shorts\/([^?&/]+)/,
+      /youtu\.be\/([^?&/]+)/,
+      /v=([^?&/]+)/,
+      /embed\/([^?&/]+)/,
+      /youtube\.com\/watch\/([^?&/]+)/
+    ];
+    for (const p of patterns) {
+      const m = clean.match(p);
+      if (m && m[1]) return m[1];
+    }
+    return null;
+  }
+
+  function embed(id) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "video-slot";
+
+    const overlay = document.createElement("div");
+    overlay.className = "play-overlay";
+    overlay.onclick = () => startVideo(overlay);
+
+    const icon = document.createElement("i");
+    icon.className = "fa-solid fa-play icon";
+    overlay.appendChild(icon);
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "battle-frame";
+    iframe.src =
+      `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+    iframe.allow = "autoplay; encrypted-media";
+
+    wrapper.appendChild(iframe);
+    wrapper.appendChild(overlay);
+
+    return wrapper;
+  }
+
+  function startVideo(overlay) {
+    overlay.classList.add("hidden");
+
+    const iframe = overlay.parentElement.querySelector("iframe");
+    iframe.contentWindow.postMessage(
+      JSON.stringify({
+        event: "command",
+        func: "playVideo"
+      }),
+      "*"
+    );
+  }
+
+  async function loadBattle() {
+    const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
+    const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
+
+    currentBattleID = state.battleID;
+
+    champion = dancers[state.championIndex];
+    challenger = dancers[state.challengerIndex];
+
+    const champID = extractID(champion.url);
+    const challID = extractID(challenger.url);
+
+    document.getElementById("championVideo").appendChild(embed(champID));
+    document.getElementById("challengerVideo").appendChild(embed(challID));
+  }
+
+  async function loadDJTrack() {
+    const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
+    if (!data || data.length === 0) return;
+
+    djData = data;
+    const last = data[data.length - 1];
+    const player = document.getElementById("djPlayer");
+
+    document.getElementById("djTrackName").innerText =
+      last.trackname || "Latest DJ Track";
+
+    player.src = last.mp3url;
+    player.volume = 0;
+    djPlayerReady = true;
+  }
+
+  function setupTapToPlay() {
+    const overlay = document.getElementById("loadingOverlay");
+    const player = document.getElementById("djPlayer");
+
+    overlay.innerText = "Tap to Play";
+
+    function handleTap() {
+
+      if (djPlayerReady && player.src) {
+        player.play().then(() => {
+
+          document.querySelectorAll("iframe.battle-frame").forEach(frame => {
+            frame.contentWindow.postMessage(
+              JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+              "*"
+            );
+          });
+
+          overlay.style.opacity = "0";
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 350);
+
+          let vol = 0;
+          const fade = setInterval(() => {
+            vol = Math.min(1, vol + 0.05);
+            player.volume = vol;
+            if (vol >= 1) clearInterval(fade);
+          }, 80);
+        });
+      } else {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 350);
+      }
+
+      overlay.removeEventListener("click", handleTap);
+    }
+
+    overlay.addEventListener("click", handleTap, { once: true });
+  }
+
+  async function loadVoteCounts() {
+    if (!currentBattleID) return;
+
+    const data = await nocache(
+      endpoint + "?mode=getvotestate&battleID=" + currentBattleID
+    ).then(r => r.json());
+
+    document.getElementById("championCount").innerText =
+      "Champion Votes: " + data.champion.used;
+
+    document.getElementById("challengerCount").innerText =
+      "Challenger Votes: " + data.challenger.used;
+
+    document.getElementById("remainingVotesText").innerText =
+      "Remaining votes: " + data.remaining;
+
+    const max = data.maxVotes || 200;
+
+    document.getElementById("championBar").style.width =
+      (data.champion.used / max * 100) + "%";
+
+    document.getElementById("challengerBar").style.width =
+      (data.challenger.used / max * 100) + "%";
+  }
+
+  function submitVote() {
+    if (!currentTransactionID) {
+      alert("Payment required before voting.");
+      return;
+    }
+
+    const choice = document.querySelector('input[name="voteChoice"]:checked');
+    if (!choice) return;
+
+    const side = choice.value;
+    const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
+    const dancerURL  = side === "champion" ? champion.url    : challenger.url;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = endpoint;
+
+    function add(name, value) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    }
+
+    add("mode", "vote");
+    add("battle", currentBattleID);
+    add("side", side);
+    add("tx", currentTransactionID);
+    add("email", window.currentVoterEmail || "");
+    add("WinnerName", dancerName);
+    add("WinnerURL", dancerURL);
+
+    document.body.appendChild(form);
+    form.submit();
+
+    setTimeout(() => {
+      window.location.href = "thankyou.html";
+    }, 400);
+  }
+
+  function loadCountdown() {
+    nocache(endpoint + "?mode=getstate")
+      .then(r => r.json())
+      .then(state => {
+        const lastUpdated = new Date(state.lastUpdated);
+        const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        function updateTimer() {
+          const now = new Date();
+          const diff = nextReset - now;
+
+          if (diff <= 0) {
+            document.getElementById("countdownTimer").innerText =
+              "New battle dropping soon…";
+            return;
+          }
+
+          const days = Math.floor(diff / 86400000);
+          const hours = Math.floor((diff / 3600000) % 24);
+          const mins = Math.floor((diff / 60000) % 60);
+          const secs = Math.floor((diff / 1000) % 60);
+
+          document.getElementById("countdownTimer").innerText =
+            `Next battle in ${days}d ${hours}h ${mins}m ${secs}s`;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      });
+  }
+
+  window.onload = async function () {
+    await loadBattle();
+    await loadDJTrack();
+    loadCountdown();
+
+    setTimeout(setupTapToPlay, 800);
+
+    setTimeout(loadVoteCounts, 1000);
+    setInterval(loadVoteCounts, 5000);
+  };
+</script>
 
 </body>
 </html>
