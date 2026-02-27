@@ -46,13 +46,34 @@
       border: 0;
     }
 
-    .blocker {
+    /* NEW: Mobile-safe overlay */
+    .play-overlay {
       position: absolute !important;
       inset: 0 !important;
-      z-index: 10 !important;
-      pointer-events: auto !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.45);
+      z-index: 10;
       cursor: pointer;
-      background: rgba(0,0,0,0.35);
+      transition: opacity 0.25s ease;
+    }
+
+    .play-overlay.hidden {
+      opacity: 0;
+      pointer-events: none !important;
+    }
+
+    .play-overlay .icon {
+      font-size: 64px;
+      color: #ffcc00;
+      text-shadow: 0 0 10px #000;
+    }
+
+    @media (max-width: 600px) {
+      .play-overlay .icon {
+        font-size: 48px;
+      }
     }
 
     .vote-option input[type="radio"] {
@@ -101,15 +122,6 @@
       opacity: 1;
     }
 
-    .vote-hint {
-      text-align: center;
-      font-size: 14px;
-      color: #ccc;
-      margin-top: 6px;
-      min-height: 18px;
-    }
-
-    /* NEW: Instruction line styling */
     #voteInstruction {
       text-align: center;
       font-size: 16px;
@@ -135,7 +147,6 @@
 
   <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
-  <!-- NEW: Instruction line -->
   <div id="voteInstruction">Voting locked — complete payment to continue.</div>
 
   <main class="page-container">
@@ -143,7 +154,7 @@
     <div class="vote-layout">
 
       <div class="vote-column">
-        <div id="championVideo" class="video-slot"></div>
+        <div id="championVideo"></div>
 
         <label class="vote-option">
           <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled onclick="submitVote()">
@@ -163,7 +174,7 @@
       </div>
 
       <div class="vote-column">
-        <div id="challengerVideo" class="video-slot"></div>
+        <div id="challengerVideo"></div>
 
         <label class="vote-option">
           <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled onclick="submitVote()">
@@ -264,7 +275,6 @@
           opt.querySelector("input").disabled = false;
         });
 
-        // NEW: update instruction text
         document.getElementById("voteInstruction").innerText =
           "Voting unlocked — choose Champion or Challenger.";
       })
@@ -287,23 +297,43 @@
     return null;
   }
 
+  /* NEW: Mobile-safe embed() */
   function embed(id) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "video-slot";
+
+    const overlay = document.createElement("div");
+    overlay.className = "play-overlay";
+    overlay.onclick = () => startVideo(overlay);
+
+    const icon = document.createElement("i");
+    icon.className = "fa-solid fa-play icon";
+    overlay.appendChild(icon);
+
     const iframe = document.createElement("iframe");
     iframe.className = "battle-frame";
     iframe.src =
       `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
     iframe.allow = "autoplay; encrypted-media";
 
-    const blocker = document.createElement("div");
-    blocker.className = "blocker";
+    wrapper.appendChild(iframe);
+    wrapper.appendChild(overlay);
 
-    const container = document.createElement("div");
-    container.style.position = "absolute";
-    container.style.inset = "0";
-    container.appendChild(iframe);
-    container.appendChild(blocker);
+    return wrapper;
+  }
 
-    return container;
+  /* NEW: Overlay play handler */
+  function startVideo(overlay) {
+    overlay.classList.add("hidden");
+
+    const iframe = overlay.parentElement.querySelector("iframe");
+    iframe.contentWindow.postMessage(
+      JSON.stringify({
+        event: "command",
+        func: "playVideo"
+      }),
+      "*"
+    );
   }
 
   async function loadBattle() {
@@ -406,9 +436,6 @@
       (data.challenger.used / max * 100) + "%";
   }
 
-  /* ----------------------------------------------------
-     UPDATED submitVote() — with redirect + instruction update
-  ---------------------------------------------------- */
   function submitVote() {
     if (!currentTransactionID) {
       alert("Payment required before voting.");
@@ -422,7 +449,6 @@
     const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
     const dancerURL  = side === "champion" ? champion.url    : challenger.url;
 
-    // NEW: update instruction text immediately
     document.getElementById("voteInstruction").innerText =
       "Your vote has been cast — one moment…";
 
@@ -449,7 +475,6 @@
     document.body.appendChild(form);
     form.submit();
 
-    // NEW: redirect after POST
     setTimeout(() => {
       window.location.href = "thankyou.html";
     }, 400);
