@@ -46,7 +46,6 @@
       border: 0;
     }
 
-    /* NEW: Mobile-safe overlay */
     .play-overlay {
       position: absolute !important;
       inset: 0 !important;
@@ -147,7 +146,8 @@
 
   <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
-  <div id="voteInstruction">Voting locked — complete payment to continue.</div>
+  <!-- CHANGE 1 APPLIED HERE -->
+  <div id="voteInstruction">Voting will open shortly.</div>
 
   <main class="page-container">
 
@@ -236,7 +236,6 @@
       Terms & Conditions
     </a>
   </footer>
-
 <script>
   const endpoint =
     "https://script.google.com/macros/s/AKfycbwWkuPI7UUQtrzb51hkkhybyVG9k_NX5YIowFV2twOD0Z06nRf1ghJLOcjJHha8mWdT/exec";
@@ -297,7 +296,6 @@
     return null;
   }
 
-  /* NEW: Mobile-safe embed() */
   function embed(id) {
     const wrapper = document.createElement("div");
     wrapper.className = "video-slot";
@@ -322,7 +320,6 @@
     return wrapper;
   }
 
-  /* NEW: Overlay play handler */
   function startVideo(overlay) {
     overlay.classList.add("hidden");
 
