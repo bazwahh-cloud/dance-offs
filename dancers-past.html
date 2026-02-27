@@ -10,9 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      overflow-x: hidden;
-    }
+    body { overflow-x: hidden; }
 
     #loadingOverlay {
       position: fixed;
@@ -67,18 +65,11 @@
       transition: transform 0.15s ease;
     }
 
-    .thumb:hover {
-      transform: scale(1.05);
-    }
+    .thumb:hover { transform: scale(1.05); }
 
     @media (max-width: 700px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      thead {
-        display: none;
-      }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
 
       tr {
         background: rgba(0,0,0,0.4);
@@ -145,7 +136,7 @@
         <th>Rank</th>
         <th>Video</th>
         <th>Dancer</th>
-        <th>Votes</th>
+        <th>Wins</th>
         <th>Uploaded</th>
       </tr>
     </thead>
@@ -170,9 +161,7 @@
 
     function extractYouTubeID(url) {
       try {
-        if (url.includes("/shorts/")) {
-          return url.split("/shorts/")[1].split("?")[0];
-        }
+        if (url.includes("/shorts/")) return url.split("/shorts/")[1].split("?")[0];
         const watchID = url.match(/v=([^&]+)/);
         if (watchID) return watchID[1];
         const shortID = url.match(/youtu\.be\/([^?]+)/);
@@ -180,9 +169,7 @@
         const embedID = url.match(/embed\/([^?]+)/);
         if (embedID) return embedID[1];
         return null;
-      } catch {
-        return null;
-      }
+      } catch { return null; }
     }
 
     function formatUploadTimestamp(ts) {
@@ -206,19 +193,48 @@
         const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
         const votes = await votesRes.json();
 
-        const voteCount = {};
+        const wins = {};
+        const votesByBattle = {};
+
         votes.forEach(v => {
+          const battle = v.BattleID;
           const url = v.WinnerURL;
-          if (!voteCount[url]) voteCount[url] = 0;
-          voteCount[url]++;
+
+          if (!votesByBattle[battle]) votesByBattle[battle] = {};
+          if (!votesByBattle[battle][url]) votesByBattle[battle][url] = 0;
+
+          votesByBattle[battle][url]++;
+        });
+
+        Object.keys(votesByBattle).forEach(battleID => {
+          const battleVotes = votesByBattle[battleID];
+          const urls = Object.keys(battleVotes);
+
+          if (urls.length < 2) return;
+
+          const urlA = urls[0];
+          const urlB = urls[1];
+
+          const votesA = battleVotes[urlA] || 0;
+          const votesB = battleVotes[urlB] || 0;
+
+          if (!wins[urlA]) wins[urlA] = 0;
+          if (!wins[urlB]) wins[urlB] = 0;
+
+          if (votesA > votesB) wins[urlA]++;
+          else if (votesB > votesA) wins[urlB]++;
+          else {
+            wins[urlA]++;
+            wins[urlB]++;
+          }
         });
 
         dancers.forEach(d => {
-          d.votes = voteCount[d.url] || 0;
+          d.wins = wins[d.url] || 0;
         });
 
         dancers.sort((a, b) => {
-          if (b.votes !== a.votes) return b.votes - a.votes;
+          if (b.wins !== a.wins) return b.wins - a.wins;
           return new Date(b.timestamp) - new Date(a.timestamp);
         });
 
@@ -244,7 +260,7 @@
               </a>
             </td>
             <td data-label="Dancer">${row.dancer || "Unknown"}</td>
-            <td data-label="Votes">${row.votes}</td>
+            <td data-label="Wins">${row.wins}</td>
             <td data-label="Uploaded">${uploadedDisplay}</td>
           `;
           tbody.appendChild(tr);
