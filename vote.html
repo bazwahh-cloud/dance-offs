@@ -120,14 +120,6 @@
       cursor: pointer;
       opacity: 1;
     }
-
-    #voteInstruction {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 0;
-    }
   </style>
 </head>
 
@@ -146,8 +138,7 @@
 
   <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
-  <!-- CHANGE 1 APPLIED HERE -->
-  <div id="voteInstruction">Voting will open shortly.</div>
+  <!-- voteInstruction removed completely -->
 
   <main class="page-container">
 
@@ -274,8 +265,7 @@
           opt.querySelector("input").disabled = false;
         });
 
-        document.getElementById("voteInstruction").innerText =
-          "Voting unlocked — choose Champion or Challenger.";
+        /* voteInstruction removed */
       })
   }).render("#paypal-button-container");
 
@@ -446,8 +436,7 @@
     const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
     const dancerURL  = side === "champion" ? champion.url    : challenger.url;
 
-    document.getElementById("voteInstruction").innerText =
-      "Your vote has been cast — one moment…";
+    /* voteInstruction removed */
 
     const form = document.createElement("form");
     form.method = "POST";
