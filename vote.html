@@ -24,7 +24,7 @@
       font-size: 28px;
       font-family: 'Bangers', cursive;
       letter-spacing: 1px;
-      z-index: 999999 !important;
+      z-index: 999999999 !important;
       text-align: center;
       transition: opacity 0.4s ease;
     }
@@ -46,7 +46,6 @@
       border: 0;
     }
 
-    /* Visible play overlay */
     .play-overlay {
       position: absolute !important;
       inset: 0 !important;
@@ -417,6 +416,12 @@
     }
 
     overlay.addEventListener("click", handleTap, { once: true });
+
+    // AUTO-HIDE FAILSAFE (Option A)
+    setTimeout(() => {
+      overlay.style.opacity = "0";
+      overlay.style.display = "none";
+    }, 3000);
   }
 
   async function loadVoteCounts() {
@@ -521,7 +526,4 @@
 
   window.onload = async function () {
     await loadBattle();
-    await loadDJTrack();
-    loadCountdown();
-
-    setTimeout(setupTapToPlay, 800
+    await loadDJTrack
