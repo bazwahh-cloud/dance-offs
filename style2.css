@@ -285,7 +285,6 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.play-overlay):not
   position: relative !important;
   z-index: 1000000 !important;
 }
-
 /* ----------------------------------------------------
    PROGRESS BARS
 ---------------------------------------------------- */
@@ -551,4 +550,40 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.play-overlay):not
   .dj-upload .mixer {
     width: 100% !important;
   }
+}
+
+/* ----------------------------------------------------
+   TOOLTIP SYSTEM (GLOBAL)
+---------------------------------------------------- */
+[data-tip] {
+  position: relative;
+}
+
+[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+[data-tip]:hover::before {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+  z-index: 99999;
+  pointer-events: none;
 }
