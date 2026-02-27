@@ -357,6 +357,13 @@
 
     document.getElementById("championVideo").appendChild(embed(champID));
     document.getElementById("challengerVideo").appendChild(embed(challID));
+
+    // --- FIX: hide overlay once videos are ready ---
+    const overlay = document.getElementById("loadingOverlay");
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 350);
   }
 
   async function loadDJTrack() {
@@ -416,12 +423,6 @@
     }
 
     overlay.addEventListener("click", handleTap, { once: true });
-
-    // AUTO-HIDE FAILSAFE (Option A)
-    setTimeout(() => {
-      overlay.style.opacity = "0";
-      overlay.style.display = "none";
-    }, 3000);
   }
 
   async function loadVoteCounts() {
@@ -520,10 +521,4 @@
         }
 
         updateTimer();
-        setInterval(updateTimer, 1000);
-      });
-  }
-
-  window.onload = async function () {
-    await loadBattle();
-    await loadDJTrack
+        setInterval(updateTimer, 1000
