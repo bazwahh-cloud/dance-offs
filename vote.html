@@ -138,16 +138,16 @@
 
   <p id="countdownTimer" style="text-align:center; margin-top:15px; font-size:20px;"></p>
 
-  <!-- voteInstruction removed completely -->
+  <!-- voteInstruction removed -->
 
   <main class="page-container">
 
     <div class="vote-layout">
 
       <div class="vote-column">
-        <div id="championVideo"></div>
+        <div id="championVideo" data-tip="Tap to play the battle video"></div>
 
-        <label class="vote-option">
+        <label class="vote-option" data-tip="Unlock voting by completing payment">
           <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled onclick="submitVote()">
           <div class="vote-box">
             <span class="vote-title">Vote Champion</span>
@@ -165,9 +165,9 @@
       </div>
 
       <div class="vote-column">
-        <div id="challengerVideo"></div>
+        <div id="challengerVideo" data-tip="Tap to play the battle video"></div>
 
-        <label class="vote-option">
+        <label class="vote-option" data-tip="Unlock voting by completing payment">
           <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled onclick="submitVote()">
           <div class="vote-box">
             <span class="vote-title">Vote Challenger</span>
@@ -435,8 +435,6 @@
     const side = choice.value;
     const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
     const dancerURL  = side === "champion" ? champion.url    : challenger.url;
-
-    /* voteInstruction removed */
 
     const form = document.createElement("form");
     form.method = "POST";
