@@ -46,7 +46,7 @@
       border: 0;
     }
 
-    /* NEW: Mobile-safe overlay */
+    /* Visible play overlay */
     .play-overlay {
       position: absolute !important;
       inset: 0 !important;
@@ -297,10 +297,18 @@
     return null;
   }
 
-  /* NEW: Mobile-safe embed() */
+  /* YouTube embed with permanent click blocker */
   function embed(id) {
     const wrapper = document.createElement("div");
     wrapper.className = "video-slot";
+
+    // Permanent invisible blocker (inline styles only)
+    const blocker = document.createElement("div");
+    blocker.style.position = "absolute";
+    blocker.style.inset = "0";
+    blocker.style.zIndex = "9";
+    blocker.style.background = "transparent";
+    blocker.style.pointerEvents = "auto";
 
     const overlay = document.createElement("div");
     overlay.className = "play-overlay";
@@ -317,12 +325,12 @@
     iframe.allow = "autoplay; encrypted-media";
 
     wrapper.appendChild(iframe);
-    wrapper.appendChild(overlay);
+    wrapper.appendChild(blocker);   // permanent blocker
+    wrapper.appendChild(overlay);   // visible play overlay
 
     return wrapper;
   }
 
-  /* NEW: Overlay play handler */
   function startVideo(overlay) {
     overlay.classList.add("hidden");
 
@@ -516,12 +524,4 @@
     await loadDJTrack();
     loadCountdown();
 
-    setTimeout(setupTapToPlay, 800);
-
-    setTimeout(loadVoteCounts, 1000);
-    setInterval(loadVoteCounts, 5000);
-  };
-</script>
-
-</body>
-</html>
+    setTimeout(setupTapToPlay, 800
