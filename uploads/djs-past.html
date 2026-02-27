@@ -66,7 +66,6 @@
       z-index: 9999;
     }
 
-    /* ⭐ NEW: Highlight row when playing */
     .dj-library tr.playing {
       background: rgba(255, 204, 0, 0.15) !important;
       box-shadow: 0 0 12px rgba(255, 204, 0, 0.4);
@@ -159,7 +158,7 @@
 
   <script>
     const BACKEND_URL =
-      "https://script.google.com/macros/s/AKfycbxUMisR1LVFdL2n6COU-DlYXBLesPSJAVLofrAvZqYapgTRr--ybmKWZYqSY5S0rncj/exec";
+      "https://script.google.com/macros/s/AKfycbwWkuPI7UUQtrzb51hkkhybyVG9k_NX5YIowFV2twOD0Z06nRf1ghJLOcjJHha8mWdT/exec";
 
     async function loadLibrary() {
       try {
@@ -210,7 +209,6 @@
 
     window.addEventListener("DOMContentLoaded", loadLibrary);
 
-    /* ⭐ NEW: Only one audio plays at a time + highlight row */
     document.addEventListener("play", function (e) {
       if (e.target.tagName !== "AUDIO") return;
 
