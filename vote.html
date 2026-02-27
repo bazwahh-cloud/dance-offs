@@ -24,10 +24,9 @@
       font-size: 28px;
       font-family: 'Bangers', cursive;
       letter-spacing: 1px;
-      z-index: 999999999 !important;
+      z-index: 999999 !important;
       text-align: center;
       transition: opacity 0.4s ease;
-      isolation: isolate; /* CRITICAL FIX */
     }
 
     .video-slot {
@@ -47,6 +46,7 @@
       border: 0;
     }
 
+    /* NEW: Mobile-safe overlay */
     .play-overlay {
       position: absolute !important;
       inset: 0 !important;
@@ -238,6 +238,267 @@
   </footer>
 
 <script>
+  const endpoint =
+    "https://script.google.com/macros/s/AKfycbwWkuPI7UUQtrzb51hkkhybyVG9k_NX5YIowFV2twOD0Z06nRf1ghJLOcjJHha8mWdT/exec";
+
+  function nocache(url) {
+    const sep = url.includes("?") ? "&" : "?";
+    return fetch(url + sep + "t=" + Date.now());
+  }
+
+  let currentTransactionID = null;
+  let currentBattleID = null;
+  let currentVoterEmail = null;
+
+  let champion = null;
+  let challenger = null;
+
+  let djData = null;
+  let djPlayerReady = false;
+
+  paypal.Buttons({
+    createOrder: (data, actions) =>
+      actions.order.create({
+        purchase_units: [{ amount: { value: "1.50" } }]
+      }),
+
+    onApprove: (data, actions) =>
+      actions.order.capture().then(details => {
+
+        const payerEmail = details.payer.email_address;
+        window.currentVoterEmail = payerEmail;
+
+        currentTransactionID = data.orderID;
+
+        document.querySelectorAll(".vote-option").forEach(opt => {
+          opt.classList.add("enabled");
+          opt.querySelector("input").disabled = false;
+        });
+
+        document.getElementById("voteInstruction").innerText =
+          "Voting unlocked — choose Champion or Challenger.";
+      })
+  }).render("#paypal-button-container");
+
+  function extractID(url) {
+    if (!url) return null;
+    const clean = url.split("?")[0];
+    const patterns = [
+      /shorts\/([^?&/]+)/,
+      /youtu\.be\/([^?&/]+)/,
+      /v=([^?&/]+)/,
+      /embed\/([^?&/]+)/,
+      /youtube\.com\/watch\/([^?&/]+)/
+    ];
+    for (const p of patterns) {
+      const m = clean.match(p);
+      if (m && m[1]) return m[1];
+    }
+    return null;
+  }
+
+  /* NEW: Mobile-safe embed() */
+  function embed(id) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "video-slot";
+
+    const overlay = document.createElement("div");
+    overlay.className = "play-overlay";
+    overlay.onclick = () => startVideo(overlay);
+
+    const icon = document.createElement("i");
+    icon.className = "fa-solid fa-play icon";
+    overlay.appendChild(icon);
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "battle-frame";
+    iframe.src =
+      `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+    iframe.allow = "autoplay; encrypted-media";
+
+    wrapper.appendChild(iframe);
+    wrapper.appendChild(overlay);
+
+    return wrapper;
+  }
+
+  /* NEW: Overlay play handler */
+  function startVideo(overlay) {
+    overlay.classList.add("hidden");
+
+    const iframe = overlay.parentElement.querySelector("iframe");
+    iframe.contentWindow.postMessage(
+      JSON.stringify({
+        event: "command",
+        func: "playVideo"
+      }),
+      "*"
+    );
+  }
+
+  async function loadBattle() {
+    const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
+    const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
+
+    currentBattleID = state.battleID;
+
+    champion = dancers[state.championIndex];
+    challenger = dancers[state.challengerIndex];
+
+    const champID = extractID(champion.url);
+    const challID = extractID(challenger.url);
+
+    document.getElementById("championVideo").appendChild(embed(champID));
+    document.getElementById("challengerVideo").appendChild(embed(challID));
+  }
+
+  async function loadDJTrack() {
+    const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
+    if (!data || data.length === 0) return;
+
+    djData = data;
+    const last = data[data.length - 1];
+    const player = document.getElementById("djPlayer");
+
+    document.getElementById("djTrackName").innerText =
+      last.trackname || "Latest DJ Track";
+
+    player.src = last.mp3url;
+    player.volume = 0;
+    djPlayerReady = true;
+  }
+
+  function setupTapToPlay() {
+    const overlay = document.getElementById("loadingOverlay");
+    const player = document.getElementById("djPlayer");
+
+    overlay.innerText = "Tap to Play";
+
+    function handleTap() {
+
+      if (djPlayerReady && player.src) {
+        player.play().then(() => {
+
+          document.querySelectorAll("iframe.battle-frame").forEach(frame => {
+            frame.contentWindow.postMessage(
+              JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+              "*"
+            );
+          });
+
+          overlay.style.opacity = "0";
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 350);
+
+          let vol = 0;
+          const fade = setInterval(() => {
+            vol = Math.min(1, vol + 0.05);
+            player.volume = vol;
+            if (vol >= 1) clearInterval(fade);
+          }, 80);
+        });
+      } else {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 350);
+      }
+
+      overlay.removeEventListener("click", handleTap);
+    }
+
+    overlay.addEventListener("click", handleTap, { once: true });
+  }
+
+  async function loadVoteCounts() {
+    if (!currentBattleID) return;
+
+    const data = await nocache(
+      endpoint + "?mode=getvotestate&battleID=" + currentBattleID
+    ).then(r => r.json());
+
+    document.getElementById("championCount").innerText =
+      "Champion Votes: " + data.champion.used;
+
+    document.getElementById("challengerCount").innerText =
+      "Challenger Votes: " + data.challenger.used;
+
+    document.getElementById("remainingVotesText").innerText =
+      "Remaining votes: " + data.remaining;
+
+    const max = data.maxVotes || 200;
+
+    document.getElementById("championBar").style.width =
+      (data.champion.used / max * 100) + "%";
+
+    document.getElementById("challengerBar").style.width =
+      (data.challenger.used / max * 100) + "%";
+  }
+
+  function submitVote() {
+    if (!currentTransactionID) {
+      alert("Payment required before voting.");
+      return;
+    }
+
+    const choice = document.querySelector('input[name="voteChoice"]:checked');
+    if (!choice) return;
+
+    const side = choice.value;
+    const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
+    const dancerURL  = side === "champion" ? champion.url    : challenger.url;
+
+    document.getElementById("voteInstruction").innerText =
+      "Your vote has been cast — one moment…";
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = endpoint;
+
+    function add(name, value) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    }
+
+    add("mode", "vote");
+    add("battle", currentBattleID);
+    add("side", side);
+    add("tx", currentTransactionID);
+    add("email", window.currentVoterEmail || "");
+    add("WinnerName", dancerName);
+    add("WinnerURL", dancerURL);
+
+    document.body.appendChild(form);
+    form.submit();
+
+    setTimeout(() => {
+      window.location.href = "thankyou.html";
+    }, 400);
+  }
+
+  function loadCountdown() {
+    nocache(endpoint + "?mode=getstate")
+      .then(r => r.json())
+      .then(state => {
+        const lastUpdated = new Date(state.lastUpdated);
+        const nextReset = new Date(lastUpdated.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        function updateTimer() {
+          const now = new Date();
+          const diff = nextReset - now;
+
+          if (diff <= 0) {
+            document.getElementById("countdownTimer").innerText =
+              "New battle dropping soon…";
+            return;
+          }
+
+          const days = Math.floor(diff / 86400000);
+          const hours = Math.floor((diff / 3600000) % 24);
           const mins = Math.floor((diff / 60000) % 60);
           const secs = Math.floor((diff / 1000) % 60);
 
@@ -251,16 +512,12 @@
   }
 
   window.onload = async function () {
-    // Load battle (auto-hides overlay when done)
-    loadBattle();
-
-    // Load DJ track (no autoplay)
-    loadDJTrack();
-
-    // Start countdown
+    await loadBattle();
+    await loadDJTrack();
     loadCountdown();
 
-    // Load vote counts
+    setTimeout(setupTapToPlay, 800);
+
     setTimeout(loadVoteCounts, 1000);
     setInterval(loadVoteCounts, 5000);
   };
