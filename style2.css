@@ -89,6 +89,15 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.play-overlay):not
   background: rgba(255,255,255,0.05);
 }
 
+.vote-page-only .video-click-blocker {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 9; /* below play-overlay (10), above iframe */
+  background: transparent;
+  pointer-events: auto !important;
+}
+
+
 /* ----------------------------------------------------
    PAGE CONTAINER
 ---------------------------------------------------- */
