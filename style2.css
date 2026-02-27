@@ -15,8 +15,9 @@ body {
 
 /* ----------------------------------------------------
    SAFARI TAP FIX — VOTE PAGE ONLY
+   (Overlay now properly whitelisted)
 ---------------------------------------------------- */
-body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
+body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.play-overlay):not(.play-overlay *):not(#loadingOverlay):not(#tapOverlay):not(#paypal-button-container *):not(.blocker):not(audio) {
   position: static !important;
 }
 
@@ -244,13 +245,41 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
   border: none !important;
 }
 
-.video-slot .blocker {
+/* ----------------------------------------------------
+   FIXED: MOBILE-SAFE PLAY OVERLAY
+---------------------------------------------------- */
+.play-overlay {
   position: absolute !important;
-  inset: 0;
-  z-index: 999999 !important;
-  pointer-events: auto !important;
+  inset: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.45);
+  z-index: 10;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
 }
 
+.play-overlay.hidden {
+  opacity: 0;
+  pointer-events: none !important;
+}
+
+.play-overlay .icon {
+  font-size: 64px;
+  color: #ffcc00;
+  text-shadow: 0 0 10px #000;
+}
+
+@media (max-width: 600px) {
+  .play-overlay .icon {
+    font-size: 48px;
+  }
+}
+
+/* ----------------------------------------------------
+   PAYPAL BUTTON FIX
+---------------------------------------------------- */
 #paypal-button-container,
 #paypal-button-container * {
   position: relative !important;
@@ -296,7 +325,6 @@ body.vote-page-only *:not(.video-slot):not(.video-slot *):not(.video-slot > div)
 
 /* ----------------------------------------------------
    DJ UPLOAD PAGE — NEW (SLIM) VERSION
-   (We will override this below)
 ---------------------------------------------------- */
 .dj-upload .dj-booth {
   max-width: 900px;
