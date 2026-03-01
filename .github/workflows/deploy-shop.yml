@@ -1,41 +1,49 @@
-name: Create Shop Folder and Deploy
+name: Deploy WordPress Shop (wp-content → /shop)
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+    paths:
+      - "wp-content/**"
+      - ".github/workflows/deploy-shop.yml"
 
 jobs:
-  deploy:
+  ftp-deploy:
+    name: FTP Deploy (Shop)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # STEP 1 — Create /shop folder on Fasthosts if missing
-      - name: Ensure /shop folder exists
+      - name: Deploy wp-content to /shop
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FH_HOST }}
-          username: ${{ secrets.FH_USER }}
-          password: ${{ secrets.FH_PASS }}
-          local-dir: ./placeholder
-          server-dir: /HTDOCS/shop/
-          exclude: ""
-          dangerous-clean-slate: false
+          server: ${{ secrets.SHOP_FTP_HOST }}
+          username: ${{ secrets.SHOP_FTP_USERNAME }}
+          password: ${{ secrets.SHOP_FTP_PASSWORD }}
 
-      # STEP 2 — Deploy your actual repo contents
-      - name: Deploy site
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FH_HOST }}
-          username: ${{ secrets.FH_USER }}
-          password: ${{ secrets.FH_PASS }}
-          local-dir: .
-          server-dir: /HTDOCS/shop/
+          protocol: ftps
+          port: 21
+
+          # ⭐ Deploy ONLY the WordPress theme/plugins folder
+          local-dir: ./wp-content/
+          server-dir: /HTDOCS/shop/wp-content/
+
+          # ⭐ Never overwrite server-managed WordPress folders
           exclude: |
-            **/wp-content/uploads/**
-            **/wp-content/cache/**
-            **/wp-content/upgrade/**
-            **/wp-content/wflogs/**
+            wp-content/uploads/**
+            wp-content/cache/**
+            wp-content/upgrade/**
+            wp-content/wflogs/**
             wp-config.php
+            .git/**
+            .github/**
+            .gitignore
+            README.md
+            **/*.yml
+            **/*.yaml
+            **/*.md
+
+          log-level: verbose
