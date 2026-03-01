@@ -1,1 +1,28 @@
+# Ignore WordPress runtime directories (server-managed)
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/wflogs/
+
+# Ignore WordPress config (server-managed)
+wp-config.php
+
+# Ignore logs
+*.log
+
+# Ignore OS/system files
+.DS_Store
+Thumbs.db
+
+# Ignore node/npm (if ever used)
+node_modules/
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.bak
 
