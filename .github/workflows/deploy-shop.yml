@@ -27,11 +27,11 @@ jobs:
           protocol: ftps
           port: 21
 
-          # ⭐ Deploy ONLY the WordPress theme/plugins folder
+          # Deploy ONLY your wp-content folder
           local-dir: ./wp-content/
           server-dir: /HTDOCS/shop/wp-content/
 
-          # ⭐ Never overwrite server-managed WordPress folders
+          # Protect server-managed WordPress folders
           exclude: |
             wp-content/uploads/**
             wp-content/cache/**
