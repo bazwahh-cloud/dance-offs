@@ -1,0 +1,41 @@
+name: Create Shop Folder and Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # STEP 1 — Create /shop folder on Fasthosts if missing
+      - name: Ensure /shop folder exists
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FH_HOST }}
+          username: ${{ secrets.FH_USER }}
+          password: ${{ secrets.FH_PASS }}
+          local-dir: ./placeholder
+          server-dir: /HTDOCS/shop/
+          exclude: ""
+          dangerous-clean-slate: false
+
+      # STEP 2 — Deploy your actual repo contents
+      - name: Deploy site
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FH_HOST }}
+          username: ${{ secrets.FH_USER }}
+          password: ${{ secrets.FH_PASS }}
+          local-dir: .
+          server-dir: /HTDOCS/shop/
+          exclude: |
+            **/wp-content/uploads/**
+            **/wp-content/cache/**
+            **/wp-content/upgrade/**
+            **/wp-content/wflogs/**
+            wp-config.php
