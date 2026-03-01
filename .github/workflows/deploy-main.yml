@@ -24,10 +24,10 @@ jobs:
           protocol: ftps
           port: 21
 
-          # ⭐ Updated to deploy only your main-site folder
+          # ⭐ Updated to match your new repo structure
           local-dir: ./main-site/
 
-          # ⭐ Confirm this is correct for your hosting
+          # ⭐ Confirm casing: /htdocs/ or /HTDOCS/
           server-dir: /htdocs/
 
           exclude: |
