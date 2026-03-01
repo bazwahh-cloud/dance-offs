@@ -1,9 +1,6 @@
-<?php
+<?php get_header(); ?>
 
-// Enable WooCommerce support
-add_action('after_setup_theme', function() {
-    add_theme_support('woocommerce');
-    add_theme_support('title-tag');
-    add_theme_support('post-thumbnails');
-});
+<h1>Dance-Offs Shop</h1>
+<p>Your custom theme is active and deployed via GitHub.</p>
 
+<?php get_footer(); ?>
