@@ -14,7 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy site safely
+      # Deploy main-site → /htdocs/
+      - name: Deploy main site
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MAIN_FTP_HOST }}
@@ -24,10 +25,7 @@ jobs:
           protocol: ftps
           port: 21
 
-          # ⭐ Updated to match your new repo structure
           local-dir: ./main-site/
-
-          # ⭐ Confirm casing: /htdocs/ or /HTDOCS/
           server-dir: /htdocs/
 
           exclude: |
@@ -41,5 +39,30 @@ jobs:
             **/*.md
             **/package.json
             **/package-lock.json
+
+          log-level: verbose
+
+      # Deploy shared → /htdocs/shared/
+      - name: Deploy shared assets
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.MAIN_FTP_HOST }}
+          username: ${{ secrets.MAIN_FTP_USERNAME }}
+          password: ${{ secrets.MAIN_FTP_PASSWORD }}
+
+          protocol: ftps
+          port: 21
+
+          local-dir: ./shared/
+          server-dir: /htdocs/shared/
+
+          exclude: |
+            .git/**
+            .github/**
+            .gitignore
+            README.md
+            **/*.yml
+            **/*.yaml
+            **/*.md
 
           log-level: verbose
