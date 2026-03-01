@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Main site CSS -->
-  <link rel="stylesheet" href="https://dance-offs.com/main-site/style2.css?v=4001">
+  <!-- Main site CSS (FIXED PATH) -->
+  <link rel="stylesheet" href="https://dance-offs.com/shared/style2.css?v=4001">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -243,16 +243,13 @@
         const fileUrl = await uploadResponse.text();
         status.innerHTML = "Mix uploaded successfully!";
 
-        // ⭐ Play the uploaded file immediately
         const player = document.getElementById("djPlayer");
         player.src = fileUrl;
         player.load();
         player.play().catch(() => {});
 
-        // ⭐ Update Now Playing text
         document.getElementById("nowPlayingTrack").textContent = file.name;
 
-        // ⭐ Log metadata to Google Sheet
         const storedName = fileUrl.split("/").pop();
 
         await fetch(BACKEND_URL, {
