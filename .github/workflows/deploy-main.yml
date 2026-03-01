@@ -24,7 +24,10 @@ jobs:
           protocol: ftps
           port: 21
 
-          local-dir: ./
+          # ⭐ Updated to deploy only your main-site folder
+          local-dir: ./main-site/
+
+          # ⭐ Confirm this is correct for your hosting
           server-dir: /htdocs/
 
           exclude: |
