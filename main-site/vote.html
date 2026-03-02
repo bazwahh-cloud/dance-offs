@@ -279,6 +279,7 @@ function startVideo(overlay) {
     "*"
   );
 }
+
 async function loadBattle() {
   const state = await nocache(endpoint + "?mode=getstate").then(r => r.json());
   const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
@@ -293,6 +294,8 @@ async function loadBattle() {
 
   document.getElementById("championVideo").appendChild(embed(extractID(champion.url)));
   document.getElementById("challengerVideo").appendChild(embed(extractID(challenger.url)));
+
+  await loadVoteCounts();
 }
 
 async function loadDJTrack() {
@@ -333,22 +336,25 @@ async function loadVoteCounts() {
     endpoint + "?mode=getvotestate&battleID=" + currentBattleID
   ).then(r => r.json());
 
+  const championVotes = data.champion.used || 0;
+  const challengerVotes = data.challenger.used || 0;
+  const maxVotes = data.maxVotes || 200;
+  const remaining = data.remaining || (maxVotes - (championVotes + challengerVotes));
+
   document.getElementById("championCount").innerText =
-    "Champion Votes: " + data.champion.used;
+    "Champion Votes: " + championVotes;
 
   document.getElementById("challengerCount").innerText =
-    "Challenger Votes: " + data.challenger.used;
+    "Challenger Votes: " + challengerVotes;
 
   document.getElementById("remainingVotesText").innerText =
-    "Remaining votes: " + data.remaining;
-
-  const max = data.maxVotes || 200;
+    "Remaining votes: " + remaining;
 
   document.getElementById("championBar").style.width =
-    (data.champion.used / max * 100) + "%";
+    (championVotes / maxVotes * 100) + "%";
 
   document.getElementById("challengerBar").style.width =
-    (data.challenger.used / max * 100) + "%";
+    (challengerVotes / maxVotes * 100) + "%";
 }
 
 function submitVote() {
@@ -446,14 +452,13 @@ async function checkForRotation() {
 
 window.onload = async function () {
   await loadBattle();
+  await loadVoteCounts();
   await loadDJTrack();
   loadCountdown();
 
   setTimeout(setupTapToPlay, 800);
 
-  setTimeout(loadVoteCounts, 1000);
   setInterval(loadVoteCounts, 5000);
-
   setInterval(checkForRotation, 10000);
 };
 </script>
