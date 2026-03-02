@@ -184,7 +184,14 @@
   <div style="margin-top:40px; text-align:center;">
     <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">Now Playing</h3>
     <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
+
     <audio id="djPlayer" controls playsinline style="width:100%; max-width:500px;"></audio>
+
+    <!-- Small tap-to-enable-audio prompt -->
+    <div id="audioTapOverlay"
+         style="margin-top:10px; font-size:18px; color:#ffcc00; cursor:pointer; display:none;">
+      Tap to enable audio
+    </div>
   </div>
 
 </main>
@@ -262,7 +269,7 @@ function embed(id) {
   const iframe = document.createElement("iframe");
   iframe.className = "battle-frame";
   iframe.src =
-    `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+    `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
   iframe.allow = "autoplay; encrypted-media";
 
   wrapper.appendChild(iframe);
@@ -297,7 +304,7 @@ async function loadBattle() {
 
   await loadVoteCounts();
 
-  // 🔥 FIX: hide overlay once battle is ready
+  // Hide loading overlay
   const overlay = document.getElementById("loadingOverlay");
   overlay.style.opacity = "0";
   setTimeout(() => overlay.style.display = "none", 350);
@@ -315,24 +322,18 @@ async function loadDJTrack() {
     last.trackname || "Latest DJ Track";
 
   player.src = last.mp3url;
-  player.volume = 0;
+  player.volume = 1;
   djPlayerReady = true;
+
+  // Show tap-to-enable-audio prompt
+  document.getElementById("audioTapOverlay").style.display = "block";
 }
 
-function setupTapToPlay() {
-  const overlay = document.getElementById("loadingOverlay");
+document.getElementById("audioTapOverlay").addEventListener("click", () => {
   const player = document.getElementById("djPlayer");
-
-  overlay.innerText = "Tap to Play";
-
-  overlay.addEventListener("click", () => {
-    if (djPlayerReady && player.src) {
-      player.play();
-    }
-    overlay.style.opacity = "0";
-    setTimeout(() => overlay.style.display = "none", 350);
-  }, { once: true });
-}
+  player.play();
+  document.getElementById("audioTapOverlay").style.display = "none";
+});
 
 async function loadVoteCounts() {
   if (!currentBattleID) return;
@@ -460,8 +461,6 @@ window.onload = async function () {
   await loadVoteCounts();
   await loadDJTrack();
   loadCountdown();
-
-  setTimeout(setupTapToPlay, 800);
 
   setInterval(loadVoteCounts, 5000);
   setInterval(checkForRotation, 10000);
