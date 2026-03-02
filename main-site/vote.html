@@ -29,6 +29,27 @@
       transition: opacity 0.4s ease;
     }
 
+    /* Full-screen Tap to Play overlay */
+    #audioTapOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: 'Bangers', cursive;
+      font-size: 48px;
+      letter-spacing: 2px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 999998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
     .video-slot {
       position: relative;
       width: 100%;
@@ -110,6 +131,7 @@
 <body class="vote-page-only">
 
 <div id="loadingOverlay">Loading battle… please wait</div>
+<div id="audioTapOverlay">Tap to Play</div>
 
 <nav class="navbar">
   <a href="index.html">Home</a>
@@ -186,12 +208,6 @@
     <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
 
     <audio id="djPlayer" controls playsinline style="width:100%; max-width:500px;"></audio>
-
-    <!-- Small tap-to-enable-audio prompt -->
-    <div id="audioTapOverlay"
-         style="margin-top:10px; font-size:18px; color:#ffcc00; cursor:pointer; display:none;">
-      Tap to enable audio
-    </div>
   </div>
 
 </main>
@@ -305,9 +321,14 @@ async function loadBattle() {
   await loadVoteCounts();
 
   // Hide loading overlay
-  const overlay = document.getElementById("loadingOverlay");
-  overlay.style.opacity = "0";
-  setTimeout(() => overlay.style.display = "none", 350);
+  const loading = document.getElementById("loadingOverlay");
+  loading.style.opacity = "0";
+  setTimeout(() => loading.style.display = "none", 350);
+
+  // Immediately show Tap to Play overlay
+  const tap = document.getElementById("audioTapOverlay");
+  tap.style.opacity = "1";
+  tap.style.pointerEvents = "auto";
 }
 
 async function loadDJTrack() {
@@ -324,15 +345,20 @@ async function loadDJTrack() {
   player.src = last.mp3url;
   player.volume = 1;
   djPlayerReady = true;
-
-  // Show tap-to-enable-audio prompt
-  document.getElementById("audioTapOverlay").style.display = "block";
 }
 
 document.getElementById("audioTapOverlay").addEventListener("click", () => {
   const player = document.getElementById("djPlayer");
-  player.play();
-  document.getElementById("audioTapOverlay").style.display = "none";
+
+  if (djPlayerReady && player.src) {
+    player.play();
+  }
+
+  const tap = document.getElementById("audioTapOverlay");
+  tap.style.opacity = "0";
+  tap.style.pointerEvents = "none";
+
+  setTimeout(() => tap.style.display = "none", 400);
 });
 
 async function loadVoteCounts() {
