@@ -305,20 +305,6 @@ async function loadBattle() {
   document.getElementById("challengerVideo").appendChild(embed(extractID(challenger.url)));
 
   await loadVoteCounts();
-
-  // SWITCH OVERLAY TO TAP TO PLAY
-  const overlay = document.getElementById("loadingOverlay");
-  overlay.innerText = "Tap to Play";
-  overlay.style.cursor = "pointer";
-
-  overlay.onclick = () => {
-    const player = document.getElementById("djPlayer");
-    if (djPlayerReady && player.src) {
-      player.play();   // <-- MP3 autoplay now works
-    }
-    overlay.style.opacity = "0";
-    setTimeout(() => overlay.style.display = "none", 400);
-  };
 }
 
 async function loadDJTrack() {
@@ -332,9 +318,23 @@ async function loadDJTrack() {
   document.getElementById("djTrackName").innerText =
     last.trackname || "Latest DJ Track";
 
+  // Load MP3 BEFORE enabling tap
   player.src = last.mp3url;
   player.volume = 1;
   djPlayerReady = true;
+
+  // NOW enable Tap to Play
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.innerText = "Tap to Play";
+  overlay.style.cursor = "pointer";
+
+  overlay.onclick = () => {
+    if (djPlayerReady && player.src) {
+      player.play();   // <-- MP3 autoplay now works
+    }
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.style.display = "none", 400);
+  };
 }
 
 async function loadVoteCounts() {
@@ -461,7 +461,7 @@ async function checkForRotation() {
 window.onload = async function () {
   await loadBattle();
   await loadVoteCounts();
-  await loadDJTrack();
+  await loadDJTrack();   // <-- overlay now activates AFTER MP3 loads
   loadCountdown();
 
   setInterval(loadVoteCounts, 5000);
