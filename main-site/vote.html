@@ -12,25 +12,8 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
+    /* SINGLE OVERLAY USED FOR BOTH LOADING + TAP TO PLAY */
     #loadingOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.9);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-size: 28px;
-      font-family: 'Bangers', cursive;
-      letter-spacing: 1px;
-      z-index: 999999;
-      text-align: center;
-      transition: opacity 0.4s ease;
-    }
-
-    /* Full-screen Tap to Play overlay */
-    #audioTapOverlay {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.92);
@@ -43,11 +26,10 @@
       font-size: 48px;
       letter-spacing: 2px;
       text-align: center;
-      cursor: pointer;
-      z-index: 999998;
-      opacity: 0;
-      pointer-events: none;
+      z-index: 999999;
+      opacity: 1;
       transition: opacity 0.4s ease;
+      cursor: default;
     }
 
     .video-slot {
@@ -130,8 +112,8 @@
 
 <body class="vote-page-only">
 
+<!-- SINGLE OVERLAY -->
 <div id="loadingOverlay">Loading battle… please wait</div>
-<div id="audioTapOverlay">Tap to Play</div>
 
 <nav class="navbar">
   <a href="index.html">Home</a>
@@ -148,6 +130,7 @@
 
   <div class="vote-layout">
 
+    <!-- LEFT = CHAMPION -->
     <div class="vote-column">
       <div id="championVideo"></div>
 
@@ -159,6 +142,7 @@
       </label>
     </div>
 
+    <!-- MIDDLE -->
     <div class="vote-column">
       <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
       <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
@@ -168,6 +152,7 @@
       </div>
     </div>
 
+    <!-- RIGHT = CHALLENGER -->
     <div class="vote-column">
       <div id="challengerVideo"></div>
 
@@ -309,6 +294,7 @@ async function loadBattle() {
 
   currentBattleID = state.battleID;
 
+  // FORCE champion always left, challenger always right
   champion = dancers[state.championIndex];
   challenger = dancers[state.challengerIndex];
 
@@ -320,15 +306,19 @@ async function loadBattle() {
 
   await loadVoteCounts();
 
-  // Hide loading overlay
-  const loading = document.getElementById("loadingOverlay");
-  loading.style.opacity = "0";
-  setTimeout(() => loading.style.display = "none", 350);
+  // SWITCH OVERLAY TO TAP TO PLAY
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.innerText = "Tap to Play";
+  overlay.style.cursor = "pointer";
 
-  // Immediately show Tap to Play overlay
-  const tap = document.getElementById("audioTapOverlay");
-  tap.style.opacity = "1";
-  tap.style.pointerEvents = "auto";
+  overlay.onclick = () => {
+    const player = document.getElementById("djPlayer");
+    if (djPlayerReady && player.src) {
+      player.play();
+    }
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.style.display = "none", 400);
+  };
 }
 
 async function loadDJTrack() {
@@ -346,20 +336,6 @@ async function loadDJTrack() {
   player.volume = 1;
   djPlayerReady = true;
 }
-
-document.getElementById("audioTapOverlay").addEventListener("click", () => {
-  const player = document.getElementById("djPlayer");
-
-  if (djPlayerReady && player.src) {
-    player.play();
-  }
-
-  const tap = document.getElementById("audioTapOverlay");
-  tap.style.opacity = "0";
-  tap.style.pointerEvents = "none";
-
-  setTimeout(() => tap.style.display = "none", 400);
-});
 
 async function loadVoteCounts() {
   if (!currentBattleID) return;
