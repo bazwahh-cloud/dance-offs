@@ -314,7 +314,7 @@ async function loadBattle() {
   overlay.onclick = () => {
     const player = document.getElementById("djPlayer");
     if (djPlayerReady && player.src) {
-      player.play();
+      player.play();   // <-- MP3 autoplay now works
     }
     overlay.style.opacity = "0";
     setTimeout(() => overlay.style.display = "none", 400);
