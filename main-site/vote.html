@@ -205,6 +205,9 @@ let currentVoterEmail = null;
 let champion = null;
 let challenger = null;
 
+let djTrackLoaded = false;
+let djTrackStarted = false;
+
 function nocache(url) {
   const sep = url.includes("?") ? "&" : "?";
   return fetch(url + sep + "t=" + Date.now());
@@ -282,10 +285,17 @@ function startVideo(overlay) {
     JSON.stringify({ event: "command", func: "playVideo" }),
     "*"
   );
+
+  // First user click on overlay also starts the DJ track (if loaded)
+  if (!djTrackStarted && djTrackLoaded) {
+    const player = document.getElementById("djPlayer");
+    djTrackStarted = true;
+    player.play().catch(() => {});
+  }
 }
 
 /* ----------------------------------------------------
-   SMOOTH LOAD: BATTLE FIRST, EVERYTHING ELSE PARALLEL
+   SMOOTH LOAD
 ---------------------------------------------------- */
 window.onload = async () => {
   const battlePromise = loadBattle();
@@ -304,7 +314,7 @@ window.onload = async () => {
 };
 
 /* ----------------------------------------------------
-   LOAD BATTLE (FASTEST PATH)
+   LOAD BATTLE
 ---------------------------------------------------- */
 async function loadBattle() {
   const [state, dancers] = await Promise.all([
@@ -329,7 +339,7 @@ async function loadBattle() {
 }
 
 /* ----------------------------------------------------
-   LOAD DJ TRACK (AUTOPLAY)
+   LOAD DJ TRACK (NO AUTOPLAY)
 ---------------------------------------------------- */
 async function loadDJTrack() {
   try {
@@ -344,8 +354,7 @@ async function loadDJTrack() {
 
     player.src = last.mp3url;
     player.volume = 1;
-
-    player.play().catch(() => {});
+    djTrackLoaded = true; // ready, but will only play on overlay click
   } catch (err) {
     console.error("DJ load failed:", err);
   }
