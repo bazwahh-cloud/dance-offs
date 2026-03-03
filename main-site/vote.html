@@ -198,13 +198,16 @@ let djTrackLoaded = false;
 let djTrackStarted = false;
 
 /* ----------------------------------------------------
-   TAP-TO-PLAY OVERLAY
+   TAP-TO-PLAY OVERLAY (FIXED)
 ---------------------------------------------------- */
-document.getElementById("loadingOverlay").addEventListener("click", () => {
-  if (djTrackLoaded && !djTrackStarted) {
-    const player = document.getElementById("djPlayer");
+document.getElementById("loadingOverlay").addEventListener("click", async () => {
+  const player = document.getElementById("djPlayer");
+
+  try {
+    await player.play();
     djTrackStarted = true;
-    player.play().catch(() => {});
+  } catch (err) {
+    console.warn("Autoplay blocked, waiting for user gesture again.");
   }
 
   const overlay = document.getElementById("loadingOverlay");
@@ -335,7 +338,7 @@ async function loadDJTrack() {
 }
 
 /* ----------------------------------------------------
-   LOAD VOTE COUNTS (UPDATED FOR NEW BACKEND)
+   LOAD VOTE COUNTS (UPDATED)
 ---------------------------------------------------- */
 async function loadVoteCounts() {
   if (!currentBattleID) return;
@@ -448,3 +451,5 @@ function loadCountdown() {
 }
 </script>
 </html>
+
+  
