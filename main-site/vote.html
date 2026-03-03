@@ -12,7 +12,7 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    /* FORCE champion left, challenger right — no matter what style2.css does */
+    /* FORCE champion left, challenger right */
     .vote-layout {
       display: flex !important;
       flex-direction: row !important;
@@ -306,9 +306,9 @@ async function loadBattle() {
 
   currentBattleID = state.battleID;
 
-  /* BACKEND IS CORRECT — DO NOT SWAP */
-  champion   = dancers[state.championIndex];
-  challenger = dancers[state.challengerIndex];
+  /* BACKEND IS REVERSED → FIX HERE */
+  champion   = dancers[state.challengerIndex];   // previous winner
+  challenger = dancers[state.championIndex];     // new dancer
 
   document.getElementById("championVideo").innerHTML = "";
   document.getElementById("challengerVideo").innerHTML = "";
