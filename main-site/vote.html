@@ -208,6 +208,21 @@ let challenger = null;
 let djTrackLoaded = false;
 let djTrackStarted = false;
 
+/* ----------------------------------------------------
+   GLOBAL USER-GESTURE LISTENER (REQUIRED FOR AUDIO)
+---------------------------------------------------- */
+let userHasInteracted = false;
+
+document.addEventListener("click", () => {
+  userHasInteracted = true;
+
+  if (djTrackLoaded && !djTrackStarted) {
+    const player = document.getElementById("djPlayer");
+    djTrackStarted = true;
+    player.play().catch(() => {});
+  }
+}, { once: true });
+
 function nocache(url) {
   const sep = url.includes("?") ? "&" : "?";
   return fetch(url + sep + "t=" + Date.now());
@@ -286,8 +301,7 @@ function startVideo(overlay) {
     "*"
   );
 
-  // First user click on overlay also starts the DJ track (if loaded)
-  if (!djTrackStarted && djTrackLoaded) {
+  if (djTrackLoaded && !djTrackStarted) {
     const player = document.getElementById("djPlayer");
     djTrackStarted = true;
     player.play().catch(() => {});
@@ -354,7 +368,14 @@ async function loadDJTrack() {
 
     player.src = last.mp3url;
     player.volume = 1;
-    djTrackLoaded = true; // ready, but will only play on overlay click
+
+    djTrackLoaded = true;
+
+    if (userHasInteracted && !djTrackStarted) {
+      djTrackStarted = true;
+      player.play().catch(() => {});
+    }
+
   } catch (err) {
     console.error("DJ load failed:", err);
   }
