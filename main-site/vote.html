@@ -6,21 +6,12 @@
 
   <title>Dance-Offs: Vote</title>
 
-  <link rel="stylesheet" href="/shared/style2.css?v=6000">
+  <link rel="stylesheet" href="/shared/style2.css?v=7000">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
-    /* FORCE champion left, challenger right */
-    .vote-layout {
-      display: flex !important;
-      flex-direction: row !important;
-    }
-    .vote-layout .vote-column:nth-child(1) { order: 1 !important; }
-    .vote-layout .vote-column:nth-child(2) { order: 2 !important; }
-    .vote-layout .vote-column:nth-child(3) { order: 3 !important; }
-
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -37,7 +28,6 @@
       z-index: 999999;
       opacity: 1;
       transition: opacity 0.4s ease;
-      cursor: default;
     }
 
     .video-slot {
@@ -120,7 +110,7 @@
 
 <body class="vote-page-only">
 
-<div id="loadingOverlay">Loading battle… please wait</div>
+<div id="loadingOverlay">Loading battle…</div>
 
 <nav class="navbar">
   <a href="index.html">Home</a>
@@ -205,7 +195,6 @@
   <br>
   <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">Terms & Conditions</a>
 </footer>
-
 <script>
 const endpoint = "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
 
@@ -216,14 +205,14 @@ let currentVoterEmail = null;
 let champion = null;
 let challenger = null;
 
-let djData = null;
-let djPlayerReady = false;
-
 function nocache(url) {
   const sep = url.includes("?") ? "&" : "?";
   return fetch(url + sep + "t=" + Date.now());
 }
 
+/* ----------------------------------------------------
+   PAYPAL
+---------------------------------------------------- */
 paypal.Buttons({
   createOrder: (data, actions) =>
     actions.order.create({
@@ -242,6 +231,9 @@ paypal.Buttons({
     })
 }).render("#paypal-button-container");
 
+/* ----------------------------------------------------
+   VIDEO HELPERS
+---------------------------------------------------- */
 function extractID(url) {
   if (!url) return null;
   const clean = url.split("?")[0];
@@ -291,24 +283,39 @@ function startVideo(overlay) {
     "*"
   );
 }
-async function loadBattle() {
-  const state   = await nocache(endpoint + "?mode=getstate").then(r => r.json());
-  const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
 
-  // Reset UI if battleID changed
-  if (currentBattleID !== state.battleID) {
-    document.getElementById("championCount").innerText = "Champion Votes: 0";
-    document.getElementById("challengerCount").innerText = "Challenger Votes: 0";
-    document.getElementById("remainingVotesText").innerText = "Remaining votes: 200";
-    document.getElementById("championBar").style.width = "0%";
-    document.getElementById("challengerBar").style.width = "0%";
-  }
+/* ----------------------------------------------------
+   SMOOTH LOAD: BATTLE FIRST, EVERYTHING ELSE PARALLEL
+---------------------------------------------------- */
+window.onload = async () => {
+  const battlePromise = loadBattle();
+  const votesPromise  = loadVoteCounts();
+  const djPromise     = loadDJTrack();
+
+  const timeout = new Promise(resolve => setTimeout(resolve, 3000));
+
+  await Promise.race([battlePromise, timeout]);
+
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.style.opacity = "0";
+  setTimeout(() => overlay.style.display = "none", 400);
+
+  loadCountdown();
+};
+
+/* ----------------------------------------------------
+   LOAD BATTLE (FASTEST PATH)
+---------------------------------------------------- */
+async function loadBattle() {
+  const [state, dancers] = await Promise.all([
+    nocache(endpoint + "?mode=getstate").then(r => r.json()),
+    nocache(endpoint + "?mode=getdancers").then(r => r.json())
+  ]);
 
   currentBattleID = state.battleID;
 
-  /* BACKEND IS REVERSED → FIX HERE */
-  champion   = dancers[state.challengerIndex];   // previous winner
-  challenger = dancers[state.championIndex];     // new dancer
+  champion   = dancers[state.championIndex];
+  challenger = dancers[state.challengerIndex];
 
   document.getElementById("championVideo").innerHTML = "";
   document.getElementById("challengerVideo").innerHTML = "";
@@ -319,38 +326,34 @@ async function loadBattle() {
   document.getElementById("challengerVideo").appendChild(
     embed(extractID(challenger.url))
   );
-
-  await loadVoteCounts();
 }
 
+/* ----------------------------------------------------
+   LOAD DJ TRACK (AUTOPLAY)
+---------------------------------------------------- */
 async function loadDJTrack() {
-  const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
-  if (!data || data.length === 0) return;
+  try {
+    const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
+    if (!data || data.length === 0) return;
 
-  djData = data;
-  const last = data[data.length - 1];
-  const player = document.getElementById("djPlayer");
+    const last = data[data.length - 1];
+    const player = document.getElementById("djPlayer");
 
-  document.getElementById("djTrackName").innerText =
-    last.trackname || "Latest DJ Track";
+    document.getElementById("djTrackName").innerText =
+      last.dj_name + " – " + last.deck1_title;
 
-  player.src = last.mp3url;
-  player.volume = 1;
-  djPlayerReady = true;
+    player.src = last.mp3url;
+    player.volume = 1;
 
-  const overlay = document.getElementById("loadingOverlay");
-  overlay.innerText = "Tap to Play";
-  overlay.style.cursor = "pointer";
-
-  overlay.onclick = () => {
-    if (djPlayerReady && player.src) {
-      player.play();
-    }
-    overlay.style.opacity = "0";
-    setTimeout(() => overlay.style.display = "none", 400);
-  };
+    player.play().catch(() => {});
+  } catch (err) {
+    console.error("DJ load failed:", err);
+  }
 }
 
+/* ----------------------------------------------------
+   LOAD VOTE COUNTS
+---------------------------------------------------- */
 async function loadVoteCounts() {
   if (!currentBattleID) return;
 
@@ -379,6 +382,9 @@ async function loadVoteCounts() {
     (challengerVotes / maxVotes * 100) + "%";
 }
 
+/* ----------------------------------------------------
+   SUBMIT VOTE
+---------------------------------------------------- */
 function submitVote() {
   if (!currentTransactionID) {
     alert("Payment required before voting.");
@@ -420,6 +426,9 @@ function submitVote() {
   }, 400);
 }
 
+/* ----------------------------------------------------
+   COUNTDOWN
+---------------------------------------------------- */
 function loadCountdown() {
   nocache(endpoint + "?mode=getstate")
     .then(r => r.json())
@@ -434,7 +443,6 @@ function loadCountdown() {
         if (diff <= 0) {
           document.getElementById("countdownTimer").innerText =
             "New battle dropping soon…";
-          checkForRotation();
           return;
         }
 
@@ -451,37 +459,5 @@ function loadCountdown() {
       setInterval(updateTimer, 1000);
     });
 }
-
-async function checkForRotation() {
-  const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
-  const newest = dancers[dancers.length - 1];
-
-  const isNewDancer =
-    newest.url !== champion.url &&
-    newest.url !== challenger.url;
-
-  if (!isNewDancer) return;
-
-  const form = new FormData();
-  form.append("mode", "rotatebattle");
-
-  await fetch(endpoint, { method: "POST", body: form });
-
-  await loadBattle();
-  await loadVoteCounts();
-  loadCountdown();
-}
-
-window.onload = async function () {
-  await loadBattle();
-  await loadVoteCounts();
-  await loadDJTrack();
-  loadCountdown();
-
-  setInterval(loadVoteCounts, 5000);
-  setInterval(checkForRotation, 10000);
-};
 </script>
-
-</body>
 </html>
