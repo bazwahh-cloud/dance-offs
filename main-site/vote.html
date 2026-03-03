@@ -128,24 +128,30 @@
 
   <div class="vote-layout">
 
+    <!-- LEFT = CHAMPION -->
     <div class="vote-column">
       <div id="championVideo"></div>
+
       <label class="vote-option">
         <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled onclick="submitVote()">
         <div class="vote-box"><span class="vote-title">Vote Champion</span></div>
       </label>
     </div>
 
+    <!-- MIDDLE -->
     <div class="vote-column">
       <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
       <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
+
       <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
         <div id="paypal-button-container"></div>
       </div>
     </div>
 
+    <!-- RIGHT = CHALLENGER -->
     <div class="vote-column">
       <div id="challengerVideo"></div>
+
       <label class="vote-option">
         <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled onclick="submitVote()">
         <div class="vote-box"><span class="vote-title">Vote Challenger</span></div>
@@ -179,6 +185,7 @@
   <div style="margin-top:40px; text-align:center;">
     <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">Now Playing</h3>
     <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
+
     <audio id="djPlayer" controls playsinline style="width:100%; max-width:500px;"></audio>
   </div>
 
@@ -279,12 +286,21 @@ async function loadBattle() {
   const state   = await nocache(endpoint + "?mode=getstate").then(r => r.json());
   const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
 
+  // Detect new battleID → reset UI
+  if (currentBattleID !== state.battleID) {
+    document.getElementById("championCount").innerText = "Champion Votes: 0";
+    document.getElementById("challengerCount").innerText = "Challenger Votes: 0";
+    document.getElementById("remainingVotesText").innerText = "Remaining votes: 200";
+    document.getElementById("championBar").style.width = "0%";
+    document.getElementById("challengerBar").style.width = "0%";
+  }
+
   currentBattleID = state.battleID;
 
-  // BACKEND IS REVERSED → FIX HERE
-  // Champion must always be LEFT column
-  champion   = dancers[state.challengerIndex];
-  challenger = dancers[state.championIndex];
+  // Champion = previous winner
+  // Challenger = newest dancer
+  champion   = dancers[state.championIndex];
+  challenger = dancers[state.challengerIndex];
 
   document.getElementById("championVideo").innerHTML = "";
   document.getElementById("challengerVideo").innerHTML = "";
