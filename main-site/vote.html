@@ -98,7 +98,7 @@
 <!-- SINGLE OVERLAY: TAP TO PLAY -->
 <div id="loadingOverlay">
   Tap to Play
-  <small>Loading,,,</small>
+  <small>Loading…</small>
 </div>
 
 <nav class="navbar">
@@ -198,27 +198,22 @@ let djTrackLoaded = false;
 let djTrackStarted = false;
 
 /* ----------------------------------------------------
-   TAP-TO-PLAY OVERLAY HANDLER
+   TAP-TO-PLAY OVERLAY
 ---------------------------------------------------- */
 document.getElementById("loadingOverlay").addEventListener("click", () => {
-  // Start DJ track if loaded
   if (djTrackLoaded && !djTrackStarted) {
     const player = document.getElementById("djPlayer");
     djTrackStarted = true;
     player.play().catch(() => {});
   }
 
-  // DO NOT unmute YouTube — keep muted
-  // (You requested YouTube audio muted)
-
-  // Fade out overlay
   const overlay = document.getElementById("loadingOverlay");
   overlay.style.opacity = "0";
   setTimeout(() => overlay.style.display = "none", 400);
 });
 
 /* ----------------------------------------------------
-   FETCH WITHOUT CACHE
+   NO-CACHE FETCH
 ---------------------------------------------------- */
 function nocache(url) {
   const sep = url.includes("?") ? "&" : "?";
@@ -316,7 +311,7 @@ async function loadBattle() {
 }
 
 /* ----------------------------------------------------
-   LOAD DJ TRACK (NO AUTOPLAY)
+   LOAD DJ TRACK
 ---------------------------------------------------- */
 async function loadDJTrack() {
   try {
@@ -340,7 +335,7 @@ async function loadDJTrack() {
 }
 
 /* ----------------------------------------------------
-   LOAD VOTE COUNTS
+   LOAD VOTE COUNTS (UPDATED FOR NEW BACKEND)
 ---------------------------------------------------- */
 async function loadVoteCounts() {
   if (!currentBattleID) return;
@@ -351,8 +346,12 @@ async function loadVoteCounts() {
 
   const championVotes   = data.champion.used   || 0;
   const challengerVotes = data.challenger.used || 0;
-  const maxVotes = data.maxVotes || 200;
-  const remaining = data.remaining || (maxVotes - (championVotes + challengerVotes));
+
+  const maxVotes        = data.maxVotes || 200;
+  const perBattleRem    = data.perBattleRemaining;
+  const globalRem       = data.globalRemaining;
+
+  const remaining = Math.min(perBattleRem, globalRem);
 
   document.getElementById("championCount").innerText =
     "Champion Votes: " + championVotes;
