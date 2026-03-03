@@ -98,7 +98,7 @@
 <!-- SINGLE OVERLAY: TAP TO PLAY -->
 <div id="loadingOverlay">
   Tap to Play
-  <small>Videos + DJ Mix will start</small>
+  <small>Videos will stay muted — DJ Mix will start</small>
 </div>
 
 <nav class="navbar">
@@ -208,13 +208,8 @@ document.getElementById("loadingOverlay").addEventListener("click", () => {
     player.play().catch(() => {});
   }
 
-  // Unmute videos
-  document.querySelectorAll("iframe").forEach(frame => {
-    frame.contentWindow.postMessage(
-      JSON.stringify({ event: "command", func: "unMute" }),
-      "*"
-    );
-  });
+  // DO NOT unmute YouTube — keep muted
+  // (You requested YouTube audio muted)
 
   // Fade out overlay
   const overlay = document.getElementById("loadingOverlay");
@@ -289,11 +284,9 @@ function embed(id) {
    SMOOTH LOAD
 ---------------------------------------------------- */
 window.onload = async () => {
-  const battlePromise = loadBattle();
-  const votesPromise  = loadVoteCounts();
-  const djPromise     = loadDJTrack();
-
-  // Do NOT hide overlay here — user must tap it
+  loadBattle();
+  loadVoteCounts();
+  loadDJTrack();
   loadCountdown();
 };
 
