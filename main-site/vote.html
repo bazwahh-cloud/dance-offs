@@ -12,6 +12,15 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
 
   <style>
+    /* FORCE champion left, challenger right — no matter what style2.css does */
+    .vote-layout {
+      display: flex !important;
+      flex-direction: row !important;
+    }
+    .vote-layout .vote-column:nth-child(1) { order: 1 !important; }
+    .vote-layout .vote-column:nth-child(2) { order: 2 !important; }
+    .vote-layout .vote-column:nth-child(3) { order: 3 !important; }
+
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -286,7 +295,7 @@ async function loadBattle() {
   const state   = await nocache(endpoint + "?mode=getstate").then(r => r.json());
   const dancers = await nocache(endpoint + "?mode=getdancers").then(r => r.json());
 
-  // Detect new battleID → reset UI
+  // Reset UI if battleID changed
   if (currentBattleID !== state.battleID) {
     document.getElementById("championCount").innerText = "Champion Votes: 0";
     document.getElementById("challengerCount").innerText = "Challenger Votes: 0";
@@ -297,8 +306,7 @@ async function loadBattle() {
 
   currentBattleID = state.battleID;
 
-  // Champion = previous winner
-  // Challenger = newest dancer
+  /* BACKEND IS CORRECT — DO NOT SWAP */
   champion   = dancers[state.championIndex];
   challenger = dancers[state.challengerIndex];
 
@@ -350,7 +358,7 @@ async function loadVoteCounts() {
     endpoint + "?mode=getvotestate&battleID=" + currentBattleID
   ).then(r => r.json());
 
-  const championVotes = data.champion.used || 0;
+  const championVotes   = data.champion.used   || 0;
   const challengerVotes = data.challenger.used || 0;
   const maxVotes = data.maxVotes || 200;
   const remaining = data.remaining || (maxVotes - (championVotes + challengerVotes));
