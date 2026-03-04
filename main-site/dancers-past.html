@@ -190,9 +190,15 @@
         const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
         const dancers = await dancersRes.json();
 
-        // Fetch ALL battle results (WinnerURL, LoserURL, BattleID)
+        // Fetch ALL battle results
         const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
-        const votes = await votesRes.json();
+        let votes = await votesRes.json();
+
+        // SAFETY FIX: ensure votes is an array
+        if (!Array.isArray(votes)) {
+          console.warn("getvotes did not return an array:", votes);
+          votes = [];
+        }
 
         // Count wins per dancer URL
         const wins = {};
