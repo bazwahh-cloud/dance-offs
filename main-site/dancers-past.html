@@ -136,7 +136,6 @@
         <th>Rank</th>
         <th>Video</th>
         <th>Dancer</th>
-        <th>Wins</th>
         <th>Uploaded</th>
       </tr>
     </thead>
@@ -154,7 +153,6 @@
       Terms & Conditions
     </a>
   </footer>
-
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
@@ -190,53 +188,8 @@
         const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
         const dancers = await dancersRes.json();
 
-        const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
-        const votes = await votesRes.json();
-
-        const wins = {};
-        const votesByBattle = {};
-
-        votes.forEach(v => {
-          const battle = v.BattleID;
-          const url = v.WinnerURL;
-
-          if (!votesByBattle[battle]) votesByBattle[battle] = {};
-          if (!votesByBattle[battle][url]) votesByBattle[battle][url] = 0;
-
-          votesByBattle[battle][url]++;
-        });
-
-        Object.keys(votesByBattle).forEach(battleID => {
-          const battleVotes = votesByBattle[battleID];
-          const urls = Object.keys(battleVotes);
-
-          if (urls.length < 2) return;
-
-          const urlA = urls[0];
-          const urlB = urls[1];
-
-          const votesA = battleVotes[urlA] || 0;
-          const votesB = battleVotes[urlB] || 0;
-
-          if (!wins[urlA]) wins[urlA] = 0;
-          if (!wins[urlB]) wins[urlB] = 0;
-
-          if (votesA > votesB) wins[urlA]++;
-          else if (votesB > votesA) wins[urlB]++;
-          else {
-            wins[urlA]++;
-            wins[urlB]++;
-          }
-        });
-
-        dancers.forEach(d => {
-          d.wins = wins[d.url] || 0;
-        });
-
-        dancers.sort((a, b) => {
-          if (b.wins !== a.wins) return b.wins - a.wins;
-          return new Date(b.timestamp) - new Date(a.timestamp);
-        });
+        // Sort newest first
+        dancers.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         const tbody = document.querySelector("#dancerTable tbody");
         tbody.innerHTML = "";
@@ -260,7 +213,6 @@
               </a>
             </td>
             <td data-label="Dancer">${row.dancer || "Unknown"}</td>
-            <td data-label="Wins">${row.wins}</td>
             <td data-label="Uploaded">${uploadedDisplay}</td>
           `;
           tbody.appendChild(tr);
