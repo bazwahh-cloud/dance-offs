@@ -1,230 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  const data = e.parameter;
-  const mode = data.mode;
+  <title>Past Dancer Uploads</title>
 
-  /* ---------------------------
-     DANCER UPLOAD
-  --------------------------- */
-  if (mode === "dancerupload") {
-    const sh = safeGetSheet(ss, "Dancers");
+  <link rel="stylesheet" href="https://dance-offs.com/shared/style2.css?v=4001">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-    sh.appendRow([
-      new Date(),
-      data.dancerName  || "",
-      data.dancerEmail || "",
-      data.youtubeUrl  || ""
-    ]);
+  <style>
+    body { overflow-x: hidden; }
 
-    return ContentService.createTextOutput("Dancer upload logged");
-  }
-
-  /* ---------------------------
-     CONTACT FORM
-  --------------------------- */
-  if (mode === "contact") {
-    const name         = data.name;
-    const contactEmail = data.contact_email;
-    const officeEmail  = data.office_email;
-    const message      = data.message;
-
-    if (!officeEmail || !contactEmail || !name || !message) {
-      return ContentService.createTextOutput("Missing fields");
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 2px;
+      z-index: 9999;
+      text-align: center;
     }
 
-    MailApp.sendEmail({
-      to: officeEmail,
-      replyTo: contactEmail,
-      subject: `New Contact Form Message from ${name}`,
-      htmlBody: `
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${contactEmail}</p>
-        <p><strong>Message:</strong><br>${message}</p>
-      `
-    });
-
-    MailApp.sendEmail({
-      to: contactEmail,
-      subject: "Thanks for contacting Dance-Offs!",
-      htmlBody: `
-        <p>Hi ${name},</p>
-        <p>Thanks for getting in touch. We've received your message.</p>
-        <p><strong>Your message:</strong><br>${message}</p>
-      `
-    });
-
-    let contacts = ss.getSheetByName("Contacts");
-    if (!contacts) {
-      contacts = ss.insertSheet("Contacts");
-      contacts.appendRow(["Timestamp", "Name", "User Email", "Message", "Status"]);
+    .page-title {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffcc00;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1px;
     }
 
-    contacts.appendRow([
-      new Date(),
-      name,
-      contactEmail,
-      message,
-      "Sent"
-    ]);
-
-    return ContentService.createTextOutput("Email sent");
-  }
-
-  /* ---------------------------
-     VOTE (PayPal-compatible)
-  --------------------------- */
-  if (mode === "vote") {
-    const v     = safeGetSheet(ss, "Votes");
-    const state = safeGetSheet(ss, "State");
-
-    const headers = state.getRange(1, 1, 1, state.getLastColumn()).getValues()[0];
-    const row     = state.getRange(2, 1, 1, state.getLastColumn()).getValues()[0];
-
-    const colBattleID        = headers.indexOf("battleID");
-    const colMaxVotes        = headers.indexOf("maxVotes");
-    const colChampionVotes   = headers.indexOf("championVotes");
-    const colChallengerVotes = headers.indexOf("challengerVotes");
-    const colTotalVotesUsed  = headers.indexOf("totalVotesUsed");
-
-    const battleIDFromState = String(row[colBattleID]);
-    const maxVotes          = Number(row[colMaxVotes] || 0);
-    let championVotes       = Number(row[colChampionVotes]   || 0);
-    let challengerVotes     = Number(row[colChallengerVotes] || 0);
-    let totalVotesUsed      = Number(row[colTotalVotesUsed]  || 0);
-
-    const perBattleUsed = championVotes + challengerVotes;
-
-    if (maxVotes > 0 && perBattleUsed >= maxVotes) {
-      return ContentService.createTextOutput("Voting closed for this battle");
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 30px auto 60px;
+      border-collapse: collapse;
+      color: white;
     }
 
-    if (totalVotesUsed >= GLOBAL_VOTE_POOL) {
-      return ContentService.createTextOutput("Voting closed for this prize cycle");
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #333;
+      text-align: center;
+      font-size: 16px;
     }
 
-    const battleID = data.battle || data.BattleID || battleIDFromState || "UNKNOWN";
-    const winner   = data.WinnerName || "";
-    const url      = data.WinnerURL  || "";
-    const txId     = data.tx || data.TransactionID || "";
-    const email    = data.email || data.Email || "";
-    const side     = (data.side || "").toLowerCase() === "challenger"
-                      ? "challenger"
-                      : "champion";
-
-    v.appendRow([
-      new Date(),
-      email,
-      battleID,
-      winner,
-      url,
-      txId,
-      1.50,
-      "Paid"
-    ]);
-
-    if (side === "champion") {
-      championVotes++;
-      state.getRange(2, colChampionVotes + 1).setValue(championVotes);
-    } else {
-      challengerVotes++;
-      state.getRange(2, colChallengerVotes + 1).setValue(challengerVotes);
+    th {
+      background: rgba(0, 0, 0, 0.5);
+      font-weight: 700;
     }
 
-    totalVotesUsed++;
-    state.getRange(2, colTotalVotesUsed + 1).setValue(totalVotesUsed);
-
-    const uniqueVoteID = `${battleID}-${txId}`;
-    appendVoteGridRow(battleID, side, uniqueVoteID, txId);
-
-    const perBattleNowUsed = championVotes + challengerVotes;
-    const perBattleFull    = (maxVotes > 0 && perBattleNowUsed >= maxVotes);
-    const globalFull       = (totalVotesUsed >= GLOBAL_VOTE_POOL);
-
-    if (perBattleFull || globalFull) {
-      recalcStateVotes(ss);   // REQUIRED FIX
-      const resetGlobal = globalFull;
-      rotateBattleInternal(ss, resetGlobal);
+    .thumb {
+      width: 140px;
+      border-radius: 6px;
+      box-shadow: 0 0 6px #000;
+      cursor: pointer;
+      transition: transform 0.15s ease;
     }
 
-    return ContentService.createTextOutput("Vote logged");
-  }
+    .thumb:hover { transform: scale(1.05); }
 
-  /* ---------------------------
-     MANUAL ROTATE BATTLE
-  --------------------------- */
-  if (mode === "rotatebattle") {
-    recalcStateVotes(ss);   // UPDATED
-    const result = rotateBattleInternal(ss, false);
-    return ContentService.createTextOutput(result);
-  }
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
 
-  return ContentService.createTextOutput("Invalid POST payload");
-}
+      tr {
+        background: rgba(0,0,0,0.4);
+        margin: 12px;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px #000;
+      }
 
-/* ----------------------------------------------------
-   WINNER-STAYS-ON ROTATION
----------------------------------------------------- */
-function rotateBattleInternal(ss, resetGlobalPool) {
-  const state   = safeGetSheet(ss, "State");
-  const dancers = safeGetSheet(ss, "Dancers");
+      td {
+        text-align: left;
+        padding: 6px 0;
+        border: none;
+        font-size: 17px;
+      }
 
-  const headers = state.getRange(1, 1, 1, state.getLastColumn()).getValues()[0];
-  const row     = state.getRange(2, 1, 1, state.getLastColumn()).getValues()[0];
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #ffcc00;
+        display: block;
+        margin-bottom: 2px;
+      }
 
-  const colBattleID        = headers.indexOf("battleID");
-  const colChampionVotes   = headers.indexOf("championVotes");
-  const colChallengerVotes = headers.indexOf("challengerVotes");
-  const colLastPlayedRow   = headers.indexOf("lastPlayedRow");
-  const colLastUpdated     = headers.indexOf("lastUpdated");
-  const colTotalVotesUsed  = headers.indexOf("totalVotesUsed");
+      .thumb {
+        width: 100%;
+        max-width: 320px;
+        margin: 10px 0;
+      }
+    }
 
-  let championVotes   = Number(row[colChampionVotes]   || 0);
-  let challengerVotes = Number(row[colChallengerVotes] || 0);
-  let lastPlayedRow   = Number(row[colLastPlayedRow]   || 2);
+    .back-link {
+      display: inline-block;
+      padding: 14px 28px;
+      background: #0077cc;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 60px;
+    }
+  </style>
+</head>
 
-  const dancersLastRow = dancers.getLastRow();
-  const dancersCount   = Math.max(dancersLastRow - 1, 1);
+<body>
 
-  const championIndex   = Math.max(lastPlayedRow - 2, 0);
-  const challengerIndex = (championIndex + 1) % dancersCount;
+  <div id="loadingOverlay">Loading<br>Please Wait…</div>
 
-  let winnerSide = "champion";
-  if (challengerVotes > championVotes) {
-    winnerSide = "challenger";
-  }
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="dancers.html">Dancers</a>
+    <a href="https://upload.dance-offs.com/uploads/djs.html">DJs</a>
+    <a href="vote.html">Vote</a>
+    <a href="prizes.html">Prizes</a>
+    <a href="shop.html">Shop</a>
+  </nav>
 
-  let newChampionIndex;
-  if (winnerSide === "champion") {
-    newChampionIndex = championIndex;
-  } else {
-    newChampionIndex = challengerIndex;
-  }
+  <h2 class="page-title">Past Dancer Uploads</h2>
 
-  const newChallengerIndex = (newChampionIndex + 1) % dancersCount;
+  <table id="dancerTable">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Video</th>
+        <th>Dancer</th>
+        <th>Wins</th>
+        <th>Uploaded</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  lastPlayedRow = newChampionIndex + 2;
-  state.getRange(2, colLastPlayedRow + 1).setValue(lastPlayedRow);
+  <div style="text-align:center;">
+    <a href="dancers.html" class="back-link">← Back to Dancer Uploads</a>
+  </div>
 
-  state.getRange(2, colChampionVotes   + 1).setValue(0);
-  state.getRange(2, colChallengerVotes + 1).setValue(0);
-
-  if (resetGlobalPool) {
-    state.getRange(2, colTotalVotesUsed + 1).setValue(0);
-  }
-
-  const newBattleID = generateNewBattleID();
-  state.getRange(2, colBattleID + 1).setValue(newBattleID);
-
-  state.getRange(2, colLastUpdated + 1).setValue(new Date());
-
-  return "Battle rotated with NEW battleID";
-}
-
-function rotateBattle() {
-  const ss = safeOpenSheet();
-  if (!ss) return "Spreadsheet authorization failed.";
-  recalcStateVotes(ss);   // UPDATED
-  return rotateBattleInternal(ss, false);
-}
+  <footer class="footer">
+    © 2026 Dance-Offs. All rights reserved.
+    <br>
+    <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">
+      Terms & Conditions
+    </a>
+  </footer>
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
