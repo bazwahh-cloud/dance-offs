@@ -184,6 +184,7 @@
   <br>
   <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">Terms & Conditions</a>
 </footer>
+
 <script>
 const endpoint = "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
 
@@ -198,7 +199,7 @@ let djTrackLoaded = false;
 let djTrackStarted = false;
 
 /* ----------------------------------------------------
-   TAP-TO-PLAY OVERLAY (FIXED)
+   TAP-TO-PLAY OVERLAY
 ---------------------------------------------------- */
 document.getElementById("loadingOverlay").addEventListener("click", async () => {
   const player = document.getElementById("djPlayer");
@@ -206,9 +207,7 @@ document.getElementById("loadingOverlay").addEventListener("click", async () => 
   try {
     await player.play();
     djTrackStarted = true;
-  } catch (err) {
-    console.warn("Autoplay blocked, waiting for user gesture again.");
-  }
+  } catch (err) {}
 
   const overlay = document.getElementById("loadingOverlay");
   overlay.style.opacity = "0";
@@ -279,11 +278,11 @@ function embed(id) {
 }
 
 /* ----------------------------------------------------
-   SMOOTH LOAD
+   SMOOTH LOAD (FIXED)
 ---------------------------------------------------- */
 window.onload = async () => {
-  loadBattle();
-  loadVoteCounts();
+  await loadBattle();        // <-- FIX
+  await loadVoteCounts();    // <-- FIX
   loadDJTrack();
   loadCountdown();
 };
@@ -338,7 +337,7 @@ async function loadDJTrack() {
 }
 
 /* ----------------------------------------------------
-   LOAD VOTE COUNTS (UPDATED)
+   LOAD VOTE COUNTS
 ---------------------------------------------------- */
 async function loadVoteCounts() {
   if (!currentBattleID) return;
@@ -451,5 +450,3 @@ function loadCountdown() {
 }
 </script>
 </html>
-
-  
