@@ -154,116 +154,150 @@
       Terms & Conditions
     </a>
   </footer>
-  <script>
-    const BACKEND_URL =
-      "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
+<script>
+  const BACKEND_URL =
+    "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
 
-    function extractYouTubeID(url) {
-      try {
-        if (url.includes("/shorts/")) return url.split("/shorts/")[1].split("?")[0];
-        const watchID = url.match(/v=([^&]+)/);
-        if (watchID) return watchID[1];
-        const shortID = url.match(/youtu\.be\/([^?]+)/);
-        if (shortID) return shortID[1];
-        const embedID = url.match(/embed\/([^?]+)/);
-        if (embedID) return embedID[1];
-        return null;
-      } catch { return null; }
+  function extractYouTubeID(url) {
+    try {
+      if (url.includes("/shorts/")) return url.split("/shorts/")[1].split("?")[0];
+      const watchID = url.match(/v=([^&]+)/);
+      if (watchID) return watchID[1];
+      const shortID = url.match(/youtu\.be\/([^?]+)/);
+      if (shortID) return shortID[1];
+      const embedID = url.match(/embed\/([^?]+)/);
+      if (embedID) return embedID[1];
+      return null;
+    } catch {
+      return null;
     }
+  }
 
-    function formatUploadTimestamp(ts) {
-      if (!ts) return "";
-      const d = new Date(ts);
-      if (isNaN(d.getTime())) return ts;
-      return d.toLocaleString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
+  function formatUploadTimestamp(ts) {
+    if (!ts) return "";
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return ts;
+    return d.toLocaleString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
 
-    async function loadDancers() {
+  async function loadDancers() {
+    try {
+      // Fetch dancers
+      const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
+      const dancers = await dancersRes.json();
+
+      // Fetch votes
+      const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
+      let votes = [];
       try {
-        // Fetch dancers
-        const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
-        const dancers = await dancersRes.json();
-
-        // Fetch ALL votes (each row = 1 win for WinnerURL)
-        const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
-        let votes;
-
-        try {
-          votes = await votesRes.json();
-        } catch (err) {
-          console.warn("Votes endpoint returned non‑JSON:", err);
-          votes = [];
-        }
-
-        // Ensure votes is an array
-        if (!Array.isArray(votes)) {
-          console.warn("Votes endpoint did not return an array:", votes);
-          votes = [];
-        }
-
-        // Count wins per WinnerURL
-        const wins = {};
-        votes.forEach(v => {
-          const url = v.WinnerURL;
-          if (!url) return;
-          wins[url] = (wins[url] || 0) + 1;
-        });
-
-        // Attach wins to dancers
-        dancers.forEach(d => {
-          d.wins = wins[d.url] || 0;
-        });
-
-        // Sort by wins desc, then newest upload
-        dancers.sort((a, b) => {
-          if (b.wins !== a.wins) return b.wins - a.wins;
-          return new Date(b.timestamp) - new Date(a.timestamp);
-        });
-
-        // Render table
-        const tbody = document.querySelector("#dancerTable tbody");
-        tbody.innerHTML = "";
-
-        dancers.forEach((row, index) => {
-          const yt = row.url || "";
-          const videoId = extractYouTubeID(yt);
-
-          const thumb = videoId
-            ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-            : "https://via.placeholder.com/140x100?text=No+Preview";
-
-          const uploadedDisplay = formatUploadTimestamp(row.timestamp);
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td data-label="Rank">${index + 1}</td>
-            <td data-label="Video">
-              <a href="${yt}" target="_blank" rel="noopener">
-                <img src="${thumb}" class="thumb" alt="Dancer video thumbnail">
-              </a>
-            </td>
-            <td data-label="Dancer">${row.dancer || "Unknown"}</td>
-            <td data-label="Wins">${row.wins}</td>
-            <td data-label="Uploaded">${uploadedDisplay}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-      } catch (err) {
-        console.error("Failed to load dancers:", err);
+        votes = await votesRes.json();
+      } catch {
+        votes = [];
       }
 
-      document.getElementById("loadingOverlay").style.display = "none";
+      if (!Array.isArray(votes)) votes = [];
+
+      // Group votes by BattleID
+      const battles = {};
+      votes.forEach(v => {
+        const b = v.BattleID;
+        const url = v.WinnerURL;
+        if (!b || !url) return;
+
+        if (!battles[b]) battles[b] = {};
+        battles[b][url] = (battles[b][url] || 0) + 1;
+      });
+
+      // Compute wins per dancer
+      const winMap = {};
+
+      Object.keys(battles).forEach(battleID => {
+        const voteCounts = battles[battleID];
+        const urls = Object.keys(voteCounts);
+
+        if (urls.length === 0) {
+          // 0-vote battle → no wins
+          return;
+        }
+
+        if (urls.length === 1) {
+          // Only one dancer received votes → that dancer gets 1 win
+          const onlyURL = urls[0];
+          winMap[onlyURL] = (winMap[onlyURL] || 0) + 1;
+          return;
+        }
+
+        // Two dancers → determine winner
+        const urlA = urls[0];
+        const urlB = urls[1];
+        const votesA = voteCounts[urlA];
+        const votesB = voteCounts[urlB];
+
+        if (votesA > votesB) {
+          winMap[urlA] = (winMap[urlA] || 0) + 1;
+        } else if (votesB > votesA) {
+          winMap[urlB] = (winMap[urlB] || 0) + 1;
+        } else {
+          // Tie → both get 1 win
+          winMap[urlA] = (winMap[urlA] || 0) + 1;
+          winMap[urlB] = (winMap[urlB] || 0) + 1;
+        }
+      });
+
+      // Attach wins to dancers
+      dancers.forEach(d => {
+        d.wins = winMap[d.url] || 0;
+      });
+
+      // Sort: wins desc → newest upload
+      dancers.sort((a, b) => {
+        if (b.wins !== a.wins) return b.wins - a.wins;
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+
+      // Render table
+      const tbody = document.querySelector("#dancerTable tbody");
+      tbody.innerHTML = "";
+
+      dancers.forEach((row, index) => {
+        const yt = row.url || "";
+        const videoId = extractYouTubeID(yt);
+
+        const thumb = videoId
+          ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+          : "https://via.placeholder.com/140x100?text=No+Preview";
+
+        const uploadedDisplay = formatUploadTimestamp(row.timestamp);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td data-label="Rank">${index + 1}</td>
+          <td data-label="Video">
+            <a href="${yt}" target="_blank" rel="noopener">
+              <img src="${thumb}" class="thumb" alt="Dancer video thumbnail">
+            </a>
+          </td>
+          <td data-label="Dancer">${row.dancer || "Unknown"}</td>
+          <td data-label="Wins">${row.wins}</td>
+          <td data-label="Uploaded">${uploadedDisplay}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+    } catch (err) {
+      console.error("Failed to load dancers:", err);
     }
 
-    window.addEventListener("DOMContentLoaded", loadDancers);
-  </script>
+    document.getElementById("loadingOverlay").style.display = "none";
+  }
 
+  window.addEventListener("DOMContentLoaded", loadDancers);
+</script>
 </body>
 </html>
