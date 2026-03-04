@@ -136,6 +136,7 @@
         <th>Rank</th>
         <th>Video</th>
         <th>Dancer</th>
+        <th>Wins</th>
         <th>Uploaded</th>
       </tr>
     </thead>
@@ -185,12 +186,34 @@
 
     async function loadDancers() {
       try {
+        // Fetch dancers
         const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
         const dancers = await dancersRes.json();
 
-        // Sort newest first
-        dancers.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        // Fetch battle results (WinnerURL, LoserURL, BattleID)
+        const votesRes = await fetch(BACKEND_URL + "?mode=getvotestate");
+        const battles = await votesRes.json();
 
+        // Count wins per dancer URL
+        const wins = {};
+        battles.forEach(b => {
+          const url = b.WinnerURL;
+          if (!wins[url]) wins[url] = 0;
+          wins[url]++;
+        });
+
+        // Attach wins to each dancer
+        dancers.forEach(d => {
+          d.wins = wins[d.url] || 0;
+        });
+
+        // Sort by wins desc, then newest timestamp
+        dancers.sort((a, b) => {
+          if (b.wins !== a.wins) return b.wins - a.wins;
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
+
+        // Render table
         const tbody = document.querySelector("#dancerTable tbody");
         tbody.innerHTML = "";
 
@@ -213,6 +236,7 @@
               </a>
             </td>
             <td data-label="Dancer">${row.dancer || "Unknown"}</td>
+            <td data-label="Wins">${row.wins}</td>
             <td data-label="Uploaded">${uploadedDisplay}</td>
           `;
           tbody.appendChild(tr);
