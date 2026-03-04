@@ -162,7 +162,7 @@
 
     async function loadLibrary() {
       try {
-        const res = await fetch(BACKEND_URL + "?mode=djlist");
+        const res = await fetch(BACKEND_URL + "?mode=getdjs");
         const list = await res.json();
 
         const tbody = document.querySelector("#djLibrary tbody");
@@ -172,21 +172,21 @@
 
         list.forEach(row => {
           const trackInfo =
-            `${row.deck1Artist} – ${row.deck1Title}  vs  ${row.deck2Artist} – ${row.deck2Title}`;
+            `${row.deck1_artist} – ${row.deck1_title}  vs  ${row.deck2_artist} – ${row.deck2_title}`;
 
           const bookingUrl =
             `https://dance-offs.com/index.html#contact` +
-            `?dj=${encodeURIComponent(row.djName || "")}` +
-            `&email=${encodeURIComponent(row.djEmail || "")}` +
+            `?dj=${encodeURIComponent(row.dj_name || "")}` +
+            `&email=${encodeURIComponent(row.dj_id || "")}` +
             `&track=${encodeURIComponent(trackInfo)}`;
 
           const tr = document.createElement("tr");
 
           tr.innerHTML = `
-            <td data-label="DJ">${row.djName}</td>
+            <td data-label="DJ">${row.dj_name}</td>
             <td data-label="Track">${trackInfo}</td>
             <td data-label="Preview">
-              <audio controls src="${row.fileUrl}" style="width:180px;"></audio>
+              <audio controls src="${row.mp3url}" style="width:180px;"></audio>
             </td>
             <td data-label="Booking">
               <a href="${bookingUrl}" class="booking-link">
