@@ -190,14 +190,14 @@
         const dancersRes = await fetch(BACKEND_URL + "?mode=getdancers");
         const dancers = await dancersRes.json();
 
-        // Fetch battle results (WinnerURL, LoserURL, BattleID)
-        const votesRes = await fetch(BACKEND_URL + "?mode=getvotestate");
-        const battles = await votesRes.json();
+        // Fetch ALL battle results (WinnerURL, LoserURL, BattleID)
+        const votesRes = await fetch(BACKEND_URL + "?mode=getvotes");
+        const votes = await votesRes.json();
 
         // Count wins per dancer URL
         const wins = {};
-        battles.forEach(b => {
-          const url = b.WinnerURL;
+        votes.forEach(v => {
+          const url = v.WinnerURL;
           if (!wins[url]) wins[url] = 0;
           wins[url]++;
         });
