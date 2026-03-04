@@ -6,19 +6,15 @@
 
   <title>Dance-Offs: Dancers</title>
 
-  <!-- UPDATED CSS VERSION -->
   <link rel="stylesheet" href="/shared/style2.css?v=4001">
-
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* Upload grid layout */
     .dancer-upload-grid {
       max-width: 600px;
       margin: 0 auto;
       text-align: center;
     }
-
     .dancer-upload-grid .grid-box {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -26,7 +22,6 @@
       margin-top: 20px;
       justify-items: center;
     }
-
     .dancer-upload-grid .input-field,
     .dancer-upload-grid .save-button {
       width: 100%;
@@ -34,7 +29,6 @@
       height: 48px;
       box-sizing: border-box;
     }
-
     .input-field {
       padding: 12px;
       border-radius: 6px;
@@ -45,7 +39,6 @@
       font-weight: 600;
       box-shadow: 0 0 8px #ffcc00;
     }
-
     .save-button {
       padding: 12px;
       font-size: 18px;
@@ -57,26 +50,21 @@
       color: #000;
       box-shadow: 0 0 10px #ffcc00;
     }
-
     .save-button.disabled-btn {
       opacity: 0.4;
       pointer-events: none;
       background: #777 !important;
       box-shadow: none !important;
     }
-
     @media (max-width: 600px) {
       .dancer-upload-grid .grid-box {
         grid-template-columns: 1fr;
       }
-
       .dancer-upload-grid .input-field,
       .dancer-upload-grid .save-button {
         max-width: 100%;
       }
     }
-
-    /* Video preview */
     .video-slot {
       margin-top: 20px;
       width: 100%;
@@ -86,13 +74,11 @@
       overflow: hidden;
       box-shadow: 0 0 12px #000;
     }
-
     .battle-frame {
       width: 100%;
       height: 100%;
       border: 0;
     }
-
     .section-title {
       font-family: 'Bangers', cursive;
       font-size: 32px;
@@ -100,7 +86,6 @@
       text-align: center;
       letter-spacing: 1px;
     }
-
     #embedTestResult {
       margin-top: 12px;
       font-size: 15px;
@@ -109,8 +94,6 @@
       line-height: 1.4;
       text-align: center;
     }
-
-    /* Loading overlay */
     #loadingDancersOverlay {
       position: fixed;
       inset: 0;
@@ -129,12 +112,8 @@
 
 <body>
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingDancersOverlay">
-    Loading please wait…
-  </div>
+  <div id="loadingDancersOverlay">Loading please wait…</div>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="dancers.html" class="active">Dancers</a>
@@ -150,7 +129,6 @@
 
   <main class="page-container dancer-layout">
 
-    <!-- UPLOAD GRID -->
     <div class="dancer-upload-grid">
 
       <h2 class="section-title">Upload Your Dancer Video</h2>
@@ -178,7 +156,6 @@
 
     </div>
 
-    <!-- LINK TO PAST DANCERS PAGE -->
     <div style="text-align:center; margin:50px 0;">
       <a href="dancers-past.html"
          style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -196,7 +173,6 @@
     Terms & Conditions
   </a>
 </footer>
-
   <!-- FULL JS -->
   <script>
     const endpoint =
@@ -350,30 +326,13 @@
         const dancerRes = await fetch(endpoint + "?mode=getdancers");
         const dancers = await dancerRes.json();
 
-        const voteRes = await fetch(endpoint + "?mode=getvotes");
-        const votes = await voteRes.json();
-
-        const voteCount = {};
-        votes.forEach(v => {
-          const name = v.WinnerName;
-          voteCount[name] = (voteCount[name] || 0) + 1;
-        });
-
-        dancers.forEach(d => {
-          d.votes = voteCount[d.dancer] || 0;
-        });
-
-        dancers.sort((a, b) => {
-          if (b.votes !== a.votes) {
-            return b.votes - a.votes;
-          }
-          return new Date(b.timestamp) - new Date(a.timestamp);
-        });
+        dancers.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         hideDancersLoading();
 
       } catch (err) {
         console.error("Could not load dancers:", err);
+        hideDancersLoading();
       }
     }
 
