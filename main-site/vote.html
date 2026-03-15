@@ -9,8 +9,6 @@
   <link rel="stylesheet" href="/shared/style2.css?v=7000">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <script src="https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons"></script>
-
   <style>
     #loadingOverlay {
       position: fixed;
@@ -184,7 +182,6 @@
   <br>
   <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">Terms & Conditions</a>
 </footer>
-
 <script>
 const endpoint = "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
 
@@ -195,6 +192,9 @@ let currentVoterEmail = null;
 let champion = null;
 let challenger = null;
 
+let championIframe = null;
+let challengerIframe = null;
+
 let djTrackLoaded = false;
 let djTrackStarted = false;
 
@@ -204,14 +204,20 @@ let djTrackStarted = false;
 document.getElementById("loadingOverlay").addEventListener("click", async () => {
   const player = document.getElementById("djPlayer");
 
+  // Start DJ audio
   try {
     await player.play();
     djTrackStarted = true;
   } catch (err) {}
 
+  // Fade overlay
   const overlay = document.getElementById("loadingOverlay");
   overlay.style.opacity = "0";
   setTimeout(() => overlay.style.display = "none", 400);
+
+  // Start both videos
+  playVideo(championIframe);
+  playVideo(challengerIframe);
 });
 
 /* ----------------------------------------------------
@@ -223,28 +229,7 @@ function nocache(url) {
 }
 
 /* ----------------------------------------------------
-   PAYPAL
----------------------------------------------------- */
-paypal.Buttons({
-  createOrder: (data, actions) =>
-    actions.order.create({
-      purchase_units: [{ amount: { value: "1.50" } }]
-    }),
-
-  onApprove: (data, actions) =>
-    actions.order.capture().then(details => {
-      currentVoterEmail = details.payer.email_address;
-      currentTransactionID = data.orderID;
-
-      document.querySelectorAll(".vote-option").forEach(opt => {
-        opt.classList.add("enabled");
-        opt.querySelector("input").disabled = false;
-      });
-    })
-}).render("#paypal-button-container");
-
-/* ----------------------------------------------------
-   VIDEO HELPERS
+   YOUTUBE HELPERS
 ---------------------------------------------------- */
 function extractID(url) {
   if (!url) return null;
@@ -269,23 +254,67 @@ function embed(id) {
 
   const iframe = document.createElement("iframe");
   iframe.className = "battle-frame";
+
+  // IMPORTANT: autoplay=0 for mobile stability
   iframe.src =
-    `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+    `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
   iframe.allow = "autoplay; encrypted-media";
 
   wrapper.appendChild(iframe);
-  return wrapper;
+  return { wrapper, iframe };
+}
+
+function playVideo(iframe) {
+  if (!iframe) return;
+  iframe.contentWindow.postMessage(
+    JSON.stringify({ event: "command", func: "playVideo" }),
+    "*"
+  );
 }
 
 /* ----------------------------------------------------
-   SMOOTH LOAD (FIXED)
+   SMOOTH LOAD SEQUENCE
 ---------------------------------------------------- */
 window.onload = async () => {
-  await loadBattle();        // <-- FIX
-  await loadVoteCounts();    // <-- FIX
-  loadDJTrack();
+  await loadBattle();
+  await loadVoteCounts();
+
+  // Delay PayPal load to avoid blocking UI
+  setTimeout(loadPayPalButtons, 800);
+
+  // Delay DJ track load
+  setTimeout(loadDJTrack, 1200);
+
   loadCountdown();
 };
+
+/* ----------------------------------------------------
+   LOAD PAYPAL (DELAYED)
+---------------------------------------------------- */
+function loadPayPalButtons() {
+  const script = document.createElement("script");
+  script.src = "https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons";
+  script.onload = () => {
+    paypal.Buttons({
+      createOrder: (data, actions) =>
+        actions.order.create({
+          purchase_units: [{ amount: { value: "1.50" } }]
+        }),
+
+      onApprove: (data, actions) =>
+        actions.order.capture().then(details => {
+          currentVoterEmail = details.payer.email_address;
+          currentTransactionID = data.orderID;
+
+          document.querySelectorAll(".vote-option").forEach(opt => {
+            opt.classList.add("enabled");
+            opt.querySelector("input").disabled = false;
+          });
+        })
+    }).render("#paypal-button-container");
+  };
+  document.body.appendChild(script);
+}
 
 /* ----------------------------------------------------
    LOAD BATTLE
@@ -301,19 +330,24 @@ async function loadBattle() {
   champion   = dancers[state.championIndex];
   challenger = dancers[state.challengerIndex];
 
-  document.getElementById("championVideo").innerHTML = "";
-  document.getElementById("challengerVideo").innerHTML = "";
+  const champContainer = document.getElementById("championVideo");
+  const challContainer = document.getElementById("challengerVideo");
 
-  document.getElementById("championVideo").appendChild(
-    embed(extractID(champion.url))
-  );
-  document.getElementById("challengerVideo").appendChild(
-    embed(extractID(challenger.url))
-  );
+  champContainer.innerHTML = "";
+  challContainer.innerHTML = "";
+
+  const champEmbed = embed(extractID(champion.url));
+  const challEmbed = embed(extractID(challenger.url));
+
+  champContainer.appendChild(champEmbed.wrapper);
+  challContainer.appendChild(challEmbed.wrapper);
+
+  championIframe = champEmbed.iframe;
+  challengerIframe = challEmbed.iframe;
 }
 
 /* ----------------------------------------------------
-   LOAD DJ TRACK
+   LOAD DJ TRACK (DELAYED)
 ---------------------------------------------------- */
 async function loadDJTrack() {
   try {
