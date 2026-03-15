@@ -5,127 +5,118 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DJ Upload</title>
 
-  <!-- Main site CSS (FIXED PATH) -->
   <link rel="stylesheet" href="https://dance-offs.com/shared/style2.css?v=4001">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- ⭐ RESTORED OLD DJ BOOTH CSS -->
   <style>
-
-  .dj-upload .dj-booth {
-    max-width: 900px !important;
-    margin: 40px auto !important;
-    text-align: center !important;
-    transform: scale(1.2) !important;
-    transform-origin: top center !important;
-    padding: 0 !important;
-  }
-
-  .dj-upload .deck-row {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 40px !important;
-    flex-wrap: wrap !important;
-  }
-
-  .dj-upload .deck {
-    flex: 0 0 260px !important;
-    text-align: center !important;
-  }
-
-  .dj-upload .record {
-    width: 260px !important;
-    height: 260px !important;
-    border-radius: 50% !important;
-    border: 6px solid #444 !important;
-    background: #000 !important;
-    margin: 0 auto 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .dj-upload .record-inner {
-    width: 180px !important;
-    text-align: center !important;
-  }
-
-  .dj-upload .record-inner input {
-    width: 100% !important;
-    padding: 14px !important;
-    margin: 10px 0 !important;
-    border-radius: 6px !important;
-    border: 2px solid #555 !important;
-    background: #000 !important;
-    color: white !important;
-    font-size: 22px !important;
-    text-align: center !important;
-  }
-
-  .dj-upload .mixer-wrap {
-    margin: 40px auto 0 !important;
-    padding-bottom: 40px !important;
-    text-align: center !important;
-  }
-
-  .dj-upload .mixer {
-    width: 500px !important;
-    padding: 24px !important;
-    background: #111 !important;
-    border: 6px solid #444 !important;
-    border-radius: 14px !important;
-    margin: 0 auto 40px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-  }
-
-  .dj-upload .mixer input,
-  .dj-upload .mixer button {
-    width: 100% !important;
-    padding: 16px !important;
-    border-radius: 6px !important;
-    border: 2px solid #555 !important;
-    background: #000 !important;
-    color: white !important;
-    font-size: 22px !important;
-    text-align: center !important;
-  }
-
-  .dj-upload .mixer button {
-    background: #ffcc00 !important;
-    color: #000 !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    border: none !important;
-  }
-
-  @media (max-width: 768px) {
     .dj-upload .dj-booth {
-      transform: scale(1) !important;
+      max-width: 900px !important;
+      margin: 40px auto !important;
+      text-align: center !important;
+      transform: scale(1.2) !important;
+      transform-origin: top center !important;
+      padding: 0 !important;
+    }
+
+    .dj-upload .deck-row {
+      display: flex !important;
+      justify-content: center !important;
+      gap: 40px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .dj-upload .deck {
+      flex: 0 0 260px !important;
+      text-align: center !important;
     }
 
     .dj-upload .record {
-      width: 220px !important;
-      height: 220px !important;
+      width: 260px !important;
+      height: 260px !important;
+      border-radius: 50% !important;
+      border: 6px solid #444 !important;
+      background: #000 !important;
+      margin: 0 auto 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .dj-upload .record-inner {
+      width: 180px !important;
+      text-align: center !important;
+    }
+
+    .dj-upload .record-inner input {
+      width: 100% !important;
+      padding: 14px !important;
+      margin: 10px 0 !important;
+      border-radius: 6px !important;
+      border: 2px solid #555 !important;
+      background: #000 !important;
+      color: white !important;
+      font-size: 22px !important;
+      text-align: center !important;
+    }
+
+    .dj-upload .mixer-wrap {
+      margin: 40px auto 0 !important;
+      padding-bottom: 40px !important;
+      text-align: center !important;
     }
 
     .dj-upload .mixer {
-      width: 100% !important;
+      width: 500px !important;
+      padding: 24px !important;
+      background: #111 !important;
+      border: 6px solid #444 !important;
+      border-radius: 14px !important;
+      margin: 0 auto 40px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 16px !important;
     }
-  }
 
+    .dj-upload .mixer input,
+    .dj-upload .mixer button {
+      width: 100% !important;
+      padding: 16px !important;
+      border-radius: 6px !important;
+      border: 2px solid #555 !important;
+      background: #000 !important;
+      color: white !important;
+      font-size: 22px !important;
+      text-align: center !important;
+    }
+
+    .dj-upload .mixer button {
+      background: #ffcc00 !important;
+      color: #000 !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      border: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .dj-upload .dj-booth {
+        transform: scale(1) !important;
+      }
+
+      .dj-upload .record {
+        width: 220px !important;
+        height: 220px !important;
+      }
+
+      .dj-upload .mixer {
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 
 <body class="dj-upload">
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <a href="https://dance-offs.com/index.html">Home</a>
     <a href="https://dance-offs.com/dancers.html">Dancers</a>
@@ -135,18 +126,15 @@
     <a href="https://dance-offs.com/shop.html">Shop</a>
   </nav>
 
-  <!-- INSTRUCTIONS -->
   <p style="max-width:900px;margin:30px auto 20px;padding:0 20px;text-align:center;font-size:20px;font-weight:600;color:#ffcc00;">
     Enter your mix details before selecting the MP3 file (under 10 mins long), then press
     <strong>Upload Mix</strong> to submit your entry.
   </p>
 
-  <!-- ⭐ DJ BOOTH -->
   <div class="dj-booth">
 
     <div class="deck-row">
 
-      <!-- LEFT DECK -->
       <div class="deck">
         <h3 class="deck-label" style="font-family:'Bangers';font-size:28px;color:#ffcc00;margin-bottom:10px;">Deck 1</h3>
         <div class="record">
@@ -157,7 +145,6 @@
         </div>
       </div>
 
-      <!-- RIGHT DECK -->
       <div class="deck">
         <h3 class="deck-label" style="font-family:'Bangers';font-size:28px;color:#ffcc00;margin-bottom:10px;">Deck 2</h3>
         <div class="record">
@@ -170,7 +157,6 @@
 
     </div>
 
-    <!-- MIXER -->
     <div class="mixer-wrap">
       <div class="mixer">
 
@@ -190,14 +176,12 @@
 
   </div>
 
-  <!-- NOW PLAYING -->
   <div class="dj-player-section" style="max-width:900px;margin:50px auto 0;padding:25px 20px;text-align:center;">
     <div class="now-playing" style="font-family:'Bangers';font-size:26px;color:#ffcc00;margin-bottom:8px;">Your Uploaded Mix</div>
     <div id="nowPlayingTrack" class="now-playing-track" style="color:#ccc;font-size:18px;margin-bottom:20px;"></div>
     <audio id="djPlayer" controls playsinline style="width:100%;max-width:900px;"></audio>
   </div>
 
-  <!-- PAST UPLOADS -->
   <div style="text-align:center; margin:50px 0;">
     <a href="djs-past.html"
        style="padding:14px 28px; background:#0077cc; color:white; border-radius:6px;
@@ -206,7 +190,6 @@
     </a>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     © 2026 Dance-Offs. All rights reserved.
     <br>
@@ -215,7 +198,7 @@
     </a>
   </footer>
 
-  <!-- ⭐ DJ UPLOAD LOGIC -->
+  <!-- ⭐ FIXED DJ UPLOAD LOGIC -->
   <script>
     const BACKEND_URL =
       "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
@@ -231,6 +214,7 @@
       }
 
       const file = fileInput.files[0];
+
       const formData = new FormData();
       formData.append("file", file);
 
@@ -252,26 +236,26 @@
 
         const storedName = fileUrl.split("/").pop();
 
+        /* ⭐ SEND JSON TO APPS SCRIPT (MATCHES POSTMAN) */
         await fetch(BACKEND_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
             mode: "djupload",
 
-            djEmail: document.getElementById("djEmail").value,
-            djName: document.getElementById("djName").value,
+            dj_id: document.getElementById("djEmail").value,
+            dj_name: document.getElementById("djName").value,
 
-            deck1Artist: document.getElementById("deck1Artist").value,
-            deck1Title: document.getElementById("deck1Title").value,
-            deck2Artist: document.getElementById("deck2Artist").value,
-            deck2Title: document.getElementById("deck2Title").value,
+            original_filename: file.name,
+            stored_filename: storedName,
+            file_size: file.size,
+            mime: file.type,
+            mp3url: fileUrl,
 
-            fileUrl: fileUrl,
-            originalName: file.name,
-            storedName: storedName,
-            sizeBytes: file.size,
-            mimeType: file.type,
-            status: "active"
+            deck1_artist: document.getElementById("deck1Artist").value,
+            deck1_title: document.getElementById("deck1Title").value,
+            deck2_artist: document.getElementById("deck2Artist").value,
+            deck2_title: document.getElementById("deck2Title").value
           })
         });
 
