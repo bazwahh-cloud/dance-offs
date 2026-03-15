@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    /* ----------------------------------------------------
+       OVERLAY WITH ANIMATED LOADING INDICATOR
+    ---------------------------------------------------- */
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -36,6 +39,44 @@
       opacity: 0.85;
     }
 
+    /* Pulsing text animation */
+    #loadingOverlay .pulse {
+      animation: pulse 1.4s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%   { opacity: 0.4; }
+      50%  { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    /* Shimmer loading bar */
+    #loadingBar {
+      width: 180px;
+      height: 8px;
+      background: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    #loadingBar::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #ffcc00, transparent);
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { transform: translateX(-60px); }
+      100% { transform: translateX(180px); }
+    }
+
+    /* ----------------------------------------------------
+       VIDEO + VOTING UI
+    ---------------------------------------------------- */
     .video-slot {
       position: relative;
       width: 100%;
@@ -95,8 +136,9 @@
 
 <!-- SINGLE OVERLAY: TAP TO PLAY -->
 <div id="loadingOverlay">
-  Tap to Play
-  <small>Loading…</small>
+  <div class="pulse">Tap to Play</div>
+  <small>Preparing battle…</small>
+  <div id="loadingBar"></div>
 </div>
 
 <nav class="navbar">
@@ -215,7 +257,7 @@ document.getElementById("loadingOverlay").addEventListener("click", async () => 
   overlay.style.opacity = "0";
   setTimeout(() => overlay.style.display = "none", 400);
 
-  // Start both videos
+  // Start both videos instantly
   playVideo(championIframe);
   playVideo(challengerIframe);
 });
@@ -255,10 +297,19 @@ function embed(id) {
   const iframe = document.createElement("iframe");
   iframe.className = "battle-frame";
 
-  // IMPORTANT: autoplay=0 for mobile stability
+  // Pre-warm the video (autoplay=0 but fully initialised)
   iframe.src =
-    `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
+    `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}` +
+    `&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&controls=0&start=0&origin=${location.origin}`;
   iframe.allow = "autoplay; encrypted-media";
+
+  // Force YouTube to initialise early
+  iframe.onload = () => {
+    iframe.contentWindow.postMessage(
+      JSON.stringify({ event: "command", func: "pauseVideo" }),
+      "*"
+    );
+  };
 
   wrapper.appendChild(iframe);
   return { wrapper, iframe };
