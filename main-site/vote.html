@@ -298,13 +298,35 @@ function embed(id) {
   wrapper.appendChild(iframe);
   return { wrapper, iframe };
 }
-
+<!-- ----------------------------------------------------
+     FIXED, ROBUST YOUTUBE PLAY FUNCTION
+---------------------------------------------------- -->
+<script>
 function playVideo(iframe) {
   if (!iframe) return;
-  iframe.contentWindow.postMessage(
-    JSON.stringify({ event: "command", func: "playVideo" }),
-    "*"
-  );
+
+  let attempts = 0;
+  const maxAttempts = 20;
+
+  const tryPlay = () => {
+    attempts++;
+
+    iframe.contentWindow.postMessage(
+      JSON.stringify({ event: "command", func: "pauseVideo" }),
+      "*"
+    );
+
+    iframe.contentWindow.postMessage(
+      JSON.stringify({ event: "command", func: "playVideo" }),
+      "*"
+    );
+
+    if (attempts < maxAttempts) {
+      setTimeout(tryPlay, 100);
+    }
+  };
+
+  setTimeout(tryPlay, 200);
 }
 
 /* ----------------------------------------------------
@@ -408,6 +430,7 @@ async function submitVote() {
 
   window.location.href = "thankyou.html";
 }
+
 /* ----------------------------------------------------
    LOAD BATTLE
 ---------------------------------------------------- */
@@ -437,7 +460,6 @@ async function loadBattle() {
   championIframe = champEmbed.iframe;
   challengerIframe = challEmbed.iframe;
 }
-
 /* ----------------------------------------------------
    LOAD DJ TRACK (DELAYED)
 ---------------------------------------------------- */
@@ -492,7 +514,7 @@ async function loadVoteCounts() {
     (championVotes / maxVotes * 100) + "%";
 
   document.getElementById("challengerBar").style.width =
-    (challengerVotes / maxVotes * 100) + "%";
+    (championVotes / maxVotes * 100) + "%";
 }
 
 /* ----------------------------------------------------
