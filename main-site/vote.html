@@ -39,7 +39,6 @@
       opacity: 0.85;
     }
 
-    /* Pulsing text animation */
     #loadingOverlay .pulse {
       animation: pulse 1.4s infinite ease-in-out;
     }
@@ -50,7 +49,6 @@
       100% { opacity: 0.4; }
     }
 
-    /* Shimmer loading bar */
     #loadingBar {
       width: 180px;
       height: 8px;
@@ -74,9 +72,6 @@
       100% { transform: translateX(180px); }
     }
 
-    /* ----------------------------------------------------
-       VIDEO + VOTING UI
-    ---------------------------------------------------- */
     .video-slot {
       position: relative;
       width: 100%;
@@ -134,7 +129,7 @@
 
 <body class="vote-page-only">
 
-<!-- SINGLE OVERLAY: TAP TO PLAY -->
+<!-- SINGLE OVERLAY -->
 <div id="loadingOverlay">
   <div class="pulse">Tap to Play</div>
   <small>Tap Here…</small>
@@ -224,8 +219,9 @@
   <br>
   <a href="https://dance-offs.com/tnc.html" style="color:#ffcc00; text-decoration:underline;">Terms & Conditions</a>
 </footer>
+
 <script>
-const endpoint = "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
+const endpoint = "YOUR_APPS_SCRIPT_URL_HERE";
 
 let currentBattleID = null;
 let currentTransactionID = null;
@@ -238,20 +234,16 @@ let championIframe = null;
 let challengerIframe = null;
 
 /* ----------------------------------------------------
-   OVERLAY — NON-BLOCKING, NEVER STICKS
+   OVERLAY — NON-BLOCKING
 ---------------------------------------------------- */
 document.getElementById("loadingOverlay").addEventListener("click", () => {
   const overlay = document.getElementById("loadingOverlay");
-
-  // Fade overlay immediately — never wait for audio/video
   overlay.style.opacity = "0";
   setTimeout(() => overlay.style.display = "none", 400);
 
-  // Try to start DJ audio (non-blocking)
   const player = document.getElementById("djPlayer");
   player.play().catch(() => {});
 
-  // Try to start both videos (non-blocking)
   playVideo(championIframe);
   playVideo(challengerIframe);
 });
@@ -291,13 +283,11 @@ function embed(id) {
   const iframe = document.createElement("iframe");
   iframe.className = "battle-frame";
 
-  // Pre-warm the video (autoplay=0 but fully initialised)
   iframe.src =
     `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}` +
     `&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&controls=0&start=0&origin=${location.origin}`;
   iframe.allow = "autoplay; encrypted-media";
 
-  // Force YouTube to initialise early
   iframe.onload = () => {
     iframe.contentWindow.postMessage(
       JSON.stringify({ event: "command", func: "pauseVideo" }),
@@ -324,21 +314,20 @@ window.onload = async () => {
   await loadBattle();
   await loadVoteCounts();
 
-  // Delay PayPal load to avoid blocking UI
   setTimeout(loadPayPalButtons, 800);
-
-  // Delay DJ track load
   setTimeout(loadDJTrack, 1200);
 
   loadCountdown();
 };
 
 /* ----------------------------------------------------
-   LOAD PAYPAL (DELAYED)
+   LOAD PAYPAL (FIXED)
 ---------------------------------------------------- */
 function loadPayPalButtons() {
   const script = document.createElement("script");
-  script.src = "https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons";
+  script.src =
+    "https://www.paypal.com/sdk/js?client-id=AX4Xv6G1hrF13n76DY6HPyTIOK13Gkz7Af3OqQMarnqPXRmhqtOb733jfZnetspN-HH7CZh_MFSRsIN8&currency=GBP&components=buttons";
+
   script.onload = () => {
     paypal.Buttons({
       createOrder: (data, actions) =>
@@ -346,21 +335,79 @@ function loadPayPalButtons() {
           purchase_units: [{ amount: { value: "1.50" } }]
         }),
 
-      onApprove: (data, actions) =>
-        actions.order.capture().then(details => {
-          currentVoterEmail = details.payer.email_address;
-          currentTransactionID = data.orderID;
+      onApprove: async (data, actions) => {
+        const details = await actions.order.capture();
 
-          document.querySelectorAll(".vote-option").forEach(opt => {
-            opt.classList.add("enabled");
-            opt.querySelector("input").disabled = false;
-          });
-        })
+        currentVoterEmail = details.payer.email_address;
+        currentTransactionID = data.orderID;
+
+        document.querySelectorAll(".vote-option").forEach(opt => {
+          opt.classList.add("enabled");
+          opt.querySelector("input").disabled = false;
+        });
+      }
     }).render("#paypal-button-container");
   };
+
   document.body.appendChild(script);
 }
 
+/* ----------------------------------------------------
+   ROBUST VOTE SUBMISSION
+---------------------------------------------------- */
+async function submitVote() {
+  if (!currentTransactionID) {
+    alert("Payment required before voting.");
+    return;
+  }
+
+  const choice = document.querySelector('input[name="voteChoice"]:checked');
+  if (!choice) return;
+
+  const side = choice.value;
+  const dancerName =
+    side === "champion" ? champion.dancer : challenger.dancer;
+  const dancerURL =
+    side === "champion" ? champion.url : challenger.url;
+
+  const payload = {
+    mode: "vote",
+    battle: currentBattleID,
+    side,
+    tx: currentTransactionID,
+    email: currentVoterEmail || "",
+    WinnerName: dancerName,
+    WinnerURL: dancerURL
+  };
+
+  let success = false;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const text = await res.text();
+      if (text.includes("Vote logged")) {
+        success = true;
+        break;
+      }
+    } catch (err) {
+      console.warn("Vote attempt failed:", err);
+    }
+
+    await new Promise(r => setTimeout(r, 500 * attempt));
+  }
+
+  if (!success) {
+    alert("Your payment succeeded but your vote could not be recorded. Please contact support.");
+    return;
+  }
+
+  window.location.href = "thankyou.html";
+}
 /* ----------------------------------------------------
    LOAD BATTLE
 ---------------------------------------------------- */
@@ -449,50 +496,6 @@ async function loadVoteCounts() {
 }
 
 /* ----------------------------------------------------
-   SUBMIT VOTE
----------------------------------------------------- */
-function submitVote() {
-  if (!currentTransactionID) {
-    alert("Payment required before voting.");
-    return;
-  }
-
-  const choice = document.querySelector('input[name="voteChoice"]:checked');
-  if (!choice) return;
-
-  const side = choice.value;
-  const dancerName = side === "champion" ? champion.dancer : challenger.dancer;
-  const dancerURL  = side === "champion" ? champion.url    : challenger.url;
-
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = endpoint;
-
-  function add(name, value) {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  }
-
-  add("mode", "vote");
-  add("battle", currentBattleID);
-  add("side", side);
-  add("tx", currentTransactionID);
-  add("email", currentVoterEmail || "");
-  add("WinnerName", dancerName);
-  add("WinnerURL", dancerURL);
-
-  document.body.appendChild(form);
-  form.submit();
-
-  setTimeout(() => {
-    window.location.href = "thankyou.html";
-  }, 400);
-}
-
-/* ----------------------------------------------------
    COUNTDOWN
 ---------------------------------------------------- */
 function loadCountdown() {
@@ -526,4 +529,6 @@ function loadCountdown() {
     });
 }
 </script>
+
+</body>
 </html>
