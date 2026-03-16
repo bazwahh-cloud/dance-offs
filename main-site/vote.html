@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ----------------------------------------------------
-       OVERLAY WITH ANIMATED LOADING INDICATOR
-    ---------------------------------------------------- */
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -44,8 +41,8 @@
     }
 
     @keyframes pulse {
-      0%   { opacity: 0.4; }
-      50%  { opacity: 1; }
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
       100% { opacity: 0.4; }
     }
 
@@ -68,7 +65,7 @@
     }
 
     @keyframes shimmer {
-      0%   { transform: translateX(-60px); }
+      0% { transform: translateX(-60px); }
       100% { transform: translateX(180px); }
     }
 
@@ -89,9 +86,7 @@
       border: 0;
     }
 
-    .vote-option input[type="radio"] {
-      display: none;
-    }
+    .vote-option input[type="radio"] { display: none; }
 
     .vote-box {
       width: 100%;
@@ -129,7 +124,6 @@
 
 <body class="vote-page-only">
 
-<!-- SINGLE OVERLAY -->
 <div id="loadingOverlay">
   <div class="pulse">Tap to Play</div>
   <small>Tap Here…</small>
@@ -151,30 +145,24 @@
 
   <div class="vote-layout">
 
-    <!-- LEFT = CHAMPION -->
     <div class="vote-column">
       <div id="championVideo"></div>
-
       <label class="vote-option">
         <input type="radio" name="voteChoice" value="champion" id="voteChampionOption" disabled onclick="submitVote()">
         <div class="vote-box"><span class="vote-title">Vote Champion</span></div>
       </label>
     </div>
 
-    <!-- MIDDLE -->
     <div class="vote-column">
       <h2 style="font-family:'Bangers', cursive; font-size:32px;">Vote for £1.50</h2>
       <p style="color:#ccc; margin-bottom:10px;">Pay £1.50 to unlock your vote.</p>
-
       <div style="width:260px; margin:auto; transform:scale(0.85); transform-origin:top center;">
         <div id="paypal-button-container"></div>
       </div>
     </div>
 
-    <!-- RIGHT = CHALLENGER -->
     <div class="vote-column">
       <div id="challengerVideo"></div>
-
       <label class="vote-option">
         <input type="radio" name="voteChoice" value="challenger" id="voteChallengerOption" disabled onclick="submitVote()">
         <div class="vote-box"><span class="vote-title">Vote Challenger</span></div>
@@ -208,7 +196,6 @@
   <div style="margin-top:40px; text-align:center;">
     <h3 style="font-family:'Bangers', cursive; font-size:28px; margin-bottom:10px;">Now Playing</h3>
     <p id="djTrackName" style="color:#ccc; margin-bottom:10px;"></p>
-
     <audio id="djPlayer" controls playsinline style="width:100%; max-width:500px;"></audio>
   </div>
 
@@ -221,7 +208,7 @@
 </footer>
 
 <script>
-const endpoint = "https://script.google.com/macros/s/AKfycbw5sreBX1RgTXegFE8Gkr4Y3thXcyNOo0YljPRVLry_fe2jBO80TAr1EShOzdfplDgi/exec";
+const endpoint = "YOUR_ENDPOINT_HERE";
 
 let currentBattleID = null;
 let currentTransactionID = null;
@@ -233,9 +220,6 @@ let challenger = null;
 let championIframe = null;
 let challengerIframe = null;
 
-/* ----------------------------------------------------
-   OVERLAY — NON-BLOCKING
----------------------------------------------------- */
 document.getElementById("loadingOverlay").addEventListener("click", () => {
   const overlay = document.getElementById("loadingOverlay");
   overlay.style.opacity = "0";
@@ -244,21 +228,17 @@ document.getElementById("loadingOverlay").addEventListener("click", () => {
   const player = document.getElementById("djPlayer");
   player.play().catch(() => {});
 
-  playVideo(championIframe);
-  playVideo(challengerIframe);
+  setTimeout(() => {
+    playVideo(championIframe);
+    playVideo(challengerIframe);
+  }, 100);
 });
 
-/* ----------------------------------------------------
-   NO-CACHE FETCH
----------------------------------------------------- */
 function nocache(url) {
   const sep = url.includes("?") ? "&" : "?";
   return fetch(url + sep + "t=" + Date.now());
 }
 
-/* ----------------------------------------------------
-   YOUTUBE HELPERS
----------------------------------------------------- */
 function extractID(url) {
   if (!url) return null;
   const clean = url.split("?")[0];
@@ -298,10 +278,6 @@ function embed(id) {
   wrapper.appendChild(iframe);
   return { wrapper, iframe };
 }
-<!-- ----------------------------------------------------
-     FIXED, ROBUST YOUTUBE PLAY FUNCTION
----------------------------------------------------- -->
-<script>
 function playVideo(iframe) {
   if (!iframe) return;
 
@@ -329,9 +305,6 @@ function playVideo(iframe) {
   setTimeout(tryPlay, 200);
 }
 
-/* ----------------------------------------------------
-   SMOOTH LOAD SEQUENCE
----------------------------------------------------- */
 window.onload = async () => {
   await loadBattle();
   await loadVoteCounts();
@@ -342,9 +315,6 @@ window.onload = async () => {
   loadCountdown();
 };
 
-/* ----------------------------------------------------
-   LOAD PAYPAL (FIXED)
----------------------------------------------------- */
 function loadPayPalButtons() {
   const script = document.createElement("script");
   script.src =
@@ -374,9 +344,6 @@ function loadPayPalButtons() {
   document.body.appendChild(script);
 }
 
-/* ----------------------------------------------------
-   ROBUST VOTE SUBMISSION
----------------------------------------------------- */
 async function submitVote() {
   if (!currentTransactionID) {
     alert("Payment required before voting.");
@@ -416,9 +383,7 @@ async function submitVote() {
         success = true;
         break;
       }
-    } catch (err) {
-      console.warn("Vote attempt failed:", err);
-    }
+    } catch (err) {}
 
     await new Promise(r => setTimeout(r, 500 * attempt));
   }
@@ -431,9 +396,6 @@ async function submitVote() {
   window.location.href = "thankyou.html";
 }
 
-/* ----------------------------------------------------
-   LOAD BATTLE
----------------------------------------------------- */
 async function loadBattle() {
   const [state, dancers] = await Promise.all([
     nocache(endpoint + "?mode=getstate").then(r => r.json()),
@@ -460,9 +422,6 @@ async function loadBattle() {
   championIframe = champEmbed.iframe;
   challengerIframe = challEmbed.iframe;
 }
-/* ----------------------------------------------------
-   LOAD DJ TRACK (DELAYED)
----------------------------------------------------- */
 async function loadDJTrack() {
   try {
     const data = await nocache(endpoint + "?mode=getdjs").then(r => r.json());
@@ -477,14 +436,9 @@ async function loadDJTrack() {
     player.src = last.mp3url;
     player.volume = 1;
 
-  } catch (err) {
-    console.error("DJ load failed:", err);
-  }
+  } catch (err) {}
 }
 
-/* ----------------------------------------------------
-   LOAD VOTE COUNTS
----------------------------------------------------- */
 async function loadVoteCounts() {
   if (!currentBattleID) return;
 
@@ -514,12 +468,9 @@ async function loadVoteCounts() {
     (championVotes / maxVotes * 100) + "%";
 
   document.getElementById("challengerBar").style.width =
-    (championVotes / maxVotes * 100) + "%";
+    (challengerVotes / maxVotes * 100) + "%";
 }
 
-/* ----------------------------------------------------
-   COUNTDOWN
----------------------------------------------------- */
 function loadCountdown() {
   nocache(endpoint + "?mode=getstate")
     .then(r => r.json())
