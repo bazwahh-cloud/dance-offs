@@ -265,7 +265,8 @@ function embed(id) {
 
   iframe.src =
     `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}` +
-    `&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&controls=0&start=0&origin=${location.origin}`;
+    `&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&controls=0&start=0
+    // remove origin completely`;
   iframe.allow = "autoplay; encrypted-media";
 
   iframe.onload = () => {
